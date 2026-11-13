@@ -1,0 +1,2594 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>1&nbsp; Orientation: computers and where you compute – Computing for Bioinformatics</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<link href="../chapters/02-book-setup.html" rel="next">
+<link href="../index.html" rel="prev">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-dark-d0ae9245876894da5ac7e18953ecc5cc.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-a297b6402252160977f5afd2b4be87ef.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-0351dc649f087ce3a5133a49f4f159b6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-a297b6402252160977f5afd2b4be87ef.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
+<link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%232E6E7E%22%2F%3E%3Ctext%20x%3D%2232%22%20y%3D%2232%22%20dy%3D%220.35em%22%20text-anchor%3D%22middle%22%20font-family%3D%22Helvetica%2CArial%2Csans-serif%22%20font-weight%3D%22700%22%20font-size%3D%2230%22%20fill%3D%22%23ffffff%22%3ECP%3C%2Ftext%3E%3C%2Fsvg%3E">
+<style>:root { --bioinf-accent: #2E6E7E; --bioinf-accent-dark: #6FB3C2; }</style>
+
+
+</head>
+
+<body class="nav-sidebar floating slimcontent quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const queryPrefersDark = window.matchMedia('(prefers-color-scheme: dark)');
+    const darkModeDefault = queryPrefersDark.matches;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    queryPrefersDark.addEventListener("change", e => {
+      if(window.localStorage.getItem("quarto-color-scheme") !== null)
+        return;
+      const alternate = e.matches
+      toggleColorMode(alternate);
+      localAlternateSentinel = e.matches ? 'alternate' : 'default'; // this is used alongside local storage!
+      toggleGiscusIfUsed(alternate, darkModeDefault);
+    });
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-orientation.html">Getting set up</a></li><li class="breadcrumb-item"><a href="../chapters/01-orientation.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Orientation: computers and where you compute</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="../">Computing for Bioinformatics</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="../reporting.html" title="Report an issue" class="quarto-navigation-tool px-1" aria-label="Report an issue"><i class="bi bi-bug"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="Toggle reader mode">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Welcome</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting set up</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/01-orientation.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Orientation: computers and where you compute</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/02-book-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Book setup and editors</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/03-organizing-projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Organizing projects and data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/04-getting-help.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Getting help</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">The Linux command line</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/05-shell-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Shell basics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/06-text-tools.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Text tools and pipes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/07-linux-system.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">The Linux system</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/08-shell-scripts.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Shell scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/09-working-remotely.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Working remotely</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/10-hpc-slurm.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">HPC and SLURM</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Languages</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/11-language-landscape.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">The language landscape</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/12-r-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">R essentials</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/13-python-essentials.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python essentials</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">Data, formats, and references</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/14-tabular-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Tabular data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/15-fasta-fastq.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Sequence formats: FASTA and FASTQ</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/16-sam-bam-cram.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Alignment formats: SAM, BAM, CRAM</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/17-intervals-variants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Intervals, annotation, and variants</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/18-efficient-formats.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">Efficient data formats</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/19-databases.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Databases (basics)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/20-reference-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Reference data and public repositories</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reproducibility</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/21-git.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Version control with git</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/22-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">GitHub and collaboration</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/23-environments.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Software environments</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/24-containers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">Containers</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Workflows</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/25-workflow-managers.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">Why workflow managers</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/26-nf-core.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">Running nf-core pipelines</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/27-writing-nextflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">Writing Nextflow</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/28-other-workflows.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">28</span>&nbsp; <span class="chapter-title">Other workflow systems</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Algorithms</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/29-thinking-algorithms.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">29</span>&nbsp; <span class="chapter-title">Thinking about algorithms</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/30-sequence-alignment.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">30</span>&nbsp; <span class="chapter-title">Sequence alignment</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/31-indexing-genomes.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">31</span>&nbsp; <span class="chapter-title">Indexing genomes</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/32-graphs-assembly.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">32</span>&nbsp; <span class="chapter-title">Graphs and assembly</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/33-probabilistic-methods.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">33</span>&nbsp; <span class="chapter-title">Probabilistic methods</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">Advanced topics (optional)</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/34-reusable-code.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">34</span>&nbsp; <span class="chapter-title">Writing reusable analysis code</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/35-performance.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">35</span>&nbsp; <span class="chapter-title">Performance and parallelism</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/36-numbers-encodings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">36</span>&nbsp; <span class="chapter-title">Numbers and text encodings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/37-gpu.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">37</span>&nbsp; <span class="chapter-title">GPU computing</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../chapters/38-cloud.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">38</span>&nbsp; <span class="chapter-title">Cloud basics</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 ">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../appendices/a-cluster-sites.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Cluster sites: SCINet and Nova</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reporting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Report an Issue</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#sec-orientation-intro" id="toc-sec-orientation-intro" class="nav-link active" data-scroll-target="#sec-orientation-intro"><span class="header-section-number">1.1</span> What this chapter does</a></li>
+  <li><a href="#sec-orientation-terminal" id="toc-sec-orientation-terminal" class="nav-link" data-scroll-target="#sec-orientation-terminal"><span class="header-section-number">1.2</span> Opening a terminal</a></li>
+  <li><a href="#sec-orientation-first-session" id="toc-sec-orientation-first-session" class="nav-link" data-scroll-target="#sec-orientation-first-session"><span class="header-section-number">1.3</span> Guided first session</a></li>
+  <li><a href="#sec-orientation-parts" id="toc-sec-orientation-parts" class="nav-link" data-scroll-target="#sec-orientation-parts"><span class="header-section-number">1.4</span> Parts of a computer that matter for analysis</a></li>
+  <li><a href="#sec-orientation-data-sizes" id="toc-sec-orientation-data-sizes" class="nav-link" data-scroll-target="#sec-orientation-data-sizes"><span class="header-section-number">1.5</span> How big is the data?</a></li>
+  <li><a href="#sec-orientation-linux" id="toc-sec-orientation-linux" class="nav-link" data-scroll-target="#sec-orientation-linux"><span class="header-section-number">1.6</span> Why Linux</a></li>
+  <li><a href="#sec-orientation-where" id="toc-sec-orientation-where" class="nav-link" data-scroll-target="#sec-orientation-where"><span class="header-section-number">1.7</span> Where you compute: laptop, cluster, cloud</a></li>
+  <li><a href="#sec-orientation-account" id="toc-sec-orientation-account" class="nav-link" data-scroll-target="#sec-orientation-account"><span class="header-section-number">1.8</span> Getting a cluster account</a></li>
+  <li><a href="#sec-orientation-summary" id="toc-sec-orientation-summary" class="nav-link" data-scroll-target="#sec-orientation-summary"><span class="header-section-number">1.9</span> Summary</a></li>
+  <li><a href="#sec-orientation-exercises" id="toc-sec-orientation-exercises" class="nav-link" data-scroll-target="#sec-orientation-exercises"><span class="header-section-number">1.10</span> Exercises</a></li>
+  <li><a href="#sec-orientation-reading" id="toc-sec-orientation-reading" class="nav-link" data-scroll-target="#sec-orientation-reading"><span class="header-section-number">1.11</span> Further reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content page-columns page-full" id="quarto-document-content">
+
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-orientation.html">Getting set up</a></li><li class="breadcrumb-item"><a href="../chapters/01-orientation.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Orientation: computers and where you compute</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span id="sec-orientation" class="quarto-section-identifier"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Orientation: computers and where you compute</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Core.</strong> Work through it, with the exercises.</p>
+<div class="goals callout callout-style-default callout-note no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Learning goals
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Open a terminal on your computer and run a command you were given.</li>
+<li>Download a FASTQ file, check that it arrived intact, look at its first records, and count its reads.</li>
+<li>Find how many logical CPUs, how much RAM, and how much free disk your computer has.</li>
+<li>Estimate a file’s size from its read count, and name the resources (CPU, RAM, disk, I/O) a job can be limited by.</li>
+<li>Decide whether a job belongs on a laptop, a cluster, or the cloud.</li>
+</ol>
+</div>
+</div>
+<section id="sec-orientation-intro" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="sec-orientation-intro"><span class="header-section-number">1.1</span> What this chapter does</h2>
+<p>By the end of this chapter you will have run your first commands on a real sequencing file: you will download it, check it, look inside it, and count its reads. Then we step back and look at the machine that did the work, and at the other machines you will use.</p>
+<p>In bioinformatics, “the computer” is usually not the one in front of you. It is most often someone else’s Linux machine, such as a university or USDA cluster, that you reach from your laptop. Your laptop is still where you edit, look at results, and run small analyses. This chapter starts on the laptop, because that is where everything begins.</p>
+</section>
+<section id="sec-orientation-terminal" class="level2 page-columns page-full" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="sec-orientation-terminal"><span class="header-section-number">1.2</span> Opening a terminal</h2>
+<p>Three words first. The <strong>operating system</strong> is the software that runs the computer: macOS, Windows, or Linux. The <strong>terminal</strong> is a window where you type commands. The <strong>shell</strong> is the program inside that window that reads each command, runs it, and prints the result.</p>
+<p>Opening a terminal is the one step that really differs between systems. Pick yours; every other tabbed box on this page will follow your choice.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset page-columns page-full" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content page-columns page-full" data-group="os">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<p>Open <strong>Terminal</strong>: press <kbd title="Cmd-Space" aria-hidden="true">Cmd-Space</kbd><span class="visually-hidden">Cmd-Space</span>, type <code>Terminal</code>, and press <kbd title="Return" aria-hidden="true">Return</kbd><span class="visually-hidden">Return</span>. (It lives in <em>Applications → Utilities</em>.)</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea: switch your Mac from zsh to bash first
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A new Mac’s Terminal runs <strong>zsh</strong>. Every command, output, and explanation in this book assumes <strong>bash</strong>, as on Linux and on clusters. Do all five setup steps below before the guided first session, then check that <code>echo "$BASH_VERSION"</code> prints <code>5</code> or higher. If you skip this, some commands and outputs will not match the book.</p>
+</div>
+</div>
+<p>This book uses <strong>bash</strong>, the shell on Linux and on clusters, everywhere. A Mac needs a one-time setup to match: a new Mac’s Terminal runs a different shell (zsh), its built-in bash is version 3.2 from 2007, and its everyday tools (<code>ls</code>, <code>sed</code>, <code>grep</code>, …) are BSD versions whose options differ from the GNU versions on Linux (<a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> explains the differences). You will install <a href="https://brew.sh">Homebrew</a>, a package manager for macOS, use it to install a current bash and the GNU tools, and make bash your shell. Allow 15–30 minutes.</p>
+<ol type="1">
+<li><p><strong>Install Homebrew.</strong> Paste the install command from <a href="https://brew.sh">brew.sh</a>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">/bin/bash</span> <span class="at">-c</span> <span class="st">"</span><span class="va">$(</span><span class="ex">curl</span> <span class="at">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh<span class="va">)</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>It asks for your Mac password (<strong>nothing appears as you type</strong>; that is normal) and may install Apple’s Command Line Tools first. When it finishes, it prints a <em>Next steps</em> section. If that section lists commands, run them: on Apple silicon Macs they let the shell find <code>brew</code>. Check with <code>brew --version</code>, which prints Homebrew’s version.</p></li>
+<li><p><strong>Install bash and the GNU tools.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install bash coreutils findutils gnu-sed gnu-tar grep gawk gzip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This installs a current bash; GNU coreutils (<code>ls</code>, <code>wc</code>, <code>nproc</code>, and about a hundred more); and GNU <code>find</code>, <code>sed</code>, <code>tar</code>, <code>grep</code>, <code>awk</code>, and <code>gzip</code>.</p></li>
+<li><p><strong>Make Homebrew’s bash your shell.</strong> The first line adds it to the list of allowed shells; the second switches to it. Each asks for your Mac password.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$(</span><span class="ex">brew</span> <span class="at">--prefix</span><span class="va">)</span><span class="st">/bin/bash"</span> <span class="kw">|</span> <span class="fu">sudo</span> tee <span class="at">-a</span> /etc/shells</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chsh</span> <span class="at">-s</span> <span class="st">"</span><span class="va">$(</span><span class="ex">brew</span> <span class="at">--prefix</span><span class="va">)</span><span class="st">/bin/bash"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p><strong>Put the GNU tools first.</strong> Homebrew installs most GNU tools under names starting with <code>g</code> (<code>gsed</code>, <code>gls</code>), so they do not replace the Mac’s own. This command writes a small settings file, <code>~/.bash_profile</code>, that bash reads each time Terminal opens. It makes <code>brew</code> available and puts each tool’s plain-named GNU version (<code>sed</code>, <code>ls</code>) ahead of the Mac’s. Copy all of it, from <code>cat</code> to the final <code>EOF</code>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="op">&gt;&gt;</span> ~/.bash_profile <span class="op">&lt;&lt;'EOF'</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="st"># Homebrew, then GNU tools ahead of the macOS versions (Chapter 1)</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="st">if [ -x /opt/homebrew/bin/brew ]; then</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="st">  eval "$(/opt/homebrew/bin/brew shellenv)"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="st">elif [ -x /usr/local/bin/brew ]; then</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="st">  eval "$(/usr/local/bin/brew shellenv)"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="st">fi</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="st">for tool in coreutils findutils gnu-sed gnu-tar grep gawk; do</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="st">  PATH="$HOMEBREW_PREFIX/opt/$tool/libexec/gnubin:$PATH"</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="st">done</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="st">export PATH</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="st"># Read ~/.bashrc too, as Linux terminals do</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="st">if [ -f ~/.bashrc ]; then . ~/.bashrc; fi</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="op">EOF</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p><strong>Quit Terminal</strong> (<kbd title="Cmd-Q" aria-hidden="true">Cmd-Q</kbd><span class="visually-hidden">Cmd-Q</span>), open it again, and check:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$BASH_VERSION</span><span class="st">"</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>5.3.15(1)-release
+sed (GNU sed) 4.10</code></pre>
+<p>Your version numbers may be newer. If the first line starts with <code>3.2</code>, step 3 did not take effect; if the second says <code>sed: illegal option</code>, check step 4.</p></li>
+</ol>
+<p>From now on your Mac behaves like the Linux machines in this book.</p>
+<p><strong>Optional: iTerm2.</strong> Many Mac users swap Terminal for <a href="https://iterm2.com">iTerm2</a>, a free terminal app. Both run the same bash with the same settings, so every command in this book works the same in either. iTerm2 adds conveniences that help once you work on a cluster all day: one window split into several panes (say, your laptop beside a login node), search through everything a pane has printed, and a history of what you pasted. To try it, install it with <code>brew install --cask iterm2</code>. This book never assumes you have it.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane page-columns page-full" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>Windows does not run the book’s commands directly. Instead you install <strong>WSL2</strong> (Windows Subsystem for Linux), which runs a real Ubuntu Linux system inside Windows. This takes longer than on the other systems: an install, a restart, and creating a Linux account. Allow 20–30 minutes.</p>
+<ol type="1">
+<li><p>Open <strong>PowerShell as administrator</strong>: open the Start menu, type <code>PowerShell</code>, right-click <em>Windows PowerShell</em>, and choose <em>Run as administrator</em>.</p></li>
+<li><p>Run this one command, which installs WSL2 with Ubuntu:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>PowerShell (laptop, as administrator)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="PowerShell (laptop, as administrator)"><pre class="sourceCode powershell code-with-copy"><code class="sourceCode powershell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>wsl <span class="op">--</span>install</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div></li>
+<li><p>Restart Windows when it asks.</p></li>
+<li><p>Open <strong>Ubuntu</strong> from the Start menu. The first time, it asks you to make a Linux user name and password. <strong>Nothing appears while you type the password</strong>: no dots, no stars. That is normal. Type it, press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>, and type it again.</p></li>
+</ol>
+<p>From now on, every command in this book runs in the Ubuntu window, not in PowerShell. Its shell is <strong>bash</strong>.</p>
+<p>If the install is blocked, your laptop may be managed by your university; ask your IT office. Microsoft’s <a href="https://learn.microsoft.com/en-us/windows/wsl/install">WSL install guide</a> has the current official steps <span class="citation" data-cites="microsoft2025install">(<a href="../references.html#ref-microsoft2025install" role="doc-biblioref">Microsoft 2025</a>)</span>. You may also have heard of Git Bash; it is a different tool, and this book does not support it.</p>
+<div class="no-row-height column-margin column-container"></div></div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<p>You already have a terminal. On Ubuntu, press <kbd title="Ctrl-Alt-T" aria-hidden="true">Ctrl-Alt-T</kbd><span class="visually-hidden">Ctrl-Alt-T</span>; on other distributions, look for <em>Terminal</em> in the applications menu. The shell is usually <strong>bash</strong>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: Windows folders from WSL
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In WSL, keep your work in your Linux home folder (<code>~</code>), not under <code>/mnt/c/...</code>, where Linux sees your Windows files. Windows folders are slow to use from Linux and invite line-ending and permission problems (<a href="https://learn.microsoft.com/en-us/windows/wsl/filesystems">Microsoft’s advice</a>).</p>
+</div>
+</div>
+<p><a href="#tbl-terminal-by-os" class="quarto-xref">Table&nbsp;<span>1.1</span></a> sums up what you now have.</p>
+<div id="tbl-terminal-by-os" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-terminal-by-os-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.1: What you type commands into, by operating system.
+</figcaption>
+<div aria-describedby="tbl-terminal-by-os-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 19%">
+<col style="width: 21%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Operating system</th>
+<th style="text-align: left;">Terminal app</th>
+<th style="text-align: left;">Default shell</th>
+<th style="text-align: left;">Supported in this book</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">macOS</td>
+<td style="text-align: left;">Terminal (or iTerm2)</td>
+<td style="text-align: left;">bash (after the setup above; a new Mac uses zsh)</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Windows</td>
+<td style="text-align: left;">Ubuntu (WSL2)</td>
+<td style="text-align: left;">bash</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Windows</td>
+<td style="text-align: left;">PowerShell, Git Bash</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Linux (e.g., Ubuntu)</td>
+<td style="text-align: left;">Terminal</td>
+<td style="text-align: left;">bash (usually)</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>The terminal shows a <strong>prompt</strong>: a short line ending in <code>$</code>, often with your user name and folder in front. It means “ready for a command”. Code blocks in this book leave the prompt out, so you can copy and paste them as they are. Each block is labelled with where it runs; in this chapter that is <code>Terminal (laptop)</code>, except for the cluster box in the next section.</p>
+</section>
+<section id="sec-orientation-first-session" class="level2 page-columns page-full" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="sec-orientation-first-session"><span class="header-section-number">1.3</span> Guided first session</h2>
+<p>Now run some commands. Copy each one, paste it into your terminal, press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>, and compare what you see with the output shown below it. You do not need to understand every part yet: you will learn these commands properly in Part II. Seeing them work first makes that easier.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Pasting into a terminal
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Paste with <kbd title="Cmd-V" aria-hidden="true">Cmd-V</kbd><span class="visually-hidden">Cmd-V</span> on macOS and <kbd title="Ctrl-Shift-V" aria-hidden="true">Ctrl-Shift-V</kbd><span class="visually-hidden">Ctrl-Shift-V</span> in most Linux and WSL terminals. In a terminal, <kbd title="Ctrl-C" aria-hidden="true">Ctrl-C</kbd><span class="visually-hidden">Ctrl-C</span> does <em>not</em> copy: it stops the running command.</p>
+</div>
+</div>
+<p>The file we use is a <strong>FASTQ</strong> file, the standard format for sequencing reads: each read’s bases, plus a quality score for every base. It holds yeast (<em>Saccharomyces cerevisiae</em>) RNA-seq reads from an experiment by <span class="citation" data-cites="wu2018repression">Wu et al. (<a href="../references.html#ref-wu2018repression" role="doc-biblioref">2018</a>)</span>, cut down to 50,000 reads for testing by <a href="https://nf-co.re">nf-core</a>, a community collection of bioinformatics pipelines. It is the running dataset of this book; its source and license are listed in the book’s <code>data/README.md</code>.</p>
+<div class="no-row-height column-margin column-container"></div><div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: on a cluster, never on the login node
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This session is meant for your laptop. If you do it on a cluster instead (say, you already have an account), <strong>do not run it on the login node</strong>, the machine you land on when you log in. Ask the scheduler for a <strong>compute node</strong> first, and run everything there, downloads included:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--cpus-per-task</span><span class="op">=</span>1 <span class="at">--mem</span><span class="op">=</span>4G <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This asks for 1 core, 4 GB of RAM, and 1 hour, and opens a shell on a compute node once they are free; it may take a moment. Run <code>hostname</code>: it should now print a different machine’s name than before. Do steps 1–6 there, then type <code>exit</code> to give the compute node back and return to the login node.</p>
+<p>Many sites need more options, such as an account (<code>-A</code>) or a partition (<code>-p</code>); SCINet, for example, requires <code>-A</code>. Your site’s are in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>. If <code>curl</code> cannot connect from a compute node, your site may block the internet there; ask your research computing office where to download. <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> explains all of this properly.</p>
+</div>
+</div>
+<p><strong>Step 1. Make a scratch folder and move into it.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch01 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch01</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This prints nothing. In the shell, silence usually means success.</p>
+<p><strong>Step 2. Download one FASTQ file.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>curl</code> shows a progress table while it works. When it finishes, the last line starts with <code>100</code>; your speeds and times will differ:</p>
+<pre class="console"><code>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 2186k  100 2186k    0     0  4146k      0 --:--:-- --:--:-- --:--:-- 4141k</code></pre>
+<p>If instead you see <code>curl: (56) The requested URL returned error: 404</code>, or any other <code>curl:</code> error, check that you copied the whole command. If a firewall blocks <code>curl</code>, download the file in your browser from its <a href="https://github.com/nf-core/test-datasets/blob/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz">GitHub page</a> (the <em>Download raw file</em> button), then move it into place:</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Replace <code>&lt;your-windows-name&gt;</code> with your Windows user name.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /mnt/c/Users/<span class="op">&lt;</span>your-windows-name<span class="op">&gt;</span>/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<p><strong>Step 3. Check that the file arrived intact.</strong> First its size:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-lh</span> SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>-rw-r--r-- 1 you you 2.2M Nov 13 11:52 SRR6357070_1.fastq.gz</code></pre>
+<p>Your name, group, and date will differ. <code>2.2M</code> means about 2.2 megabytes; the next section says exactly what <code>M</code> counts. Then test the compression:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This prints nothing if the file is intact. A damaged or incomplete download prints an error instead.</p>
+<p><strong>Step 4. Look at the first two reads.</strong> The file is compressed (<code>.gz</code>), so we decompress it on the fly and show only its first 8 lines:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 8</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>@SRR6357070.25017281 25017281/1 kraken:taxid|4932
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
++
+BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF
+@SRR6357070.6710070 6710070/1 kraken:taxid|4932
+GTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA
++
+BBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB</code></pre>
+<p>We use <code>gunzip -c</code> because it works the same on every system. (You may see <code>zcat</code> elsewhere; the <code>zcat</code> built into macOS does not read <code>.gz</code> files.)</p>
+<p><strong>Step 5. Count the lines.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>200000</code></pre>
+<p><strong>Step 6. Count the reads and save the result.</strong> Each read in this file takes four lines, as you saw in step 4, so 200,000 lines are 200,000 / 4 = 50,000 reads. This command does the same count, divides by 4, and writes one line to a file:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-11-1" class="code-annotation-target"><a href="#annotated-cell-11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"SRR6357070_1 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">"</span> <span class="op">&gt;</span> fastq_summary.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-11" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-11-2" class="code-annotation-target"><a href="#annotated-cell-11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> fastq_summary.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-11" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="1" data-code-annotation="1"><code>$( ... )</code> runs the line count from step 5 and puts its result here; <code>$(( ... / 4 ))</code> divides it by 4; <code>echo</code> prints the sentence; and <code>&gt;</code> sends that sentence into the file <code>fastq_summary.txt</code> instead of the screen.</span>
+</dd>
+<dt data-target-cell="annotated-cell-11" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-11" data-code-lines="2" data-code-annotation="2"><code>cat</code> prints the file, so you can check what was saved.</span>
+</dd>
+</dl>
+<pre class="console"><code>SRR6357070_1 reads: 50000</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: stop at the first error
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If any step prints an error, stop and fix it before going on. In particular, a summary that says <code>reads: 0</code> means the download failed or the file is broken; the command still “succeeds”, because the shell does not stop on errors unless told to (<a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>).</p>
+</div>
+</div>
+<p>You now have a one-line summary of a real sequencing file. Before moving on, look at what a read is. <a href="#fig-fastq-record" class="quarto-xref">Figure&nbsp;<span>1.1</span></a> labels the first record from step 4.</p>
+<div id="fig-fastq-record" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-fastq-record-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 360" role="img" aria-labelledby="fastq-record-title">
+  <title id="fastq-record-title">The first record of the file SRR6357070_1.fastq.gz, four lines long. Line 1 is the header: it starts with @, then the read ID SRR6357070.25017281, and ends its second word with /1, meaning this read is read 1 of a pair. Line 2 is the 101 bases of the read, shown cut short. Line 3 is a plus sign that separates the bases from their qualities. Line 4 holds one quality character for each of the 101 bases.</title>
+  <!-- The record, in a box like a terminal window -->
+  <rect x="150" y="52" width="560" height="296" rx="8" class="fill-surface stroke-line"></rect>
+  <!-- Line names (left column) -->
+  <g font-size="13" font-weight="700">
+    <text x="20" y="88">1 · Header</text>
+    <text x="20" y="160">2 · Bases</text>
+    <text x="20" y="232">3 · Separator</text>
+    <text x="20" y="304">4 · Qualities</text>
+  </g>
+  <!-- Labels above the header line -->
+  <g font-size="13" class="fill-given" font-weight="700" text-anchor="middle">
+    <text x="243" y="30">read ID</text>
+    <text x="420" y="30">/1 = read 1 of the pair</text>
+  </g>
+  <g class="stroke-given" stroke-width="1.25">
+    <line x1="243" y1="36" x2="243" y2="72"></line>
+    <line x1="395" y1="36" x2="395" y2="72"></line>
+  </g>
+  <!-- Line 1: header -->
+  <text x="166" y="88" font-size="13" class="mono"><tspan class="fill-given" font-weight="700">@SRR6357070.25017281</tspan><tspan class="fill-given"> 25017281</tspan><tspan class="fill-given" font-weight="700">/1</tspan><tspan class="fill-muted"> kraken:taxid|4932</tspan></text>
+  <text x="166" y="110" font-size="13" class="fill-muted">Starts with @. The rest of the header is explained in Chapter 15.</text>
+  <!-- Line 2: bases -->
+  <text x="166" y="160" font-size="13" class="mono fill-given">CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAG…</text>
+  <text x="166" y="182" font-size="13" class="fill-muted">The read itself: 101 bases (A, C, G, T; N if unknown), shown cut short.</text>
+  <!-- Line 3: separator -->
+  <text x="166" y="232" font-size="13" class="mono fill-muted" font-weight="700">+</text>
+  <text x="166" y="254" font-size="13" class="fill-muted">Separates the bases from their qualities.</text>
+  <!-- Line 4: qualities -->
+  <text x="166" y="304" font-size="13" class="mono fill-given">BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFF…</text>
+  <text x="166" y="326" font-size="13" class="fill-muted">One character per base, 101 in all. B and F are both high scores.</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-fastq-record-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.1: The first record of <code>SRR6357070_1.fastq.gz</code>. In this file every read takes exactly four lines: a header with the read ID, the bases, a <code>+</code> separator, and one quality character per base. The full format, including files that break the four-line pattern, is in <a href="15-fasta-fastq.html" class="quarto-xref"><span>Chapter 15</span></a>.
+</figcaption>
+</figure>
+</div>
+<p><code>~/bioinf-ch01</code> is a scratch folder: you can delete it whenever you like. <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> starts the book’s real project and brings this file, and the address you downloaded it from, into it.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> This FASTQ file has 200,000 lines. How many reads does it hold?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>50,000. In this file each read takes four lines, so 200,000 / 4 = 50,000.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orientation-parts" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="sec-orientation-parts"><span class="header-section-number">1.4</span> Parts of a computer that matter for analysis</h2>
+<p>Start with your own computer. Run the commands for your system and write your values in the last column of <a href="#tbl-my-computer" class="quarto-xref">Table&nbsp;<span>1.2</span></a>.</p>
+<div id="tbl-my-computer" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-my-computer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.2: The resources of one computer. macOS has no <code>free</code>, so it uses a different command for RAM; all commands are in the tabs below. The example values are from one laptop (a Mac); yours will differ.
+</figcaption>
+<div aria-describedby="tbl-my-computer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 13%">
+<col style="width: 31%">
+<col style="width: 15%">
+<col style="width: 22%">
+<col style="width: 16%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Resource</th>
+<th style="text-align: left;">Command (Linux / WSL)</th>
+<th style="text-align: left;">Read this</th>
+<th style="text-align: left;">Example output</th>
+<th style="text-align: left;">Your value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Logical CPUs</td>
+<td style="text-align: left;"><code>nproc</code></td>
+<td style="text-align: left;">the number</td>
+<td style="text-align: left;"><code>16</code></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">RAM</td>
+<td style="text-align: left;"><code>free -h</code></td>
+<td style="text-align: left;"><code>total</code> in the <code>Mem:</code> row</td>
+<td style="text-align: left;"><code>64 GiB</code></td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Free disk</td>
+<td style="text-align: left;"><code>df -h ~</code></td>
+<td style="text-align: left;">the <code>Avail</code> column</td>
+<td style="text-align: left;"><code>744G</code></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-3" role="tab" aria-controls="tabset-3-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nproc</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$((</span> <span class="va">$(</span><span class="ex">sysctl</span> <span class="at">-n</span> hw.memsize<span class="va">)</span> <span class="op">/</span> <span class="dv">1073741824</span> <span class="va">))</span><span class="st"> GiB"</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span> ~</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>16
+64 GiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk1s4s1  1.9T  1.1T  744G  61% /</code></pre>
+<p><code>nproc</code> comes with the GNU tools you installed. The second line asks macOS for its memory in bytes and divides by 1,073,741,824 (2<sup>30</sup>), giving GiB as <code>free -h</code> does on Linux. Read free disk from the <code>Avail</code> column. On a Mac, <code>Used</code> and <code>Avail</code> need not add up to <code>Size</code>, because several volumes share one disk.</p>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nproc</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">free</span> <span class="at">-h</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span> ~</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For RAM, read the <code>total</code> column of the <code>Mem:</code> row of <code>free -h</code>; for disk, the <code>Avail</code> column of <code>df -h ~</code>. WSL sees only the memory Windows gives its virtual machine, by default about half the laptop’s RAM, not the full amount (<a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config">WSL settings</a>).</p>
+</div>
+<div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">nproc</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">free</span> <span class="at">-h</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span> ~</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>For RAM, read the <code>total</code> column of the <code>Mem:</code> row of <code>free -h</code>; for disk, the <code>Avail</code> column of <code>df -h ~</code>.</p>
+</div>
+</div>
+</div>
+<p>These three numbers describe the parts in <a href="#fig-computer-parts" class="quarto-xref">Figure&nbsp;<span>1.2</span></a>:</p>
+<ul>
+<li><strong>CPU</strong> (central processing unit): the part that computes. It has several <strong>physical cores</strong>, each able to work on its own. On many Intel and AMD processors, each core appears to the system as two <strong>logical CPUs</strong>; the commands above count logical CPUs. (The example laptop has 8 physical cores and 16 logical CPUs.) A running program splits its work into <strong>threads</strong>, pieces of work that the system places onto CPUs. Many tools take an option that sets how many threads to use: <code>--threads</code>, <code>-t</code>, or <code>-p</code>, depending on the tool. More threads help only if the tool is written to use them.</li>
+<li><strong>RAM</strong> (memory): the fast working space a program uses while it runs. It is emptied when the program stops.</li>
+<li><strong>Disk</strong> (storage): slow, large, and permanent; it keeps your files. A file’s size on disk is not the RAM a program needs to read it. The count in step 6 <em>streams</em> through the file a few lines at a time and needs almost no memory, whatever the file’s size. Other tools, such as those that build a genome index (<a href="31-indexing-genomes.html" class="quarto-xref"><span>Chapter 31</span></a>), hold a lot in memory at once.</li>
+<li><strong>I/O</strong> (input/output): reading and writing files, over the disk or the network. Simple steps over big files, such as copying them or counting their lines, often spend most of their time waiting for I/O. Heavier steps, such as aligning reads, are often limited by the CPU, and some by RAM.</li>
+<li><strong>GPU</strong> (graphics processing unit): a separate processor with thousands of small cores, built to do the same arithmetic on lots of data at once. Most tools in this book do not use one. Where you will meet GPUs: nanopore basecalling (<a href="https://github.com/nanoporetech/dorado">Dorado</a>), deep-learning models, and GPU versions of standard tools such as BWA-MEM, STAR, and DeepVariant (<a href="https://docs.nvidia.com/clara/parabricks/latest/index.html">NVIDIA Parabricks</a>). Clusters usually have a few GPU nodes, which you must ask the scheduler for. <a href="37-gpu.html" class="quarto-xref"><span>Chapter 37</span></a> covers them.</li>
+</ul>
+<div id="fig-computer-parts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-computer-parts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 300" role="img" aria-labelledby="computer-parts-title">
+  <title id="computer-parts-title">The parts of a computer that matter for analysis, from fastest to slowest: the CPU, whose cores do the work; RAM, the working space, at about 10 to 50 gigabytes per second; the local disk, which keeps files, at about 0.5 to 5 gigabytes per second for a solid-state drive; and the network, which reaches other machines and shared storage, at about 0.1 to 1 gigabyte per second. In this example the job is limited by input and output: blocks of a blue FASTQ file move slowly from disk into RAM while the CPU's cores wait.</title>
+  <style>
+    /* Each block's normal position is its final place in RAM, so the still
+       frame (reduced motion) is the finished picture. It starts on the disk
+       (shifted right) and crawls left; the cores wait meanwhile. */
+    .computer-parts-block { animation: computer-parts-crawl 9s linear infinite; }
+    .computer-parts-b2 { animation-delay: 0.6s; }
+    .computer-parts-b3 { animation-delay: 1.2s; }
+    @keyframes computer-parts-crawl {
+      0%, 8%    { transform: translate(250px, 0); opacity: 0; }
+      12%       { transform: translate(250px, 0); opacity: 1; }
+      70%, 100% { transform: translate(0, 0); opacity: 1; }
+    }
+    .computer-parts-wait { animation: computer-parts-blink 9s steps(1) infinite; }
+    @keyframes computer-parts-blink {
+      0%, 75%   { opacity: 1; }
+      76%, 100% { opacity: 0; }
+    }
+  </style>
+  <defs>
+    <marker id="computer-parts-arrow" viewbox="0 0 10 10" refx="5" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Boxes -->
+  <g class="fill-surface stroke-line">
+    <rect x="10" y="40" width="140" height="172" rx="10"></rect>
+    <rect x="200" y="40" width="190" height="172" rx="10"></rect>
+    <rect x="440" y="40" width="150" height="172" rx="10"></rect>
+    <rect x="620" y="40" width="90" height="172" rx="10"></rect>
+  </g>
+  <g font-size="16" font-weight="700">
+    <text x="24" y="66">CPU</text>
+    <text x="214" y="66">RAM</text>
+    <text x="454" y="66">Disk</text>
+    <text x="630" y="66">Network</text>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="24" y="86">cores do the work</text>
+    <text x="214" y="86">working space,</text>
+    <text x="214" y="102">emptied at the end</text>
+    <text x="454" y="86">keeps files</text>
+    <text x="630" y="86">other</text>
+    <text x="630" y="102">machines,</text>
+    <text x="630" y="118">shared</text>
+    <text x="630" y="134">storage</text>
+  </g>
+  <!-- Links between parts -->
+  <g class="stroke-muted" stroke-width="1.5" marker-start="url(#computer-parts-arrow)" marker-end="url(#computer-parts-arrow)">
+    <line x1="156" y1="115" x2="194" y2="115"></line>
+    <line x1="396" y1="115" x2="434" y2="115"></line>
+    <line x1="596" y1="115" x2="614" y2="115"></line>
+  </g>
+  <!-- CPU: four cores, idle while waiting -->
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="28" y="104" width="44" height="30" rx="4"></rect>
+    <rect x="86" y="104" width="44" height="30" rx="4"></rect>
+    <rect x="28" y="142" width="44" height="30" rx="4"></rect>
+    <rect x="86" y="142" width="44" height="30" rx="4"></rect>
+  </g>
+  <text x="80" y="198" font-size="13" text-anchor="middle" class="fill-muted computer-parts-wait">waiting for data…</text>
+  <!-- Disk: the file stays on disk; copies of its blocks move into RAM -->
+  <rect x="456" y="140" width="118" height="28" rx="4" class="fill-given-soft stroke-given"></rect>
+  <text x="515" y="159" font-size="12" text-anchor="middle" class="mono">reads.fastq.gz</text>
+  <!-- Blocks of the file, drawn where they end up: in RAM -->
+  <g class="fill-given">
+    <rect x="216" y="140" width="44" height="28" rx="4" class="computer-parts-block computer-parts-b1"></rect>
+    <rect x="270" y="140" width="44" height="28" rx="4" class="computer-parts-block computer-parts-b2"></rect>
+    <rect x="324" y="140" width="44" height="28" rx="4" class="computer-parts-block computer-parts-b3"></rect>
+  </g>
+  <!-- Typical speeds, order of magnitude only -->
+  <g font-size="13" text-anchor="middle">
+    <text x="80" y="244">billions of steps</text>
+    <text x="80" y="260">per second, per core</text>
+    <text x="295" y="244">about 10–50 GB/s</text>
+    <text x="515" y="244">about 0.5–5 GB/s</text>
+    <text x="515" y="260" class="fill-muted">(solid-state drive)</text>
+    <text x="665" y="244">about</text>
+    <text x="665" y="260">0.1–1 GB/s</text>
+  </g>
+  <text x="360" y="288" font-size="13" text-anchor="middle" class="fill-muted">fastest on the left, slowest on the right; typical laptop values</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-computer-parts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.2: The parts of a computer that matter for analysis, fastest on the left. Speeds are typical laptop values, order of magnitude only. Shown is one example, an I/O-limited job: blocks of the file crawl from disk into RAM while the CPU’s cores wait.
+</figcaption>
+</figure>
+</div>
+<p><a href="#fig-cores-threads" class="quarto-xref">Figure&nbsp;<span>1.3</span></a> shows what threads do, and do not do, on a computer with 8 cores.</p>
+<div id="fig-cores-threads" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cores-threads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 250" role="img" aria-labelledby="cores-threads-title">
+  <title id="cores-threads-title">Two panels, each a computer with 8 cores. Left: a tool that can use threads, run with 4 threads, keeps 4 cores busy and leaves 4 idle. Right: a single-threaded step keeps 1 core busy while the other 7 sit idle; giving it more threads would change nothing.</title>
+  <!-- Panel frames -->
+  <g class="fill-surface stroke-line">
+    <rect x="10" y="10" width="340" height="200" rx="10"></rect>
+    <rect x="370" y="10" width="340" height="200" rx="10"></rect>
+  </g>
+  <g font-size="16" font-weight="700">
+    <text x="26" y="38">A tool run with <tspan class="mono">--threads 4</tspan></text>
+    <text x="386" y="38">A single-threaded step</text>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="26" y="58">the tool is written to use threads</text>
+    <text x="386" y="58">extra cores cannot help it</text>
+  </g>
+  <!-- Left panel: 8 cores, 4 busy -->
+  <g font-size="12" text-anchor="middle">
+    <g class="fill-given-soft stroke-given" stroke-width="1.5">
+      <rect x="30" y="76" width="66" height="50" rx="5"></rect>
+      <rect x="108" y="76" width="66" height="50" rx="5"></rect>
+      <rect x="186" y="76" width="66" height="50" rx="5"></rect>
+      <rect x="264" y="76" width="66" height="50" rx="5"></rect>
+    </g>
+    <g class="fill-given" font-weight="700">
+      <text x="63" y="106">thread 1</text>
+      <text x="141" y="106">thread 2</text>
+      <text x="219" y="106">thread 3</text>
+      <text x="297" y="106">thread 4</text>
+    </g>
+    <g class="fill-muted-soft stroke-muted" stroke-width="1" stroke-dasharray="4 3">
+      <rect x="30" y="138" width="66" height="50" rx="5"></rect>
+      <rect x="108" y="138" width="66" height="50" rx="5"></rect>
+      <rect x="186" y="138" width="66" height="50" rx="5"></rect>
+      <rect x="264" y="138" width="66" height="50" rx="5"></rect>
+    </g>
+    <g class="fill-muted">
+      <text x="63" y="168">idle</text>
+      <text x="141" y="168">idle</text>
+      <text x="219" y="168">idle</text>
+      <text x="297" y="168">idle</text>
+    </g>
+  </g>
+  <!-- Right panel: 8 cores, 1 busy -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="390" y="76" width="66" height="50" rx="5" class="fill-given-soft stroke-given" stroke-width="1.5"></rect>
+    <text x="423" y="106" class="fill-given" font-weight="700">thread 1</text>
+    <g class="fill-muted-soft stroke-muted" stroke-width="1" stroke-dasharray="4 3">
+      <rect x="468" y="76" width="66" height="50" rx="5"></rect>
+      <rect x="546" y="76" width="66" height="50" rx="5"></rect>
+      <rect x="624" y="76" width="66" height="50" rx="5"></rect>
+      <rect x="390" y="138" width="66" height="50" rx="5"></rect>
+      <rect x="468" y="138" width="66" height="50" rx="5"></rect>
+      <rect x="546" y="138" width="66" height="50" rx="5"></rect>
+      <rect x="624" y="138" width="66" height="50" rx="5"></rect>
+    </g>
+    <g class="fill-muted">
+      <text x="501" y="106">idle</text>
+      <text x="579" y="106">idle</text>
+      <text x="657" y="106">idle</text>
+      <text x="423" y="168">idle</text>
+      <text x="501" y="168">idle</text>
+      <text x="579" y="168">idle</text>
+      <text x="657" y="168">idle</text>
+    </g>
+  </g>
+  <g font-size="13" text-anchor="middle">
+    <text x="180" y="236">4 of 8 cores busy</text>
+    <text x="540" y="236">1 of 8 cores busy, 7 idle</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cores-threads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.3: Threads on a computer with 8 cores. Left: a tool written to use threads, run with 4, keeps 4 cores busy. Right: a single-threaded step keeps 1 core busy and leaves 7 idle; asking it for more threads changes nothing.
+</figcaption>
+</figure>
+</div>
+<p>Whether code can use more than one core also depends on the language it is written in and the packages it uses (<a href="#tbl-language-threads" class="quarto-xref">Table&nbsp;<span>1.3</span></a>). Some packages use several <strong>processes</strong> (separate copies of a running program) instead of threads. The cores fill up the same way, but each process needs its own memory.</p>
+<div id="tbl-language-threads" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-language-threads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.3: Using more than one core, by language. Brief; <a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a> and <a href="13-python-essentials.html" class="quarto-xref"><span>Chapter 13</span></a> show how, and <a href="35-performance.html" class="quarto-xref"><span>Chapter 35</span></a> goes further.
+</figcaption>
+<div aria-describedby="tbl-language-threads-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 32%">
+<col style="width: 48%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Language</th>
+<th style="text-align: left;">Out of the box</th>
+<th style="text-align: left;">Ways to use more cores</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">One core: R runs one step at a time</td>
+<td style="text-align: left;"><code>data.table</code> (threads; by default half your logical CPUs); the <code>parallel</code> package (<code>mclapply</code> starts extra processes; not on Windows); matrix maths, if R uses a multi-threaded BLAS library such as OpenBLAS</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Python</td>
+<td style="text-align: left;">One thread runs Python code at a time, because of the global interpreter lock (GIL)</td>
+<td style="text-align: left;"><code>multiprocessing</code> and <code>concurrent.futures</code> (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate <em>free-threaded</em> build without the GIL (e.g., <code>python3.14t</code>) was experimental in 3.13 and is officially supported since 3.14, but it is not the default</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Julia</td>
+<td style="text-align: left;">One worker thread, unless you ask for more</td>
+<td style="text-align: left;">Start with <code>julia --threads auto</code>, then use <code>Threads.@threads</code> loops</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">C, C++, Java</td>
+<td style="text-align: left;">Real threads, if the program is written to use them</td>
+<td style="text-align: left;">Most heavy bioinformatics tools are written in these (samtools, BWA, and STAR in C or C++; GATK in Java). That is why they take a <code>--threads</code> option</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “More cores always makes it faster”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> Only steps written to use several threads get faster, and only until something else limits them. Many steps use one core, and some are limited by disk, network, or memory rather than the CPU.</p>
+</div>
+</div>
+<p>Each resource fails in its own way when it runs out (<a href="#tbl-resource-limits" class="quarto-xref">Table&nbsp;<span>1.4</span></a>). You will meet these messages; recognising them saves hours.</p>
+<div id="tbl-resource-limits" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-resource-limits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.4: What it looks like when each resource runs out.
+</figcaption>
+<div aria-describedby="tbl-resource-limits-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 38%">
+<col style="width: 35%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Resource</th>
+<th style="text-align: left;">What runs out</th>
+<th style="text-align: left;">What you see</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">RAM</td>
+<td style="text-align: left;">Working space while the program runs</td>
+<td style="text-align: left;">The program stops with <code>Killed</code> or an “out of memory” message, often with no output file</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Disk</td>
+<td style="text-align: left;">Space to write files</td>
+<td style="text-align: left;"><code>No space left on device</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">CPU</td>
+<td style="text-align: left;">Computing power</td>
+<td style="text-align: left;">The job is slow; its cores show 100% busy</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">I/O</td>
+<td style="text-align: left;">Speed of reading and writing</td>
+<td style="text-align: left;">The job is slow, but its cores are mostly idle</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A job can be limited by CPU, RAM, disk space, or I/O. Extra cores help only when the work can use them.</p>
+</div>
+</div>
+<p>Finding which one limits a real job is part of <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> (on a cluster) and <a href="35-performance.html" class="quarto-xref"><span>Chapter 35</span></a>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> A step keeps one core at 100% while seven sit idle. Will rerunning it with <code>--threads 8</code> make it faster?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Only if the tool supports threads. Many steps use one core whatever you ask for, and then nothing changes. Some are limited by disk or memory, not the CPU, and more threads will not help those either.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orientation-data-sizes" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="sec-orientation-data-sizes"><span class="header-section-number">1.5</span> How big is the data?</h2>
+<p>Start with your own file. Our sample was sequenced <strong>paired-end</strong>: each fragment of RNA (copied to DNA) was read from both ends, so the sample has two <strong>mate files</strong>, one for read 1 (<code>_1</code>) and one for read 2 (<code>_2</code>). Your file is the read-1 file. It holds 50,000 reads and takes 2.2 MB compressed (12.8 MB uncompressed). A typical RNA-seq sample has around 30 million reads in each mate file, 600 times as many. If those reads are like ours, the file is about 600 times larger:</p>
+<ul>
+<li>compressed: 2.2 MB × 600 ≈ 1.3 GB</li>
+<li>uncompressed: 12.8 MB × 600 ≈ 7.7 GB</li>
+</ul>
+<p>A paired-end sample has two such files. Ours does too: your file holds 50,000 reads, and its mate file <code>SRR6357070_2.fastq.gz</code> holds another 50,000, so the sample is 50,000 read <em>pairs</em> (100,000 reads).</p>
+<p>This kind of scaling works only for the same kind of file. Read length, header style, and compression all change the result, so treat it as an estimate.</p>
+<p>A note on units: in this book, 1 MB is 1,000,000 bytes and 1 GB is 1,000,000,000 bytes. Some tools count in powers of 2 instead (1 MiB = 1,048,576 bytes) and often still print <code>M</code>. <code>ls -lh</code> is one of them: your 2,239,317-byte file is 2.14 MiB, which GNU <code>ls</code> rounds up to <code>2.2M</code>. (The <code>ls</code> built into macOS rounds to <code>2.1M</code>.) Memory is sold in binary units too: a laptop sold with “64 GB” has 64 GiB.</p>
+<p>An analysis <strong>pipeline</strong> is a fixed series of steps run in order; for RNA-seq, roughly: <em>align</em> the reads (find where each one came from in the genome), <em>count</em> the reads on each gene, and <em>test</em> which genes differ between groups. Part VI shows how to run whole pipelines. The files along the way fall into two groups (<a href="#tbl-data-sizes" class="quarto-xref">Table&nbsp;<span>1.5</span></a>, <a href="#fig-pipeline-file-sizes" class="quarto-xref">Figure&nbsp;<span>1.4</span></a>):</p>
+<ul>
+<li><strong>Read-level files</strong> (FASTQ, BAM) hold every read: gigabytes per sample in a real study. A BAM file holds the same reads after aligning, each with its place on the genome, and is often about as large as the compressed FASTQ files it came from, sometimes larger. Sorting it into genome order needs temporary disk space on top (<a href="https://www.htslib.org/doc/samtools-sort.html"><code>samtools sort</code></a>).</li>
+<li><strong>Summary files</strong> (count matrix, results table, and in DNA studies often a VCF of variants) hold one row per gene or variant: megabytes or less for RNA-seq, small enough for any laptop.</li>
+</ul>
+<div class="wide-table">
+<div id="tbl-data-sizes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-data-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.5: File sizes in an RNA-seq analysis. The yeast test set is measured; it uses only yeast chromosome I, which is why it has 124 genes. A whole yeast genome has about 6,000 genes and a mammal 20,000 or more. The typical study column is a rough order of magnitude.
+</figcaption>
+<div aria-describedby="tbl-data-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 11%">
+<col style="width: 20%">
+<col style="width: 9%">
+<col style="width: 37%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Format</th>
+<th style="text-align: left;">What it holds</th>
+<th style="text-align: left;">Group</th>
+<th style="text-align: left;">Yeast test set (measured)</th>
+<th style="text-align: left;">Typical study</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">FASTQ (<code>.fastq.gz</code>)</td>
+<td style="text-align: left;">Every read, with a quality per base</td>
+<td style="text-align: left;">read-level</td>
+<td style="text-align: left;">2.2 MB per mate file; 4.3 MB for one paired sample (<code>WT_REP2</code>)</td>
+<td style="text-align: left;">about 1 GB per mate file; a few GB per sample</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BAM (<code>.bam</code>)</td>
+<td style="text-align: left;">Every read, placed on the genome</td>
+<td style="text-align: left;">read-level</td>
+<td style="text-align: left;">3.3 MB for one sample (<code>WT_REP2</code>)</td>
+<td style="text-align: left;">a few GB per sample</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Count matrix</td>
+<td style="text-align: left;">One count per gene per sample</td>
+<td style="text-align: left;">summary</td>
+<td style="text-align: left;">2.8 kB (124 genes × 5 samples)</td>
+<td style="text-align: left;">a few MB for the whole study</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Results table</td>
+<td style="text-align: left;">One row per gene: fold change, p-value</td>
+<td style="text-align: left;">summary</td>
+<td style="text-align: left;">12.7 kB (124 genes)</td>
+<td style="text-align: left;">a few MB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">VCF (<code>.vcf.gz</code>, DNA studies)</td>
+<td style="text-align: left;">One row per variant</td>
+<td style="text-align: left;">summary</td>
+<td style="text-align: left;">none (RNA-seq)</td>
+<td style="text-align: left;">MB for a few samples; GB for large cohorts</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<div id="fig-pipeline-file-sizes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pipeline-file-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 410" role="img" aria-labelledby="pipeline-file-sizes-title">
+  <title id="pipeline-file-sizes-title">Measured file sizes for the yeast test data, drawn to scale: the area of each square is proportional to the file's size. Read-level files: the paired FASTQ files of one sample are 4.3 MB, a large square, and its sorted BAM file is 3.3 MB, almost as large. Summary files: the count matrix for 124 genes and 5 samples is 2.8 kB and the differential expression results table for 124 genes is 12.7 kB; both are tiny dots, hundreds to thousands of times smaller. A reference genome and annotation enter at the align and count steps.</title>
+  <defs>
+    <marker id="pipeline-file-sizes-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Group labels -->
+  <g font-size="13" font-weight="700">
+    <text x="40" y="24">Read-level files: every read</text>
+    <text x="620" y="24" text-anchor="middle">Summary files:</text>
+    <text x="620" y="40" text-anchor="middle">one row per gene</text>
+  </g>
+  <!-- Baseline -->
+  <line x1="30" y1="290" x2="700" y2="290" class="stroke-line" stroke-width="1"></line>
+  <!-- Squares: side = sqrt(bytes) * 0.1059, so area is proportional to size.
+       Measured: 4,315,508 / 3,277,856 / 2,834 / 12,675 bytes. -->
+  <g class="fill-given-soft stroke-given" stroke-width="1.5">
+    <rect x="40" y="70" width="220" height="220"></rect>
+    <rect x="310" y="98.3" width="191.7" height="191.7"></rect>
+  </g>
+  <g class="fill-given">
+    <rect x="569.2" y="284.4" width="5.6" height="5.6"></rect>
+    <rect x="664" y="278.1" width="11.9" height="11.9"></rect>
+  </g>
+  <g font-size="13" font-weight="700" text-anchor="middle" class="fill-given">
+    <text x="150" y="60">4.3 MB</text>
+    <text x="406" y="88">3.3 MB</text>
+    <text x="572" y="270">2.8 kB</text>
+    <text x="670" y="266">12.7 kB</text>
+  </g>
+  <!-- The empty space is the point -->
+  <g font-size="13" text-anchor="middle" class="fill-muted">
+    <text x="620" y="150">hundreds to thousands</text>
+    <text x="620" y="166">of times smaller</text>
+  </g>
+  <!-- Steps between files -->
+  <g class="stroke-muted" stroke-width="1.5" marker-end="url(#pipeline-file-sizes-arrow)">
+    <line x1="266" y1="280" x2="304" y2="280"></line>
+    <line x1="507" y1="287" x2="565" y2="287"></line>
+    <line x1="579" y1="287" x2="660" y2="287"></line>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="285" y="270">align</text>
+    <text x="536" y="278">count</text>
+    <text x="620" y="278">test</text>
+  </g>
+  <!-- File names and what each size covers -->
+  <g font-size="13" text-anchor="middle">
+    <g font-weight="700">
+      <text x="150" y="312">FASTQ, R1 + R2</text>
+      <text x="406" y="312">sorted BAM</text>
+      <text x="572" y="312">count matrix</text>
+      <text x="670" y="312">results table</text>
+    </g>
+    <g class="fill-muted">
+      <text x="150" y="328">one sample</text>
+      <text x="406" y="328">one sample</text>
+      <text x="572" y="328">124 genes ×</text>
+      <text x="572" y="344">5 samples</text>
+      <text x="670" y="328">124 genes</text>
+    </g>
+  </g>
+  <!-- Reference we bring: enters at align and count -->
+  <rect x="230" y="372" width="300" height="30" rx="5" class="fill-ref-soft stroke-ref"></rect>
+  <text x="380" y="392" font-size="13" text-anchor="middle">reference: genome + annotation</text>
+  <g class="stroke-ref" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#pipeline-file-sizes-arrow)">
+    <line x1="285" y1="370" x2="285" y2="286"></line>
+    <line x1="522" y1="370" x2="522" y2="293"></line>
+  </g>
+  <text x="40" y="362" font-size="12" class="fill-muted">square area is proportional to file size</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pipeline-file-sizes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.4: Measured file sizes along the pipeline for the yeast test data, drawn to scale: each square’s area is proportional to the file’s size. The sample is <code>WT_REP2</code>, one paired run like yours (50,000 read pairs). The BAM is the nf-core/rnaseq output stored with the test data; the count matrix and results table were made from those BAMs by <code>scripts/ch01_file_sizes.R</code>. Read-level files are hundreds to thousands of times larger than summary files.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Read-level files (FASTQ, BAM) are large; summary files (count matrices, results tables) are usually far smaller. Intermediate and temporary files raise the peak disk space a pipeline needs.</p>
+</div>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> Our mate file holds 50,000 reads in 2.2 MB. About how large is a mate file of the same kind with 30 million reads?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>About 1.3 GB compressed: 30 million is 600 × 50,000, and 600 × 2.2 MB ≈ 1.3 GB. A paired sample has two such files.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orientation-linux" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="sec-orientation-linux"><span class="header-section-number">1.6</span> Why Linux</h2>
+<p>Almost every cluster runs Linux, and most bioinformatics tools are written for it first. That is why this book teaches Linux commands. macOS is close enough that nearly all of them work unchanged, and WSL gives Windows a real Linux system. Where macOS or Windows differ, the book says so.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Background: Linux distributions
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Linux comes in <em>distributions</em> that share the same core and commands but differ in how software is installed. You will most often meet <a href="https://ubuntu.com">Ubuntu</a> on laptops and WSL, and Red Hat Enterprise Linux or <a href="https://rockylinux.org">Rocky Linux</a> on clusters.</p>
+</div>
+</div>
+</section>
+<section id="sec-orientation-where" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="sec-orientation-where"><span class="header-section-number">1.7</span> Where you compute: laptop, cluster, cloud</h2>
+<p>You will use up to three kinds of computer (<a href="#tbl-where-compute" class="quarto-xref">Table&nbsp;<span>1.6</span></a>).</p>
+<div id="tbl-where-compute" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-where-compute-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;1.6: Three places to compute.
+</figcaption>
+<div aria-describedby="tbl-where-compute-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Laptop</th>
+<th style="text-align: left;">Cluster (HPC)</th>
+<th style="text-align: left;">Cloud</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Cost to you</td>
+<td style="text-align: left;">already paid for</td>
+<td style="text-align: left;">usually free or cheap through your institution</td>
+<td style="text-align: left;">pay for each hour used and each GB stored</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Size</td>
+<td style="text-align: left;">a few to ~16 cores; 8–64 GiB of RAM</td>
+<td style="text-align: left;">thousands of cores; nodes with hundreds of GB of RAM</td>
+<td style="text-align: left;">as large as you pay for</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Who manages it</td>
+<td style="text-align: left;">you</td>
+<td style="text-align: left;">research computing staff</td>
+<td style="text-align: left;">you, on the provider’s machines</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">What to run there</td>
+<td style="text-align: left;">editing, plots, R and Python on summary files, small tests</td>
+<td style="text-align: left;">alignment, many samples, pipelines, large-memory jobs</td>
+<td style="text-align: left;">work your cluster cannot do, or when you have no cluster</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>A <strong>cluster</strong>, or HPC (high-performance computing) system, is many computers, called <strong>nodes</strong>, shared by many people (<a href="#fig-cluster-anatomy" class="quarto-xref">Figure&nbsp;<span>1.5</span></a>). You connect from your laptop to a <strong>login node</strong> with <code>ssh</code> (secure shell, the standard way to log in to another computer). There you edit files and <strong>submit jobs</strong>: requests for some cores, memory, and time. A program called the <strong>scheduler</strong> (on most clusters, including SCINet and Nova, <a href="https://slurm.schedmd.com">SLURM</a>) holds each job in a queue until those resources are free, then runs it on a <strong>compute node</strong>. Your files sit on shared storage, which both the login node and the compute nodes can read. <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> covers connecting and <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> the scheduler.</p>
+<div id="fig-cluster-anatomy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-cluster-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 380" role="img" aria-labelledby="cluster-anatomy-title">
+  <title id="cluster-anatomy-title">The parts of an HPC cluster. Your laptop connects over SSH to a login node, where you edit files and submit jobs. Submitted jobs wait in the queue of the scheduler, SLURM on most clusters, until it starts them on compute nodes, where the work runs. Shared storage holding your data is part of the cluster and is connected to both the login node and the compute nodes; files do not pass through the scheduler. The laptop reaches the cluster only through the SSH connection and file transfers.</title>
+  <defs>
+    <marker id="cluster-anatomy-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- The cluster boundary -->
+  <rect x="186" y="10" width="524" height="360" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"></rect>
+  <text x="202" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+  <!-- Laptop -->
+  <rect x="10" y="100" width="130" height="90" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="24" y="128" font-size="16" font-weight="700">Your laptop</text>
+  <text x="24" y="148" font-size="13" class="fill-muted">edit, view</text>
+  <text x="24" y="164" font-size="13" class="fill-muted">small jobs</text>
+  <!-- Laptop to login node: SSH and file transfers -->
+  <line x1="140" y1="145" x2="200" y2="145" class="stroke-muted" stroke-width="1.75" marker-start="url(#cluster-anatomy-arrow)" marker-end="url(#cluster-anatomy-arrow)"></line>
+  <text x="161" y="134" font-size="13" text-anchor="middle" class="mono">ssh</text>
+  <text x="161" y="166" font-size="12" text-anchor="middle" class="fill-muted">files</text>
+  <!-- Login node -->
+  <rect x="202" y="100" width="130" height="90" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="216" y="128" font-size="16" font-weight="700">Login node</text>
+  <text x="216" y="148" font-size="13" class="fill-muted">edit, submit</text>
+  <text x="216" y="164" font-size="13" class="fill-muted">shared by all</text>
+  <!-- Login node to scheduler -->
+  <line x1="332" y1="145" x2="374" y2="145" class="stroke-muted" stroke-width="1.75" marker-end="url(#cluster-anatomy-arrow)"></line>
+  <text x="353" y="134" font-size="12" text-anchor="middle" class="fill-muted">submit</text>
+  <!-- Scheduler queue -->
+  <rect x="376" y="64" width="134" height="150" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="390" y="88" font-size="16" font-weight="700">Scheduler</text>
+  <text x="390" y="106" font-size="13" font-weight="700" class="fill-muted">SLURM</text>
+  <text x="390" y="124" font-size="13" class="fill-muted">jobs wait in a queue</text>
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="390" y="138" width="106" height="16" rx="3"></rect>
+    <rect x="390" y="160" width="106" height="16" rx="3"></rect>
+    <rect x="390" y="182" width="106" height="16" rx="3"></rect>
+  </g>
+  <g font-size="12" class="fill-muted" text-anchor="middle">
+    <text x="443" y="150">job 3</text>
+    <text x="443" y="172">job 2</text>
+    <text x="443" y="194">job 1</text>
+  </g>
+  <!-- Scheduler starts jobs on compute nodes -->
+  <g class="stroke-muted" stroke-width="1.75" marker-end="url(#cluster-anatomy-arrow)" fill="none">
+    <path d="M510,130 C536,130 536,72 560,72"></path>
+    <path d="M510,145 L560,145"></path>
+    <path d="M510,160 C536,160 536,218 560,218"></path>
+  </g>
+  <text x="535" y="252" font-size="12" text-anchor="middle" class="fill-muted">starts jobs</text>
+  <text x="535" y="266" font-size="12" text-anchor="middle" class="fill-muted">when free</text>
+  <!-- Compute nodes -->
+  <g class="fill-surface stroke-ink" stroke-width="1.25">
+    <rect x="562" y="48" width="134" height="50" rx="8"></rect>
+    <rect x="562" y="120" width="134" height="50" rx="8"></rect>
+    <rect x="562" y="192" width="134" height="50" rx="8"></rect>
+  </g>
+  <g font-size="13">
+    <text x="574" y="70" font-weight="700">Compute node</text>
+    <text x="574" y="88" class="fill-muted">run</text>
+    <text x="574" y="142" font-weight="700">Compute node</text>
+    <text x="574" y="160" class="fill-muted">run</text>
+    <text x="574" y="214" font-weight="700">Compute node</text>
+    <text x="574" y="232" class="fill-muted">run</text>
+  </g>
+  <!-- Shared storage: wired to login and compute nodes, not the scheduler -->
+  <rect x="202" y="296" width="494" height="60" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="216" y="322" font-size="16" font-weight="700">Shared storage</text>
+  <text x="216" y="342" font-size="13" class="fill-muted">home, project, and scratch folders</text>
+  <g class="fill-given-soft stroke-given">
+    <rect x="500" y="310" width="54" height="32" rx="4"></rect>
+    <rect x="562" y="310" width="54" height="32" rx="4"></rect>
+    <rect x="624" y="310" width="54" height="32" rx="4"></rect>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-given">
+    <text x="527" y="330">reads</text>
+    <text x="589" y="330">BAMs</text>
+    <text x="651" y="330">counts</text>
+  </g>
+  <g class="stroke-line" stroke-width="2.5">
+    <line x1="267" y1="190" x2="267" y2="296"></line>
+    <line x1="704" y1="73" x2="704" y2="326"></line>
+    <line x1="696" y1="73" x2="704" y2="73"></line>
+    <line x1="696" y1="145" x2="704" y2="145"></line>
+    <line x1="696" y1="217" x2="704" y2="217"></line>
+    <line x1="696" y1="326" x2="704" y2="326"></line>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-cluster-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;1.5: The parts of an HPC cluster. You reach the login node from your laptop with <code>ssh</code>; work runs on compute nodes when the scheduler (SLURM) starts it; shared storage is connected to both. Files do not pass through the scheduler.
+</figcaption>
+</figure>
+</div>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “The cluster is just a faster computer”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> A cluster is many ordinary computers shared by many people. You ask a scheduler for cores, memory, and time, and your job waits in a queue until they are free. A single step is often no faster than on a laptop; the gain is running many steps at once, with more memory.</p>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: heavy work on the login node
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The login node is a shared doorway. Running an analysis there slows it for everyone, and many sites kill long-running processes on it. Run work on a compute node instead: interactively with <code>srun</code> (the box in <a href="#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>), or as a submitted job (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>).</p>
+</div>
+</div>
+<p>The <strong>cloud</strong> is computers you rent by the hour from a company. It costs money for every hour and every gigabyte, so for most readers it is the option for when a cluster cannot do the job. <a href="38-cloud.html" class="quarto-xref"><span>Chapter 38</span></a> introduces it.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> Laptop, cluster, or cloud?</p>
+<ol type="1">
+<li>Editing an analysis script.</li>
+<li>Aligning the reads of 48 samples.</li>
+<li>Running DESeq2 (an R package that finds genes whose expression differs between groups) on this book’s small yeast count matrix.</li>
+<li>A one-off job that needs 2 TB of RAM, more than any node of your cluster has.</li>
+</ol>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li>Laptop (or the login node, if the script lives on the cluster).</li>
+<li>Cluster compute nodes, submitted as jobs.</li>
+<li>Laptop: the matrix is a few kilobytes.</li>
+<li>The cloud is one option if you have funding for it; another is a shared facility that has such nodes.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orientation-account" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="sec-orientation-account"><span class="header-section-number">1.8</span> Getting a cluster account</h2>
+<p>Most readers will need a cluster account for the later chapters. Apply early, since approval can take days or weeks. Ask your PI or your institution’s research computing office which cluster you can use.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Apply for an account now
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>ARS scientists and their collaborators can <a href="https://scinet.usda.gov/about/signup">sign up for SCINet</a>, USDA’s clusters. Universities run their own, such as <a href="https://www.hpc.iastate.edu/">Iowa State’s HPC clusters</a> (Nova). Step-by-step details are in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
+</div>
+</div>
+<p>No cluster yet? Keep going: everything before <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> runs on your laptop.</p>
+</section>
+<section id="sec-orientation-summary" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="sec-orientation-summary"><span class="header-section-number">1.9</span> Summary</h2>
+<ul>
+<li>A terminal runs a shell; this book uses bash on every system (on a Mac, after installing it with Homebrew). You type commands, and code blocks in this book leave out the prompt and say where they run.</li>
+<li>You downloaded a FASTQ file, checked it, looked at its records, and saved a read count: <code>SRR6357070_1 reads: 50000</code>.</li>
+<li>Your computer’s logical CPUs, RAM, and free disk are three commands away; a job can be limited by CPU, RAM, disk, or I/O, and more threads help only tools written to use them.</li>
+<li>Read-level files (FASTQ, BAM) are large; summary files (count matrices, results) are small. File size scales with read count for files of the same kind.</li>
+<li>Edit and run small analyses on a laptop; run heavy jobs on cluster compute nodes, never on the login node; rent the cloud when neither will do.</li>
+</ul>
+</section>
+<section id="sec-orientation-exercises" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="sec-orientation-exercises"><span class="header-section-number">1.10</span> Exercises</h2>
+<p>Do these where you did the guided session: on your laptop, or, on a cluster, inside an <code>srun</code> session on a compute node (see the pitfall box in <a href="#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>), never on the login node.</p>
+<div class="check">
+<p><strong>Exercise 1. Read 2.</strong> Download the matching read-2 file and add its count as a second line of <code>fastq_summary.txt</code>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"SRR6357070_2 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_2.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">"</span> <span class="op">&gt;&gt;</span> fastq_summary.txt</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> fastq_summary.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The only change from step 6 is <code>&gt;&gt;</code> instead of <code>&gt;</code>: <code>&gt;</code> replaces a file’s contents, <code>&gt;&gt;</code> adds to the end (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>). Do both files have the same count? Why should they?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<pre class="console"><code>SRR6357070_1 reads: 50000
+SRR6357070_2 reads: 50000</code></pre>
+<p>Yes. In a paired-end run each fragment is read from both ends, so read 1 and read 2 of a pair sit at the same position in the two files, and the counts must match. Equal counts do not by themselves prove that the pairs line up; <a href="15-fasta-fastq.html" class="quarto-xref"><span>Chapter 15</span></a> shows how to check.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 2. Would it fit?</strong> Fill in your column of <a href="#tbl-my-computer" class="quarto-xref">Table&nbsp;<span>1.2</span></a>. Would an uncompressed 30-million-read mate file (about 7.7 GB) fit in your RAM <em>if a program loaded all of it at once</em>, leaving room for the system and your other programs?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>It depends on your laptop: with 8 GB of RAM, no; with 32 GB, yes. But the count from step 6 never loads the file: it streams through it, so it works on any laptop. Some tools do need that much memory or more, which is one reason to use a cluster.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 3. How long would it take?</strong> Time the line count:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> gunzip <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Find the elapsed time: the <code>real</code> line of the output. Estimate the time for a 30-million-read mate file (600 times larger), then name two reasons the real time could differ from your estimate.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>On the example laptop the count took 0.03 seconds, so 600 times that is about 20 seconds. Two reasons it could differ: for a file this small, the time is mostly spent starting the programs, and the file may already be in memory from step 5, so the small run is not a fair sample. And a big file may sit on a slower disk or a network filesystem, which makes reading it the limit. Measuring what limits a job is part of <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> and <a href="35-performance.html" class="quarto-xref"><span>Chapter 35</span></a>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-orientation-reading" class="level2 page-columns page-full" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="sec-orientation-reading"><span class="header-section-number">1.11</span> Further reading</h2>
+<ul>
+<li><span class="citation" data-cites="shotts2025linux">Shotts (<a href="../references.html#ref-shotts2025linux" role="doc-biblioref">2025</a>)</span>, <em>The Linux Command Line</em>, chapters 1–3 — a free, gentle book on what a shell and a terminal are; a second explanation of this chapter and a preview of Part II.</li>
+<li><span class="citation" data-cites="wilson2019swcarpentry">Wilson et al. (<a href="../references.html#ref-wilson2019swcarpentry" role="doc-biblioref">2019</a>)</span>, Software Carpentry’s <a href="https://swcarpentry.github.io/shell-novice/"><em>The Unix Shell</em></a>, the introduction episode — the same ideas taught as a workshop lesson, with exercises.</li>
+<li><span class="citation" data-cites="microsoft2025install">Microsoft (<a href="../references.html#ref-microsoft2025install" role="doc-biblioref">2025</a>)</span> — the official, current steps for installing WSL, if anything in the Windows tab has changed.</li>
+<li><span class="citation" data-cites="wu2018repression">Wu et al. (<a href="../references.html#ref-wu2018repression" role="doc-biblioref">2018</a>)</span> — the study our yeast reads come from; read the summary to see what experiment the running dataset measures.</li>
+</ul>
+
+
+<div class="no-row-height column-margin column-container"><div id="ref-shotts2025linux" class="csl-entry" role="listitem">
+Shotts, William. 2025. <em>The Linux Command Line</em>. Seventh Internet, Rev. A (25.12). <a href="https://linuxcommand.org/tlcl.php">https://linuxcommand.org/tlcl.php</a>.
+</div><div id="ref-wilson2019swcarpentry" class="csl-entry" role="listitem">
+Wilson, Greg, Gerard Capes, Gabriel A. Devenyi, et al. 2019. <em>Swcarpentry/Shell-Novice: <span>Software Carpentry</span>: The <span>UNIX</span> Shell, June 2019</em>. Zenodo. <a href="https://doi.org/10.5281/zenodo.3266823">https://doi.org/10.5281/zenodo.3266823</a>.
+</div><div id="ref-microsoft2025install" class="csl-entry" role="listitem">
+Microsoft. 2025. <em>How to Install <span>Linux</span> on <span>Windows</span> with <span>WSL</span></em>. Microsoft Learn. <a href="https://learn.microsoft.com/en-us/windows/wsl/install">https://learn.microsoft.com/en-us/windows/wsl/install</a>.
+</div><div id="ref-wu2018repression" class="csl-entry" role="listitem">
+Wu, Andrew C. K., Harshil Patel, Minghao Chia, et al. 2018. <span>“Repression of Divergent Noncoding Transcription by a Sequence-Specific Transcription Factor.”</span> <em>Molecular Cell</em> 72 (6): 942–954.e7. <a href="https://doi.org/10.1016/j.molcel.2018.10.018">https://doi.org/10.1016/j.molcel.2018.10.018</a>.
+</div></div>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+            // target, if specified
+            link.setAttribute("target", "_blank");
+            if (link.getAttribute("rel") === null) {
+              link.setAttribute("rel", "noopener");
+            }
+            // default icon
+            link.classList.add("external");
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../index.html" class="pagination-link" aria-label="Welcome">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Welcome</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../chapters/02-book-setup.html" class="pagination-link" aria-label="Book setup and editors">
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Book setup and editors</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>Text and figures: <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a>. Code: <a href="https://opensource.org/license/mit">MIT</a>.</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1117 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Computing for Bioinformatics",
+    "section": "",
+    "text": "Welcome\nFound a mistake, or a command that does not run for you? See Report an Issue, also linked from the bug icon at the top of the left sidebar on every page.\nComputing for Bioinformatics is the computing foundation for the series Bioinformatics: A Worked Approach. It covers the Linux command line, HPC and SLURM, R and Python for everyday analysis, file formats, reproducibility (git, environments, containers), workflows (nf-core and Nextflow), and a high-level tour of the algorithms behind common tools. The other books in the series assume what is taught here.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#who-this-book-is-for",
+    "href": "index.html#who-this-book-is-for",
+    "title": "Computing for Bioinformatics",
+    "section": "Who this book is for",
+    "text": "Who this book is for\n\nMS and new PhD students with little computing background, mostly from biology or animal science. Engineers and computer scientists are welcome, but will find the early chapters slow.\nBeginner to intermediate. You will mostly use existing tools, packages, and pipelines, not write them from scratch. Writing reusable code is covered, but it is optional and comes last.\nYou work, or will work, on a Linux HPC cluster (e.g., SCINet Ceres/Atlas, ISU Nova), with a laptop for editing and small analyses. Readers without cluster access can still do the local examples and read the captured cluster output.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#what-this-book-covers-and-what-it-leaves-out",
+    "href": "index.html#what-this-book-covers-and-what-it-leaves-out",
+    "title": "Computing for Bioinformatics",
+    "section": "What this book covers, and what it leaves out",
+    "text": "What this book covers, and what it leaves out\nThe aim is awareness, not depth. Every core tool and idea a working bioinformatician meets appears here, so that nothing in a later book is a first encounter. Each topic gets the idea, why it matters, and a hands-on use of the tool. Full algorithms (BLAST, Smith-Waterman, the FM-index, assembly graphs) are left to the book that owns them, and linked forward.\nThis book also owns file formats for the series: FASTA, FASTQ, SAM/BAM, BED, GFF, VCF, and friends are taught here, and other books link back.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#how-to-read-it",
+    "href": "index.html#how-to-read-it",
+    "title": "Computing for Bioinformatics",
+    "section": "How to read it",
+    "text": "How to read it\nEvery chapter carries one label:\n\nCore (24 chapters): work through it, with the exercises. The core chapters together are the first-pass path through the book.\nOverview (8 chapters): read for understanding; no required exercises. Explains why tools behave as they do.\nOptional (6 chapters): reference for later, when you need it.\n\nEvery command is marked with where it runs: your laptop, a cluster login node, or a compute node.\nThe book uses one software setup throughout: a pixi environment for all the tools, and VS Code as the editor, connected to a cluster by your site’s supported route. Both are set up in 2  Book setup and editors. A single running dataset, a small yeast RNA-seq experiment from the nf-core/rnaseq test data, is used from start to finish.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#chapters",
+    "href": "index.html#chapters",
+    "title": "Computing for Bioinformatics",
+    "section": "Chapters",
+    "text": "Chapters\n\nPart I: Getting set up\n\nOrientation: computers and where you compute (core)\nBook setup and editors (core)\nOrganizing projects and data (core)\nGetting help (core)\n\n\n\nPart II: The Linux command line\n\nShell basics (core)\nText tools and pipes (core)\nThe Linux system (core)\nShell scripts (core)\nWorking remotely (core)\nHPC and SLURM (core)\n\n\n\nPart III: Languages\n\nThe language landscape (overview)\nR essentials (core)\nPython essentials (core)\n\n\n\nPart IV: Data, formats, and references\n\nTabular data (core)\nSequence formats: FASTA and FASTQ (core)\nAlignment formats: SAM, BAM, CRAM (core)\nIntervals, annotation, and variants (core)\nEfficient data formats (overview)\nDatabases (basics) (core)\nReference data and public repositories (core)\n\n\n\nPart V: Reproducibility\n\nVersion control with git (core)\nGitHub and collaboration (core)\nSoftware environments (core)\nContainers (core)\n\n\n\nPart VI: Workflows\n\nWhy workflow managers (core)\nRunning nf-core pipelines (core)\nWriting Nextflow (optional)\nOther workflow systems (overview)\n\n\n\nPart VII: Algorithms\n\nThinking about algorithms (overview)\nSequence alignment (overview)\nIndexing genomes (overview)\nGraphs and assembly (overview)\nProbabilistic methods (overview)\n\n\n\nPart VIII: Advanced topics (optional)\n\nWriting reusable analysis code (optional)\nPerformance and parallelism (optional)\nNumbers and text encodings (optional)\nGPU computing (optional)\nCloud basics (optional)\n\n\n\nAppendices\nA. Cluster sites: SCINet and Nova (optional)",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "index.html#license",
+    "href": "index.html#license",
+    "title": "Computing for Bioinformatics",
+    "section": "License",
+    "text": "License\nThe text and figures of this book are licensed under CC BY-NC-SA 4.0: you may share and adapt them, with credit and under the same license, but not sell them. The code is licensed under MIT. Data from public repositories keeps its own license. See LICENSING.md in the book’s repository for the details.",
+    "crumbs": [
+      "Welcome"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html",
+    "href": "chapters/01-orientation.html",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "",
+    "text": "1.1 What this chapter does\nCore. Work through it, with the exercises.\nBy the end of this chapter you will have run your first commands on a real sequencing file: you will download it, check it, look inside it, and count its reads. Then we step back and look at the machine that did the work, and at the other machines you will use.\nIn bioinformatics, “the computer” is usually not the one in front of you. It is most often someone else’s Linux machine, such as a university or USDA cluster, that you reach from your laptop. Your laptop is still where you edit, look at results, and run small analyses. This chapter starts on the laptop, because that is where everything begins.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-terminal",
+    "href": "chapters/01-orientation.html#sec-orientation-terminal",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.2 Opening a terminal",
+    "text": "1.2 Opening a terminal\nThree words first. The operating system is the software that runs the computer: macOS, Windows, or Linux. The terminal is a window where you type commands. The shell is the program inside that window that reads each command, runs it, and prints the result.\nOpening a terminal is the one step that really differs between systems. Pick yours; every other tabbed box on this page will follow your choice.\n\nmacOSWindows (WSL2)Linux\n\n\nOpen Terminal: press Cmd-SpaceCmd-Space, type Terminal, and press ReturnReturn. (It lives in Applications → Utilities.)\n\n\n\n\n\n\nImportantKey idea: switch your Mac from zsh to bash first\n\n\n\nA new Mac’s Terminal runs zsh. Every command, output, and explanation in this book assumes bash, as on Linux and on clusters. Do all five setup steps below before the guided first session, then check that echo \"$BASH_VERSION\" prints 5 or higher. If you skip this, some commands and outputs will not match the book.\n\n\nThis book uses bash, the shell on Linux and on clusters, everywhere. A Mac needs a one-time setup to match: a new Mac’s Terminal runs a different shell (zsh), its built-in bash is version 3.2 from 2007, and its everyday tools (ls, sed, grep, …) are BSD versions whose options differ from the GNU versions on Linux (Chapter 7 explains the differences). You will install Homebrew, a package manager for macOS, use it to install a current bash and the GNU tools, and make bash your shell. Allow 15–30 minutes.\n\nInstall Homebrew. Paste the install command from brew.sh:\n\n\nTerminal (laptop)\n\n/bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"\n\nIt asks for your Mac password (nothing appears as you type; that is normal) and may install Apple’s Command Line Tools first. When it finishes, it prints a Next steps section. If that section lists commands, run them: on Apple silicon Macs they let the shell find brew. Check with brew --version, which prints Homebrew’s version.\nInstall bash and the GNU tools.\n\n\nTerminal (laptop)\n\nbrew install bash coreutils findutils gnu-sed gnu-tar grep gawk gzip\n\nThis installs a current bash; GNU coreutils (ls, wc, nproc, and about a hundred more); and GNU find, sed, tar, grep, awk, and gzip.\nMake Homebrew’s bash your shell. The first line adds it to the list of allowed shells; the second switches to it. Each asks for your Mac password.\n\n\nTerminal (laptop)\n\necho \"$(brew --prefix)/bin/bash\" | sudo tee -a /etc/shells\nchsh -s \"$(brew --prefix)/bin/bash\"\n\nPut the GNU tools first. Homebrew installs most GNU tools under names starting with g (gsed, gls), so they do not replace the Mac’s own. This command writes a small settings file, ~/.bash_profile, that bash reads each time Terminal opens. It makes brew available and puts each tool’s plain-named GNU version (sed, ls) ahead of the Mac’s. Copy all of it, from cat to the final EOF:\n\n\nTerminal (laptop)\n\ncat &gt;&gt; ~/.bash_profile &lt;&lt;'EOF'\n# Homebrew, then GNU tools ahead of the macOS versions (Chapter 1)\nif [ -x /opt/homebrew/bin/brew ]; then\n  eval \"$(/opt/homebrew/bin/brew shellenv)\"\nelif [ -x /usr/local/bin/brew ]; then\n  eval \"$(/usr/local/bin/brew shellenv)\"\nfi\nfor tool in coreutils findutils gnu-sed gnu-tar grep gawk; do\n  PATH=\"$HOMEBREW_PREFIX/opt/$tool/libexec/gnubin:$PATH\"\ndone\nexport PATH\n# Read ~/.bashrc too, as Linux terminals do\nif [ -f ~/.bashrc ]; then . ~/.bashrc; fi\nEOF\n\nQuit Terminal (Cmd-QCmd-Q), open it again, and check:\n\n\nTerminal (laptop)\n\necho \"$BASH_VERSION\"\nsed --version | head -n 1\n\n5.3.15(1)-release\nsed (GNU sed) 4.10\nYour version numbers may be newer. If the first line starts with 3.2, step 3 did not take effect; if the second says sed: illegal option, check step 4.\n\nFrom now on your Mac behaves like the Linux machines in this book.\nOptional: iTerm2. Many Mac users swap Terminal for iTerm2, a free terminal app. Both run the same bash with the same settings, so every command in this book works the same in either. iTerm2 adds conveniences that help once you work on a cluster all day: one window split into several panes (say, your laptop beside a login node), search through everything a pane has printed, and a history of what you pasted. To try it, install it with brew install --cask iterm2. This book never assumes you have it.\n\n\nWindows does not run the book’s commands directly. Instead you install WSL2 (Windows Subsystem for Linux), which runs a real Ubuntu Linux system inside Windows. This takes longer than on the other systems: an install, a restart, and creating a Linux account. Allow 20–30 minutes.\n\nOpen PowerShell as administrator: open the Start menu, type PowerShell, right-click Windows PowerShell, and choose Run as administrator.\nRun this one command, which installs WSL2 with Ubuntu:\n\n\nPowerShell (laptop, as administrator)\n\nwsl --install\n\nRestart Windows when it asks.\nOpen Ubuntu from the Start menu. The first time, it asks you to make a Linux user name and password. Nothing appears while you type the password: no dots, no stars. That is normal. Type it, press EnterEnter, and type it again.\n\nFrom now on, every command in this book runs in the Ubuntu window, not in PowerShell. Its shell is bash.\nIf the install is blocked, your laptop may be managed by your university; ask your IT office. Microsoft’s WSL install guide has the current official steps (Microsoft 2025). You may also have heard of Git Bash; it is a different tool, and this book does not support it.\n\n\nYou already have a terminal. On Ubuntu, press Ctrl-Alt-TCtrl-Alt-T; on other distributions, look for Terminal in the applications menu. The shell is usually bash.\n\n\n\n\n\n\n\n\n\nWarningPitfall: Windows folders from WSL\n\n\n\nIn WSL, keep your work in your Linux home folder (~), not under /mnt/c/..., where Linux sees your Windows files. Windows folders are slow to use from Linux and invite line-ending and permission problems (Microsoft’s advice).\n\n\nTable 1.1 sums up what you now have.\n\n\n\nTable 1.1: What you type commands into, by operating system.\n\n\n\n\n\n\n\n\n\n\n\nOperating system\nTerminal app\nDefault shell\nSupported in this book\n\n\n\n\nmacOS\nTerminal (or iTerm2)\nbash (after the setup above; a new Mac uses zsh)\nyes\n\n\nWindows\nUbuntu (WSL2)\nbash\nyes\n\n\nWindows\nPowerShell, Git Bash\n—\nno\n\n\nLinux (e.g., Ubuntu)\nTerminal\nbash (usually)\nyes\n\n\n\n\n\n\nThe terminal shows a prompt: a short line ending in $, often with your user name and folder in front. It means “ready for a command”. Code blocks in this book leave the prompt out, so you can copy and paste them as they are. Each block is labelled with where it runs; in this chapter that is Terminal (laptop), except for the cluster box in the next section.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-first-session",
+    "href": "chapters/01-orientation.html#sec-orientation-first-session",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.3 Guided first session",
+    "text": "1.3 Guided first session\nNow run some commands. Copy each one, paste it into your terminal, press EnterEnter, and compare what you see with the output shown below it. You do not need to understand every part yet: you will learn these commands properly in Part II. Seeing them work first makes that easier.\n\n\n\n\n\n\nTipPasting into a terminal\n\n\n\nPaste with Cmd-VCmd-V on macOS and Ctrl-Shift-VCtrl-Shift-V in most Linux and WSL terminals. In a terminal, Ctrl-CCtrl-C does not copy: it stops the running command.\n\n\nThe file we use is a FASTQ file, the standard format for sequencing reads: each read’s bases, plus a quality score for every base. It holds yeast (Saccharomyces cerevisiae) RNA-seq reads from an experiment by Wu et al. (2018), cut down to 50,000 reads for testing by nf-core, a community collection of bioinformatics pipelines. It is the running dataset of this book; its source and license are listed in the book’s data/README.md.\n\n\n\n\n\n\nWarningPitfall: on a cluster, never on the login node\n\n\n\nThis session is meant for your laptop. If you do it on a cluster instead (say, you already have an account), do not run it on the login node, the machine you land on when you log in. Ask the scheduler for a compute node first, and run everything there, downloads included:\n\n\nTerminal (login node)\n\nsrun --cpus-per-task=1 --mem=4G --time=01:00:00 --pty bash -l\n\nThis asks for 1 core, 4 GB of RAM, and 1 hour, and opens a shell on a compute node once they are free; it may take a moment. Run hostname: it should now print a different machine’s name than before. Do steps 1–6 there, then type exit to give the compute node back and return to the login node.\nMany sites need more options, such as an account (-A) or a partition (-p); SCINet, for example, requires -A. Your site’s are in Appendix A. If curl cannot connect from a compute node, your site may block the internet there; ask your research computing office where to download. Chapter 10 explains all of this properly.\n\n\nStep 1. Make a scratch folder and move into it.\n\n\nTerminal (laptop)\n\nmkdir -p ~/bioinf-ch01 && cd ~/bioinf-ch01\n\nThis prints nothing. In the shell, silence usually means success.\nStep 2. Download one FASTQ file.\n\n\nTerminal (laptop)\n\ncurl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz\n\ncurl shows a progress table while it works. When it finishes, the last line starts with 100; your speeds and times will differ:\n  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current\n                                 Dload  Upload   Total   Spent    Left  Speed\n100 2186k  100 2186k    0     0  4146k      0 --:--:-- --:--:-- --:--:-- 4141k\nIf instead you see curl: (56) The requested URL returned error: 404, or any other curl: error, check that you copied the whole command. If a firewall blocks curl, download the file in your browser from its GitHub page (the Download raw file button), then move it into place:\n\nmacOSWindows (WSL2)Linux\n\n\n\n\nTerminal (laptop)\n\nmv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/\n\n\n\nReplace &lt;your-windows-name&gt; with your Windows user name.\n\n\nTerminal (laptop)\n\ncp /mnt/c/Users/&lt;your-windows-name&gt;/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/\n\n\n\n\n\nTerminal (laptop)\n\nmv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/\n\n\n\n\nStep 3. Check that the file arrived intact. First its size:\n\n\nTerminal (laptop)\n\nls -lh SRR6357070_1.fastq.gz\n\n-rw-r--r-- 1 you you 2.2M Nov 13 11:52 SRR6357070_1.fastq.gz\nYour name, group, and date will differ. 2.2M means about 2.2 megabytes; the next section says exactly what M counts. Then test the compression:\n\n\nTerminal (laptop)\n\ngzip -t SRR6357070_1.fastq.gz\n\nThis prints nothing if the file is intact. A damaged or incomplete download prints an error instead.\nStep 4. Look at the first two reads. The file is compressed (.gz), so we decompress it on the fly and show only its first 8 lines:\n\n\nTerminal (laptop)\n\ngunzip -c SRR6357070_1.fastq.gz | head -n 8\n\n@SRR6357070.25017281 25017281/1 kraken:taxid|4932\nCCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT\n+\nBBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF\n@SRR6357070.6710070 6710070/1 kraken:taxid|4932\nGTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA\n+\nBBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB\nWe use gunzip -c because it works the same on every system. (You may see zcat elsewhere; the zcat built into macOS does not read .gz files.)\nStep 5. Count the lines.\n\n\nTerminal (laptop)\n\ngunzip -c SRR6357070_1.fastq.gz | wc -l\n\n200000\nStep 6. Count the reads and save the result. Each read in this file takes four lines, as you saw in step 4, so 200,000 lines are 200,000 / 4 = 50,000 reads. This command does the same count, divides by 4, and writes one line to a file:\n\n\nTerminal (laptop)\n\n1echo \"SRR6357070_1 reads: $(( $(gunzip -c SRR6357070_1.fastq.gz | wc -l) / 4 ))\" &gt; fastq_summary.txt\n2cat fastq_summary.txt\n\n\n1\n\n$( ... ) runs the line count from step 5 and puts its result here; $(( ... / 4 )) divides it by 4; echo prints the sentence; and &gt; sends that sentence into the file fastq_summary.txt instead of the screen.\n\n2\n\ncat prints the file, so you can check what was saved.\n\n\nSRR6357070_1 reads: 50000\n\n\n\n\n\n\nWarningPitfall: stop at the first error\n\n\n\nIf any step prints an error, stop and fix it before going on. In particular, a summary that says reads: 0 means the download failed or the file is broken; the command still “succeeds”, because the shell does not stop on errors unless told to (Chapter 8).\n\n\nYou now have a one-line summary of a real sequencing file. Before moving on, look at what a read is. Figure 1.1 labels the first record from step 4.\n\n\n\n\n  The first record of the file SRR6357070_1.fastq.gz, four lines long. Line 1 is the header: it starts with @, then the read ID SRR6357070.25017281, and ends its second word with /1, meaning this read is read 1 of a pair. Line 2 is the 101 bases of the read, shown cut short. Line 3 is a plus sign that separates the bases from their qualities. Line 4 holds one quality character for each of the 101 bases.\n  \n  \n  \n  \n    1 · Header\n    2 · Bases\n    3 · Separator\n    4 · Qualities\n  \n  \n  \n    read ID\n    /1 = read 1 of the pair\n  \n  \n    \n    \n  \n  \n  @SRR6357070.25017281 25017281/1 kraken:taxid|4932\n  Starts with @. The rest of the header is explained in Chapter 15.\n  \n  CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAG…\n  The read itself: 101 bases (A, C, G, T; N if unknown), shown cut short.\n  \n  +\n  Separates the bases from their qualities.\n  \n  BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFF…\n  One character per base, 101 in all. B and F are both high scores.\n\n\n\n\nFigure 1.1: The first record of SRR6357070_1.fastq.gz. In this file every read takes exactly four lines: a header with the read ID, the bases, a + separator, and one quality character per base. The full format, including files that break the four-line pattern, is in Chapter 15.\n\n\n\n~/bioinf-ch01 is a scratch folder: you can delete it whenever you like. Chapter 3 starts the book’s real project and brings this file, and the address you downloaded it from, into it.\n\nCheck yourself. This FASTQ file has 200,000 lines. How many reads does it hold?\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\n50,000. In this file each read takes four lines, so 200,000 / 4 = 50,000.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-parts",
+    "href": "chapters/01-orientation.html#sec-orientation-parts",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.4 Parts of a computer that matter for analysis",
+    "text": "1.4 Parts of a computer that matter for analysis\nStart with your own computer. Run the commands for your system and write your values in the last column of Table 1.2.\n\n\n\nTable 1.2: The resources of one computer. macOS has no free, so it uses a different command for RAM; all commands are in the tabs below. The example values are from one laptop (a Mac); yours will differ.\n\n\n\n\n\n\n\n\n\n\n\n\nResource\nCommand (Linux / WSL)\nRead this\nExample output\nYour value\n\n\n\n\nLogical CPUs\nnproc\nthe number\n16\n\n\n\nRAM\nfree -h\ntotal in the Mem: row\n64 GiB\n\n\n\nFree disk\ndf -h ~\nthe Avail column\n744G\n\n\n\n\n\n\n\n\nmacOSWindows (WSL2)Linux\n\n\n\n\nTerminal (laptop)\n\nnproc\necho \"$(( $(sysctl -n hw.memsize) / 1073741824 )) GiB\"\ndf -h ~\n\n16\n64 GiB\nFilesystem      Size  Used Avail Use% Mounted on\n/dev/disk1s4s1  1.9T  1.1T  744G  61% /\nnproc comes with the GNU tools you installed. The second line asks macOS for its memory in bytes and divides by 1,073,741,824 (230), giving GiB as free -h does on Linux. Read free disk from the Avail column. On a Mac, Used and Avail need not add up to Size, because several volumes share one disk.\n\n\n\n\nTerminal (laptop)\n\nnproc\nfree -h\ndf -h ~\n\nFor RAM, read the total column of the Mem: row of free -h; for disk, the Avail column of df -h ~. WSL sees only the memory Windows gives its virtual machine, by default about half the laptop’s RAM, not the full amount (WSL settings).\n\n\n\n\nTerminal (laptop)\n\nnproc\nfree -h\ndf -h ~\n\nFor RAM, read the total column of the Mem: row of free -h; for disk, the Avail column of df -h ~.\n\n\n\nThese three numbers describe the parts in Figure 1.2:\n\nCPU (central processing unit): the part that computes. It has several physical cores, each able to work on its own. On many Intel and AMD processors, each core appears to the system as two logical CPUs; the commands above count logical CPUs. (The example laptop has 8 physical cores and 16 logical CPUs.) A running program splits its work into threads, pieces of work that the system places onto CPUs. Many tools take an option that sets how many threads to use: --threads, -t, or -p, depending on the tool. More threads help only if the tool is written to use them.\nRAM (memory): the fast working space a program uses while it runs. It is emptied when the program stops.\nDisk (storage): slow, large, and permanent; it keeps your files. A file’s size on disk is not the RAM a program needs to read it. The count in step 6 streams through the file a few lines at a time and needs almost no memory, whatever the file’s size. Other tools, such as those that build a genome index (Chapter 31), hold a lot in memory at once.\nI/O (input/output): reading and writing files, over the disk or the network. Simple steps over big files, such as copying them or counting their lines, often spend most of their time waiting for I/O. Heavier steps, such as aligning reads, are often limited by the CPU, and some by RAM.\nGPU (graphics processing unit): a separate processor with thousands of small cores, built to do the same arithmetic on lots of data at once. Most tools in this book do not use one. Where you will meet GPUs: nanopore basecalling (Dorado), deep-learning models, and GPU versions of standard tools such as BWA-MEM, STAR, and DeepVariant (NVIDIA Parabricks). Clusters usually have a few GPU nodes, which you must ask the scheduler for. Chapter 37 covers them.\n\n\n\n\n\n  The parts of a computer that matter for analysis, from fastest to slowest: the CPU, whose cores do the work; RAM, the working space, at about 10 to 50 gigabytes per second; the local disk, which keeps files, at about 0.5 to 5 gigabytes per second for a solid-state drive; and the network, which reaches other machines and shared storage, at about 0.1 to 1 gigabyte per second. In this example the job is limited by input and output: blocks of a blue FASTQ file move slowly from disk into RAM while the CPU's cores wait.\n  \n  \n    \n      \n    \n  \n  \n  \n    \n    \n    \n    \n  \n  \n    CPU\n    RAM\n    Disk\n    Network\n  \n  \n    cores do the work\n    working space,\n    emptied at the end\n    keeps files\n    other\n    machines,\n    shared\n    storage\n  \n  \n  \n    \n    \n    \n  \n  \n  \n    \n    \n    \n    \n  \n  waiting for data…\n  \n  \n  reads.fastq.gz\n  \n  \n    \n    \n    \n  \n  \n  \n    billions of steps\n    per second, per core\n    about 10–50 GB/s\n    about 0.5–5 GB/s\n    (solid-state drive)\n    about\n    0.1–1 GB/s\n  \n  fastest on the left, slowest on the right; typical laptop values\n\n\n\n\nFigure 1.2: The parts of a computer that matter for analysis, fastest on the left. Speeds are typical laptop values, order of magnitude only. Shown is one example, an I/O-limited job: blocks of the file crawl from disk into RAM while the CPU’s cores wait.\n\n\n\nFigure 1.3 shows what threads do, and do not do, on a computer with 8 cores.\n\n\n\n\n  Two panels, each a computer with 8 cores. Left: a tool that can use threads, run with 4 threads, keeps 4 cores busy and leaves 4 idle. Right: a single-threaded step keeps 1 core busy while the other 7 sit idle; giving it more threads would change nothing.\n  \n  \n    \n    \n  \n  \n    A tool run with --threads 4\n    A single-threaded step\n  \n  \n    the tool is written to use threads\n    extra cores cannot help it\n  \n  \n  \n    \n      \n      \n      \n      \n    \n    \n      thread 1\n      thread 2\n      thread 3\n      thread 4\n    \n    \n      \n      \n      \n      \n    \n    \n      idle\n      idle\n      idle\n      idle\n    \n  \n  \n  \n    \n    thread 1\n    \n      \n      \n      \n      \n      \n      \n      \n    \n    \n      idle\n      idle\n      idle\n      idle\n      idle\n      idle\n      idle\n    \n  \n  \n    4 of 8 cores busy\n    1 of 8 cores busy, 7 idle\n  \n\n\n\n\nFigure 1.3: Threads on a computer with 8 cores. Left: a tool written to use threads, run with 4, keeps 4 cores busy. Right: a single-threaded step keeps 1 core busy and leaves 7 idle; asking it for more threads changes nothing.\n\n\n\nWhether code can use more than one core also depends on the language it is written in and the packages it uses (Table 1.3). Some packages use several processes (separate copies of a running program) instead of threads. The cores fill up the same way, but each process needs its own memory.\n\n\n\nTable 1.3: Using more than one core, by language. Brief; Chapter 12 and Chapter 13 show how, and Chapter 35 goes further.\n\n\n\n\n\n\n\n\n\n\nLanguage\nOut of the box\nWays to use more cores\n\n\n\n\nR\nOne core: R runs one step at a time\ndata.table (threads; by default half your logical CPUs); the parallel package (mclapply starts extra processes; not on Windows); matrix maths, if R uses a multi-threaded BLAS library such as OpenBLAS\n\n\nPython\nOne thread runs Python code at a time, because of the global interpreter lock (GIL)\nmultiprocessing and concurrent.futures (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate free-threaded build without the GIL (e.g., python3.14t) was experimental in 3.13 and is officially supported since 3.14, but it is not the default\n\n\nJulia\nOne worker thread, unless you ask for more\nStart with julia --threads auto, then use Threads.@threads loops\n\n\nC, C++, Java\nReal threads, if the program is written to use them\nMost heavy bioinformatics tools are written in these (samtools, BWA, and STAR in C or C++; GATK in Java). That is why they take a --threads option\n\n\n\n\n\n\n\n\n\n\n\n\nCautionMisconception: “More cores always makes it faster”\n\n\n\nReality. Only steps written to use several threads get faster, and only until something else limits them. Many steps use one core, and some are limited by disk, network, or memory rather than the CPU.\n\n\nEach resource fails in its own way when it runs out (Table 1.4). You will meet these messages; recognising them saves hours.\n\n\n\nTable 1.4: What it looks like when each resource runs out.\n\n\n\n\n\n\n\n\n\n\nResource\nWhat runs out\nWhat you see\n\n\n\n\nRAM\nWorking space while the program runs\nThe program stops with Killed or an “out of memory” message, often with no output file\n\n\nDisk\nSpace to write files\nNo space left on device\n\n\nCPU\nComputing power\nThe job is slow; its cores show 100% busy\n\n\nI/O\nSpeed of reading and writing\nThe job is slow, but its cores are mostly idle\n\n\n\n\n\n\n\n\n\n\n\n\nImportantKey idea\n\n\n\nA job can be limited by CPU, RAM, disk space, or I/O. Extra cores help only when the work can use them.\n\n\nFinding which one limits a real job is part of Chapter 10 (on a cluster) and Chapter 35.\n\nCheck yourself. A step keeps one core at 100% while seven sit idle. Will rerunning it with --threads 8 make it faster?\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\nOnly if the tool supports threads. Many steps use one core whatever you ask for, and then nothing changes. Some are limited by disk or memory, not the CPU, and more threads will not help those either.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-data-sizes",
+    "href": "chapters/01-orientation.html#sec-orientation-data-sizes",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.5 How big is the data?",
+    "text": "1.5 How big is the data?\nStart with your own file. Our sample was sequenced paired-end: each fragment of RNA (copied to DNA) was read from both ends, so the sample has two mate files, one for read 1 (_1) and one for read 2 (_2). Your file is the read-1 file. It holds 50,000 reads and takes 2.2 MB compressed (12.8 MB uncompressed). A typical RNA-seq sample has around 30 million reads in each mate file, 600 times as many. If those reads are like ours, the file is about 600 times larger:\n\ncompressed: 2.2 MB × 600 ≈ 1.3 GB\nuncompressed: 12.8 MB × 600 ≈ 7.7 GB\n\nA paired-end sample has two such files. Ours does too: your file holds 50,000 reads, and its mate file SRR6357070_2.fastq.gz holds another 50,000, so the sample is 50,000 read pairs (100,000 reads).\nThis kind of scaling works only for the same kind of file. Read length, header style, and compression all change the result, so treat it as an estimate.\nA note on units: in this book, 1 MB is 1,000,000 bytes and 1 GB is 1,000,000,000 bytes. Some tools count in powers of 2 instead (1 MiB = 1,048,576 bytes) and often still print M. ls -lh is one of them: your 2,239,317-byte file is 2.14 MiB, which GNU ls rounds up to 2.2M. (The ls built into macOS rounds to 2.1M.) Memory is sold in binary units too: a laptop sold with “64 GB” has 64 GiB.\nAn analysis pipeline is a fixed series of steps run in order; for RNA-seq, roughly: align the reads (find where each one came from in the genome), count the reads on each gene, and test which genes differ between groups. Part VI shows how to run whole pipelines. The files along the way fall into two groups (Table 1.5, Figure 1.4):\n\nRead-level files (FASTQ, BAM) hold every read: gigabytes per sample in a real study. A BAM file holds the same reads after aligning, each with its place on the genome, and is often about as large as the compressed FASTQ files it came from, sometimes larger. Sorting it into genome order needs temporary disk space on top (samtools sort).\nSummary files (count matrix, results table, and in DNA studies often a VCF of variants) hold one row per gene or variant: megabytes or less for RNA-seq, small enough for any laptop.\n\n\n\n\n\nTable 1.5: File sizes in an RNA-seq analysis. The yeast test set is measured; it uses only yeast chromosome I, which is why it has 124 genes. A whole yeast genome has about 6,000 genes and a mammal 20,000 or more. The typical study column is a rough order of magnitude.\n\n\n\n\n\n\n\n\n\n\n\n\nFormat\nWhat it holds\nGroup\nYeast test set (measured)\nTypical study\n\n\n\n\nFASTQ (.fastq.gz)\nEvery read, with a quality per base\nread-level\n2.2 MB per mate file; 4.3 MB for one paired sample (WT_REP2)\nabout 1 GB per mate file; a few GB per sample\n\n\nBAM (.bam)\nEvery read, placed on the genome\nread-level\n3.3 MB for one sample (WT_REP2)\na few GB per sample\n\n\nCount matrix\nOne count per gene per sample\nsummary\n2.8 kB (124 genes × 5 samples)\na few MB for the whole study\n\n\nResults table\nOne row per gene: fold change, p-value\nsummary\n12.7 kB (124 genes)\na few MB\n\n\nVCF (.vcf.gz, DNA studies)\nOne row per variant\nsummary\nnone (RNA-seq)\nMB for a few samples; GB for large cohorts\n\n\n\n\n\n\n\n\n\n\n\n  Measured file sizes for the yeast test data, drawn to scale: the area of each square is proportional to the file's size. Read-level files: the paired FASTQ files of one sample are 4.3 MB, a large square, and its sorted BAM file is 3.3 MB, almost as large. Summary files: the count matrix for 124 genes and 5 samples is 2.8 kB and the differential expression results table for 124 genes is 12.7 kB; both are tiny dots, hundreds to thousands of times smaller. A reference genome and annotation enter at the align and count steps.\n  \n    \n      \n    \n  \n  \n  \n    Read-level files: every read\n    Summary files:\n    one row per gene\n  \n  \n  \n  \n  \n    \n    \n  \n  \n    \n    \n  \n  \n    4.3 MB\n    3.3 MB\n    2.8 kB\n    12.7 kB\n  \n  \n  \n    hundreds to thousands\n    of times smaller\n  \n  \n  \n    \n    \n    \n  \n  \n    align\n    count\n    test\n  \n  \n  \n    \n      FASTQ, R1 + R2\n      sorted BAM\n      count matrix\n      results table\n    \n    \n      one sample\n      one sample\n      124 genes ×\n      5 samples\n      124 genes\n    \n  \n  \n  \n  reference: genome + annotation\n  \n    \n    \n  \n  square area is proportional to file size\n\n\n\n\nFigure 1.4: Measured file sizes along the pipeline for the yeast test data, drawn to scale: each square’s area is proportional to the file’s size. The sample is WT_REP2, one paired run like yours (50,000 read pairs). The BAM is the nf-core/rnaseq output stored with the test data; the count matrix and results table were made from those BAMs by scripts/ch01_file_sizes.R. Read-level files are hundreds to thousands of times larger than summary files.\n\n\n\n\n\n\n\n\n\nImportantKey idea\n\n\n\nRead-level files (FASTQ, BAM) are large; summary files (count matrices, results tables) are usually far smaller. Intermediate and temporary files raise the peak disk space a pipeline needs.\n\n\n\nCheck yourself. Our mate file holds 50,000 reads in 2.2 MB. About how large is a mate file of the same kind with 30 million reads?\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\nAbout 1.3 GB compressed: 30 million is 600 × 50,000, and 600 × 2.2 MB ≈ 1.3 GB. A paired sample has two such files.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-linux",
+    "href": "chapters/01-orientation.html#sec-orientation-linux",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.6 Why Linux",
+    "text": "1.6 Why Linux\nAlmost every cluster runs Linux, and most bioinformatics tools are written for it first. That is why this book teaches Linux commands. macOS is close enough that nearly all of them work unchanged, and WSL gives Windows a real Linux system. Where macOS or Windows differ, the book says so.\n\n\n\n\n\n\nNoteBackground: Linux distributions\n\n\n\nLinux comes in distributions that share the same core and commands but differ in how software is installed. You will most often meet Ubuntu on laptops and WSL, and Red Hat Enterprise Linux or Rocky Linux on clusters.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-where",
+    "href": "chapters/01-orientation.html#sec-orientation-where",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.7 Where you compute: laptop, cluster, cloud",
+    "text": "1.7 Where you compute: laptop, cluster, cloud\nYou will use up to three kinds of computer (Table 1.6).\n\n\n\nTable 1.6: Three places to compute.\n\n\n\n\n\n\n\n\n\n\n\n\nLaptop\nCluster (HPC)\nCloud\n\n\n\n\nCost to you\nalready paid for\nusually free or cheap through your institution\npay for each hour used and each GB stored\n\n\nSize\na few to ~16 cores; 8–64 GiB of RAM\nthousands of cores; nodes with hundreds of GB of RAM\nas large as you pay for\n\n\nWho manages it\nyou\nresearch computing staff\nyou, on the provider’s machines\n\n\nWhat to run there\nediting, plots, R and Python on summary files, small tests\nalignment, many samples, pipelines, large-memory jobs\nwork your cluster cannot do, or when you have no cluster\n\n\n\n\n\n\nA cluster, or HPC (high-performance computing) system, is many computers, called nodes, shared by many people (Figure 1.5). You connect from your laptop to a login node with ssh (secure shell, the standard way to log in to another computer). There you edit files and submit jobs: requests for some cores, memory, and time. A program called the scheduler (on most clusters, including SCINet and Nova, SLURM) holds each job in a queue until those resources are free, then runs it on a compute node. Your files sit on shared storage, which both the login node and the compute nodes can read. Chapter 9 covers connecting and Chapter 10 the scheduler.\n\n\n\n\n  The parts of an HPC cluster. Your laptop connects over SSH to a login node, where you edit files and submit jobs. Submitted jobs wait in the queue of the scheduler, SLURM on most clusters, until it starts them on compute nodes, where the work runs. Shared storage holding your data is part of the cluster and is connected to both the login node and the compute nodes; files do not pass through the scheduler. The laptop reaches the cluster only through the SSH connection and file transfers.\n  \n    \n      \n    \n  \n  \n  \n  THE CLUSTER\n  \n  \n  Your laptop\n  edit, view\n  small jobs\n  \n  \n  ssh\n  files\n  \n  \n  Login node\n  edit, submit\n  shared by all\n  \n  \n  submit\n  \n  \n  Scheduler\n  SLURM\n  jobs wait in a queue\n  \n    \n    \n    \n  \n  \n    job 3\n    job 2\n    job 1\n  \n  \n  \n    \n    \n    \n  \n  starts jobs\n  when free\n  \n  \n    \n    \n    \n  \n  \n    Compute node\n    run\n    Compute node\n    run\n    Compute node\n    run\n  \n  \n  \n  Shared storage\n  home, project, and scratch folders\n  \n    \n    \n    \n  \n  \n    reads\n    BAMs\n    counts\n  \n  \n    \n    \n    \n    \n    \n    \n  \n\n\n\n\nFigure 1.5: The parts of an HPC cluster. You reach the login node from your laptop with ssh; work runs on compute nodes when the scheduler (SLURM) starts it; shared storage is connected to both. Files do not pass through the scheduler.\n\n\n\n\n\n\n\n\n\nCautionMisconception: “The cluster is just a faster computer”\n\n\n\nReality. A cluster is many ordinary computers shared by many people. You ask a scheduler for cores, memory, and time, and your job waits in a queue until they are free. A single step is often no faster than on a laptop; the gain is running many steps at once, with more memory.\n\n\n\n\n\n\n\n\nWarningPitfall: heavy work on the login node\n\n\n\nThe login node is a shared doorway. Running an analysis there slows it for everyone, and many sites kill long-running processes on it. Run work on a compute node instead: interactively with srun (the box in Section 1.3), or as a submitted job (Chapter 10).\n\n\nThe cloud is computers you rent by the hour from a company. It costs money for every hour and every gigabyte, so for most readers it is the option for when a cluster cannot do the job. Chapter 38 introduces it.\n\nCheck yourself. Laptop, cluster, or cloud?\n\nEditing an analysis script.\nAligning the reads of 48 samples.\nRunning DESeq2 (an R package that finds genes whose expression differs between groups) on this book’s small yeast count matrix.\nA one-off job that needs 2 TB of RAM, more than any node of your cluster has.\n\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\n\nLaptop (or the login node, if the script lives on the cluster).\nCluster compute nodes, submitted as jobs.\nLaptop: the matrix is a few kilobytes.\nThe cloud is one option if you have funding for it; another is a shared facility that has such nodes.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-account",
+    "href": "chapters/01-orientation.html#sec-orientation-account",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.8 Getting a cluster account",
+    "text": "1.8 Getting a cluster account\nMost readers will need a cluster account for the later chapters. Apply early, since approval can take days or weeks. Ask your PI or your institution’s research computing office which cluster you can use.\n\n\n\n\n\n\nTipApply for an account now\n\n\n\nARS scientists and their collaborators can sign up for SCINet, USDA’s clusters. Universities run their own, such as Iowa State’s HPC clusters (Nova). Step-by-step details are in Appendix A.\n\n\nNo cluster yet? Keep going: everything before Chapter 9 runs on your laptop.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-summary",
+    "href": "chapters/01-orientation.html#sec-orientation-summary",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.9 Summary",
+    "text": "1.9 Summary\n\nA terminal runs a shell; this book uses bash on every system (on a Mac, after installing it with Homebrew). You type commands, and code blocks in this book leave out the prompt and say where they run.\nYou downloaded a FASTQ file, checked it, looked at its records, and saved a read count: SRR6357070_1 reads: 50000.\nYour computer’s logical CPUs, RAM, and free disk are three commands away; a job can be limited by CPU, RAM, disk, or I/O, and more threads help only tools written to use them.\nRead-level files (FASTQ, BAM) are large; summary files (count matrices, results) are small. File size scales with read count for files of the same kind.\nEdit and run small analyses on a laptop; run heavy jobs on cluster compute nodes, never on the login node; rent the cloud when neither will do.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-exercises",
+    "href": "chapters/01-orientation.html#sec-orientation-exercises",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.10 Exercises",
+    "text": "1.10 Exercises\nDo these where you did the guided session: on your laptop, or, on a cluster, inside an srun session on a compute node (see the pitfall box in Section 1.3), never on the login node.\n\nExercise 1. Read 2. Download the matching read-2 file and add its count as a second line of fastq_summary.txt:\n\n\nTerminal (laptop)\n\ncurl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz\necho \"SRR6357070_2 reads: $(( $(gunzip -c SRR6357070_2.fastq.gz | wc -l) / 4 ))\" &gt;&gt; fastq_summary.txt\ncat fastq_summary.txt\n\nThe only change from step 6 is &gt;&gt; instead of &gt;: &gt; replaces a file’s contents, &gt;&gt; adds to the end (Chapter 6). Do both files have the same count? Why should they?\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\nSRR6357070_1 reads: 50000\nSRR6357070_2 reads: 50000\nYes. In a paired-end run each fragment is read from both ends, so read 1 and read 2 of a pair sit at the same position in the two files, and the counts must match. Equal counts do not by themselves prove that the pairs line up; Chapter 15 shows how to check.\n\n\n\n\n\nExercise 2. Would it fit? Fill in your column of Table 1.2. Would an uncompressed 30-million-read mate file (about 7.7 GB) fit in your RAM if a program loaded all of it at once, leaving room for the system and your other programs?\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\nIt depends on your laptop: with 8 GB of RAM, no; with 32 GB, yes. But the count from step 6 never loads the file: it streams through it, so it works on any laptop. Some tools do need that much memory or more, which is one reason to use a cluster.\n\n\n\n\n\nExercise 3. How long would it take? Time the line count:\n\n\nTerminal (laptop)\n\ntime gunzip -c SRR6357070_1.fastq.gz | wc -l\n\nFind the elapsed time: the real line of the output. Estimate the time for a 30-million-read mate file (600 times larger), then name two reasons the real time could differ from your estimate.\n\n\n\n\n\n\nTipAnswer\n\n\n\n\n\nOn the example laptop the count took 0.03 seconds, so 600 times that is about 20 seconds. Two reasons it could differ: for a file this small, the time is mostly spent starting the programs, and the file may already be in memory from step 5, so the small run is not a fair sample. And a big file may sit on a slower disk or a network filesystem, which makes reading it the limit. Measuring what limits a job is part of Chapter 10 and Chapter 35.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/01-orientation.html#sec-orientation-reading",
+    "href": "chapters/01-orientation.html#sec-orientation-reading",
+    "title": "1  Orientation: computers and where you compute",
+    "section": "1.11 Further reading",
+    "text": "1.11 Further reading\n\nShotts (2025), The Linux Command Line, chapters 1–3 — a free, gentle book on what a shell and a terminal are; a second explanation of this chapter and a preview of Part II.\nWilson et al. (2019), Software Carpentry’s The Unix Shell, the introduction episode — the same ideas taught as a workshop lesson, with exercises.\nMicrosoft (2025) — the official, current steps for installing WSL, if anything in the Windows tab has changed.\nWu et al. (2018) — the study our yeast reads come from; read the summary to see what experiment the running dataset measures.\n\n\n\n\nShotts, William. 2025. The Linux Command Line. Seventh Internet, Rev. A (25.12). https://linuxcommand.org/tlcl.php.\n\nWilson, Greg, Gerard Capes, Gabriel A. Devenyi, et al. 2019. Swcarpentry/Shell-Novice: Software Carpentry: The UNIX Shell, June 2019. Zenodo. https://doi.org/10.5281/zenodo.3266823.\n\nMicrosoft. 2025. How to Install Linux on Windows with WSL. Microsoft Learn. https://learn.microsoft.com/en-us/windows/wsl/install.\n\nWu, Andrew C. K., Harshil Patel, Minghao Chia, et al. 2018. “Repression of Divergent Noncoding Transcription by a Sequence-Specific Transcription Factor.” Molecular Cell 72 (6): 942–954.e7. https://doi.org/10.1016/j.molcel.2018.10.018.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Orientation: computers and where you compute</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-book-setup.html",
+    "href": "chapters/02-book-setup.html",
+    "title": "2  Book setup and editors",
+    "section": "",
+    "text": "2.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Book setup and editors</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/02-book-setup.html#planned-topics",
+    "href": "chapters/02-book-setup.html#planned-topics",
+    "title": "2  Book setup and editors",
+    "section": "",
+    "text": "Install pixi and the book environment; run a first example\nVS Code as the primary editor; reaching a cluster by the site’s route (Remote-SSH, tunnel, or Open OnDemand)\nJust enough SSH to connect to a cluster (full treatment in Chapter 9)\nPitfall: some clusters restrict the VS Code server on login nodes; fall back to Open OnDemand or a compute-node session\nnano and vim basics for editing on a server\nReference table: RStudio / Positron, Jupyter, Quarto, Open OnDemand",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Book setup and editors</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/03-organizing-projects.html",
+    "href": "chapters/03-organizing-projects.html",
+    "title": "3  Organizing projects and data",
+    "section": "",
+    "text": "3.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Organizing projects and data</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/03-organizing-projects.html#planned-topics",
+    "href": "chapters/03-organizing-projects.html#planned-topics",
+    "title": "3  Organizing projects and data",
+    "section": "",
+    "text": "Project folder structure (src/, data/, results/, …)\nFile and script naming (00_, 01_, …; no spaces)\nRaw data is read-only; link shared lab data and references into a project (symlinks) rather than copying them\nChecksums (md5sum) for raw data\nBackups (3-2-1); scratch is not a backup\nSample sheets and metadata as first-class files\nProvenance: link each output to input accessions/checksums, reference release, software or pipeline version, parameters, and logs\nREADMEs and a lab-notebook habit\nFAIR principles (brief)\nStart the recurring project",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Organizing projects and data</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/04-getting-help.html",
+    "href": "chapters/04-getting-help.html",
+    "title": "4  Getting help",
+    "section": "",
+    "text": "4.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Getting help</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/04-getting-help.html#planned-topics",
+    "href": "chapters/04-getting-help.html#planned-topics",
+    "title": "4  Getting help",
+    "section": "",
+    "text": "--help, man pages, tool documentation\nRoutine troubleshooting: read the error or warning; find the log; check paths, inputs, and requested resources; know when to ask\nReading a methods section to find tools, versions, parameters\nSearching well; Biostars, Bioconductor support site\nAsking for help: code, complete messages, session info; a minimal reproducible example\nUsing AI coding assistants responsibly (verify output; no data or credentials pasted in)\nGitHub issues covered later (Part V)",
+    "crumbs": [
+      "Getting set up",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Getting help</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/05-shell-basics.html",
+    "href": "chapters/05-shell-basics.html",
+    "title": "5  Shell basics",
+    "section": "",
+    "text": "5.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Shell basics</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/05-shell-basics.html#planned-topics",
+    "href": "chapters/05-shell-basics.html#planned-topics",
+    "title": "5  Shell basics",
+    "section": "",
+    "text": "What a shell is; bash\nFilesystem tree, paths (absolute vs relative), home directory\nNavigating, creating, copying, moving, deleting\nSymbolic links (ln -s)\nWildcards and tab completion; quoting paths\nFinding files (find)\nViewing files: cat, less, head, tail\nCommand history and shortcuts",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Shell basics</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/06-text-tools.html",
+    "href": "chapters/06-text-tools.html",
+    "title": "6  Text tools and pipes",
+    "section": "",
+    "text": "6.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Text tools and pipes</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/06-text-tools.html#planned-topics",
+    "href": "chapters/06-text-tools.html#planned-topics",
+    "title": "6  Text tools and pipes",
+    "section": "",
+    "text": "Pipes and redirection; standard output vs standard error\n&gt; overwrites: destructive redirection\ngrep, cut, sort, uniq, wc\nsed and awk basics\nRegular expressions (shared across shell, R, Python)\nWorking with compressed files (zcat, gzip)",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Text tools and pipes</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-linux-system.html",
+    "href": "chapters/07-linux-system.html",
+    "title": "7  The Linux system",
+    "section": "",
+    "text": "7.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Linux system</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/07-linux-system.html#planned-topics",
+    "href": "chapters/07-linux-system.html#planned-topics",
+    "title": "7  The Linux system",
+    "section": "",
+    "text": "Users, groups, permissions, chmod\nExecutable files and shebang lines\nPATH and environment variables\n.bashrc vs .bash_profile\nProcesses: ps, top; interrupting (Ctrl-C) and kill\nDisk usage: df, du\nGNU (Linux) vs BSD (macOS) tools\nLine endings (LF vs CRLF)",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>The Linux system</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/08-shell-scripts.html",
+    "href": "chapters/08-shell-scripts.html",
+    "title": "8  Shell scripts",
+    "section": "",
+    "text": "8.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Shell scripts</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/08-shell-scripts.html#planned-topics",
+    "href": "chapters/08-shell-scripts.html#planned-topics",
+    "title": "8  Shell scripts",
+    "section": "",
+    "text": "Variables, quoting, loops, conditionals\nScript arguments\nset -euo pipefail: what it catches and what it does not\nLogging output and errors\nNumbered scripts as a simple pipeline\nMinimal git routine for saved scripts: check changes, commit, recover a previous version (full treatment in Chapter 21)",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Shell scripts</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-working-remotely.html",
+    "href": "chapters/09-working-remotely.html",
+    "title": "9  Working remotely",
+    "section": "",
+    "text": "9.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Working remotely</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/09-working-remotely.html#planned-topics",
+    "href": "chapters/09-working-remotely.html#planned-topics",
+    "title": "9  Working remotely",
+    "section": "",
+    "text": "SSH and SSH keys; ~/.ssh/config; jump hosts (ProxyJump)\ntmux / screen so work survives a dropped connection\nMoving data: scp, rsync, Globus\nChecksums to confirm a transfer",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>Working remotely</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-hpc-slurm.html",
+    "href": "chapters/10-hpc-slurm.html",
+    "title": "10  HPC and SLURM",
+    "section": "",
+    "text": "10.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>HPC and SLURM</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/10-hpc-slurm.html#planned-topics",
+    "href": "chapters/10-hpc-slurm.html#planned-topics",
+    "title": "10  HPC and SLURM",
+    "section": "",
+    "text": "Cluster anatomy: login vs compute nodes\nEnvironment modules (module load, Lmod)\nStorage tiers: home, project, scratch; quotas (site quota command) and purges\nFile-count (inode) quotas: millions of small files (a Nextflow work/ directory, environments in $HOME) can fill an account that has bytes to spare\nsbatch scripts and resource requests\nEstimating memory, time, and disk for a job; measuring a real one\nInteractive jobs\nJob arrays\nMonitoring and accounting (squeue, sacct, seff); cancelling (scancel)\nA running process vs a submitted job\nGPU partitions (brief)\nEtiquette: no heavy work on login nodes",
+    "crumbs": [
+      "The Linux command line",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>HPC and SLURM</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-language-landscape.html",
+    "href": "chapters/11-language-landscape.html",
+    "title": "11  The language landscape",
+    "section": "",
+    "text": "11.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Languages",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The language landscape</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/11-language-landscape.html#planned-topics",
+    "href": "chapters/11-language-landscape.html#planned-topics",
+    "title": "11  The language landscape",
+    "section": "",
+    "text": "Bash as glue for running tools\nR and Python: who uses which, and for what\nJulia (brief)\nPerl as history\nCompiled languages (C/C++, Rust, Java): what your tools are written in\nBuilding tools from source (make, cmake) briefly\nThe series’ division of labour",
+    "crumbs": [
+      "Languages",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>The language landscape</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/12-r-essentials.html",
+    "href": "chapters/12-r-essentials.html",
+    "title": "12  R essentials",
+    "section": "",
+    "text": "12.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Languages",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>R essentials</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/12-r-essentials.html#planned-topics",
+    "href": "chapters/12-r-essentials.html#planned-topics",
+    "title": "12  R essentials",
+    "section": "",
+    "text": "Running R scripts vs interactive work\nObjects and assignment; calling a function, changing a named argument, saving the result\nTypes: strings, numbers (integer vs double), logicals, missing values (NA); why 0.1 + 0.2 == 0.3 is FALSE\nVectors, lists, matrices, data frames\nSelecting rows/columns; filtering with a condition; checking dimensions and sample names\nPackages: CRAN and Bioconductor; reading a vignette\nBase R vs tidyverse\nRunning a supplied script: adjust paths, filenames, documented settings\nReading an error; restart and run from a clean session\nReading files and making a quick plot; rendering one small Quarto report",
+    "crumbs": [
+      "Languages",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>R essentials</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/13-python-essentials.html",
+    "href": "chapters/13-python-essentials.html",
+    "title": "13  Python essentials",
+    "section": "",
+    "text": "13.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Languages",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Python essentials</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/13-python-essentials.html#planned-topics",
+    "href": "chapters/13-python-essentials.html#planned-topics",
+    "title": "13  Python essentials",
+    "section": "",
+    "text": "Running Python scripts vs interactive work\nObjects and assignment; calling a function with keyword arguments\nTypes: strings, numbers (int vs float), booleans, missing values (None, NaN); why 0.1 + 0.2 == 0.3 is False\nLists, dicts, data frames (pandas / polars)\nSelecting and filtering; checking shape and sample names\nPackages: PyPI and Bioconda\nBiopython and pysam (brief)\nRunning a supplied script; reading a traceback for the line that failed\nReading files and making a quick plot",
+    "crumbs": [
+      "Languages",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Python essentials</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/14-tabular-data.html",
+    "href": "chapters/14-tabular-data.html",
+    "title": "14  Tabular data",
+    "section": "",
+    "text": "14.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Tabular data</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/14-tabular-data.html#planned-topics",
+    "href": "chapters/14-tabular-data.html#planned-topics",
+    "title": "14  Tabular data",
+    "section": "",
+    "text": "CSV vs TSV; why bioinformatics uses tabs\nTidy data\nSpreadsheet pitfalls (gene names turned into dates)\nIdentifiers as text; missing or duplicate sample IDs\nCheck column types after reading (lost leading zeros, numbers read as text)\nJoining counts to metadata: unmatched rows, row multiplication, order\nMissing value vs zero\nReading and writing tables in R and Python, including gzipped files",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Tabular data</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/15-fasta-fastq.html",
+    "href": "chapters/15-fasta-fastq.html",
+    "title": "15  Sequence formats: FASTA and FASTQ",
+    "section": "",
+    "text": "15.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Sequence formats: FASTA and FASTQ</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/15-fasta-fastq.html#planned-topics",
+    "href": "chapters/15-fasta-fastq.html#planned-topics",
+    "title": "15  Sequence formats: FASTA and FASTQ",
+    "section": "",
+    "text": "Which reference? Genome assemblies and versions; mixing builds by accident; chromosome naming (chr1 vs 1)\nFASTA structure; .fai index\nFASTQ structure\nQuality scores and Phred encoding (ASCII basics here only)\nPaired-end files\nCandidate template chapter (series PLAN.md §8)",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>15</span>  <span class='chapter-title'>Sequence formats: FASTA and FASTQ</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/16-sam-bam-cram.html",
+    "href": "chapters/16-sam-bam-cram.html",
+    "title": "16  Alignment formats: SAM, BAM, CRAM",
+    "section": "",
+    "text": "16.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Alignment formats: SAM, BAM, CRAM</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/16-sam-bam-cram.html#planned-topics",
+    "href": "chapters/16-sam-bam-cram.html#planned-topics",
+    "title": "16  Alignment formats: SAM, BAM, CRAM",
+    "section": "",
+    "text": "SAM fields and flags\nBAM and CRAM: binary and compressed\nsamtools basics\nSorting and indexing (.bai)\nA BAM, its index, and its reference must stay matched",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>16</span>  <span class='chapter-title'>Alignment formats: SAM, BAM, CRAM</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/17-intervals-variants.html",
+    "href": "chapters/17-intervals-variants.html",
+    "title": "17  Intervals, annotation, and variants",
+    "section": "",
+    "text": "17.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Intervals, annotation, and variants</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/17-intervals-variants.html#planned-topics",
+    "href": "chapters/17-intervals-variants.html#planned-topics",
+    "title": "17  Intervals, annotation, and variants",
+    "section": "",
+    "text": "BED, GFF3, GTF\n0-based vs 1-based coordinates, shown on a tiny interval\nVCF structure\nbgzip and tabix\nbedtools basics",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>17</span>  <span class='chapter-title'>Intervals, annotation, and variants</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/18-efficient-formats.html",
+    "href": "chapters/18-efficient-formats.html",
+    "title": "18  Efficient data formats",
+    "section": "",
+    "text": "18.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Efficient data formats</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/18-efficient-formats.html#planned-topics",
+    "href": "chapters/18-efficient-formats.html#planned-topics",
+    "title": "18  Efficient data formats",
+    "section": "",
+    "text": "Text vs binary\nR and Python native formats (.rds, pickle)\nArrow and Parquet\nHDF5-based formats (e.g., .h5ad) briefly",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>Efficient data formats</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/19-databases.html",
+    "href": "chapters/19-databases.html",
+    "title": "19  Databases (basics)",
+    "section": "",
+    "text": "19.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Databases (basics)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/19-databases.html#planned-topics",
+    "href": "chapters/19-databases.html#planned-topics",
+    "title": "19  Databases (basics)",
+    "section": "",
+    "text": "What a relational database is\nCore SQL: SELECT, WHERE, JOIN\nSQLite and DuckDB\nQuerying Parquet files with DuckDB\nWhere databases sit in bioinformatics (annotation packages, Ensembl)",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>Databases (basics)</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/20-reference-data.html",
+    "href": "chapters/20-reference-data.html",
+    "title": "20  Reference data and public repositories",
+    "section": "",
+    "text": "20.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Reference data and public repositories</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/20-reference-data.html#planned-topics",
+    "href": "chapters/20-reference-data.html#planned-topics",
+    "title": "20  Reference data and public repositories",
+    "section": "",
+    "text": "Ensembl, NCBI, UCSC: where references come from\nBasic downloads with curl / wget; verify the file and record its source\nDownloading reads: SRA, ENA, fasterq-dump\nNCBI Datasets, GEO\nProgrammatic access (Entrez, biomaRt, REST APIs)\nLicenses and citation for public data",
+    "crumbs": [
+      "Data, formats, and references",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>Reference data and public repositories</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/21-git.html",
+    "href": "chapters/21-git.html",
+    "title": "21  Version control with git",
+    "section": "",
+    "text": "21.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Version control with git</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/21-git.html#planned-topics",
+    "href": "chapters/21-git.html#planned-topics",
+    "title": "21  Version control with git",
+    "section": "",
+    "text": "Why version control\nRepositories, commits, history (builds on Chapter 8’s routine)\n.gitignore; keep data and secrets out of repos\nBranches and merging\nUndoing mistakes",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>21</span>  <span class='chapter-title'>Version control with git</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/22-github.html",
+    "href": "chapters/22-github.html",
+    "title": "22  GitHub and collaboration",
+    "section": "",
+    "text": "22.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>GitHub and collaboration</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/22-github.html#planned-topics",
+    "href": "chapters/22-github.html#planned-topics",
+    "title": "22  GitHub and collaboration",
+    "section": "",
+    "text": "Remotes: GitHub, GitLab, Bitbucket, Codeberg\nIssues; asking for help on a tool’s repo\nPull requests and code review (overview)\nForks (overview)\nLicensing your code\nArchiving with Zenodo DOIs; citing software",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>22</span>  <span class='chapter-title'>GitHub and collaboration</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/23-environments.html",
+    "href": "chapters/23-environments.html",
+    "title": "23  Software environments",
+    "section": "",
+    "text": "23.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Software environments</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/23-environments.html#planned-topics",
+    "href": "chapters/23-environments.html#planned-topics",
+    "title": "23  Software environments",
+    "section": "",
+    "text": "Why environments; dependency conflicts\nHow the book’s pixi environment works (set up in Chapter 2)\nConda and Bioconda\nuv and pyproject.toml\nrenv / rv for R\nLockfiles\nRecording versions, parameters, and random seeds (provenance)\nHPC pitfall: package caches default to $HOME and fill its quota; move them to project storage",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Software environments</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/24-containers.html",
+    "href": "chapters/24-containers.html",
+    "title": "24  Containers",
+    "section": "",
+    "text": "24.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Containers</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/24-containers.html#planned-topics",
+    "href": "chapters/24-containers.html#planned-topics",
+    "title": "24  Containers",
+    "section": "",
+    "text": "What a container is (vs a virtual machine)\nDocker\nApptainer on HPC\nBioContainers and Seqera Containers\nImage caches on HPC (APPTAINER_CACHEDIR, Nextflow’s image cache) on project or scratch storage, not $HOME\nWhen to use containers vs environments",
+    "crumbs": [
+      "Reproducibility",
+      "<span class='chapter-number'>24</span>  <span class='chapter-title'>Containers</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/25-workflow-managers.html",
+    "href": "chapters/25-workflow-managers.html",
+    "title": "25  Why workflow managers",
+    "section": "",
+    "text": "25.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Why workflow managers</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/25-workflow-managers.html#planned-topics",
+    "href": "chapters/25-workflow-managers.html#planned-topics",
+    "title": "25  Why workflow managers",
+    "section": "",
+    "text": "From numbered scripts to a workflow\nDependencies and re-running only what changed\nMake basics\nOverview of workflow managers",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>25</span>  <span class='chapter-title'>Why workflow managers</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/26-nf-core.html",
+    "href": "chapters/26-nf-core.html",
+    "title": "26  Running nf-core pipelines",
+    "section": "",
+    "text": "26.1 Planned topics\nCore. Work through it, with the exercises.",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Running nf-core pipelines</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/26-nf-core.html#planned-topics",
+    "href": "chapters/26-nf-core.html#planned-topics",
+    "title": "26  Running nf-core pipelines",
+    "section": "",
+    "text": "What nf-core and Nextflow are\nRunning a pipeline: sample sheets, parameters, profiles, resources\nRunning on SLURM\nLogs, the work directory, and -resume after a failure\nReading the outputs (MultiQC)\nChoosing pipeline versions; recording and citing them",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>26</span>  <span class='chapter-title'>Running nf-core pipelines</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/27-writing-nextflow.html",
+    "href": "chapters/27-writing-nextflow.html",
+    "title": "27  Writing Nextflow",
+    "section": "",
+    "text": "27.1 Planned topics\nOptional. Reference for later, when you need it.",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Writing Nextflow</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/27-writing-nextflow.html#planned-topics",
+    "href": "chapters/27-writing-nextflow.html#planned-topics",
+    "title": "27  Writing Nextflow",
+    "section": "",
+    "text": "Processes and channels\nConfig files and profiles\nContainers in Nextflow\nReading and adjusting an existing workflow; a small workflow of your own",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>27</span>  <span class='chapter-title'>Writing Nextflow</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/28-other-workflows.html",
+    "href": "chapters/28-other-workflows.html",
+    "title": "28  Other workflow systems",
+    "section": "",
+    "text": "28.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Other workflow systems</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/28-other-workflows.html#planned-topics",
+    "href": "chapters/28-other-workflows.html#planned-topics",
+    "title": "28  Other workflow systems",
+    "section": "",
+    "text": "Snakemake (brief)\nWDL / CWL (Terra, GATK)\nGalaxy as a no-code option",
+    "crumbs": [
+      "Workflows",
+      "<span class='chapter-number'>28</span>  <span class='chapter-title'>Other workflow systems</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/29-thinking-algorithms.html",
+    "href": "chapters/29-thinking-algorithms.html",
+    "title": "29  Thinking about algorithms",
+    "section": "",
+    "text": "29.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Thinking about algorithms</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/29-thinking-algorithms.html#planned-topics",
+    "href": "chapters/29-thinking-algorithms.html#planned-topics",
+    "title": "29  Thinking about algorithms",
+    "section": "",
+    "text": "Big-O intuition\nSorting and binary search (why BAMs are sorted and indexed; why samtools sort needs memory and temp files; why an index makes region queries fast)\nHash tables (k-mer counting)\nTime vs memory trade-offs",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>29</span>  <span class='chapter-title'>Thinking about algorithms</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/30-sequence-alignment.html",
+    "href": "chapters/30-sequence-alignment.html",
+    "title": "30  Sequence alignment",
+    "section": "",
+    "text": "30.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>Sequence alignment</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/30-sequence-alignment.html#planned-topics",
+    "href": "chapters/30-sequence-alignment.html#planned-topics",
+    "title": "30  Sequence alignment",
+    "section": "",
+    "text": "Dynamic programming intuition\nGlobal (Needleman–Wunsch) vs local (Smith–Waterman)\nScoring matrices and gap penalties\nBLAST: seed and extend; E-values vs bit scores; one basic command-line query and its tabular output (-outfmt 6)",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>30</span>  <span class='chapter-title'>Sequence alignment</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/31-indexing-genomes.html",
+    "href": "chapters/31-indexing-genomes.html",
+    "title": "31  Indexing genomes",
+    "section": "",
+    "text": "31.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Indexing genomes</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/31-indexing-genomes.html#planned-topics",
+    "href": "chapters/31-indexing-genomes.html#planned-topics",
+    "title": "31  Indexing genomes",
+    "section": "",
+    "text": "Why aligners need an index build step, and why it takes so much memory for large genomes\nk-mers\nSuffix arrays\nBWT and FM-index (BWA, Bowtie)\nMinimizers (minimap2)\nPseudoalignment (brief): trading base-level alignment for speed; link to Transcriptomics",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>31</span>  <span class='chapter-title'>Indexing genomes</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/32-graphs-assembly.html",
+    "href": "chapters/32-graphs-assembly.html",
+    "title": "32  Graphs and assembly",
+    "section": "",
+    "text": "32.1 Planned topics\nOverview. Read for understanding; no required exercises.",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>32</span>  <span class='chapter-title'>Graphs and assembly</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/32-graphs-assembly.html#planned-topics",
+    "href": "chapters/32-graphs-assembly.html#planned-topics",
+    "title": "32  Graphs and assembly",
+    "section": "",
+    "text": "Graph basics; trees as graphs (phylogenetic trees mentioned only; full treatment in a later Advanced algorithms book)\nOverlap graphs vs de Bruijn graphs\nWhy assembly is hard (repeats, errors)",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>32</span>  <span class='chapter-title'>Graphs and assembly</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/33-probabilistic-methods.html",
+    "href": "chapters/33-probabilistic-methods.html",
+    "title": "33  Probabilistic methods",
+    "section": "",
+    "text": "33.1 Planned topics\nOverview. Read for understanding; no required exercises.\nFour ideas met inside common tools, each tied to where readers meet it; no derivations.",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>33</span>  <span class='chapter-title'>Probabilistic methods</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/33-probabilistic-methods.html#planned-topics",
+    "href": "chapters/33-probabilistic-methods.html#planned-topics",
+    "title": "33  Probabilistic methods",
+    "section": "",
+    "text": "Hidden Markov models (gene finding, profile HMMs, Pfam)\nExpectation–maximization (multi-mapping reads in Salmon / RSEM)\nSketching: MinHash (Mash, sourmash)\nBloom filters (k-mer tools)",
+    "crumbs": [
+      "Algorithms",
+      "<span class='chapter-number'>33</span>  <span class='chapter-title'>Probabilistic methods</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/34-reusable-code.html",
+    "href": "chapters/34-reusable-code.html",
+    "title": "34  Writing reusable analysis code",
+    "section": "",
+    "text": "34.1 Planned topics\nOptional. Reference for later, when you need it.",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>34</span>  <span class='chapter-title'>Writing reusable analysis code</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/34-reusable-code.html#planned-topics",
+    "href": "chapters/34-reusable-code.html#planned-topics",
+    "title": "34  Writing reusable analysis code",
+    "section": "",
+    "text": "Data structures (beyond vectors, lists, dicts)\nWriting functions: inputs, return values, unusual inputs\nCommand-line scripts with arguments (argparse, optparse)\nDebugging: breakpoints, stepping through functions, call stacks\nAutomated tests; checking results on toy data\nStyle and linting",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>34</span>  <span class='chapter-title'>Writing reusable analysis code</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/35-performance.html",
+    "href": "chapters/35-performance.html",
+    "title": "35  Performance and parallelism",
+    "section": "",
+    "text": "35.1 Planned topics\nOptional. Reference for later, when you need it.",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>35</span>  <span class='chapter-title'>Performance and parallelism</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/35-performance.html#planned-topics",
+    "href": "chapters/35-performance.html#planned-topics",
+    "title": "35  Performance and parallelism",
+    "section": "",
+    "text": "Thread flags: when more threads stop helping\nEmbarrassingly parallel work; GNU parallel\nVectorization in R and Python\nProfiling time and memory",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>35</span>  <span class='chapter-title'>Performance and parallelism</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/36-numbers-encodings.html",
+    "href": "chapters/36-numbers-encodings.html",
+    "title": "36  Numbers and text encodings",
+    "section": "",
+    "text": "36.1 Planned topics\nOptional. Reference for later, when you need it.",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>36</span>  <span class='chapter-title'>Numbers and text encodings</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/36-numbers-encodings.html#planned-topics",
+    "href": "chapters/36-numbers-encodings.html#planned-topics",
+    "title": "36  Numbers and text encodings",
+    "section": "",
+    "text": "How integers and floating-point numbers are stored\nFloating-point error: why 0.1 + 0.2 == 0.3 is false\nInteger overflow\nLog-space probabilities (introduced earlier where an example needs it)\nText encodings beyond ASCII",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>36</span>  <span class='chapter-title'>Numbers and text encodings</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/37-gpu.html",
+    "href": "chapters/37-gpu.html",
+    "title": "37  GPU computing",
+    "section": "",
+    "text": "37.1 Planned topics\nOptional. Reference for later, when you need it.",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>37</span>  <span class='chapter-title'>GPU computing</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/37-gpu.html#planned-topics",
+    "href": "chapters/37-gpu.html#planned-topics",
+    "title": "37  GPU computing",
+    "section": "",
+    "text": "What GPUs are good at; what CUDA is\nWhen GPUs help in bioinformatics\nGPU tools (e.g., Parabricks, deep-learning tools)\nRequesting GPUs on SLURM",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>37</span>  <span class='chapter-title'>GPU computing</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/38-cloud.html",
+    "href": "chapters/38-cloud.html",
+    "title": "38  Cloud basics",
+    "section": "",
+    "text": "38.1 Planned topics\nOptional. Reference for later, when you need it.",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>38</span>  <span class='chapter-title'>Cloud basics</span>"
+    ]
+  },
+  {
+    "objectID": "chapters/38-cloud.html#planned-topics",
+    "href": "chapters/38-cloud.html#planned-topics",
+    "title": "38  Cloud basics",
+    "section": "",
+    "text": "What cloud computing is\nCosts and egress; avoiding surprise bills\nRunning pipelines in the cloud (AWS Batch, Seqera Platform, Terra)",
+    "crumbs": [
+      "Advanced topics (optional)",
+      "<span class='chapter-number'>38</span>  <span class='chapter-title'>Cloud basics</span>"
+    ]
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "References",
+    "section": "",
+    "text": "Microsoft. 2025. How to Install Linux on\nWindows with WSL. Microsoft Learn. https://learn.microsoft.com/en-us/windows/wsl/install.\n\n\nShotts, William. 2025. The Linux Command Line. Seventh\nInternet, Rev. A (25.12). https://linuxcommand.org/tlcl.php.\n\n\nWilson, Greg, Gerard Capes, Gabriel A. Devenyi, et al. 2019.\nSwcarpentry/Shell-Novice: Software Carpentry: The\nUNIX Shell, June 2019. Zenodo. https://doi.org/10.5281/zenodo.3266823.\n\n\nWu, Andrew C. K., Harshil Patel, Minghao Chia, et al. 2018.\n“Repression of Divergent Noncoding Transcription by a\nSequence-Specific Transcription Factor.” Molecular Cell\n72 (6): 942–954.e7. https://doi.org/10.1016/j.molcel.2018.10.018.",
+    "crumbs": [
+      "References"
+    ]
+  },
+  {
+    "objectID": "appendices/a-cluster-sites.html",
+    "href": "appendices/a-cluster-sites.html",
+    "title": "Appendix A — Cluster sites: SCINet and Nova",
+    "section": "",
+    "text": "A.1 Planned topics\nOptional. Reference for readers who use one of these clusters. Shared by Chapter 1, Chapter 9, and Chapter 10.",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Cluster sites: SCINet and Nova</span>"
+    ]
+  },
+  {
+    "objectID": "appendices/a-cluster-sites.html#planned-topics",
+    "href": "appendices/a-cluster-sites.html#planned-topics",
+    "title": "Appendix A — Cluster sites: SCINet and Nova",
+    "section": "",
+    "text": "Who can get an account, and how to apply (SCINet for USDA-affiliated users; ISU Nova for Iowa State users); how long approval takes\nLogging in: host names, multi-factor authentication, first login\nStorage areas, quotas, and what is backed up (home, project, scratch)\nSoftware on the site: modules, containers, and where pixi fits\nVS Code on each site: the supported route (Nova: VS Code Tunnel app or VS Code Server in Open OnDemand, Remote-SSH only to compute nodes; SCINet: VS Code Server in Open OnDemand or a registered tunnel to Ceres compute nodes), what each needs (VPN; Microsoft or GitHub account), ending a session to release its resources, and moving the code-server folder from $HOME to project storage\nSources: ISU: Using VS Code on the cluster, SCINet: VS Code guide\nWhere to get help: each site’s own documentation and support contacts",
+    "crumbs": [
+      "Appendices",
+      "<span class='chapter-number'>A</span>  <span class='chapter-title'>Cluster sites: SCINet and Nova</span>"
+    ]
+  },
+  {
+    "objectID": "reporting.html",
+    "href": "reporting.html",
+    "title": "Report an Issue",
+    "section": "",
+    "text": "Which route for what\nA computing book goes wrong in more ways than most: a command that worked last year fails with a new tool version, a cluster behaves differently from the one the book was tested on, a download link moves, an install breaks on one operating system. The fastest way to find these is readers. Every report is read, and the fix goes onto the website as soon as it is made.\nThere is no errata list. When something is wrong it is corrected in the book itself.\nIssues and Discussions are kept separate on purpose. The issue tracker holds only things with a fix, so it reads as a to-do list and you can search it to see whether your problem is already reported. Questions go to Discussions because a question is not a defect, but a run of questions on the same section is a sign the explanation failed, and that does become an issue.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#which-route-for-what",
+    "href": "reporting.html#which-route-for-what",
+    "title": "Report an Issue",
+    "section": "",
+    "text": "You have found\nUse\n\n\n\n\nA wrong command, output, or claim\nAn issue, using the Error in the book form\n\n\nA command or install that fails for you (pixi, VS Code, a tool, a cluster step)\nAn issue, using the Something doesn’t run form\n\n\nA broken link, moved download, or outdated tool version\nAn issue, using the Error in the book form\n\n\nA typo or awkward sentence you are willing to fix\nA pull request (see below)\n\n\nA typo you would rather just report\nThe Error in the book form\n\n\nA section you did not follow, or are not sure is right\nA question in Discussions › Q&A\n\n\nA suggestion: a better example, a missing topic or tool\nAn idea in Discussions › Ideas\n\n\nSomething that should not be public\nEmail the author (the address on the GitHub profile)",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#before-you-report",
+    "href": "reporting.html#before-you-report",
+    "title": "Report an Issue",
+    "section": "Before you report",
+    "text": "Before you report\nNote the page. Copy the URL of the page and the section heading. The book changes often while it is being written, so say roughly when you read it.\nSearch the open issues. If someone has already reported it, add a comment there rather than opening a second one. A second report on the same problem is still useful: it says how many readers it affects.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#reporting-an-error",
+    "href": "reporting.html#reporting-an-error",
+    "title": "Report an Issue",
+    "section": "Reporting an error",
+    "text": "Reporting an error\nYou need a free GitHub account. The Error in the book form asks for:\n\nChapter and section, with the command, code chunk, table, or figure if there is one.\nWhat is wrong (quote it as it appears) and what it should be.\nHow you know. Optional, and the most useful field: the command you ran and its output, or a link to the tool’s documentation.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#reporting-something-that-doesnt-run",
+    "href": "reporting.html#reporting-something-that-doesnt-run",
+    "title": "Report an Issue",
+    "section": "Reporting something that doesn’t run",
+    "text": "Reporting something that doesn’t run\nProblems with installs and commands are the most common reports, and the hardest to fix without details. The Something doesn’t run form asks for:\n\nWhere you ran it: laptop, cluster login node, or compute node; the operating system (macOS, Windows with WSL2, or Linux); the cluster name if there is one (e.g., SCINet Ceres, ISU Nova).\nThe exact command, copied, not retyped.\nThe complete error message, copied as text, not a screenshot, and not shortened. The useful line is often the first error, not the last.\nYour environment: the output of pixi info run in the book’s folder. On a cluster, also any module load lines you ran first.\n\n\n\n\n\n\n\nWarningPitfall\n\n\n\nNever paste passwords, SSH private keys, access tokens, or private data into an issue. Issues are public and stay public. Replace usernames, paths, and hostnames you would rather not share with placeholders such as &lt;user&gt;.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#fixing-it-yourself",
+    "href": "reporting.html#fixing-it-yourself",
+    "title": "Report an Issue",
+    "section": "Fixing it yourself",
+    "text": "Fixing it yourself\nFor a typo or a wording fix, the fastest route is to make the change and propose it on GitHub:\n\nOpen the page’s source file in the repository. Chapters live in chapters/, one .qmd file each (Markdown with code), named by number: chapter 5 is chapters/05-shell-basics.qmd.\nClick the pencil icon. GitHub offers to fork the repository into your own account; accept.\nMake the change, write one line saying what it is, and choose Propose changes, then Create pull request.\n\nThe author reviews it, and merges it or asks for a change. Some things to know before you edit:\n\nEdit the .qmd only. _book/ is generated output.\nOne fix per pull request. A three-line change is reviewed in a minute; a change that touches four chapters waits.\nDo not add to references.bib unless you have checked the DOI. Every entry in it has been verified.\nYour contribution is offered under the book’s licenses: CC BY-NC-SA 4.0 for text and figures, MIT for code.\nLarger changes (a rewritten section, a new example) should start as a discussion in Ideas, so the shape is agreed before the work is done.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#asking-a-question-or-suggesting-something",
+    "href": "reporting.html#asking-a-question-or-suggesting-something",
+    "title": "Report an Issue",
+    "section": "Asking a question or suggesting something",
+    "text": "Asking a question or suggesting something\nDiscussions › Q&A is for “I did not follow this step” or “is this right?”. Other readers can answer as well as the author, and an answered question stays there for the next person.\nDiscussions › Ideas is for a different example, a tool the book should cover, or a better way to explain something. Scope is the author’s call: this book aims for awareness, not depth, and full algorithms belong to the other books in the series. The discussion is where the case is made.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  },
+  {
+    "objectID": "reporting.html#what-happens-next",
+    "href": "reporting.html#what-happens-next",
+    "title": "Report an Issue",
+    "section": "What happens next",
+    "text": "What happens next\nA report is labelled with its chapter and its type (error, typo, doesnt-run, link). The fix is made on the main branch and the website updates from it. If a problem only affects one operating system or cluster, the fix may be a note in the chapter rather than a change to the command.",
+    "crumbs": [
+      "Appendices",
+      "Report an Issue"
+    ]
+  }
+]

@@ -15,6 +15,7 @@ will change as the chapter is written.
 - Tidy data
 - Spreadsheet pitfalls (gene names turned into dates)
 - Identifiers as text; missing or duplicate sample IDs
+- Check column types after reading (lost leading zeros, numbers read as text)
 - Joining counts to metadata: unmatched rows, row multiplication, order
 - Missing value vs zero
 - Reading and writing tables in R and Python, including gzipped files

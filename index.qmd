@@ -57,9 +57,10 @@ Every command is marked with where it runs: your **laptop**, a cluster
 **login node**, or a **compute node**.
 
 The book uses one software setup throughout: a **pixi** environment for all
-the tools, and **VS Code** (with Remote-SSH) as the editor. Both are set up
-in @sec-book-setup. A single running dataset, a small yeast RNA-seq
-experiment from the nf-core/rnaseq test data, is used from start to finish.
+the tools, and **VS Code** as the editor, connected to a cluster by your site's
+supported route. Both are set up in @sec-book-setup. A single running
+dataset, a small yeast RNA-seq experiment from the nf-core/rnaseq test
+data, is used from start to finish.
 
 ## Chapters
 

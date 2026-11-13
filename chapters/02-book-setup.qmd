@@ -12,7 +12,7 @@ will change as the chapter is written.
 ## Planned topics
 
 - Install pixi and the book environment; run a first example
-- VS Code as the primary editor, including Remote-SSH
+- VS Code as the primary editor; reaching a cluster by the site's route (Remote-SSH, tunnel, or Open OnDemand)
 - Just enough SSH to connect to a cluster (full treatment in Chapter 9)
 - Pitfall: some clusters restrict the VS Code server on login nodes; fall back to Open OnDemand or a compute-node session
 - nano and vim basics for editing on a server

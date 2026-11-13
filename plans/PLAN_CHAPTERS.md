@@ -16,6 +16,8 @@ authoring, Trees & clusters dropped, routine troubleshooting / ID checks /
 provenance added inside existing chapters. Revised 2026-11-13 after
 `PLAN_CHAPTERS_review_agy.md`: core/overview/optional label on every
 chapter, scope notes for Parts IV and VII, HPC quota and cache pitfalls.
+Revised 2026-11-13: number types made explicit in Chapters 12–15 and 36
+(integer vs float, booleans from conditions, `0.1 + 0.2 == 0.3`).
 
 **Guiding idea:** most readers will work on a Linux HPC cluster (SCINet
 Ceres/Atlas, ISU Nova, and similar), with a laptop for editing, small
@@ -31,7 +33,8 @@ optional and lives in Part VIII.
 ## Conventions for every chapter
 
 - **Primary setup [decided]:** one book environment with **pixi**, installed
-  in Chapter 2, and **VS Code** (with Remote-SSH) as the primary editor.
+  in Chapter 2, and **VS Code** as the primary editor, connected to a cluster by the
+  site's supported route (Remote-SSH, a VS Code tunnel, or Open OnDemand).
   Alternatives (Conda, uv, renv/rv, RStudio, Positron, Jupyter) appear in
   compact comparisons, not as choices readers must make before continuing.
   On a managed cluster, say when the site's modules/containers replace it.
@@ -89,7 +92,8 @@ Short: get readers to a first successful command quickly.
 ### 2. Book setup and editors [core]
 
 - Install pixi and the book environment; run a first example
-- VS Code as the primary editor, including Remote-SSH
+- VS Code as the primary editor; reaching a cluster by the site's route
+  (Remote-SSH, tunnel, or Open OnDemand)
 - Just enough SSH to connect to a cluster (full treatment in Chapter 9)
 - Pitfall: some clusters restrict the VS Code server on login nodes; fall
   back to Open OnDemand or a compute-node session
@@ -219,6 +223,11 @@ writing them is Part VIII.
 - Objects and assignment; calling a function, changing a named argument,
   saving the result
 - Types: strings, numbers, logicals, missing values (`NA`)
+  - Integer vs double: counts are whole numbers; DESeq2 stops with "some
+    values in assay are not integers" if given decimal (estimated) counts
+  - Logicals come from conditions (`padj < 0.05`) and select rows
+  - Floating-point surprise: `0.1 + 0.2 == 0.3` is `FALSE`; compare
+    decimals with `isTRUE(all.equal(x, y))`, never `==` (why: Chapter 36)
 - Vectors, lists, matrices, data frames
 - Selecting rows/columns; filtering with a condition; checking dimensions
   and sample names
@@ -233,6 +242,12 @@ writing them is Part VIII.
 - Running Python scripts vs interactive work
 - Objects and assignment; calling a function with keyword arguments
 - Types: strings, numbers, booleans, missing values (`None`, `NaN`)
+  - `int` vs `float`: counts are whole numbers; a single missing value
+    (`NaN`) turns a pandas count column into floats
+  - Booleans come from conditions (`padj < 0.05`) and select rows
+  - Floating-point surprise: `0.1 + 0.2 == 0.3` is `False`; compare
+    decimals with `math.isclose()` (`numpy.isclose()` for arrays), never
+    `==` (why: Chapter 36)
 - Lists, dicts, data frames (pandas / polars)
 - Selecting and filtering; checking shape and sample names
 - Packages: PyPI and Bioconda
@@ -256,6 +271,8 @@ linking to the Proteomics & Metabolomics book.
 - Tidy data
 - Spreadsheet pitfalls (gene names turned into dates)
 - Identifiers as text; missing or duplicate sample IDs
+- Check column types after reading: IDs read as numbers lose leading
+  zeros; one stray text value turns a numeric column into text
 - Joining counts to metadata: unmatched rows, row multiplication, order
 - Missing value vs zero
 - Reading and writing tables in R and Python, including gzipped files
@@ -266,7 +283,9 @@ linking to the Proteomics & Metabolomics book.
   accident; chromosome naming (`chr1` vs `1`)
 - FASTA structure; `.fai` index
 - FASTQ structure
-- Quality scores and Phred encoding (ASCII basics here only)
+- Quality scores and Phred encoding (ASCII basics here only): every
+  character is stored as a number; quality = character code − 33, so `B`
+  is 33 and `F` is 37 (the characters in Chapter 1's file)
 - Paired-end files
 - Candidate template chapter (series `PLAN.md` §8)
 
@@ -467,7 +486,11 @@ derivations.
 
 ### 36. Numbers and text encodings [optional]
 
-- Floating-point error, integer overflow
+- How integers and floating-point numbers are stored (bits, precision)
+- Floating-point error: why `0.1 + 0.2 == 0.3` is false (set up in
+  Chapters 12–13); comparing with a tolerance
+- Integer overflow: R's integers stop at 2,147,483,647 (`.Machine$integer.max`);
+  where large counts or genome coordinates meet such limits
 - Log-space probabilities (introduced earlier where an example needs it)
 - Text encodings beyond ASCII
 
@@ -497,7 +520,9 @@ chapters stay site-neutral.
 - Logging in: host names, multi-factor authentication, first login
 - Storage areas, quotas, and what is backed up
 - Site software: modules, containers, and where pixi fits
-- Open OnDemand and VS Code Remote-SSH on each site
+- VS Code on each site: supported route (Open OnDemand VS Code Server,
+  VS Code Tunnel app, Remote-SSH to compute nodes), ending sessions, moving
+  the code-server folder out of `$HOME`
 - Each site's own documentation and support contacts
 
 ### Candidates

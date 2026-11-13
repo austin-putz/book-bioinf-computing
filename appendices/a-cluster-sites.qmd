@@ -17,5 +17,12 @@ by @sec-orientation, @sec-working-remotely, and @sec-hpc-slurm.
 - Logging in: host names, multi-factor authentication, first login
 - Storage areas, quotas, and what is backed up (home, project, scratch)
 - Software on the site: modules, containers, and where pixi fits
-- Open OnDemand and VS Code Remote-SSH on each site
+- VS Code on each site: the supported route (Nova: VS Code Tunnel app or
+  VS Code Server in Open OnDemand, Remote-SSH only to compute nodes;
+  SCINet: VS Code Server in Open OnDemand or a registered tunnel to Ceres
+  compute nodes), what each needs (VPN; Microsoft or GitHub account),
+  ending a session to release its resources, and moving the code-server
+  folder from `$HOME` to project storage
+- Sources: [ISU: Using VS Code on the cluster](https://research.it.iastate.edu/using-vs-code-cluster),
+  [SCINet: VS Code guide](https://scinet.usda.gov/guides/ide/vscode)
 - Where to get help: each site's own documentation and support contacts

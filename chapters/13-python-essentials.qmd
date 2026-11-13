@@ -13,7 +13,7 @@ will change as the chapter is written.
 
 - Running Python scripts vs interactive work
 - Objects and assignment; calling a function with keyword arguments
-- Types: strings, numbers, booleans, missing values (`None`, `NaN`)
+- Types: strings, numbers (`int` vs `float`), booleans, missing values (`None`, `NaN`); why `0.1 + 0.2 == 0.3` is `False`
 - Lists, dicts, data frames (pandas / polars)
 - Selecting and filtering; checking shape and sample names
 - Packages: PyPI and Bioconda

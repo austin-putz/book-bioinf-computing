@@ -13,7 +13,7 @@ will change as the chapter is written.
 
 - Running R scripts vs interactive work
 - Objects and assignment; calling a function, changing a named argument, saving the result
-- Types: strings, numbers, logicals, missing values (`NA`)
+- Types: strings, numbers (integer vs double), logicals, missing values (`NA`); why `0.1 + 0.2 == 0.3` is `FALSE`
 - Vectors, lists, matrices, data frames
 - Selecting rows/columns; filtering with a condition; checking dimensions and sample names
 - Packages: CRAN and Bioconductor; reading a vignette

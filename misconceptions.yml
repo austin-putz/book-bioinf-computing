@@ -86,3 +86,65 @@
     this course. What do you tell them? (Correct: no; install WSL2 with
     Ubuntu.)
   chapters: [01-orientation]
+
+# Chapter 2 -----------------------------------------------------------------
+
+- id: installed-everywhere
+  claim: "Once I install a tool, it works in every terminal."
+  reality: >
+    Installing the book environment does not add its tools to every
+    terminal. `pixi run` runs one command with the environment; `pixi shell`
+    starts a shell with it until you type `exit`.
+  probe: >
+    In a fresh terminal in the book folder, `seqkit stats` says "command not
+    found", but `pixi run seqkit stats` works, and you have not installed
+    seqkit any other way. Why? (Correct: the environment is only active
+    through `pixi run` or `pixi shell`.)
+  chapters: [02-book-setup, 07-linux-system, 23-environments]
+
+- id: need-sudo-to-install
+  claim: "I need admin rights (sudo) to install the tools I use."
+  reality: >
+    Analysis tools install into your own space with pixi or conda, which is
+    the normal way on a cluster where you never have sudo. Some system
+    components and container runtimes do need your site's admins.
+  probe: >
+    On the cluster, `sudo apt install samtools` fails with "not in the
+    sudoers file". What do you do? (Correct: install it into your own
+    environment with pixi or conda, or use the site's module; not ask for
+    sudo.)
+  chapters: [02-book-setup, 23-environments]
+
+- id: remote-runs-on-laptop
+  claim: "With VS Code connected to the cluster, my code runs on my laptop."
+  reality: >
+    The window is local; a VS Code server runs on the remote machine, and
+    the files, terminal, and most extensions are there. Laptop files and
+    the laptop's environment are not copied over.
+  probe: >
+    In a VS Code window connected to the cluster you open a terminal and run
+    `ls ~/bioinf-book`, a folder on your laptop. What happens? (Correct:
+    "No such file or directory", unless you made that folder on the
+    cluster too.)
+  chapters: [02-book-setup, 09-working-remotely]
+
+- id: ide-required
+  claim: "I need RStudio for R and Jupyter for Python."
+  reality: >
+    Any editor plus a terminal runs both. VS Code edits R and Python
+    scripts, runs notebooks, and renders Quarto; RStudio and Jupyter are
+    options, not requirements.
+  probe: >
+    (Not probed by a question; Chapter 2's reference table and Chapters
+    12-13 confront it by running R and Python from VS Code.)
+  chapters: [02-book-setup, 12-r-essentials, 13-python-essentials]
+
+- id: stuck-in-vim
+  claim: "If vim opens, I have to close the terminal to get out."
+  reality: >
+    Press Esc, type `:q!`, press Enter to quit without saving. To make the
+    tool that opened vim (such as `git commit`) stop, use `:cq` instead.
+  probe: >
+    A command opened vim and the screen fills with `~` lines. How do you
+    leave without saving? (Correct: Esc, `:q!`, Enter.)
+  chapters: [02-book-setup, 08-shell-scripts]

@@ -2274,13 +2274,13 @@ vertical-align: -.125em;
 </header>
 
 
-<p><strong>Status:</strong> draft for review. Each chapter lists topics only; full chapter outlines come later. Revised 2026-11-12 after <code>PLAN_CHAPTERS_codex_review.md</code>: Part I shortened, Languages moved before Formats, nf-core before Nextflow authoring, Trees &amp; clusters dropped, routine troubleshooting / ID checks / provenance added inside existing chapters. Revised 2026-11-13 after <code>PLAN_CHAPTERS_review_agy.md</code>: core/overview/optional label on every chapter, scope notes for Parts IV and VII, HPC quota and cache pitfalls.</p>
+<p><strong>Status:</strong> draft for review. Each chapter lists topics only; full chapter outlines come later. Revised 2026-11-12 after <code>PLAN_CHAPTERS_codex_review.md</code>: Part I shortened, Languages moved before Formats, nf-core before Nextflow authoring, Trees &amp; clusters dropped, routine troubleshooting / ID checks / provenance added inside existing chapters. Revised 2026-11-13 after <code>PLAN_CHAPTERS_review_agy.md</code>: core/overview/optional label on every chapter, scope notes for Parts IV and VII, HPC quota and cache pitfalls. Revised 2026-11-13: number types made explicit in Chapters 12–15 and 36 (integer vs float, booleans from conditions, <code>0.1 + 0.2 == 0.3</code>).</p>
 <p><strong>Guiding idea:</strong> most readers will work on a Linux HPC cluster (SCINet Ceres/Atlas, ISU Nova, and similar), with a laptop for editing, small analyses (e.g., a small DESeq2 run), and collecting data. Teach Linux first; mention macOS and Windows only where they differ.</p>
 <p><strong>Audience boundary:</strong> readers mostly <em>use</em> existing tools, packages, and pipelines. Using code (calling functions, adapting a supplied script, reading an error, checking inputs) is taught throughout, where it is needed. Developing code (writing reusable functions, debuggers, automated tests) is optional and lives in Part VIII.</p>
 <section id="conventions-for-every-chapter" class="level2">
 <h2 class="anchored" data-anchor-id="conventions-for-every-chapter">Conventions for every chapter</h2>
 <ul>
-<li><strong>Primary setup [decided]:</strong> one book environment with <strong>pixi</strong>, installed in Chapter 2, and <strong>VS Code</strong> (with Remote-SSH) as the primary editor. Alternatives (Conda, uv, renv/rv, RStudio, Positron, Jupyter) appear in compact comparisons, not as choices readers must make before continuing. On a managed cluster, say when the site’s modules/containers replace it.</li>
+<li><strong>Primary setup [decided]:</strong> one book environment with <strong>pixi</strong>, installed in Chapter 2, and <strong>VS Code</strong> as the primary editor, connected to a cluster by the site’s supported route (Remote-SSH, a VS Code tunnel, or Open OnDemand). Alternatives (Conda, uv, renv/rv, RStudio, Positron, Jupyter) appear in compact comparisons, not as choices readers must make before continuing. On a managed cluster, say when the site’s modules/containers replace it.</li>
 <li><strong>Labels:</strong> every chapter heading carries one label, so readers know what to work through now and what to keep as reference for later:
 <ul>
 <li><strong>core</strong>: work through it, with exercises. The core chapters together form the first-pass path (about 24 chapters), shown in the preface.</li>
@@ -2316,7 +2316,7 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <h3 class="anchored" data-anchor-id="book-setup-and-editors-core">2. Book setup and editors [core]</h3>
 <ul>
 <li>Install pixi and the book environment; run a first example</li>
-<li>VS Code as the primary editor, including Remote-SSH</li>
+<li>VS Code as the primary editor; reaching a cluster by the site’s route (Remote-SSH, tunnel, or Open OnDemand)</li>
 <li>Just enough SSH to connect to a cluster (full treatment in Chapter 9)</li>
 <li>Pitfall: some clusters restrict the VS Code server on login nodes; fall back to Open OnDemand or a compute-node session</li>
 <li>nano and vim basics for editing on a server</li>
@@ -2450,7 +2450,12 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <ul>
 <li>Running R scripts vs interactive work</li>
 <li>Objects and assignment; calling a function, changing a named argument, saving the result</li>
-<li>Types: strings, numbers, logicals, missing values (<code>NA</code>)</li>
+<li>Types: strings, numbers, logicals, missing values (<code>NA</code>)
+<ul>
+<li>Integer vs double: counts are whole numbers; DESeq2 stops with “some values in assay are not integers” if given decimal (estimated) counts</li>
+<li>Logicals come from conditions (<code>padj &lt; 0.05</code>) and select rows</li>
+<li>Floating-point surprise: <code>0.1 + 0.2 == 0.3</code> is <code>FALSE</code>; compare decimals with <code>isTRUE(all.equal(x, y))</code>, never <code>==</code> (why: Chapter 36)</li>
+</ul></li>
 <li>Vectors, lists, matrices, data frames</li>
 <li>Selecting rows/columns; filtering with a condition; checking dimensions and sample names</li>
 <li>Packages: CRAN and Bioconductor; reading a vignette</li>
@@ -2465,7 +2470,12 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <ul>
 <li>Running Python scripts vs interactive work</li>
 <li>Objects and assignment; calling a function with keyword arguments</li>
-<li>Types: strings, numbers, booleans, missing values (<code>None</code>, <code>NaN</code>)</li>
+<li>Types: strings, numbers, booleans, missing values (<code>None</code>, <code>NaN</code>)
+<ul>
+<li><code>int</code> vs <code>float</code>: counts are whole numbers; a single missing value (<code>NaN</code>) turns a pandas count column into floats</li>
+<li>Booleans come from conditions (<code>padj &lt; 0.05</code>) and select rows</li>
+<li>Floating-point surprise: <code>0.1 + 0.2 == 0.3</code> is <code>False</code>; compare decimals with <code>math.isclose()</code> (<code>numpy.isclose()</code> for arrays), never <code>==</code> (why: Chapter 36)</li>
+</ul></li>
 <li>Lists, dicts, data frames (pandas / polars)</li>
 <li>Selecting and filtering; checking shape and sample names</li>
 <li>Packages: PyPI and Bioconda</li>
@@ -2486,6 +2496,7 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <li>Tidy data</li>
 <li>Spreadsheet pitfalls (gene names turned into dates)</li>
 <li>Identifiers as text; missing or duplicate sample IDs</li>
+<li>Check column types after reading: IDs read as numbers lose leading zeros; one stray text value turns a numeric column into text</li>
 <li>Joining counts to metadata: unmatched rows, row multiplication, order</li>
 <li>Missing value vs zero</li>
 <li>Reading and writing tables in R and Python, including gzipped files</li>
@@ -2497,7 +2508,7 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <li>Which reference? Genome assemblies and versions; mixing builds by accident; chromosome naming (<code>chr1</code> vs <code>1</code>)</li>
 <li>FASTA structure; <code>.fai</code> index</li>
 <li>FASTQ structure</li>
-<li>Quality scores and Phred encoding (ASCII basics here only)</li>
+<li>Quality scores and Phred encoding (ASCII basics here only): every character is stored as a number; quality = character code − 33, so <code>B</code> is 33 and <code>F</code> is 37 (the characters in Chapter 1’s file)</li>
 <li>Paired-end files</li>
 <li>Candidate template chapter (series <code>PLAN.md</code> §8)</li>
 </ul>
@@ -2722,7 +2733,9 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <section id="numbers-and-text-encodings-optional" class="level3">
 <h3 class="anchored" data-anchor-id="numbers-and-text-encodings-optional">36. Numbers and text encodings [optional]</h3>
 <ul>
-<li>Floating-point error, integer overflow</li>
+<li>How integers and floating-point numbers are stored (bits, precision)</li>
+<li>Floating-point error: why <code>0.1 + 0.2 == 0.3</code> is false (set up in Chapters 12–13); comparing with a tolerance</li>
+<li>Integer overflow: R’s integers stop at 2,147,483,647 (<code>.Machine$integer.max</code>); where large counts or genome coordinates meet such limits</li>
 <li>Log-space probabilities (introduced earlier where an example needs it)</li>
 <li>Text encodings beyond ASCII</li>
 </ul>
@@ -2756,7 +2769,7 @@ A mixed chapter marks its overview or optional sections inline.</li>
 <li>Logging in: host names, multi-factor authentication, first login</li>
 <li>Storage areas, quotas, and what is backed up</li>
 <li>Site software: modules, containers, and where pixi fits</li>
-<li>Open OnDemand and VS Code Remote-SSH on each site</li>
+<li>VS Code on each site: supported route (Open OnDemand VS Code Server, VS Code Tunnel app, Remote-SSH to compute nodes), ending sessions, moving the code-server folder out of <code>$HOME</code></li>
 <li>Each site’s own documentation and support contacts</li>
 </ul>
 </section>

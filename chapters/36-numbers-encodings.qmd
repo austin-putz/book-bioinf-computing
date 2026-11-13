@@ -11,6 +11,8 @@ will change as the chapter is written.
 
 ## Planned topics
 
-- Floating-point error, integer overflow
+- How integers and floating-point numbers are stored
+- Floating-point error: why `0.1 + 0.2 == 0.3` is false
+- Integer overflow
 - Log-space probabilities (introduced earlier where an example needs it)
 - Text encodings beyond ASCII

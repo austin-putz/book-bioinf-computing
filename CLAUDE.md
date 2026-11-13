@@ -166,9 +166,17 @@ file beside the source (`embed-resources: true`: no `_files/` folder).
 
 ## Decided
 
-- Primary setup: one book environment with **pixi**, and **VS Code** (with
-  Remote-SSH) as the primary editor. Alternatives appear only in compact
+- Primary setup: one book environment with **pixi**, and **VS Code** as the primary editor,
+  connected to a cluster by the site's supported route (Remote-SSH, a VS
+  Code tunnel, or Open OnDemand; revised 2026-11-13, since Nova and SCINet
+  keep VS Code off login nodes). Alternatives appear only in compact
   comparisons.
+- **Shell: bash everywhere** (decided 2026-11-13). Commands, outputs, and
+  explanations assume bash with GNU tools, as on Linux clusters. macOS
+  readers install Homebrew, a current bash, and the GNU tools in Chapter 1
+  (gnubin directories first on `PATH` in `~/.bash_profile`) and make bash
+  their login shell. Do not write zsh variants. GNU vs BSD differences are
+  taught in Chapter 7.
 - Running dataset: the yeast (*S. cerevisiae*) paired-end RNA-seq subset
   from nf-core/rnaseq's test profile (GEO GSE110004). Details in
   `PLAN_CHAPTERS.md`.

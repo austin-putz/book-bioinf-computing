@@ -46,13 +46,88 @@ Pick yours; every other tabbed box on this page will follow your choice.
 Open **Terminal**: press {{< kbd Cmd-Space >}}, type `Terminal`, and press
 {{< kbd Return >}}. (It lives in *Applications → Utilities*.)
 
-The shell on a Mac is **zsh**. Every command in this chapter works in zsh.
-@sec-shell-basics introduces bash, the shell on most clusters, without changing
-your Mac's settings.
+This book uses **bash**, the shell on Linux and on clusters, everywhere. A
+Mac needs a one-time setup to match: a new Mac's Terminal runs a different
+shell (zsh), its built-in bash is version 3.2 from 2007, and its everyday
+tools (`ls`, `sed`, `grep`, …) are BSD versions whose options differ from
+the GNU versions on Linux (@sec-linux-system explains the differences). You
+will install [Homebrew](https://brew.sh), a package manager for macOS, use it
+to install a current bash and the GNU tools, and make bash your shell. Allow
+15–30 minutes.
 
-You may read about [Homebrew](https://brew.sh), a popular way to install
-command-line tools on a Mac. You do not need it for this book: @sec-book-setup
-sets up every tool with pixi.
+1. **Install Homebrew.** Paste the install command from
+   [brew.sh](https://brew.sh):
+
+   ```{.bash filename="Terminal (laptop)"}
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+
+   It asks for your Mac password (**nothing appears as you type**; that is
+   normal) and may install Apple's Command Line Tools first. When it
+   finishes, it prints a *Next steps* section. If that section lists
+   commands, run them: on Apple silicon Macs they let the shell find
+   `brew`. Check with `brew --version`, which prints Homebrew's version.
+
+2. **Install bash and the GNU tools.**
+
+   ```{.bash filename="Terminal (laptop)"}
+   brew install bash coreutils findutils gnu-sed gnu-tar grep gawk gzip
+   ```
+
+   This installs a current bash; GNU coreutils (`ls`, `wc`, `nproc`, and
+   about a hundred more); and GNU `find`, `sed`, `tar`, `grep`, `awk`, and
+   `gzip`.
+
+3. **Make Homebrew's bash your shell.** The first line adds it to the list
+   of allowed shells; the second switches to it. Each asks for your Mac
+   password.
+
+   ```{.bash filename="Terminal (laptop)"}
+   echo "$(brew --prefix)/bin/bash" | sudo tee -a /etc/shells
+   chsh -s "$(brew --prefix)/bin/bash"
+   ```
+
+4. **Put the GNU tools first.** Homebrew installs most GNU tools under
+   names starting with `g` (`gsed`, `gls`), so they do not replace the
+   Mac's own. This command writes a small settings file, `~/.bash_profile`,
+   that bash reads each time Terminal opens. It makes `brew` available and
+   puts each tool's plain-named GNU version (`sed`, `ls`) ahead of the
+   Mac's. Copy all of it, from `cat` to the final `EOF`:
+
+   ```{.bash filename="Terminal (laptop)"}
+   cat >> ~/.bash_profile <<'EOF'
+   # Homebrew, then GNU tools ahead of the macOS versions (Chapter 1)
+   if [ -x /opt/homebrew/bin/brew ]; then
+     eval "$(/opt/homebrew/bin/brew shellenv)"
+   elif [ -x /usr/local/bin/brew ]; then
+     eval "$(/usr/local/bin/brew shellenv)"
+   fi
+   for tool in coreutils findutils gnu-sed gnu-tar grep gawk; do
+     PATH="$HOMEBREW_PREFIX/opt/$tool/libexec/gnubin:$PATH"
+   done
+   export PATH
+   # Read ~/.bashrc too, as Linux terminals do
+   if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+   EOF
+   ```
+
+5. **Quit Terminal** ({{< kbd Cmd-Q >}}), open it again, and check:
+
+   ```{.bash filename="Terminal (laptop)"}
+   echo "$BASH_VERSION"
+   sed --version | head -n 1
+   ```
+
+   ```{.console}
+   5.3.15(1)-release
+   sed (GNU sed) 4.10
+   ```
+
+   Your version numbers may be newer. If the first line starts with `3.2`,
+   step 3 did not take effect; if the second says `sed: illegal option`,
+   check step 4.
+
+From now on your Mac behaves like the Linux machines in this book.
 
 ## Windows (WSL2)
 
@@ -107,13 +182,13 @@ to use from Linux and invite line-ending and permission problems
 
 | Operating system | Terminal app | Default shell | Supported in this book |
 |:-----------------|:-------------|:--------------|:-----------------------|
-| macOS | Terminal | zsh | yes |
+| macOS | Terminal | bash (after the setup above; a new Mac uses zsh) | yes |
 | Windows | Ubuntu (WSL2) | bash | yes |
 | Windows | PowerShell, Git Bash | — | no |
 | Linux (e.g., Ubuntu) | Terminal | bash (usually) | yes |
 
-The terminal shows a **prompt**: a short line ending in `$` (bash) or `%`
-(zsh), often with your user name and folder in front. It means "ready for a
+The terminal shows a **prompt**: a short line ending in `$`, often with
+your user name and folder in front. It means "ready for a
 command". Code blocks in this book leave the prompt out, so you can copy and
 paste them as they are. Each block is labelled with where it runs; in this
 chapter that is always `Terminal (laptop)`.
@@ -191,12 +266,11 @@ ls -lh SRR6357070_1.fastq.gz
 ```
 
 ```{.console}
--rw-r--r--  1 you  staff   2.1M Nov 13 11:52 SRR6357070_1.fastq.gz
+-rw-r--r-- 1 you you 2.2M Nov 13 11:52 SRR6357070_1.fastq.gz
 ```
 
-Your name, group, and date will differ. The size shows as `2.1M` on macOS
-and `2.2M` on Linux and WSL; the next section explains why. Then test the
-compression:
+Your name, group, and date will differ. `2.2M` means about 2.2 megabytes;
+the next section says exactly what `M` counts. Then test the compression:
 
 ```{.bash filename="Terminal (laptop)"}
 gzip -t SRR6357070_1.fastq.gz
@@ -224,7 +298,7 @@ BBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 ```
 
 We use `gunzip -c` because it works the same on every system. (You may see
-`zcat` elsewhere; on macOS it does not read `.gz` files.)
+`zcat` elsewhere; the `zcat` built into macOS does not read `.gz` files.)
 
 **Step 5. Count the lines.**
 
@@ -233,10 +307,8 @@ gunzip -c SRR6357070_1.fastq.gz | wc -l
 ```
 
 ```{.console}
-  200000
+200000
 ```
-
-Linux and WSL print it without the leading spaces.
 
 **Step 6. Count the reads and save the result.** Each read in this file
 takes four lines, as you saw in step 4, so 200,000 lines are
@@ -298,33 +370,36 @@ it hold?
 Start with your own computer. Run the commands for your system and write
 your values in the last column of @tbl-my-computer.
 
-: The resources of one computer. macOS uses different commands for CPUs
-and RAM; all commands are in the tabs below. The example values are from
-one laptop (a Mac); yours will differ. {#tbl-my-computer}
+: The resources of one computer. macOS has no `free`, so it uses a
+different command for RAM; all commands are in the tabs below. The example
+values are from one laptop (a Mac); yours will differ. {#tbl-my-computer}
 
 | Resource | Command (Linux / WSL) | Read this | Example output | Your value |
 |:---------|:----------------------|:----------|:---------------|:-----------|
 | Logical CPUs | `nproc` | the number | `16` | |
-| RAM | `free -h` | `total` in the `Mem:` row | `68 GB` | |
-| Free disk | `df -h ~` | the `Avail` column | `744Gi` | |
+| RAM | `free -h` | `total` in the `Mem:` row | `64 GiB` | |
+| Free disk | `df -h ~` | the `Avail` column | `744G` | |
 
 ::: {.panel-tabset group="os"}
 ## macOS
 ```{.bash filename="Terminal (laptop)"}
-sysctl -n hw.ncpu
-echo "$(( $(sysctl -n hw.memsize) / 1000000000 )) GB"
+nproc
+echo "$(( $(sysctl -n hw.memsize) / 1073741824 )) GiB"
 df -h ~
 ```
 
 ```{.console}
 16
-68 GB
-Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
-/dev/disk1s1   1.8Ti   1.1Ti   744Gi    60%    6.1M  7.8G    0%   /System/Volumes/Data
+64 GiB
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/disk1s4s1  1.9T  1.1T  744G  61% /
 ```
 
-Read free disk from the `Avail` column. On a Mac, `Used` and `Avail` need
-not add up to `Size`, because several volumes share one disk.
+`nproc` comes with the GNU tools you installed. The second line asks macOS
+for its memory in bytes and divides by 1,073,741,824 (2^30^), giving GiB as
+`free -h` does on Linux. Read free disk from the `Avail` column. On a Mac,
+`Used` and `Avail` need not add up to `Size`, because several volumes share
+one disk.
 
 ## Windows (WSL2)
 ```{.bash filename="Terminal (laptop)"}
@@ -368,8 +443,8 @@ These three numbers describe the parts in @fig-computer-parts:
   almost no memory, whatever the file's size. Other tools, such as those
   that build a genome index (@sec-indexing-genomes), hold a lot in memory at once.
 - **I/O** (input/output): reading and writing files, over the disk or the
-  network. Simple steps over big files, such as counting or compressing,
-  often spend most of their time waiting for I/O. Heavier steps, such as
+  network. Simple steps over big files, such as copying them or counting
+  their lines, often spend most of their time waiting for I/O. Heavier steps, such as
   aligning reads, are often limited by the CPU, and some by RAM.
 
 ::: {#fig-computer-parts}
@@ -454,8 +529,9 @@ estimate.
 A note on units: in this book, 1 MB is 1,000,000 bytes and 1 GB is
 1,000,000,000 bytes. Some tools count in powers of 2 instead
 (1 MiB = 1,048,576 bytes) and often still print `M`. `ls -lh` is one of
-them: your 2,239,317-byte file is 2.14 MiB, which macOS shows as `2.1M`
-and Linux, which always rounds up, as `2.2M`.
+them: your 2,239,317-byte file is 2.14 MiB, which GNU `ls` rounds up to
+`2.2M`. (The `ls` built into macOS rounds to `2.1M`.) Memory is sold in
+binary units too: a laptop sold with "64 GB" has 64 GiB.
 
 Files later in a pipeline fall into two groups (@tbl-data-sizes,
 @fig-pipeline-file-sizes):
@@ -472,8 +548,8 @@ Files later in a pipeline fall into two groups (@tbl-data-sizes,
 ::: {.wide-table}
 | Format | What it holds | Group | Yeast test set (measured) | Typical study |
 |:-------|:--------------|:------|:--------------------------|:--------------|
-| FASTQ (`.fastq.gz`) | Every read, with a quality per base | read-level | 2.2 MB per mate file; 4.3 MB for one paired sample | about 1 GB per mate file; a few GB per sample |
-| BAM (`.bam`) | Every read, placed on the genome | read-level | 3.3 MB for one sample | a few GB per sample |
+| FASTQ (`.fastq.gz`) | Every read, with a quality per base | read-level | 2.2 MB per mate file; 4.3 MB for one paired sample (`WT_REP2`) | about 1 GB per mate file; a few GB per sample |
+| BAM (`.bam`) | Every read, placed on the genome | read-level | 3.3 MB for one sample (`WT_REP2`) | a few GB per sample |
 | Count matrix | One count per gene per sample | summary | 2.8 kB (124 genes × 5 samples) | a few MB for the whole study |
 | Results table | One row per gene: fold change, p-value | summary | 12.7 kB (124 genes) | a few MB |
 | VCF (`.vcf.gz`, DNA studies) | One row per variant | summary | none (RNA-seq) | MB for a few samples; GB for large cohorts |
@@ -537,7 +613,7 @@ You will use up to three kinds of computer (@tbl-where-compute).
 | | Laptop | Cluster (HPC) | Cloud |
 |:--|:--|:--|:--|
 | Cost to you | already paid for | usually free or cheap through your institution | pay for each hour used and each GB stored |
-| Size | a few to ~16 cores; 8–64 GB RAM | thousands of cores; nodes with hundreds of GB of RAM | as large as you pay for |
+| Size | a few to ~16 cores; 8–64 GiB of RAM | thousands of cores; nodes with hundreds of GB of RAM | as large as you pay for |
 | Who manages it | you | research computing staff | you, on the provider's machines |
 | What to run there | editing, plots, R and Python on summary files, small tests | alignment, many samples, pipelines, large-memory jobs | work your cluster cannot do, or when you have no cluster |
 
@@ -612,12 +688,13 @@ clusters](https://www.hpc.iastate.edu/) (Nova). Step-by-step details are in
 @sec-cluster-sites.
 :::
 
-No cluster yet? Keep going: everything up to @sec-working-remotely runs on your laptop.
+No cluster yet? Keep going: everything before @sec-working-remotely runs
+on your laptop.
 
 ## Summary {#sec-orientation-summary}
 
-- A terminal runs a shell (zsh on macOS, bash on Linux and WSL); you type
-  commands, and code blocks in this book leave out the prompt and say where
+- A terminal runs a shell; this book uses bash on every system (on a Mac,
+  after installing it with Homebrew). You type commands, and code blocks in this book leave out the prompt and say where
   they run.
 - You downloaded a FASTQ file, checked it, looked at its records, and saved
   a read count: `SRR6357070_1 reads: 50000`.
@@ -683,8 +760,7 @@ reason to use a cluster.
 time gunzip -c SRR6357070_1.fastq.gz | wc -l
 ```
 
-Find the elapsed time: the `real` line in bash, or the number before
-`total` in zsh. Estimate the time for a 30-million-read mate file (600
+Find the elapsed time: the `real` line of the output. Estimate the time for a 30-million-read mate file (600
 times larger), then name two reasons the real time could differ from your
 estimate.
 

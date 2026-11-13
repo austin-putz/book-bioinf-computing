@@ -2234,6 +2234,7 @@ vertical-align: -.125em;
   <li><a href="#decisions-2026-11-13-outside-reviews" id="toc-decisions-2026-11-13-outside-reviews" class="nav-link" data-scroll-target="#decisions-2026-11-13-outside-reviews">Decisions (2026-11-13, outside reviews)</a></li>
   <li><a href="#decisions-2026-11-13-open-questions-round-2" id="toc-decisions-2026-11-13-open-questions-round-2" class="nav-link" data-scroll-target="#decisions-2026-11-13-open-questions-round-2">Decisions (2026-11-13, open questions round 2)</a></li>
   <li><a href="#written-2026-11-13-what-changed-from-the-plan" id="toc-written-2026-11-13-what-changed-from-the-plan" class="nav-link" data-scroll-target="#written-2026-11-13-what-changed-from-the-plan">Written (2026-11-13): what changed from the plan</a></li>
+  <li><a href="#decisions-2026-11-13-after-first-draft" id="toc-decisions-2026-11-13-after-first-draft" class="nav-link" data-scroll-target="#decisions-2026-11-13-after-first-draft">Decisions (2026-11-13, after first draft)</a></li>
   <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   </ul>
 </nav>
@@ -2304,7 +2305,7 @@ vertical-align: -.125em;
 <li><strong>What this chapter does.</strong> Learning-goals callout. One paragraph: by the end you will have run your first commands on a real sequencing file. What a “bioinformatics computer” is: usually someone else’s Linux machine you reach from your laptop.</li>
 <li><strong>Opening a terminal.</strong> First, three words in one short paragraph: the <em>operating system</em> (macOS, Windows, Linux), the <em>terminal</em> (the window), and the <em>shell</em> (the program inside it that runs your commands). Then an OS tabset (<code>macOS</code> / <code>Windows (WSL2)</code> / <code>Linux</code>, STYLE-GUIDE §6):
 <ul>
-<li>macOS: Terminal; the default shell is zsh. Every command in this chapter works in zsh; Chapter 5 introduces bash without changing the login shell. Homebrew mentioned, not required (pixi in Chapter 2 covers installs).</li>
+<li>macOS: Terminal, then a one-time setup (15–30 min): install Homebrew; <code>brew install bash coreutils findutils gnu-sed gnu-tar grep gawk gzip</code>; make Homebrew’s bash the login shell (<code>/etc/shells</code>, <code>chsh</code>); write <code>~/.bash_profile</code> that puts each tool’s <code>gnubin</code> first on <code>PATH</code>; reopen Terminal and check <code>$BASH_VERSION</code> and <code>sed --version</code>. (Changed 2026-11-13: was “zsh, Homebrew not required”.)</li>
 <li>Windows: a setup branch that takes longer (install, restart, create a Linux account). The install command runs in PowerShell <em>as administrator</em>; everything after that runs in Ubuntu. When Ubuntu asks for a new password, nothing appears as you type; that is normal. Managed (university-owned) laptops may block the install: ask your IT office. One sentence that Git Bash exists but the book does not support it.</li>
 <li>Linux: already there; the shell is usually bash.</li>
 </ul>
@@ -2707,6 +2708,13 @@ BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 <li><strong><code>tbl-my-computer</code></strong> columns: Resource · command (Linux/WSL) · what to read · example output · your value. The macOS commands moved to the OS tabset below the table: the long macOS RAM command wrapped badly in a table cell.</li>
 <li><strong>Further reading:</strong> Shotts (TLCL, 7th Internet Edition, 25.12), Software Carpentry <em>The Unix Shell</em> (Zenodo DOI, June 2019 release), Microsoft’s WSL install page, Wu et al. 2018. DOIs verified with scite; BibTeX fetched from the DOI. The SCINet and ISU pages are linked in the text instead of being cited.</li>
 <li><code>SRR6357070_2.fastq.gz</code> (exercise 1) added to <code>data/README.md</code>: 50,000 reads, SHA-256 recorded.</li>
+</ul>
+</section>
+<section id="decisions-2026-11-13-after-first-draft" class="level2">
+<h2 class="anchored" data-anchor-id="decisions-2026-11-13-after-first-draft">Decisions (2026-11-13, after first draft)</h2>
+<ul>
+<li><strong>Bash everywhere</strong> (Austin): no zsh variants anywhere in the book. The macOS tab now installs Homebrew, GNU bash and the GNU tools, and makes bash the login shell. With GNU tools on the Mac, outputs are the same on every system: <code>ls -lh</code> shows <code>2.2M</code>, <code>wc -l</code> prints no leading spaces, <code>nproc</code> works on macOS, and <code>time</code> prints <code>real</code>. Recorded in the book’s <code>CLAUDE.md</code> under Decided. The setup was tested in an empty home folder with Homebrew’s bash 5.3 on macOS 15 (Intel).</li>
+<li>Review fixes: RAM shown in GiB (the macOS command divides by 2^30, so a “64 GB” laptop shows 64, matching <code>free -h</code>); “compressing” removed from the examples of I/O-limited steps (gzip compression is usually limited by the CPU); FASTQ and BAM sizes in <code>tbl-data-sizes</code> marked as <code>WT_REP2</code>; “everything before Chapter 9” (not “up to”).</li>
 </ul>
 </section>
 <section id="open-questions" class="level2">

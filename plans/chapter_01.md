@@ -60,10 +60,13 @@ aids* below.
    *operating system* (macOS, Windows, Linux), the *terminal* (the window),
    and the *shell* (the program inside it that runs your commands). Then an
    OS tabset (`macOS` / `Windows (WSL2)` / `Linux`, STYLE-GUIDE §6):
-   - macOS: Terminal; the default shell is zsh. Every command in this
-     chapter works in zsh; Chapter 5 introduces bash without changing the
-     login shell. Homebrew mentioned, not required (pixi in Chapter 2
-     covers installs).
+   - macOS: Terminal, then a one-time setup (15–30 min): install
+     Homebrew; `brew install bash coreutils findutils gnu-sed gnu-tar grep
+     gawk gzip`; make Homebrew's bash the login shell (`/etc/shells`,
+     `chsh`); write `~/.bash_profile` that puts each tool's `gnubin` first
+     on `PATH`; reopen Terminal and check `$BASH_VERSION` and
+     `sed --version`. (Changed 2026-11-13: was "zsh, Homebrew not
+     required".)
    - Windows: a setup branch that takes longer (install, restart, create a
      Linux account). The install command runs in PowerShell *as
      administrator*; everything after that runs in Ubuntu. When Ubuntu
@@ -502,6 +505,21 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   text instead of being cited.
 - `SRR6357070_2.fastq.gz` (exercise 1) added to `data/README.md`:
   50,000 reads, SHA-256 recorded.
+
+## Decisions (2026-11-13, after first draft)
+
+- **Bash everywhere** (Austin): no zsh variants anywhere in the book. The
+  macOS tab now installs Homebrew, GNU bash and the GNU tools, and makes
+  bash the login shell. With GNU tools on the Mac, outputs are the same on
+  every system: `ls -lh` shows `2.2M`, `wc -l` prints no leading spaces,
+  `nproc` works on macOS, and `time` prints `real`. Recorded in the book's
+  `CLAUDE.md` under Decided. The setup was tested in an empty home folder
+  with Homebrew's bash 5.3 on macOS 15 (Intel).
+- Review fixes: RAM shown in GiB (the macOS command divides by 2^30, so a
+  "64 GB" laptop shows 64, matching `free -h`); "compressing" removed from
+  the examples of I/O-limited steps (gzip compression is usually limited by
+  the CPU); FASTQ and BAM sizes in `tbl-data-sizes` marked as `WT_REP2`;
+  "everything before Chapter 9" (not "up to").
 
 ## Open questions
 

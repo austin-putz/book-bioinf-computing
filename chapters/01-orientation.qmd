@@ -683,7 +683,8 @@ A **cluster**, or HPC (high-performance computing) system, is many
 computers, called **nodes**, shared by many people (@fig-cluster-anatomy).
 You connect from your laptop to a **login node**. There you edit files and
 **submit jobs**: requests for some cores, memory, and time. A program called
-the **scheduler** holds each job in a queue until those resources are free,
+the **scheduler** (on most clusters, including SCINet and Nova,
+[SLURM](https://slurm.schedmd.com)) holds each job in a queue until those resources are free,
 then runs it on a **compute node**. Your files sit on shared storage, which
 both the login node and the compute nodes can read. @sec-working-remotely covers
 connecting and @sec-hpc-slurm the scheduler.
@@ -692,7 +693,7 @@ connecting and @sec-hpc-slurm the scheduler.
 {{< svg ../figures/cluster-anatomy.svg >}}
 
 The parts of an HPC cluster. You reach the login node from your laptop with
-`ssh`; work runs on compute nodes when the scheduler starts it; shared
+`ssh`; work runs on compute nodes when the scheduler (SLURM) starts it; shared
 storage is connected to both. Files do not pass through the scheduler.
 :::
 

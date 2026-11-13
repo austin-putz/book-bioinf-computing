@@ -521,6 +521,8 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   srun docs), `hostname` to check, `exit` after; site options (`-A`, `-p`)
   in Appendix A; some compute nodes have no internet. The §7 login-node
   pitfall and the top of the exercises point back to it.
+- **SLURM named** (Austin): `fig-cluster-anatomy` scheduler box labelled
+  SLURM; §7 text and caption name it (linked to slurm.schedmd.com).
 - **iTerm2** (Austin): one optional paragraph at the end of the macOS tab
   (same bash either way; split panes, scrollback search, paste history;
   `brew install --cask iterm2`), linked to iterm2.com; never assumed.

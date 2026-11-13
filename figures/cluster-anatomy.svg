@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" role="img" aria-labelledby="cluster-anatomy-title">
-  <title id="cluster-anatomy-title">The parts of an HPC cluster. Your laptop connects over SSH to a login node, where you edit files and submit jobs. Submitted jobs wait in the scheduler's queue until the scheduler starts them on compute nodes, where the work runs. Shared storage holding your data is part of the cluster and is connected to both the login node and the compute nodes; files do not pass through the scheduler. The laptop reaches the cluster only through the SSH connection and file transfers.</title>
+  <title id="cluster-anatomy-title">The parts of an HPC cluster. Your laptop connects over SSH to a login node, where you edit files and submit jobs. Submitted jobs wait in the queue of the scheduler, SLURM on most clusters, until it starts them on compute nodes, where the work runs. Shared storage holding your data is part of the cluster and is connected to both the login node and the compute nodes; files do not pass through the scheduler. The laptop reaches the cluster only through the SSH connection and file transfers.</title>
   <defs>
     <marker id="cluster-anatomy-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
@@ -32,8 +32,9 @@
   <text x="353" y="134" font-size="12" text-anchor="middle" class="fill-muted">submit</text>
 
   <!-- Scheduler queue -->
-  <rect x="376" y="80" width="134" height="130" rx="10" class="fill-surface stroke-line"/>
-  <text x="390" y="106" font-size="16" font-weight="700">Scheduler</text>
+  <rect x="376" y="64" width="134" height="150" rx="10" class="fill-surface stroke-line"/>
+  <text x="390" y="88" font-size="16" font-weight="700">Scheduler</text>
+  <text x="390" y="106" font-size="13" font-weight="700" class="fill-muted">SLURM</text>
   <text x="390" y="124" font-size="13" class="fill-muted">jobs wait in a queue</text>
   <g class="fill-muted-soft stroke-muted" stroke-width="1">
     <rect x="390" y="138" width="106" height="16" rx="3"/>

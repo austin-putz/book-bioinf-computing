@@ -14,6 +14,11 @@ $bioinf-muted:       #adb5bd;
 $bioinf-ref:   #F5B841;
 $bioinf-solve: #E3A3C7;
 
+// Inline code outside p/li/td (code-annotation notes, figure captions)
+// falls back to $code-bg, Bootstrap's near-white #f8f9fa: light text on
+// a white box. Use the dark panel colour instead.
+$code-bg: #343a40;
+
 // Darkly's docked sidebar is a light-grey slab; keep it a dark panel.
 $sidebar-bg: #2a2a2a;
 

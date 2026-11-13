@@ -390,8 +390,8 @@ End-of-chapter exercises (core chapter, so required):
   # open a new terminal (installer added ~/.pixi/bin to PATH), then:
   pixi --version
   mkdir -p ~/bioinf-book && cd ~/bioinf-book
-  curl -fLO <book release URL>/pixi.toml         # one fixed release
-  curl -fLO <book release URL>/pixi.lock
+  curl -fLO https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/<tag>/setup/pixi.toml
+  curl -fLO https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/<tag>/setup/pixi.lock
   pixi install --locked
   pixi run check
   pixi run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz
@@ -531,7 +531,10 @@ Not adopted:
   measuring download size, installed size (`du -sh .pixi`), file count
   (`find .pixi | wc -l`), and `osx-arm64` availability.
 - **Distribution:** two `curl -fLO` URLs for `pixi.toml` and `pixi.lock`,
-  pinned to a tagged book release.
+  pinned to a tagged book release. Files live in `setup/` in the book
+  repo (not the root, which is for building the book); URL pattern
+  `https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/<tag>/setup/pixi.toml`.
+  Tag once the environment contents are settled.
 - **Windows SSH:** two config files, said plainly. The Ubuntu terminal's
   `ssh` reads the WSL `~/.ssh/config`; VS Code Remote-SSH hosts are added
   with *Add New SSH Host* into the Windows-side config. The text names

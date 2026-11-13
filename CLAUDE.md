@@ -13,8 +13,11 @@ The parent folder `../` (`book-bioinf-series/`) holds the plan for the
 **whole series**. Read these before starting work:
 
 - `../CLAUDE.md`: series-wide decisions (audience, platform, naming,
-  licensing, data, citations, diagrams, output). They apply to this book.
-  Do not copy them here.
+  licensing, data, citations, diagrams, output) and **"Writing and
+  visuals"** (examples first, plenty of SVGs and tables, stepped SVG
+  before manim, ggplot2 / matplotlib, callouts, official links only).
+  Read that section before writing or planning any chapter. They apply
+  to this book. Do not copy them here.
 - `../PLAN.md`: series plan: every book's outline (§6), which book owns
   which shared topic (§7), pedagogy (§4), and build order (§8).
 - `../plans/`: series-level working notes (e.g., `animation-tools.md`).
@@ -85,6 +88,36 @@ tools.
   - `PLAN_CHAPTERS_codex_review.md`, `PLAN_CHAPTERS_review_agy.md`: outside
     reviews of the chapter plan. Advisory, not decisions.
   - `chapter_NN.md` (+ `.html`): one plan per chapter. See below.
+- `_quarto.yml`: the book config, started from the theme's
+  `example/_quarto.yml`. Its `chapters:` list mirrors `PLAN_CHAPTERS.md`
+  (one `part:` per Part); keep the two in step.
+- `index.qmd`: homepage (under-construction notice, audience, how to read,
+  linked chapter list with labels, license). Update its chapter list and
+  label counts whenever chapters change.
+- `chapters/NN-slug.qmd`: one file per chapter, `{#sec-slug}` on the title.
+  Unwritten chapters are stubs: an "Under construction" callout, the
+  chapter's label, and its planned topics from `PLAN_CHAPTERS.md`.
+- `references.qmd` + `references.bib`: References page.
+- `reporting.qmd`: "Report an Issue" page, the last sidebar entry, adapted
+  from `../../linear-models-in-animal-breeding/reporting.qmd`. Reached from
+  the left side only: that entry plus a bug icon in `sidebar: tools:`.
+  Do not use `repo-actions` or `issue-url` (they put links in the right
+  margin, which Austin does not want). GitHub links and issue forms get
+  added once the remote exists.
+- `_extensions/bioinf/`: copy of the shared theme (`quarto add`); never
+  edit it here, change `book-bioinf-theme` and update.
+- `LICENSE` (CC BY-NC-SA 4.0), `LICENSE-CODE` (MIT), `LICENSING.md`
+  (plain-English split), as in series `PLAN.md` §7a.
+
+## Book build
+
+- `quarto render` from the root builds `_book/` (git-ignored).
+- Identity: `bioinf:` accent `#2E6E7E` / `#6FB3C2`, label `CP` (the
+  theme's demo values for this book).
+- "Under construction" uses a red `callout-important` with
+  `icon=false`, on the homepage and every stub. This is the one use of
+  that callout outside its "Key idea" meaning; drop it from a chapter once
+  it is written.
 
 ## Chapter plans (`plans/`)
 

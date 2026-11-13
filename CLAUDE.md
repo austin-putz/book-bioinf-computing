@@ -128,6 +128,11 @@ tools.
 ## Book build
 
 - `quarto render` from the root builds `_book/` (git-ignored).
+- Repo: public, github.com/austin-putz/book-bioinf-computing. Published
+  with GitHub Pages as in `linear-models-in-animal-breeding`:
+  `.github/workflows/publish.yml` renders on every push to `main` and
+  publishes to the `gh-pages` branch
+  (austin-putz.github.io/book-bioinf-computing). Do not commit `_book/`.
 - Identity: `bioinf:` accent `#2E6E7E` / `#6FB3C2`, label `CP` (the
   theme's demo values for this book).
 - "Under construction" uses a red `callout-important` with
@@ -159,8 +164,9 @@ file beside the source (`embed-resources: true`: no `_files/` folder).
 - From `plans/`, render one file with `quarto render chapter_01.md`, or
   every doc with `quarto render`. Files starting with `_` (the template)
   are skipped.
-- Re-render after every edit; the HTML does not update itself. Commit the
-  `.md` and `.html` together.
+- Re-render after every edit; the HTML does not update itself. The HTML
+  is for viewing locally only: `plans/*.html` is git-ignored, so commit
+  only the `.md`.
 - `plans/` stays standalone after the book's own `_quarto.yml` is added at
   the root, because Quarto uses the nearest `_quarto.yml`.
 

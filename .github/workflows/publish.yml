@@ -1,0 +1,47 @@
+name: Render and Deploy Quarto Book
+
+# Same pattern as linear-models-in-animal-breeding: render on every push to
+# main and publish the HTML book to the gh-pages branch (GitHub Pages serves
+# that branch). Pull requests render only, to catch breakage early.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # HTML only (no PDF), and no chapter executes code yet, so Quarto is
+      # all the build needs. Add R/Python setup here when executed chunks
+      # appear (freeze: auto keeps results in _freeze/, which is committed).
+      - name: Setup Quarto
+        uses: quarto-dev/quarto-actions/setup@v2
+        with:
+          version: 'release'
+
+      - name: Render and deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Render only (pull requests)
+        if: github.ref != 'refs/heads/main'
+        run: quarto render

@@ -2,3 +2,6 @@
 /.quarto/
 **/*.quarto_ipynb
 .DS_Store
+
+# Rendered planning docs: local viewing only
+/plans/*.html

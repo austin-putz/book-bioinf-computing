@@ -1,0 +1,22 @@
+# Python essentials {#sec-python-essentials}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Running Python scripts vs interactive work
+- Objects and assignment; calling a function with keyword arguments
+- Types: strings, numbers, booleans, missing values (`None`, `NaN`)
+- Lists, dicts, data frames (pandas / polars)
+- Selecting and filtering; checking shape and sample names
+- Packages: PyPI and Bioconda
+- Biopython and pysam (brief)
+- Running a supplied script; reading a traceback for the line that failed
+- Reading files and making a quick plot

@@ -1,0 +1,17 @@
+# Performance and parallelism {#sec-performance}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Optional.** Reference for later, when you need it.
+
+## Planned topics
+
+- Thread flags: when more threads stop helping
+- Embarrassingly parallel work; GNU parallel
+- Vectorization in R and Python
+- Profiling time and memory

@@ -1,0 +1,19 @@
+# Text tools and pipes {#sec-text-tools}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Pipes and redirection; standard output vs standard error
+- `>` overwrites: destructive redirection
+- `grep`, `cut`, `sort`, `uniq`, `wc`
+- `sed` and `awk` basics
+- Regular expressions (shared across shell, R, Python)
+- Working with compressed files (`zcat`, `gzip`)

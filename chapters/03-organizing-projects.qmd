@@ -1,0 +1,23 @@
+# Organizing projects and data {#sec-organizing-projects}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Project folder structure (`src/`, `data/`, `results/`, …)
+- File and script naming (`00_`, `01_`, …; no spaces)
+- Raw data is read-only; link shared lab data and references into a project (symlinks) rather than copying them
+- Checksums (`md5sum`) for raw data
+- Backups (3-2-1); scratch is not a backup
+- Sample sheets and metadata as first-class files
+- Provenance: link each output to input accessions/checksums, reference release, software or pipeline version, parameters, and logs
+- READMEs and a lab-notebook habit
+- FAIR principles (brief)
+- Start the recurring project

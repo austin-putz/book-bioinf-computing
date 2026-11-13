@@ -1,0 +1,21 @@
+# Software environments {#sec-environments}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Why environments; dependency conflicts
+- How the book's pixi environment works (set up in Chapter 2)
+- Conda and Bioconda
+- uv and `pyproject.toml`
+- renv / rv for R
+- Lockfiles
+- Recording versions, parameters, and random seeds (provenance)
+- HPC pitfall: package caches default to `$HOME` and fill its quota; move them to project storage

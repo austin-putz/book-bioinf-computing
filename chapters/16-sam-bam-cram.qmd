@@ -1,0 +1,18 @@
+# Alignment formats: SAM, BAM, CRAM {#sec-sam-bam-cram}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- SAM fields and flags
+- BAM and CRAM: binary and compressed
+- `samtools` basics
+- Sorting and indexing (`.bai`)
+- A BAM, its index, and its reference must stay matched

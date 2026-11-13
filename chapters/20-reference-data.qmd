@@ -1,0 +1,19 @@
+# Reference data and public repositories {#sec-reference-data}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Ensembl, NCBI, UCSC: where references come from
+- Basic downloads with `curl` / `wget`; verify the file and record its source
+- Downloading reads: SRA, ENA, `fasterq-dump`
+- NCBI Datasets, GEO
+- Programmatic access (Entrez, biomaRt, REST APIs)
+- Licenses and citation for public data

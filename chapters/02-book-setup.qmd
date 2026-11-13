@@ -1,0 +1,19 @@
+# Book setup and editors {#sec-book-setup}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Install pixi and the book environment; run a first example
+- VS Code as the primary editor, including Remote-SSH
+- Just enough SSH to connect to a cluster (full treatment in Chapter 9)
+- Pitfall: some clusters restrict the VS Code server on login nodes; fall back to Open OnDemand or a compute-node session
+- nano and vim basics for editing on a server
+- Reference table: RStudio / Positron, Jupyter, Quarto, Open OnDemand

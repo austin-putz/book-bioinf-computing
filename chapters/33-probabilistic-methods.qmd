@@ -1,0 +1,19 @@
+# Probabilistic methods {#sec-probabilistic-methods}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+Four ideas met inside common tools, each tied to where readers meet it; no derivations.
+
+## Planned topics
+
+- Hidden Markov models (gene finding, profile HMMs, Pfam)
+- Expectation–maximization (multi-mapping reads in Salmon / RSEM)
+- Sketching: MinHash (Mash, sourmash)
+- Bloom filters (k-mer tools)

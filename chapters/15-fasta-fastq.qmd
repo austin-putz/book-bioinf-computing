@@ -1,0 +1,19 @@
+# Sequence formats: FASTA and FASTQ {#sec-fasta-fastq}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Which reference? Genome assemblies and versions; mixing builds by accident; chromosome naming (`chr1` vs `1`)
+- FASTA structure; `.fai` index
+- FASTQ structure
+- Quality scores and Phred encoding (ASCII basics here only)
+- Paired-end files
+- Candidate template chapter (series `PLAN.md` §8)

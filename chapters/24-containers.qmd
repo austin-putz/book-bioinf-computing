@@ -1,0 +1,19 @@
+# Containers {#sec-containers}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- What a container is (vs a virtual machine)
+- Docker
+- Apptainer on HPC
+- BioContainers and Seqera Containers
+- Image caches on HPC (`APPTAINER_CACHEDIR`, Nextflow's image cache) on project or scratch storage, not `$HOME`
+- When to use containers vs environments

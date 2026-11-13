@@ -1,0 +1,118 @@
+project:
+  type: book
+  output-dir: _book
+  # Chapters resolve data/ and scripts/ paths from the project root.
+  execute-dir: project
+
+book:
+  title: "Computing for Bioinformatics"
+  subtitle: "From the command line to reproducible pipelines"
+  author: "Austin Putz"
+  date: today
+  search: true
+  reader-mode: true
+  page-navigation: true
+  sidebar:
+    style: docked
+    collapse-level: 1
+    # Readers report problems from the left side only: a bug icon at the
+    # top of the sidebar (every page) and the last sidebar entry. No
+    # repo-actions or issue-url, so nothing goes in the right margin.
+    tools:
+      - icon: bug
+        href: reporting.qmd
+        text: "Report an issue"
+  page-footer:
+    center: |
+      Text and figures: [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/).
+      Code: [MIT](https://opensource.org/license/mit).
+
+  # Generated from plans/PLAN_CHAPTERS.md. Keep the two in step: if a
+  # chapter is added, renamed, or moved, update both.
+  chapters:
+    - index.qmd
+
+    - part: "Getting set up"
+      chapters:
+        - chapters/01-orientation.qmd
+        - chapters/02-book-setup.qmd
+        - chapters/03-organizing-projects.qmd
+        - chapters/04-getting-help.qmd
+
+    - part: "The Linux command line"
+      chapters:
+        - chapters/05-shell-basics.qmd
+        - chapters/06-text-tools.qmd
+        - chapters/07-linux-system.qmd
+        - chapters/08-shell-scripts.qmd
+        - chapters/09-working-remotely.qmd
+        - chapters/10-hpc-slurm.qmd
+
+    - part: "Languages"
+      chapters:
+        - chapters/11-language-landscape.qmd
+        - chapters/12-r-essentials.qmd
+        - chapters/13-python-essentials.qmd
+
+    - part: "Data, formats, and references"
+      chapters:
+        - chapters/14-tabular-data.qmd
+        - chapters/15-fasta-fastq.qmd
+        - chapters/16-sam-bam-cram.qmd
+        - chapters/17-intervals-variants.qmd
+        - chapters/18-efficient-formats.qmd
+        - chapters/19-databases.qmd
+        - chapters/20-reference-data.qmd
+
+    - part: "Reproducibility"
+      chapters:
+        - chapters/21-git.qmd
+        - chapters/22-github.qmd
+        - chapters/23-environments.qmd
+        - chapters/24-containers.qmd
+
+    - part: "Workflows"
+      chapters:
+        - chapters/25-workflow-managers.qmd
+        - chapters/26-nf-core.qmd
+        - chapters/27-writing-nextflow.qmd
+        - chapters/28-other-workflows.qmd
+
+    - part: "Algorithms"
+      chapters:
+        - chapters/29-thinking-algorithms.qmd
+        - chapters/30-sequence-alignment.qmd
+        - chapters/31-indexing-genomes.qmd
+        - chapters/32-graphs-assembly.qmd
+        - chapters/33-probabilistic-methods.qmd
+
+    - part: "Advanced topics (optional)"
+      chapters:
+        - chapters/34-reusable-code.qmd
+        - chapters/35-performance.qmd
+        - chapters/36-numbers-encodings.qmd
+        - chapters/37-gpu.qmd
+        - chapters/38-cloud.qmd
+
+    - references.qmd
+
+  # Confirmed appendices only; candidates stay in plans/PLAN_CHAPTERS.md.
+  appendices:
+    - appendices/a-cluster-sites.qmd
+    - reporting.qmd
+
+# The only per-book styling. See ../book-bioinf-theme/STYLE-GUIDE.md §1.
+bioinf:
+  accent: "#2E6E7E"
+  accent-dark: "#6FB3C2"
+  label: "CP"
+
+bibliography: references.bib
+
+format: bioinf-html
+
+execute:
+  freeze: auto
+  echo: true
+  warning: false
+  message: false

@@ -1,0 +1,19 @@
+# GitHub and collaboration {#sec-github}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Remotes: GitHub, GitLab, Bitbucket, Codeberg
+- Issues; asking for help on a tool's repo
+- Pull requests and code review (overview)
+- Forks (overview)
+- Licensing your code
+- Archiving with Zenodo DOIs; citing software

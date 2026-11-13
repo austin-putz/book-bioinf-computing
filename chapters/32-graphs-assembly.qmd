@@ -1,0 +1,16 @@
+# Graphs and assembly {#sec-graphs-assembly}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+## Planned topics
+
+- Graph basics; trees as graphs (phylogenetic trees mentioned only; full treatment in a later Advanced algorithms book)
+- Overlap graphs vs de Bruijn graphs
+- Why assembly is hard (repeats, errors)

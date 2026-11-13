@@ -1,0 +1,21 @@
+# Shell basics {#sec-shell-basics}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- What a shell is; bash
+- Filesystem tree, paths (absolute vs relative), home directory
+- Navigating, creating, copying, moving, deleting
+- Symbolic links (`ln -s`)
+- Wildcards and tab completion; quoting paths
+- Finding files (`find`)
+- Viewing files: `cat`, `less`, `head`, `tail`
+- Command history and shortcuts

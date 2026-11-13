@@ -1,0 +1,16 @@
+# Cloud basics {#sec-cloud}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Optional.** Reference for later, when you need it.
+
+## Planned topics
+
+- What cloud computing is
+- Costs and egress; avoiding surprise bills
+- Running pipelines in the cloud (AWS Batch, Seqera Platform, Terra)

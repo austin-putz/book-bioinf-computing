@@ -1,0 +1,21 @@
+# Cluster sites: SCINet and Nova {#sec-cluster-sites}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This appendix is a placeholder. The topics below are the current plan and
+will change as it is written.
+:::
+
+**Optional.** Reference for readers who use one of these clusters. Shared
+by @sec-orientation, @sec-working-remotely, and @sec-hpc-slurm.
+
+## Planned topics
+
+- Who can get an account, and how to apply (SCINet for USDA-affiliated
+  users; ISU Nova for Iowa State users); how long approval takes
+- Logging in: host names, multi-factor authentication, first login
+- Storage areas, quotas, and what is backed up (home, project, scratch)
+- Software on the site: modules, containers, and where pixi fits
+- Open OnDemand and VS Code Remote-SSH on each site
+- Where to get help: each site's own documentation and support contacts

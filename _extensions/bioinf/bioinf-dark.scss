@@ -1,0 +1,26 @@
+/*-- scss:defaults --*/
+
+// Lightened versions of the same semantic colours: same meanings, only the
+// luminance changes, so switching themes never changes the colour language.
+$bioinf-given: #5BB4E5;
+$bioinf-good:  #3FD3A8;
+$bioinf-warn:  #F08A4B;
+
+$bioinf-rule:        #dee2e6;
+$bioinf-rule-light:  #495057;
+$bioinf-console-bg:  #1b1f24;
+$bioinf-muted:       #adb5bd;
+
+$bioinf-ref:   #F5B841;
+$bioinf-solve: #E3A3C7;
+
+// Darkly's docked sidebar is a light-grey slab; keep it a dark panel.
+$sidebar-bg: #2a2a2a;
+
+// Mermaid: same neutral scheme as light, lightened (see bioinf-light.scss).
+$mermaid-node-bg-color:  #343a40;
+$mermaid-node-fg-color:  #f8f9fa;
+$mermaid-fg-color:       #f8f9fa;
+$mermaid-edge-color:     #adb5bd;
+$mermaid-label-bg-color: #222222;
+$mermaid-label-fg-color: #f8f9fa;

@@ -1,0 +1,17 @@
+# Working remotely {#sec-working-remotely}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- SSH and SSH keys; `~/.ssh/config`; jump hosts (`ProxyJump`)
+- tmux / screen so work survives a dropped connection
+- Moving data: `scp`, `rsync`, Globus
+- Checksums to confirm a transfer

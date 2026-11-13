@@ -1,0 +1,33 @@
+title: "Bioinformatics: A Worked Approach"
+author: Austin Putz
+version: 0.1.0
+quarto-required: ">=1.7.0"
+contributes:
+  formats:
+    # Used in a book as `format: bioinf-html`. Each book sets only
+    # `bioinf: {accent, accent-dark, label}` in its own _quarto.yml.
+    html:
+      theme:
+        light: [cosmo, bioinf-light.scss, bioinf-rules.scss]
+        dark: [darkly, bioinf-dark.scss, bioinf-rules.scss]
+      respect-user-color-scheme: true
+      filters:
+        - identity.lua
+      shortcodes:
+        - svg.lua
+        - animation.lua
+      toc: true
+      toc-depth: 3
+      # Wrap rather than clip: a reader should never scroll a code block
+      # sideways to see the end of a command.
+      code-copy: true
+      code-overflow: wrap
+      code-annotations: below
+      fig-cap-location: bottom
+      tbl-cap-location: top
+      reference-location: margin
+      citation-location: margin
+      lightbox: auto
+      link-external-icon: true
+      link-external-newwindow: true
+      df-print: kable

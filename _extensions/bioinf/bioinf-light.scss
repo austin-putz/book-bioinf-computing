@@ -1,0 +1,27 @@
+/*-- scss:defaults --*/
+
+// Semantic colours: identical in every book and reserved for their meaning.
+// A book accent must never reuse them (see STYLE-GUIDE.md).
+// Okabe-Ito, colour-vision-deficiency safe.
+$bioinf-given: #0072B2;   // input, observed
+$bioinf-good:  #009E73;   // check passed, self-check blocks
+$bioinf-warn:  #D55E00;   // misconceptions and warnings ONLY
+
+$bioinf-rule:        #212529;  // table top/bottom rules
+$bioinf-rule-light:  #dee2e6;  // table inner rule
+$bioinf-console-bg:  #f6f8fa;  // captured tool output
+$bioinf-muted:       #6c757d;
+
+// Two more roles, used in diagrams, animations, and maths (STYLE-GUIDE §2).
+$bioinf-ref:   #E69F00;   // reference / structure we bring: genome, GTF, adapters, X
+$bioinf-solve: #CC79A7;   // what we solve for: estimates, unknowns
+
+// Mermaid: neutral tiles with body-coloured text. Quarto's default colours
+// nodes with $primary, which is unreadable in the dark theme; keep both
+// modes neutral so no semantic colour is implied.
+$mermaid-node-bg-color:  #f1f3f5;
+$mermaid-node-fg-color:  #212529;
+$mermaid-fg-color:       #212529;
+$mermaid-edge-color:     #6c757d;
+$mermaid-label-bg-color: #ffffff;
+$mermaid-label-fg-color: #212529;

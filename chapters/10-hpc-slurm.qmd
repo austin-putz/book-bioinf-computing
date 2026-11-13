@@ -1,0 +1,25 @@
+# HPC and SLURM {#sec-hpc-slurm}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Cluster anatomy: login vs compute nodes
+- Environment modules (`module load`, Lmod)
+- Storage tiers: home, project, scratch; quotas (site quota command) and purges
+- File-count (inode) quotas: millions of small files (a Nextflow `work/` directory, environments in `$HOME`) can fill an account that has bytes to spare
+- `sbatch` scripts and resource requests
+- Estimating memory, time, and disk for a job; measuring a real one
+- Interactive jobs
+- Job arrays
+- Monitoring and accounting (`squeue`, `sacct`, `seff`); cancelling (`scancel`)
+- A running process vs a submitted job
+- GPU partitions (brief)
+- Etiquette: no heavy work on login nodes

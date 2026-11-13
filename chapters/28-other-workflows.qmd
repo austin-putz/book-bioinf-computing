@@ -1,0 +1,16 @@
+# Other workflow systems {#sec-other-workflows}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+## Planned topics
+
+- Snakemake (brief)
+- WDL / CWL (Terra, GATK)
+- Galaxy as a no-code option

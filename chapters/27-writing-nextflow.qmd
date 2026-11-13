@@ -1,0 +1,17 @@
+# Writing Nextflow {#sec-writing-nextflow}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Optional.** Reference for later, when you need it.
+
+## Planned topics
+
+- Processes and channels
+- Config files and profiles
+- Containers in Nextflow
+- Reading and adjusting an existing workflow; a small workflow of your own

@@ -1,0 +1,18 @@
+# Version control with git {#sec-git}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Why version control
+- Repositories, commits, history (builds on Chapter 8's routine)
+- `.gitignore`; keep data and secrets out of repos
+- Branches and merging
+- Undoing mistakes

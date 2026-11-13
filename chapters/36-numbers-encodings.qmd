@@ -1,0 +1,16 @@
+# Numbers and text encodings {#sec-numbers-encodings}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Optional.** Reference for later, when you need it.
+
+## Planned topics
+
+- Floating-point error, integer overflow
+- Log-space probabilities (introduced earlier where an example needs it)
+- Text encodings beyond ASCII

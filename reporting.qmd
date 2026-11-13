@@ -1,0 +1,122 @@
+# Report an Issue {.unnumbered}
+
+::: {.callout-important icon=false}
+## Not open yet
+
+The book's GitHub repository is not public yet, so the links on this page
+do not work. They will once it is. Until then, this page describes how
+reporting will work.
+:::
+
+A computing book goes wrong in more ways than most: a command that worked
+last year fails with a new tool version, a cluster behaves differently from
+the one the book was tested on, a download link moves, an install breaks on
+one operating system. The fastest way to find these is readers. Every report
+is read, and the fix goes onto the website as soon as it is made.
+
+There is no errata list. When something is wrong it is corrected in the book
+itself.
+
+## Which route for what
+
+| You have found | Use |
+|---|---|
+| A **wrong command, output, or claim** | An issue, using the *Error in the book* form |
+| A **command or install that fails for you** (pixi, VS Code, a tool, a cluster step) | An issue, using the *Something doesn't run* form |
+| A **broken link, moved download, or outdated tool version** | An issue, using the *Error in the book* form |
+| A **typo or awkward sentence** you are willing to fix | A pull request (see below) |
+| A typo you would rather just report | The *Error in the book* form |
+| A section you **did not follow**, or are not sure is right | A question in Discussions › Q&A |
+| A **suggestion**: a better example, a missing topic or tool | An idea in Discussions › Ideas |
+| Something that should **not be public** | Email the author (the address on the GitHub profile) |
+
+Issues and Discussions are kept separate on purpose. The issue tracker holds
+only things with a fix, so it reads as a to-do list and you can search it to
+see whether your problem is already reported. Questions go to Discussions
+because a question is not a defect, but a run of questions on the same
+section is a sign the explanation failed, and that does become an issue.
+
+## Before you report
+
+**Note the page.** Copy the URL of the page and the section heading. The
+book changes often while it is being written, so say roughly when you read
+it.
+
+**Search the open issues.** If someone has already reported it, add a comment
+there rather than opening a second one. A second report on the same problem
+is still useful: it says how many readers it affects.
+
+## Reporting an error
+
+You need a free GitHub account. The *Error in the book* form asks for:
+
+- **Chapter and section**, with the command, code chunk, table, or figure if
+  there is one.
+- **What is wrong** (quote it as it appears) and **what it should be**.
+- **How you know.** Optional, and the most useful field: the command you ran
+  and its output, or a link to the tool's documentation.
+
+## Reporting something that doesn't run
+
+Problems with installs and commands are the most common reports, and the
+hardest to fix without details. The *Something doesn't run* form asks for:
+
+- **Where you ran it:** laptop, cluster login node, or compute node; the
+  operating system (macOS, Windows with WSL2, or Linux); the cluster name if
+  there is one (e.g., SCINet Ceres, ISU Nova).
+- **The exact command**, copied, not retyped.
+- **The complete error message**, copied as text, not a screenshot, and not
+  shortened. The useful line is often the first error, not the last.
+- **Your environment:** the output of `pixi info` run in the book's folder.
+  On a cluster, also any `module load` lines you ran first.
+
+::: {.callout-warning}
+## Pitfall
+Never paste passwords, SSH private keys, access tokens, or private data into
+an issue. Issues are public and stay public. Replace usernames, paths, and
+hostnames you would rather not share with placeholders such as `<user>`.
+:::
+
+## Fixing it yourself
+
+For a typo or a wording fix, the fastest route is to make the change and
+propose it on GitHub:
+
+1. Open the page's source file in the repository. Chapters live in
+   `chapters/`, one `.qmd` file each (Markdown with code), named by number:
+   chapter 5 is `chapters/05-shell-basics.qmd`.
+2. Click the pencil icon. GitHub offers to **fork** the repository into your
+   own account; accept.
+3. Make the change, write one line saying what it is, and choose
+   **Propose changes**, then **Create pull request**.
+
+The author reviews it, and merges it or asks for a change. Some things to
+know before you edit:
+
+- **Edit the `.qmd` only.** `_book/` is generated output.
+- **One fix per pull request.** A three-line change is reviewed in a minute;
+  a change that touches four chapters waits.
+- **Do not add to `references.bib`** unless you have checked the DOI. Every
+  entry in it has been verified.
+- **Your contribution is offered under the book's licenses:** CC BY-NC-SA 4.0
+  for text and figures, MIT for code.
+- **Larger changes** (a rewritten section, a new example) should start as a
+  discussion in *Ideas*, so the shape is agreed before the work is done.
+
+## Asking a question or suggesting something
+
+**Discussions › Q&A** is for "I did not follow this step" or "is this
+right?". Other readers can answer as well as the author, and an answered
+question stays there for the next person.
+
+**Discussions › Ideas** is for a different example, a tool the book should
+cover, or a better way to explain something. Scope is the author's call:
+this book aims for awareness, not depth, and full algorithms belong to the
+other books in the series. The discussion is where the case is made.
+
+## What happens next
+
+A report is labelled with its chapter and its type (`error`, `typo`,
+`doesnt-run`, `link`). The fix is made on the `main` branch and the website
+updates from it. If a problem only affects one operating system or cluster,
+the fix may be a note in the chapter rather than a change to the command.

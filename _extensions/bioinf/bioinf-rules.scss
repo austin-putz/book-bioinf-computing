@@ -1,0 +1,326 @@
+/*-- scss:rules --*/
+
+// Shared by light and dark. Colours come from the defaults in
+// bioinf-light.scss / bioinf-dark.scss; the book accent comes from CSS
+// variables written by identity.lua.
+
+// --- Book identity: the strip ---------------------------------------------
+// The ONLY place the book accent appears on the page (plus the favicon).
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: var(--bioinf-accent, #{$bioinf-muted});
+  z-index: 1100;
+  pointer-events: none;
+}
+
+body.quarto-dark::before {
+  background: var(--bioinf-accent-dark, var(--bioinf-accent, #{$bioinf-muted}));
+}
+
+// --- Series line ----------------------------------------------------------
+// Same text in every book, above the book title in the sidebar.
+
+.sidebar-title::before {
+  content: "Bioinformatics: A Worked Approach";
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: $bioinf-muted;
+}
+
+// --- Tables ---------------------------------------------------------------
+// Booktabs style: heavy rule above and below, light rule under the header,
+// no vertical lines, no zebra stripes. Numbers line up in columns.
+
+main table {
+  font-variant-numeric: tabular-nums;
+  font-size: 0.9rem;
+}
+
+main .table {
+  border-top: 2px solid $bioinf-rule;
+  border-bottom: 2px solid $bioinf-rule;
+
+  > thead > tr > th {
+    border-bottom: 1px solid $bioinf-rule;
+    font-weight: 600;
+  }
+
+  > tbody > tr > td,
+  > tbody > tr > th {
+    border-bottom: 1px solid $bioinf-rule-light;
+  }
+
+  > tbody > tr:last-child > td,
+  > tbody > tr:last-child > th {
+    border-bottom: 0;
+  }
+}
+
+// Code inside a table cell (file names, flags) must not break mid-token.
+main table td code {
+  white-space: nowrap;
+}
+
+// Computed tables can be wide (count matrices, VCF columns). They scroll
+// inside their own box; the page itself never scrolls sideways.
+.cell-output-display:has(> table),
+.cell-output-display:has(> div > table),
+.wide-table {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+// --- Callout vocabulary ---------------------------------------------------
+// Built-in Quarto callouts carry fixed meanings (STYLE-GUIDE.md). These
+// classes mark the series-specific ones.
+
+// Learning goals: callout-note with icon=false and class .goals.
+.callout.goals {
+  border-left-color: $bioinf-given !important;
+}
+
+// Misconceptions: callout-caution with class .misconception.
+// The only place the warning colour is used for a whole block.
+.callout.misconception {
+  border-left-color: $bioinf-warn !important;
+
+  .callout-title-container { color: $bioinf-warn; }
+}
+
+// --- Self-check -----------------------------------------------------------
+// A question block; the answer sits in a collapsed callout inside it.
+
+.check {
+  border-left: 4px solid $bioinf-good;
+  background: rgba($bioinf-good, 0.06);
+  padding: 0.75rem 1rem;
+  margin: 1rem 0;
+  border-radius: 0 4px 4px 0;
+
+  > :last-child { margin-bottom: 0; }
+
+  .callout { margin-bottom: 0; }
+}
+
+// --- Three tiers of code --------------------------------------------------
+// Tier 2 ("shown, not run") is announced by a one-line compute note, and its
+// captured output is shown in a .console block.
+
+.compute-note {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  margin: 1rem 0 0.35rem;
+  font-size: 0.82rem;
+  color: $bioinf-muted;
+
+  &::before {
+    content: "Shown, not run";
+    flex: none;
+    padding: 0.05rem 0.45rem;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+}
+
+pre.console,
+div.sourceCode:has(> pre.console) {
+  background: $bioinf-console-bg;
+}
+
+pre.console {
+  font-size: 0.8rem;
+  border-left: 3px solid $bioinf-muted;
+  padding: 0.5rem 0.75rem;
+}
+
+// --- Diagrams (inline SVG) ------------------------------------------------
+// Hand-drawn SVGs are pasted into the page by the svg shortcode (svg.lua),
+// which marks the root <svg class="diagram">. They never contain colour
+// values: they use these classes, which take their values from the light or
+// dark stylesheet, so one drawing works in both modes. STYLE-GUIDE.md §7.
+//
+//   .fill-<c>       solid fill (shapes, text)
+//   .fill-<c>-soft  pale tint of the colour on the page background (boxes)
+//   .stroke-<c>     outline / line colour
+
+$bioinf-diagram-colors: (
+  "ink":     $body-color,
+  "muted":   $bioinf-muted,
+  "line":    $bioinf-rule-light,
+  "surface": $body-bg,
+  "given":   $bioinf-given,
+  "good":    $bioinf-good,
+  "warn":    $bioinf-warn,
+  "ref":     $bioinf-ref,
+  "solve":   $bioinf-solve,
+);
+
+svg.diagram {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: $font-family-sans-serif;
+  fill: $body-color;  // default for text and unclassed shapes
+
+  @each $name, $c in $bioinf-diagram-colors {
+    .fill-#{$name}      { fill: $c; }
+    .fill-#{$name}-soft { fill: mix($c, $body-bg, 15%); }
+    .stroke-#{$name}    { stroke: $c; }
+  }
+
+  .mono { font-family: $font-family-monospace; }
+
+  // Lines drawn with a stroke class should not also get the default fill.
+  line, polyline { fill: none; }
+}
+
+// Animation in diagrams is CSS only (no SMIL <animate>), so it stops for
+// readers who ask their system for reduced motion. The figure must make
+// sense as the still frame that is left.
+@media (prefers-reduced-motion: reduce) {
+  svg.diagram *,
+  svg.diagram *::before,
+  svg.diagram *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+// --- Stepped diagrams -----------------------------------------------------
+// SVGs with data-step-labels; steps.js adds the controls and the is-hidden /
+// is-away classes. Without the script, the drawing is the last step.
+
+svg.diagram:not(.steps-on) [data-hide] { display: none; }
+
+svg.diagram.steps-on {
+  [data-show], [data-hide], [data-move] {
+    transition: opacity 0.45s ease, transform 0.9s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: var(--delay, 0s);
+  }
+  [data-move] { transform-box: fill-box; transform-origin: center; }
+  .is-hidden { opacity: 0; }
+  .is-away {
+    transform: translate(var(--dx, 0px), var(--dy, 0px)) rotate(var(--rot, 0deg));
+  }
+}
+
+svg.diagram.steps-still * { transition: none !important; }
+
+.steps-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+
+  button {
+    font-size: 0.85rem;
+    line-height: 1.2;
+    color: $body-color;
+    background: transparent;
+    border: 1px solid $bioinf-rule-light;
+    border-radius: 999px;
+    padding: 0.25rem 0.7rem;
+    white-space: nowrap;
+    &:hover:not(:disabled) { border-color: $bioinf-muted; }
+    &:disabled { opacity: 0.4; cursor: default; }
+  }
+  .steps-prev, .steps-next { flex: none; }
+}
+
+.steps-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.35rem;
+  flex: 1;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .steps-pill { color: $bioinf-muted; }
+  .steps-pill.is-done { color: $body-color; }
+  .steps-pill.is-current {
+    color: $body-color;
+    font-weight: 600;
+    border-color: $body-color;
+    background: mix($body-color, $body-bg, 10%);
+  }
+}
+
+.steps-caption {
+  min-height: 3em;  // two lines, so the page does not jump between steps
+  margin: 0.6rem 0 0;
+  font-size: 0.95rem;
+  text-align: left;  // figure contents are centred; this is body text
+}
+
+// Narrow screens: Back/Next on one line, step names below.
+@media (max-width: 575.98px) {
+  .steps-bar { flex-wrap: wrap; justify-content: space-between; }
+  .steps-list { order: 3; flex-basis: 100%; }
+}
+
+// --- Interactive figures (Observable JS) ----------------------------------
+// The diagram colour classes also work in OJS output. Observable Plot writes
+// each mark's colour onto its shapes, so here a class on a mark also
+// colours the mark's children.
+
+.cell-output-display svg {
+  @each $name, $c in $bioinf-diagram-colors {
+    .fill-#{$name}, .fill-#{$name} > *           { fill: $c; }
+    .fill-#{$name}-soft, .fill-#{$name}-soft > * { fill: mix($c, $body-bg, 15%); }
+    .stroke-#{$name}, .stroke-#{$name} > *       { stroke: $c; }
+  }
+}
+
+// Inputs.button: match the stepped-figure buttons, readable in both modes.
+.cell-output-display form button {
+  font-size: 0.85rem;
+  color: $body-color;
+  background: transparent;
+  border: 1px solid $bioinf-rule-light;
+  border-radius: 999px;
+  padding: 0.25rem 0.8rem;
+  &:hover { border-color: $bioinf-muted; }
+}
+
+// `echo: false` OJS cells leave an empty copy button behind; hide it.
+.code-copy-outer-scaffold:has(> .cell-code.hidden) { display: none; }
+
+// --- Plots ----------------------------------------------------------------
+// Plots are rendered once, in light colours. In dark mode they sit on a
+// light panel so they read as a deliberate card, not a hole in the page.
+
+body.quarto-dark .cell-output-display img {
+  background: #fff;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
+
+// --- Animations -----------------------------------------------------------
+// manim clips (animation shortcode). Rendered once on a dark background, so
+// they read as a video player in both modes.
+
+video.animation {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  background: #1b1f24;
+}

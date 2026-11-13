@@ -1,0 +1,19 @@
+# Running nf-core pipelines {#sec-nf-core}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- What nf-core and Nextflow are
+- Running a pipeline: sample sheets, parameters, profiles, resources
+- Running on SLURM
+- Logs, the work directory, and `-resume` after a failure
+- Reading the outputs (MultiQC)
+- Choosing pipeline versions; recording and citing them

@@ -1,0 +1,20 @@
+# Orientation: computers and where you compute {#sec-orientation}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- CPU, cores vs threads; RAM vs disk; I/O as the usual bottleneck
+- Typical data sizes (FASTQ, BAM, VCF, count matrix)
+- macOS, Windows, Linux; Linux distributions briefly
+- Laptop vs HPC cluster vs cloud: what runs where
+- Windows: WSL2; macOS: Terminal, Homebrew
+- Getting an account on SCINet / a university cluster
+- Guided first session: open a terminal, look at a small FASTQ file, save a one-line summary (commands explained in Part II)

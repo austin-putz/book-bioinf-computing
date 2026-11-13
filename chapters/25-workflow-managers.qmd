@@ -1,0 +1,17 @@
+# Why workflow managers {#sec-workflow-managers}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- From numbered scripts to a workflow
+- Dependencies and re-running only what changed
+- Make basics
+- Overview of workflow managers

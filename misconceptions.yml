@@ -1,0 +1,86 @@
+# misconceptions.yml ------------------------------------------------------
+# What students actually get wrong, and where the book confronts it.
+# Format from ../../animal-models-test/misconceptions.yml. Misconception
+# callouts (STYLE-GUIDE §3) and self-check probes are written FROM this
+# file, not invented per chapter. Chapter plans list new entries; add them
+# here when the plan is agreed.
+#
+# Fields:
+#   id        stable slug, cited from chapters as {#mis-<id>}
+#   claim     the wrong belief, in a student's own voice
+#   reality   the correction
+#   probe     an item that separates students who hold the belief from those who don't
+#   chapters  where it is raised (first entry = where it is confronted head-on)
+
+# Chapter 1 -----------------------------------------------------------------
+
+- id: more-cores-faster
+  claim: "More cores always makes it faster."
+  reality: >
+    Only steps written to use several threads get faster, and only until
+    something else limits them. Many steps use one core, and many are
+    waiting on the disk or network, not the CPU.
+  probe: >
+    A step keeps one core at 100% while seven sit idle. Will rerunning it
+    with --threads 8 make it faster? (Correct: only if the tool supports
+    threads; if it does not, nothing changes.)
+  chapters: [01-orientation, 35-performance]
+
+- id: cluster-faster-computer
+  claim: "The cluster is just a faster computer."
+  reality: >
+    A cluster is many ordinary computers shared by many people. You ask a
+    scheduler for cores, memory, and time, and your job waits in a queue
+    until they are free. A single step is often no faster than on a laptop;
+    the gain is running many steps at once, with more memory.
+  probe: >
+    You submit one single-threaded job to the cluster. Why might it finish
+    later than the same job on your laptop? (Correct: it waits in the queue,
+    and one core on a compute node is not much faster than a laptop core.)
+  chapters: [01-orientation, 10-hpc-slurm]
+
+- id: run-on-login-node
+  claim: "I can run my analysis on the login node."
+  reality: >
+    The login node is a shared doorway for editing files and submitting
+    jobs. Heavy work there slows it for everyone, and many sites kill
+    long-running processes on it. Analysis runs on compute nodes.
+  probe: >
+    You have just logged in to the cluster. Where should an alignment of
+    48 samples run, and how do you get it there? (Correct: on compute nodes,
+    by submitting a job to the scheduler.)
+  chapters: [10-hpc-slurm, 01-orientation, 09-working-remotely]
+
+- id: ram-is-disk
+  claim: "RAM and disk storage are the same thing."
+  reality: >
+    RAM is the fast working space a program uses while it runs; it is
+    small and emptied when the program stops. Disk is slow, large, and
+    keeps files. Running out of RAM gets a job killed; running out of disk
+    gives "No space left on device".
+  probe: >
+    A job stops with the message "Killed" and no output file. Which
+    resource most likely ran out? (Correct: RAM, not disk.)
+  chapters: [01-orientation, 10-hpc-slurm]
+
+- id: learn-commands-first
+  claim: "I need to learn the commands before I can try anything."
+  reality: >
+    You can run a working analysis by copying commands and checking the
+    output. Understanding comes from seeing it work first, then learning
+    what each part does (Part II).
+  probe: >
+    (Not probed by a question; Chapter 1's guided session confronts it by
+    having readers run commands before they are explained.)
+  chapters: [01-orientation]
+
+- id: windows-needs-linux-pc
+  claim: "Windows users need a separate Linux computer."
+  reality: >
+    WSL2 runs a real Linux system (e.g., Ubuntu) inside Windows. Every
+    command in this book works there.
+  probe: >
+    A classmate on Windows asks whether they need to buy a Linux laptop for
+    this course. What do you tell them? (Correct: no; install WSL2 with
+    Ubuntu.)
+  chapters: [01-orientation]

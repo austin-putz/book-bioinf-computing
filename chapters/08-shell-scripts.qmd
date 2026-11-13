@@ -1,0 +1,19 @@
+# Shell scripts {#sec-shell-scripts}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Variables, quoting, loops, conditionals
+- Script arguments
+- `set -euo pipefail`: what it catches and what it does not
+- Logging output and errors
+- Numbered scripts as a simple pipeline
+- Minimal git routine for saved scripts: check changes, commit, recover a previous version (full treatment in Chapter 21)

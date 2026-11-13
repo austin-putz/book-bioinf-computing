@@ -1,0 +1,20 @@
+# Getting help {#sec-getting-help}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- `--help`, `man` pages, tool documentation
+- Routine troubleshooting: read the error or warning; find the log; check paths, inputs, and requested resources; know when to ask
+- Reading a methods section to find tools, versions, parameters
+- Searching well; Biostars, Bioconductor support site
+- Asking for help: code, complete messages, session info; a minimal reproducible example
+- Using AI coding assistants responsibly (verify output; no data or credentials pasted in)
+- GitHub issues covered later (Part V)

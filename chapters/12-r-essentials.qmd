@@ -1,0 +1,23 @@
+# R essentials {#sec-r-essentials}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Running R scripts vs interactive work
+- Objects and assignment; calling a function, changing a named argument, saving the result
+- Types: strings, numbers, logicals, missing values (`NA`)
+- Vectors, lists, matrices, data frames
+- Selecting rows/columns; filtering with a condition; checking dimensions and sample names
+- Packages: CRAN and Bioconductor; reading a vignette
+- Base R vs tidyverse
+- Running a supplied script: adjust paths, filenames, documented settings
+- Reading an error; restart and run from a clean session
+- Reading files and making a quick plot; rendering one small Quarto report

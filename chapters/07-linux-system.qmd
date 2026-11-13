@@ -1,0 +1,21 @@
+# The Linux system {#sec-linux-system}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- Users, groups, permissions, `chmod`
+- Executable files and shebang lines
+- `PATH` and environment variables
+- `.bashrc` vs `.bash_profile`
+- Processes: `ps`, `top`; interrupting (Ctrl-C) and `kill`
+- Disk usage: `df`, `du`
+- GNU (Linux) vs BSD (macOS) tools
+- Line endings (LF vs CRLF)

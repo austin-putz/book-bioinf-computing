@@ -1,0 +1,18 @@
+# Intervals, annotation, and variants {#sec-intervals-variants}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- BED, GFF3, GTF
+- 0-based vs 1-based coordinates, shown on a tiny interval
+- VCF structure
+- `bgzip` and `tabix`
+- `bedtools` basics

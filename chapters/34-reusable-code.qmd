@@ -1,0 +1,19 @@
+# Writing reusable analysis code {#sec-reusable-code}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Optional.** Reference for later, when you need it.
+
+## Planned topics
+
+- Data structures (beyond vectors, lists, dicts)
+- Writing functions: inputs, return values, unusual inputs
+- Command-line scripts with arguments (argparse, optparse)
+- Debugging: breakpoints, stepping through functions, call stacks
+- Automated tests; checking results on toy data
+- Style and linting

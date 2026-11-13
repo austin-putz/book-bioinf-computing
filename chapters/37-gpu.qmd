@@ -1,0 +1,17 @@
+# GPU computing {#sec-gpu}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Optional.** Reference for later, when you need it.
+
+## Planned topics
+
+- What GPUs are good at; what CUDA is
+- When GPUs help in bioinformatics
+- GPU tools (e.g., Parabricks, deep-learning tools)
+- Requesting GPUs on SLURM

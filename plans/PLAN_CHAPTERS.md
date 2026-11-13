@@ -486,12 +486,25 @@ derivations.
 
 ---
 
-## Appendices (candidates)
+## Appendices
+
+### A. Cluster sites: SCINet and Nova [optional] (confirmed 2026-11-13)
+
+Step-by-step site details, shared by Chapters 1, 9, and 10, so the
+chapters stay site-neutral.
+
+- Who can get an account and how to apply; how long approval takes
+- Logging in: host names, multi-factor authentication, first login
+- Storage areas, quotas, and what is backed up
+- Site software: modules, containers, and where pixi fits
+- Open OnDemand and VS Code Remote-SSH on each site
+- Each site's own documentation and support contacts
+
+### Candidates
 
 - Setup checklist (install everything needed for the book)
 - Command cheat sheets (shell, git, SLURM)
 - Glossary
-- Site-specific notes (SCINet, Nova)
 
 ---
 

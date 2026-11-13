@@ -1,0 +1,20 @@
+# The language landscape {#sec-language-landscape}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+## Planned topics
+
+- Bash as glue for running tools
+- R and Python: who uses which, and for what
+- Julia (brief)
+- Perl as history
+- Compiled languages (C/C++, Rust, Java): what your tools are written in
+- Building tools from source (`make`, `cmake`) briefly
+- The series' division of labour

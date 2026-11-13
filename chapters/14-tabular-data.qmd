@@ -1,0 +1,20 @@
+# Tabular data {#sec-tabular-data}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- CSV vs TSV; why bioinformatics uses tabs
+- Tidy data
+- Spreadsheet pitfalls (gene names turned into dates)
+- Identifiers as text; missing or duplicate sample IDs
+- Joining counts to metadata: unmatched rows, row multiplication, order
+- Missing value vs zero
+- Reading and writing tables in R and Python, including gzipped files

@@ -21,6 +21,41 @@ ul.task-list li input[type="checkbox"] {
 width: 0.8em;
 margin: 0 0.8em 0.2em -1em;  vertical-align: middle;
 }
+
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+}
+pre.numberSource { margin-left: 3em; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -2175,12 +2210,27 @@ vertical-align: -.125em;
   <ul>
   <li><a href="#from-plan_chapters.md" id="toc-from-plan_chapters.md" class="nav-link active" data-scroll-target="#from-plan_chapters.md">From <code>PLAN_CHAPTERS.md</code></a></li>
   <li><a href="#outcome-and-check" id="toc-outcome-and-check" class="nav-link" data-scroll-target="#outcome-and-check">Outcome and check</a></li>
+  <li><a href="#learning-goals-draft-of-the-opening-callout" id="toc-learning-goals-draft-of-the-opening-callout" class="nav-link" data-scroll-target="#learning-goals-draft-of-the-opening-callout">Learning goals (draft of the opening callout)</a></li>
   <li><a href="#sections" id="toc-sections" class="nav-link" data-scroll-target="#sections">Sections</a></li>
+  <li><a href="#visuals-and-teaching-aids" id="toc-visuals-and-teaching-aids" class="nav-link" data-scroll-target="#visuals-and-teaching-aids">Visuals and teaching aids</a>
+  <ul class="collapse">
+  <li><a href="#figures-svg-7" id="toc-figures-svg-7" class="nav-link" data-scroll-target="#figures-svg-7">Figures (SVG, §7)</a></li>
+  <li><a href="#interactive-figure-observable-js" id="toc-interactive-figure-observable-js" class="nav-link" data-scroll-target="#interactive-figure-observable-js">Interactive figure (Observable JS)</a></li>
+  <li><a href="#tables-5" id="toc-tables-5" class="nav-link" data-scroll-target="#tables-5">Tables (§5)</a></li>
+  <li><a href="#code-6" id="toc-code-6" class="nav-link" data-scroll-target="#code-6">Code (§6)</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  <li><a href="#animation-manim" id="toc-animation-manim" class="nav-link" data-scroll-target="#animation-manim">Animation (manim)</a></li>
+  <li><a href="#callouts-3-at-most-3-per-screen" id="toc-callouts-3-at-most-3-per-screen" class="nav-link" data-scroll-target="#callouts-3-at-most-3-per-screen">Callouts (§3, at most ~3 per screen)</a></li>
+  <li><a href="#self-checks-and-exercises-4" id="toc-self-checks-and-exercises-4" class="nav-link" data-scroll-target="#self-checks-and-exercises-4">Self-checks and exercises (§4)</a></li>
+  </ul></li>
   <li><a href="#examples-and-data" id="toc-examples-and-data" class="nav-link" data-scroll-target="#examples-and-data">Examples and data</a></li>
   <li><a href="#misconceptions" id="toc-misconceptions" class="nav-link" data-scroll-target="#misconceptions">Misconceptions</a></li>
   <li><a href="#links-to-other-chapters-and-books" id="toc-links-to-other-chapters-and-books" class="nav-link" data-scroll-target="#links-to-other-chapters-and-books">Links to other chapters and books</a></li>
+  <li><a href="#official-links-to-include" id="toc-official-links-to-include" class="nav-link" data-scroll-target="#official-links-to-include">Official links to include</a></li>
   <li><a href="#further-reading-candidates" id="toc-further-reading-candidates" class="nav-link" data-scroll-target="#further-reading-candidates">Further reading (candidates)</a></li>
   <li><a href="#austins-notes" id="toc-austins-notes" class="nav-link" data-scroll-target="#austins-notes">Austin’s notes</a></li>
+  <li><a href="#decisions-2026-11-13" id="toc-decisions-2026-11-13" class="nav-link" data-scroll-target="#decisions-2026-11-13">Decisions (2026-11-13)</a></li>
+  <li><a href="#decisions-2026-11-13-open-questions-round" id="toc-decisions-2026-11-13-open-questions-round" class="nav-link" data-scroll-target="#decisions-2026-11-13-open-questions-round">Decisions (2026-11-13, open questions round)</a></li>
   <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   </ul>
 </nav>
@@ -2229,41 +2279,310 @@ vertical-align: -.125em;
 <section id="outcome-and-check" class="level2">
 <h2 class="anchored" data-anchor-id="outcome-and-check">Outcome and check</h2>
 <ul>
-<li><strong>Outcome:</strong></li>
-<li><strong>Check:</strong></li>
+<li><strong>Outcome:</strong> readers can open a terminal on their own computer, download one small FASTQ file, look at it, and save a one-line read count to a file. They can also say, for a given job, whether it belongs on a laptop, a cluster, or the cloud, and which resource (CPU, RAM, disk, I/O) is likely to limit it.</li>
+<li><strong>Check:</strong> <code>cat fastq_summary.txt</code> prints exactly <code>SRR6357070_1 reads: 50000</code> (each test sample has 50,000 reads; verified 2026-11-13).</li>
 </ul>
+</section>
+<section id="learning-goals-draft-of-the-opening-callout" class="level2">
+<h2 class="anchored" data-anchor-id="learning-goals-draft-of-the-opening-callout">Learning goals (draft of the opening callout)</h2>
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Open a terminal on your computer and run a command you were given.</li>
+<li>Download a FASTQ file, look at its first records, and count its reads.</li>
+<li>Find how many cores, how much RAM, and how much free disk your computer has.</li>
+<li>Estimate a file’s size from its read count, and say which resource (CPU, RAM, disk, I/O) is likely to limit a job.</li>
+<li>Decide whether a job belongs on a laptop, a cluster, or the cloud.</li>
+</ol>
 </section>
 <section id="sections" class="level2">
 <h2 class="anchored" data-anchor-id="sections">Sections</h2>
+<p>Short chapter: first successful command comes early (sections 2–3), then brief concept sections that point forward. Each concept section opens with something the reader runs or computes, then names the idea (examples first). Visual items in brackets are specified under <em>Visuals and teaching aids</em> below.</p>
 <ol type="1">
-<li></li>
+<li><strong>What this chapter does.</strong> Learning-goals callout. One paragraph: by the end you will have run your first commands on a real sequencing file. What a “bioinformatics computer” is: usually someone else’s Linux machine you reach from your laptop.</li>
+<li><strong>Opening a terminal.</strong> OS tabset (<code>macOS</code> / <code>Windows (WSL2)</code> / <code>Linux</code>, STYLE-GUIDE §6) so each reader sees only their steps. macOS: Terminal (Homebrew mentioned, not required, since pixi in Chapter 2 covers installs). Windows: install WSL2 with Ubuntu and work inside it; one sentence that Git Bash exists but the book does not support it. Linux: already there. What the prompt is, and that code blocks in this book leave it out so copy-paste works. [<code>tbl-terminal-by-os</code>; pitfall: WSL files under <code>/mnt/c</code>]</li>
+<li><strong>Guided first session.</strong> Copy-and-run, with “you’ll learn this in Part II” notes: make a folder, download one yeast FASTQ file with one <code>curl</code> command (browser download link as a fallback), peek at the first two records, count reads, save a one-line summary. Each command is explained with code annotations, and the real output is shown in a <code>.console</code> block so readers can compare. Then the annotated FASTQ record (full format in Chapter 15). [<code>fig-fastq-record</code>; self-check]</li>
+<li><strong>Parts of a computer that matter for analysis.</strong> <em>Start hands-on:</em> readers run <code>time</code> on the read count from section 3, then look up their own cores, RAM, and free disk and fill in the “your computer” column. <em>Then name the parts:</em> CPU, cores vs threads (and why tools ask for <code>--threads</code>); RAM vs disk (working space vs storage); I/O (reading and writing files) as the usual bottleneck. Close with what it looks like when each resource runs out. [<code>tbl-my-computer</code>, <code>fig-computer-parts</code>, <code>fig-cores-threads</code>, <code>tbl-resource-limits</code>; key idea; misconception callout “more cores”; self-check]</li>
+<li><strong>How big is the data?</strong> <em>Start with arithmetic on the reader’s own file:</em> 50,000 reads → 2.2 MB compressed (12.8 MB uncompressed), so a 25-million-read sample is about 500 × larger, roughly 1.1 GB. <em>Then the table:</em> FASTQ, BAM, VCF, and count matrix, measured sizes for our yeast test set beside rough orders of magnitude (MB / GB / TB) for a typical study, with a note that sizes vary. Takeaway: raw reads are large, results get smaller down a pipeline. [<code>tbl-data-sizes</code>, <code>fig-data-shrinks</code>; key idea; self-check]</li>
+<li><strong>Operating systems.</strong> macOS, Windows, Linux; why clusters run Linux; distributions in two sentences (Ubuntu, Rocky/RHEL) as a background callout. Teach Linux; note macOS and Windows only where they differ.</li>
+<li><strong>Where you compute: laptop, cluster, cloud.</strong> Compact comparison table (cost, size, who manages it, what to run there). Login node vs compute node in one paragraph, with the cluster diagram; full treatment in Chapter 10. Cloud only as “exists, costs money, see Chapter 38”. [<code>tbl-where-compute</code>, <code>fig-cluster-anatomy</code>; misconception callout “cluster = faster computer”; pitfall “heavy work on the login node”; self-check sorting jobs into laptop / cluster / cloud]</li>
+<li><strong>Getting a cluster account.</strong> Brief: apply early, since approval can take days or weeks; ask your PI or research computing office. A tip callout naming SCINet (USDA-affiliated users) and university clusters (e.g., ISU Nova), linking to Appendix A, <em>Cluster sites: SCINet and Nova</em> (<code>@sec-cluster-sites</code>), shared with Chapters 9–10. No-cluster readers can continue.</li>
+<li><strong>Summary, exercises, further reading.</strong> Summary as 4–5 bullets that mirror the learning goals; exercises (below); annotated further reading.</li>
 </ol>
+</section>
+<section id="visuals-and-teaching-aids" class="level2">
+<h2 class="anchored" data-anchor-id="visuals-and-teaching-aids">Visuals and teaching aids</h2>
+<p>Everything here follows <code>book-bioinf-theme/STYLE-GUIDE.md</code> and is demonstrated in <code>book-bioinf-theme/example/</code>. Section numbers (§) refer to STYLE-GUIDE.</p>
+<section id="figures-svg-7" class="level3">
+<h3 class="anchored" data-anchor-id="figures-svg-7">Figures (SVG, §7)</h3>
+<p>All hand-drawn SVGs in <code>figures/</code>, pasted with the <code>svg</code> shortcode inside a <code>::: {#fig-…}</code> div, colours from theme classes only. Colour roles (§2): our data is <code>given</code> (blue) everywhere, including inside hardware diagrams; hardware and infrastructure are neutral (<code>ink</code>, <code>line</code>, <code>muted</code>).</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 24%">
+<col style="width: 16%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Label</th>
+<th style="text-align: center;">Section</th>
+<th style="text-align: left;">Kind</th>
+<th style="text-align: left;">What it shows</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>fig-fastq-record</code></td>
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">static</td>
+<td style="text-align: left;">The first real record from <code>SRR6357070_1</code> (sequence truncated), each of the 4 lines labelled: header (read ID, <code>/1</code> = read 1), bases, <code>+</code> separator, one quality character per base. Read lines <code>given</code>; <code>+</code> line <code>muted</code>.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>fig-computer-parts</code></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">CSS-animated</td>
+<td style="text-align: left;">CPU ↔︎ RAM ↔︎ disk ↔︎ network, with relative speeds as labels (order of magnitude only). Blue data blocks flow from disk to RAM to CPU, slowly on the disk/network leg and quickly on the RAM ↔︎ CPU leg, so the bottleneck is visible. Final frame = blocks at rest in RAM.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>fig-cores-threads</code></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">static</td>
+<td style="text-align: left;">Two panels: a tool run with <code>--threads 4</code> keeps 4 of 8 cores busy; a single-threaded step keeps 1 busy while 7 sit idle. Busy cores hold <code>given</code> work; idle cores <code>muted</code>.</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>fig-data-shrinks</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">static</td>
+<td style="text-align: left;">One sample down a pipeline: FASTQ → BAM → count matrix → results table, boxes sized on a log scale with the size written in each. All <code>given</code>, because the data only gets re-organised; reference (genome/GTF) enters as <code>ref</code>.</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>fig-cluster-anatomy</code></td>
+<td style="text-align: center;">7</td>
+<td style="text-align: left;">static</td>
+<td style="text-align: left;">Laptop → SSH → login node → scheduler queue → compute nodes, all sharing one storage system. Labels “edit, submit” on the login node, “run” on compute nodes. Drawn so Chapters 9–10 can reuse it or turn it into a stepped figure.</td>
+</tr>
+</tbody>
+</table>
+<p>Not used here: Mermaid (no step-order diagram is needed), screenshots (terminal windows differ too much by OS and version to be worth it).</p>
+</section>
+<section id="interactive-figure-observable-js" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-figure-observable-js">Interactive figure (Observable JS)</h3>
+<p>None (decided 2026-11-13). <code>tbl-data-sizes</code> and <code>fig-computer-parts</code> carry the point; interactive figures are kept for chapters where moving an input is the lesson.</p>
+</section>
+<section id="tables-5" class="level3">
+<h3 class="anchored" data-anchor-id="tables-5">Tables (§5)</h3>
+<p>Pipe tables, caption above, <code>tbl-</code> label, cited by label.</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 36%">
+<col style="width: 36%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Label</th>
+<th style="text-align: center;">Section</th>
+<th style="text-align: left;">Columns</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>tbl-terminal-by-os</code></td>
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">OS · terminal app · shell you get · supported in this book</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>tbl-my-computer</code></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Resource · Linux/WSL command · macOS command · example output · <em>your value</em> (blank, readers fill in)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>tbl-resource-limits</code></td>
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Resource · what runs out · what you see (e.g., RAM → job killed / <code>Killed</code> / out-of-memory; disk → <code>No space left on device</code>; CPU → slow, cores at 100%; I/O → slow, cores mostly idle)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>tbl-data-sizes</code></td>
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Format · what it holds · yeast test set (measured) · typical study (order of magnitude)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>tbl-where-compute</code></td>
+<td style="text-align: center;">7</td>
+<td style="text-align: left;">Laptop · cluster · cloud, by cost, size, who manages it, what to run there</td>
+</tr>
+</tbody>
+</table>
+<p><code>tbl-my-computer</code> commands (draft): cores <code>nproc</code> / <code>sysctl -n hw.ncpu</code>; RAM <code>free -h</code> / <code>sysctl -n hw.memsize</code>; free disk <code>df -h ~</code> on both.</p>
+</section>
+<section id="code-6" class="level3">
+<h3 class="anchored" data-anchor-id="code-6">Code (§6)</h3>
+<ul>
+<li>All commands run on the <strong>laptop</strong>, tier 2 style (shown, not run at render), but cheap enough that readers run every one.</li>
+<li>OS tabsets (<code>group=&quot;os&quot;</code>) in §2 (opening a terminal) and §4 (the <code>tbl-my-computer</code> commands, as runnable blocks under the table).</li>
+<li>Blocks use <code>filename=&quot;Terminal&quot;</code>, no <code>$</code> prompt, and code annotations (<code># &lt;1&gt;</code> + numbered list) to explain each command, as in <code>example/code.qmd</code>. Output goes in a separate <code>.console</code> block with real captured output (first record shown below).</li>
+<li>No compute notes needed: every step takes seconds.</li>
+</ul>
+</section>
+<section id="plots" class="level3">
+<h3 class="anchored" data-anchor-id="plots">Plots</h3>
+<p>None. Nothing in this chapter is a measured quantity worth plotting; the data-size comparison is a table plus <code>fig-data-shrinks</code>.</p>
+</section>
+<section id="animation-manim" class="level3">
+<h3 class="anchored" data-anchor-id="animation-manim">Animation (manim)</h3>
+<p>None. Nothing here is a hard sequence of steps; <code>fig-computer-parts</code> covers the one bit of motion with CSS. The first manim clip is more likely in the algorithms tour (e.g., how a read is placed on a genome) or the nf-core chapter.</p>
+</section>
+<section id="callouts-3-at-most-3-per-screen" class="level3">
+<h3 class="anchored" data-anchor-id="callouts-3-at-most-3-per-screen">Callouts (§3, at most ~3 per screen)</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 37%">
+<col style="width: 25%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Section</th>
+<th style="text-align: left;">Type</th>
+<th style="text-align: left;">Content</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">1</td>
+<td style="text-align: left;">Learning goals</td>
+<td style="text-align: left;">As drafted above</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">2</td>
+<td style="text-align: left;">Pitfall</td>
+<td style="text-align: left;">WSL: keep work in your Linux home (<code>~</code>), not under <code>/mnt/c/…</code>; Windows folders are slow from Linux and invite line-ending and permission problems</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">3</td>
+<td style="text-align: left;">Tip</td>
+<td style="text-align: left;">Paste into a terminal: <code>Cmd-V</code> on macOS, <code>Ctrl-Shift-V</code> in most Linux/WSL terminals; <code>Ctrl-C</code> stops a command, it does not copy</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Key idea</td>
+<td style="text-align: left;">Most analysis waits on reading and writing files, not on the CPU</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">4</td>
+<td style="text-align: left;">Misconception</td>
+<td style="text-align: left;">“More cores always makes it faster”</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">5</td>
+<td style="text-align: left;">Key idea</td>
+<td style="text-align: left;">Raw reads are the biggest files you will handle; every later step makes the data smaller</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">6</td>
+<td style="text-align: left;">Background</td>
+<td style="text-align: left;">Linux distributions (Ubuntu, Rocky/RHEL): same commands, different installers</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">7</td>
+<td style="text-align: left;">Misconception</td>
+<td style="text-align: left;">“The cluster is just a faster computer”</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;">7</td>
+<td style="text-align: left;">Pitfall</td>
+<td style="text-align: left;">Heavy work on the login node slows it for everyone and may get your job killed</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;">8</td>
+<td style="text-align: left;">Tip</td>
+<td style="text-align: left;">Apply for a cluster account now; approval can take weeks</td>
+</tr>
+</tbody>
+</table>
+<p>Misconceptions not given a callout (“RAM and disk are the same”, “I need to learn the commands first”, “Windows needs a separate Linux computer”, “I can run my analysis on the login node”) are handled in the text, in <code>tbl-resource-limits</code>, or as self-check probes.</p>
+</section>
+<section id="self-checks-and-exercises-4" class="level3">
+<h3 class="anchored" data-anchor-id="self-checks-and-exercises-4">Self-checks and exercises (§4)</h3>
+<p>Self-checks (<code>.check</code> blocks with collapsed answers), one per concept section:</p>
+<ul>
+<li>§3: A FASTQ file has 200,000 lines. How many reads? (<em>50,000; four lines per read.</em>)</li>
+<li>§4: A step uses one core at 100% while seven sit idle. Will adding <code>--threads 8</code> help? (<em>Only if the tool supports threads; many steps don’t, and some are limited by disk, not CPU.</em>)</li>
+<li>§5: Our file holds 50,000 reads in 2.2 MB. About how large is a 30-million-read sample? (<em>About 1.3 GB.</em>)</li>
+<li>§7: Laptop, cluster, or cloud? Editing a script; aligning 48 samples; running DESeq2 on a finished count matrix; a one-off job needing 2 TB RAM that your cluster lacks. (<em>Laptop; cluster compute nodes; laptop; cloud.</em>)</li>
+</ul>
+<p>End-of-chapter exercises (core chapter, so required):</p>
+<ol type="1">
+<li>Download the matching read-2 file (<code>SRR6357070_2.fastq.gz</code>), count its reads, and append a second line to <code>fastq_summary.txt</code>. Do both files have the same count, and why should they?</li>
+<li>Fill in your column of <code>tbl-my-computer</code>. Could your laptop hold one uncompressed 30-million-read FASTQ in RAM?</li>
+<li>Time the read count on the compressed file (<code>time</code> in front of the command). Scale it up: about how long would the same count take on a 30-million-read sample, 600 times larger? Which resource is your computer waiting on?</li>
+</ol>
+</section>
 </section>
 <section id="examples-and-data" class="level2">
 <h2 class="anchored" data-anchor-id="examples-and-data">Examples and data</h2>
 <ul>
-<li>Toy example:</li>
-<li>Running dataset (yeast nf-core/rnaseq test data):</li>
-<li>Where commands run (laptop / login node / compute node):</li>
+<li><p>Toy example: one FASTQ record drawn and labelled (4 lines), small enough to read by eye. Use the real first record of <code>SRR6357070_1</code>, so the figure matches what readers see on screen.</p></li>
+<li><p>Running dataset (yeast nf-core/rnaseq test data): one read-1 file from one sample, verified 2026-11-13:</p>
+<ul>
+<li>URL: <code>https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz</code></li>
+<li>2.2 MB compressed (2,239,317 bytes), 12.8 MB uncompressed, 50,000 reads of 101 bases.</li>
+<li>Browser fallback: the same file’s page on GitHub, with its download button.</li>
+</ul></li>
+<li><p>Draft command sequence (laptop):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch01 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch01</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-LO</span> https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 8</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;SRR6357070_1 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">&quot;</span> <span class="op">&gt;</span> fastq_summary.txt</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> fastq_summary.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Use <code>gunzip -c</code>, not <code>zcat</code>, because macOS <code>zcat</code> does not read <code>.gz</code>. First record, captured 2026-11-13 (for the <code>.console</code> block and <code>fig-fastq-record</code>):</p>
+<pre><code>@SRR6357070.25017281 25017281/1 kraken:taxid|4932
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
++
+BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF</code></pre>
+<p>The header’s <code>kraken:taxid|4932</code> (the NCBI taxon ID for <em>S. cerevisiae</em>) is left for Chapter 15; the figure labels only the read ID and <code>/1</code>.</p></li>
+<li><p>Where commands run (laptop / login node / compute node): all laptop. A short note that the same commands work on a login node later, and that heavy work never runs there (Chapter 10).</p></li>
 </ul>
 </section>
 <section id="misconceptions" class="level2">
 <h2 class="anchored" data-anchor-id="misconceptions">Misconceptions</h2>
+<p>Each has an entry in the book’s <code>misconceptions.yml</code> (id, claim, reality, probe, chapters), created 2026-11-13. Where it is handled in this chapter is in brackets.</p>
 <ul>
-<li></li>
+<li><code>more-cores-faster</code>: “More cores always makes it faster.” Often disk or I/O is the limit, and many steps use one core. [callout, §4]</li>
+<li><code>cluster-faster-computer</code>: “The cluster is just a faster computer.” It is many computers shared by many people; you request resources and wait in a queue. [callout, §7]</li>
+<li><code>run-on-login-node</code>: “I can run my analysis on the login node.” Login nodes are for editing and submitting jobs. [pitfall, §7; head-on in Chapter 10]</li>
+<li><code>ram-is-disk</code>: “RAM and disk/storage are the same thing.” Running out of each fails differently (killed job vs full disk). [<code>tbl-resource-limits</code>, §4]</li>
+<li><code>learn-commands-first</code>: “I need to learn the commands before I can try anything.” The first session works by copying; understanding comes in Part II. [text, §3]</li>
+<li><code>windows-needs-linux-pc</code>: “Windows users need a separate Linux computer.” WSL2 gives a real Linux environment on Windows. [text, §2]</li>
 </ul>
 </section>
 <section id="links-to-other-chapters-and-books" class="level2">
 <h2 class="anchored" data-anchor-id="links-to-other-chapters-and-books">Links to other chapters and books</h2>
 <ul>
 <li>Builds on: nothing (first chapter)</li>
-<li>Leads to: Chapter 2 (book setup and editors); Part II (shell)</li>
+<li>Leads to: Chapter 2 (book setup and editors); Part II (shell); Chapter 9 (SSH) and Chapter 10 (HPC and SLURM) for the cluster; Chapter 15 (FASTA and FASTQ); Chapter 35 (performance) and Chapter 38 (cloud) for depth on resources.</li>
+</ul>
+</section>
+<section id="official-links-to-include" class="level2">
+<h2 class="anchored" data-anchor-id="official-links-to-include">Official links to include</h2>
+<ul>
+<li>WSL install: learn.microsoft.com (WSL documentation)</li>
+<li>Homebrew: brew.sh</li>
+<li>Ubuntu: ubuntu.com; Rocky Linux: rockylinux.org</li>
+<li>nf-core test datasets: github.com/nf-core/test-datasets (<code>rnaseq</code> branch); GEO accession GSE110004 at ncbi.nlm.nih.gov/geo</li>
+<li>SCINet: scinet.usda.gov; ISU research computing: the site’s own docs</li>
+<li><code>curl</code>: curl.se</li>
 </ul>
 </section>
 <section id="further-reading-candidates" class="level2">
 <h2 class="anchored" data-anchor-id="further-reading-candidates">Further reading (candidates)</h2>
+<p>Final list: 3–6 annotated picks, each cited by key so it lands on the References page (STYLE-GUIDE §9). Verify with scite / fetch BibTeX from the DOI; items with no DOI get <code>url</code> + <code>urldate</code>.</p>
 <ul>
-<li></li>
+<li>Shotts, <em>The Linux Command Line</em>: opening chapters, for what a shell and terminal are.</li>
+<li>Software Carpentry, <em>The Unix Shell</em>: introduction episode, as a second explanation.</li>
+<li>Microsoft WSL install documentation: the current official steps.</li>
+<li>SCINet “Getting started” / account request pages, and ISU research computing docs: site-specific account steps.</li>
+<li>(Optional) A short open article on computing for biologists, e.g. “Ten simple rules” style; find and verify with scite before adding.</li>
 </ul>
 </section>
 <section id="austins-notes" class="level2">
@@ -2272,10 +2591,29 @@ vertical-align: -.125em;
 <li></li>
 </ul>
 </section>
+<section id="decisions-2026-11-13" class="level2">
+<h2 class="anchored" data-anchor-id="decisions-2026-11-13">Decisions (2026-11-13)</h2>
+<ul>
+<li>FASTQ download: one <code>curl</code> command, with a browser download link as a fallback.</li>
+<li>Order: guided first session right after opening a terminal; concept sections follow.</li>
+<li>Data-size table: measured sizes for the yeast test set plus rough orders of magnitude for a typical study.</li>
+<li>Cluster accounts: brief in Chapter 1; step-by-step SCINet/Nova details in a site-specific appendix shared with Chapters 9–10.</li>
+<li>Windows: WSL2 with Ubuntu; Git Bash noted in one sentence as unsupported.</li>
+</ul>
+</section>
+<section id="decisions-2026-11-13-open-questions-round" class="level2">
+<h2 class="anchored" data-anchor-id="decisions-2026-11-13-open-questions-round">Decisions (2026-11-13, open questions round)</h2>
+<ul>
+<li>OS differences: OS tabsets (<code>group=&quot;os&quot;</code>) where steps really differ; rule added to STYLE-GUIDE §6 with a demo in <code>example/code.qmd</code>.</li>
+<li>No interactive figure in Chapter 1 (<code>fig-read-time</code> dropped).</li>
+<li><code>misconceptions.yml</code> (with the six Chapter 1 entries) and <code>figures/</code> created now; recorded in the book’s <code>CLAUDE.md</code>.</li>
+<li>Site-specific appendix confirmed: Appendix A, <em>Cluster sites: SCINet and Nova</em> (<code>appendices/a-cluster-sites.qmd</code>, stub), shared by Chapters 1, 9, and 10.</li>
+</ul>
+</section>
 <section id="open-questions" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
 <ul>
-<li>How do readers get the small FASTQ file before the book environment is installed in Chapter 2 (browser download or one copied <code>curl</code> command)?</li>
+<li>Measured BAM, VCF, and count-matrix sizes for the yeast test set: take them from an nf-core/rnaseq test run (BAM, counts) and the small VCF file used in the formats part; fill in when writing.</li>
 </ul>
 </section>
 

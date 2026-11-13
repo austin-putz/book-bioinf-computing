@@ -1,0 +1,17 @@
+# Thinking about algorithms {#sec-thinking-algorithms}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+## Planned topics
+
+- Big-O intuition
+- Sorting and binary search (why BAMs are sorted and indexed; why `samtools sort` needs memory and temp files; why an index makes region queries fast)
+- Hash tables (k-mer counting)
+- Time vs memory trade-offs

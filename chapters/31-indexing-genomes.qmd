@@ -1,0 +1,19 @@
+# Indexing genomes {#sec-indexing-genomes}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+## Planned topics
+
+- Why aligners need an index build step, and why it takes so much memory for large genomes
+- k-mers
+- Suffix arrays
+- BWT and FM-index (BWA, Bowtie)
+- Minimizers (minimap2)
+- Pseudoalignment (brief): trading base-level alignment for speed; link to Transcriptomics

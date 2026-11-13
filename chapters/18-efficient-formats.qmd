@@ -1,0 +1,17 @@
+# Efficient data formats {#sec-efficient-formats}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Overview.** Read for understanding; no required exercises.
+
+## Planned topics
+
+- Text vs binary
+- R and Python native formats (`.rds`, pickle)
+- Arrow and Parquet
+- HDF5-based formats (e.g., `.h5ad`) briefly

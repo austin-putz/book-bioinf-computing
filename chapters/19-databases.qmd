@@ -1,0 +1,18 @@
+# Databases (basics) {#sec-databases}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This chapter is a placeholder. The topics below are the current plan and
+will change as the chapter is written.
+:::
+
+**Core.** Work through it, with the exercises.
+
+## Planned topics
+
+- What a relational database is
+- Core SQL: `SELECT`, `WHERE`, `JOIN`
+- SQLite and DuckDB
+- Querying Parquet files with DuckDB
+- Where databases sit in bioinformatics (annotation packages, Ensembl)

@@ -1,0 +1,140 @@
+# Welcome {.unnumbered}
+
+::: {.callout-important icon=false}
+## Under construction
+
+This book is being written. Every chapter is a placeholder that lists its
+planned topics, and the plan itself will change. Nothing here is ready to
+teach from yet.
+:::
+
+Found a mistake, or a command that does not run for you? See
+[Report an Issue](reporting.qmd), also linked from the bug icon at the top
+of the left sidebar on every page.
+
+*Computing for Bioinformatics* is the computing foundation for the series
+*Bioinformatics: A Worked Approach*. It covers the Linux command line, HPC
+and SLURM, R and Python for everyday analysis, file formats, reproducibility
+(git, environments, containers), workflows (nf-core and Nextflow), and a
+high-level tour of the algorithms behind common tools. The other books in
+the series assume what is taught here.
+
+## Who this book is for
+
+- **MS and new PhD students with little computing background**, mostly from
+  biology or animal science. Engineers and computer scientists are welcome,
+  but will find the early chapters slow.
+- **Beginner to intermediate.** You will mostly *use* existing tools,
+  packages, and pipelines, not write them from scratch. Writing reusable
+  code is covered, but it is optional and comes last.
+- **You work, or will work, on a Linux HPC cluster** (e.g., SCINet
+  Ceres/Atlas, ISU Nova), with a laptop for editing and small analyses.
+  Readers without cluster access can still do the local examples and read
+  the captured cluster output.
+
+## What this book covers, and what it leaves out
+
+The aim is **awareness, not depth**. Every core tool and idea a working
+bioinformatician meets appears here, so that nothing in a later book is a
+first encounter. Each topic gets the idea, why it matters, and a hands-on
+use of the tool. Full algorithms (BLAST, Smith-Waterman, the FM-index,
+assembly graphs) are left to the book that owns them, and linked forward.
+
+This book also owns **file formats** for the series: FASTA, FASTQ, SAM/BAM,
+BED, GFF, VCF, and friends are taught here, and other books link back.
+
+## How to read it
+
+Every chapter carries one label:
+
+- **Core** (24 chapters): work through it, with the exercises. The core
+  chapters together are the first-pass path through the book.
+- **Overview** (8 chapters): read for understanding; no required exercises.
+  Explains why tools behave as they do.
+- **Optional** (6 chapters): reference for later, when you need it.
+
+Every command is marked with where it runs: your **laptop**, a cluster
+**login node**, or a **compute node**.
+
+The book uses one software setup throughout: a **pixi** environment for all
+the tools, and **VS Code** (with Remote-SSH) as the editor. Both are set up
+in @sec-book-setup. A single running dataset, a small yeast RNA-seq
+experiment from the nf-core/rnaseq test data, is used from start to finish.
+
+## Chapters
+
+### Part I: Getting set up
+
+1. [Orientation: computers and where you compute](chapters/01-orientation.qmd) *(core)*
+2. [Book setup and editors](chapters/02-book-setup.qmd) *(core)*
+3. [Organizing projects and data](chapters/03-organizing-projects.qmd) *(core)*
+4. [Getting help](chapters/04-getting-help.qmd) *(core)*
+
+### Part II: The Linux command line
+
+5. [Shell basics](chapters/05-shell-basics.qmd) *(core)*
+6. [Text tools and pipes](chapters/06-text-tools.qmd) *(core)*
+7. [The Linux system](chapters/07-linux-system.qmd) *(core)*
+8. [Shell scripts](chapters/08-shell-scripts.qmd) *(core)*
+9. [Working remotely](chapters/09-working-remotely.qmd) *(core)*
+10. [HPC and SLURM](chapters/10-hpc-slurm.qmd) *(core)*
+
+### Part III: Languages
+
+11. [The language landscape](chapters/11-language-landscape.qmd) *(overview)*
+12. [R essentials](chapters/12-r-essentials.qmd) *(core)*
+13. [Python essentials](chapters/13-python-essentials.qmd) *(core)*
+
+### Part IV: Data, formats, and references
+
+14. [Tabular data](chapters/14-tabular-data.qmd) *(core)*
+15. [Sequence formats: FASTA and FASTQ](chapters/15-fasta-fastq.qmd) *(core)*
+16. [Alignment formats: SAM, BAM, CRAM](chapters/16-sam-bam-cram.qmd) *(core)*
+17. [Intervals, annotation, and variants](chapters/17-intervals-variants.qmd) *(core)*
+18. [Efficient data formats](chapters/18-efficient-formats.qmd) *(overview)*
+19. [Databases (basics)](chapters/19-databases.qmd) *(core)*
+20. [Reference data and public repositories](chapters/20-reference-data.qmd) *(core)*
+
+### Part V: Reproducibility
+
+21. [Version control with git](chapters/21-git.qmd) *(core)*
+22. [GitHub and collaboration](chapters/22-github.qmd) *(core)*
+23. [Software environments](chapters/23-environments.qmd) *(core)*
+24. [Containers](chapters/24-containers.qmd) *(core)*
+
+### Part VI: Workflows
+
+25. [Why workflow managers](chapters/25-workflow-managers.qmd) *(core)*
+26. [Running nf-core pipelines](chapters/26-nf-core.qmd) *(core)*
+27. [Writing Nextflow](chapters/27-writing-nextflow.qmd) *(optional)*
+28. [Other workflow systems](chapters/28-other-workflows.qmd) *(overview)*
+
+### Part VII: Algorithms
+
+29. [Thinking about algorithms](chapters/29-thinking-algorithms.qmd) *(overview)*
+30. [Sequence alignment](chapters/30-sequence-alignment.qmd) *(overview)*
+31. [Indexing genomes](chapters/31-indexing-genomes.qmd) *(overview)*
+32. [Graphs and assembly](chapters/32-graphs-assembly.qmd) *(overview)*
+33. [Probabilistic methods](chapters/33-probabilistic-methods.qmd) *(overview)*
+
+### Part VIII: Advanced topics (optional)
+
+34. [Writing reusable analysis code](chapters/34-reusable-code.qmd) *(optional)*
+35. [Performance and parallelism](chapters/35-performance.qmd) *(optional)*
+36. [Numbers and text encodings](chapters/36-numbers-encodings.qmd) *(optional)*
+37. [GPU computing](chapters/37-gpu.qmd) *(optional)*
+38. [Cloud basics](chapters/38-cloud.qmd) *(optional)*
+
+### Appendices
+
+A. [Cluster sites: SCINet and Nova](appendices/a-cluster-sites.qmd) *(optional)*
+
+## License
+
+The text and figures of this book are licensed under
+[CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/): you
+may share and adapt them, with credit and under the same license, but not
+sell them. The code is licensed under
+[MIT](https://opensource.org/license/mit). Data from public repositories
+keeps its own license. See `LICENSING.md` in the book's repository for the
+details.

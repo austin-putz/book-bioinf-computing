@@ -97,6 +97,16 @@ tools.
 - `chapters/NN-slug.qmd`: one file per chapter, `{#sec-slug}` on the title.
   Unwritten chapters are stubs: an "Under construction" callout, the
   chapter's label, and its planned topics from `PLAN_CHAPTERS.md`.
+- `appendices/X-slug.qmd`: confirmed appendices only, listed under
+  `appendices:` in `_quarto.yml` (lettered A, B, …; `{#sec-slug}` on the
+  title). Candidates stay in `PLAN_CHAPTERS.md`.
+- `misconceptions.yml`: what students get wrong, and where the book
+  confronts it (id, claim, reality, probe, chapters), as in
+  `animal-models-test`. Misconception callouts and self-check probes are
+  written from it. When a chapter plan is agreed, add its misconceptions
+  here.
+- `figures/`: hand-drawn SVGs, named after their figure label without
+  `fig-` (e.g., `fastq-record.svg` for `fig-fastq-record`).
 - `references.qmd` + `references.bib`: References page.
 - `reporting.qmd`: "Report an Issue" page, the last sidebar entry, adapted
   from `../../linear-models-in-animal-breeding/reporting.qmd`. Reached from

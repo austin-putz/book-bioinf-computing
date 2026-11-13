@@ -1,78 +1,80 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="pipeline-file-sizes-title">
-  <title id="pipeline-file-sizes-title">Measured file sizes for the yeast test data, on a log scale. Read-level files: the paired FASTQ files of one sample are 4.3 MB and its sorted BAM file is 3.3 MB, about as large. Summary files: the count matrix for 124 genes and 5 samples is 2.8 kB, and the differential expression results table for 124 genes is 12.7 kB, a thousand times smaller than the read-level files. A reference genome and annotation enter at the align and count steps.</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 410" role="img" aria-labelledby="pipeline-file-sizes-title">
+  <title id="pipeline-file-sizes-title">Measured file sizes for the yeast test data, drawn to scale: the area of each square is proportional to the file's size. Read-level files: the paired FASTQ files of one sample are 4.3 MB, a large square, and its sorted BAM file is 3.3 MB, almost as large. Summary files: the count matrix for 124 genes and 5 samples is 2.8 kB and the differential expression results table for 124 genes is 12.7 kB; both are tiny dots, hundreds to thousands of times smaller. A reference genome and annotation enter at the align and count steps.</title>
   <defs>
     <marker id="pipeline-file-sizes-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
     </marker>
   </defs>
 
-  <!-- Log axis: y = 300 - (log10(bytes) - 2) * 50 -->
-  <g class="stroke-line" stroke-width="1" stroke-dasharray="3 4">
-    <line x1="80" y1="50" x2="710" y2="50"/>
-    <line x1="80" y1="100" x2="710" y2="100"/>
-    <line x1="80" y1="150" x2="710" y2="150"/>
-    <line x1="80" y1="200" x2="710" y2="200"/>
-    <line x1="80" y1="250" x2="710" y2="250"/>
-  </g>
-  <line x1="80" y1="300" x2="710" y2="300" class="stroke-ink" stroke-width="1.25"/>
-  <g font-size="12" text-anchor="end" class="fill-muted">
-    <text x="72" y="54">10 MB</text>
-    <text x="72" y="104">1 MB</text>
-    <text x="72" y="154">100 kB</text>
-    <text x="72" y="204">10 kB</text>
-    <text x="72" y="254">1 kB</text>
-  </g>
-  <text x="14" y="180" font-size="12" class="fill-muted" transform="rotate(-90 14 180)" text-anchor="middle">size (log scale)</text>
-
   <!-- Group labels -->
   <g font-size="13" font-weight="700">
-    <text x="100" y="24">Read-level files: every read</text>
-    <text x="440" y="24">Summary files: one row per gene</text>
+    <text x="40" y="24">Read-level files: every read</text>
+    <text x="620" y="24" text-anchor="middle">Summary files:</text>
+    <text x="620" y="40" text-anchor="middle">one row per gene</text>
   </g>
 
-  <!-- Bars, drawn from measured sizes; our data is blue throughout -->
+  <!-- Baseline -->
+  <line x1="30" y1="290" x2="700" y2="290" class="stroke-line" stroke-width="1"/>
+
+  <!-- Squares: side = sqrt(bytes) * 0.1059, so area is proportional to size.
+       Measured: 4,315,508 / 3,277,856 / 2,834 / 12,675 bytes. -->
   <g class="fill-given-soft stroke-given" stroke-width="1.5">
-    <rect x="100" y="68.2" width="110" height="231.8"/>
-    <rect x="250" y="74.2" width="110" height="225.8"/>
-    <rect x="440" y="227.4" width="100" height="72.6"/>
-    <rect x="590" y="194.9" width="100" height="105.1"/>
+    <rect x="40" y="70" width="220" height="220"/>
+    <rect x="310" y="98.3" width="191.7" height="191.7"/>
+  </g>
+  <g class="fill-given">
+    <rect x="569.2" y="284.4" width="5.6" height="5.6"/>
+    <rect x="664" y="278.1" width="11.9" height="11.9"/>
   </g>
   <g font-size="13" font-weight="700" text-anchor="middle" class="fill-given">
-    <text x="155" y="60">4.3 MB</text>
-    <text x="305" y="66">3.3 MB</text>
-    <text x="490" y="219">2.8 kB</text>
-    <text x="640" y="187">12.7 kB</text>
+    <text x="150" y="60">4.3 MB</text>
+    <text x="406" y="88">3.3 MB</text>
+    <text x="572" y="270">2.8 kB</text>
+    <text x="670" y="266">12.7 kB</text>
+  </g>
+
+  <!-- The empty space is the point -->
+  <g font-size="13" text-anchor="middle" class="fill-muted">
+    <text x="620" y="150">hundreds to thousands</text>
+    <text x="620" y="166">of times smaller</text>
   </g>
 
   <!-- Steps between files -->
   <g class="stroke-muted" stroke-width="1.5" marker-end="url(#pipeline-file-sizes-arrow)">
-    <line x1="214" y1="270" x2="246" y2="270"/>
-    <line x1="364" y1="270" x2="436" y2="270"/>
-    <line x1="544" y1="270" x2="586" y2="270"/>
+    <line x1="266" y1="280" x2="304" y2="280"/>
+    <line x1="507" y1="287" x2="565" y2="287"/>
+    <line x1="579" y1="287" x2="660" y2="287"/>
   </g>
   <g font-size="12" text-anchor="middle" class="fill-muted">
-    <text x="230" y="260">align</text>
-    <text x="400" y="260">count</text>
-    <text x="565" y="260">test</text>
+    <text x="285" y="270">align</text>
+    <text x="536" y="278">count</text>
+    <text x="620" y="278">test</text>
   </g>
 
   <!-- File names and what each size covers -->
   <g font-size="13" text-anchor="middle">
-    <text x="155" y="320" font-weight="700">FASTQ, R1 + R2</text>
-    <text x="155" y="336" class="fill-muted">one sample</text>
-    <text x="305" y="320" font-weight="700">sorted BAM</text>
-    <text x="305" y="336" class="fill-muted">one sample</text>
-    <text x="490" y="320" font-weight="700">count matrix</text>
-    <text x="490" y="336" class="fill-muted">124 genes × 5 samples</text>
-    <text x="640" y="320" font-weight="700">results table</text>
-    <text x="640" y="336" class="fill-muted">124 genes</text>
+    <g font-weight="700">
+      <text x="150" y="312">FASTQ, R1 + R2</text>
+      <text x="406" y="312">sorted BAM</text>
+      <text x="572" y="312">count matrix</text>
+      <text x="670" y="312">results table</text>
+    </g>
+    <g class="fill-muted">
+      <text x="150" y="328">one sample</text>
+      <text x="406" y="328">one sample</text>
+      <text x="572" y="328">124 genes ×</text>
+      <text x="572" y="344">5 samples</text>
+      <text x="670" y="328">124 genes</text>
+    </g>
   </g>
 
   <!-- Reference we bring: enters at align and count -->
-  <rect x="180" y="368" width="250" height="30" rx="5" class="fill-ref-soft stroke-ref"/>
-  <text x="305" y="388" font-size="13" text-anchor="middle">reference: genome + annotation</text>
+  <rect x="230" y="372" width="300" height="30" rx="5" class="fill-ref-soft stroke-ref"/>
+  <text x="380" y="392" font-size="13" text-anchor="middle">reference: genome + annotation</text>
   <g class="stroke-ref" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#pipeline-file-sizes-arrow)">
-    <line x1="230" y1="366" x2="230" y2="278"/>
-    <line x1="400" y1="366" x2="400" y2="278"/>
+    <line x1="285" y1="370" x2="285" y2="286"/>
+    <line x1="522" y1="370" x2="522" y2="293"/>
   </g>
+
+  <text x="40" y="362" font-size="12" class="fill-muted">square area is proportional to file size</text>
 </svg>

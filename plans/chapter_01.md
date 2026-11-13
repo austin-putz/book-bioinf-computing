@@ -521,6 +521,10 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   srun docs), `hostname` to check, `exit` after; site options (`-A`, `-p`)
   in Appendix A; some compute nodes have no internet. The §7 login-node
   pitfall and the top of the exercises point back to it.
+- **`fig-pipeline-file-sizes` redrawn to scale** (Austin): log-scale bars
+  made a 2.8 kB file look about a third the height of a 4.3 MB one.
+  Now squares with area proportional to size (side = sqrt(bytes) ×
+  0.1059): the summary files show as dots.
 - **SLURM named** (Austin): `fig-cluster-anatomy` scheduler box labelled
   SLURM; §7 text and caption name it (linked to slurm.schedmd.com).
 - **iTerm2** (Austin): one optional paragraph at the end of the macOS tab

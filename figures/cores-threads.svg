@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 250" role="img" aria-labelledby="cores-threads-title">
+  <title id="cores-threads-title">Two panels, each a computer with 8 cores. Left: a tool that can use threads, run with 4 threads, keeps 4 cores busy and leaves 4 idle. Right: a single-threaded step keeps 1 core busy while the other 7 sit idle; giving it more threads would change nothing.</title>
+
+  <!-- Panel frames -->
+  <g class="fill-surface stroke-line">
+    <rect x="10" y="10" width="340" height="200" rx="10"/>
+    <rect x="370" y="10" width="340" height="200" rx="10"/>
+  </g>
+  <g font-size="16" font-weight="700">
+    <text x="26" y="38">A tool run with <tspan class="mono">--threads 4</tspan></text>
+    <text x="386" y="38">A single-threaded step</text>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="26" y="58">the tool is written to use threads</text>
+    <text x="386" y="58">extra cores cannot help it</text>
+  </g>
+
+  <!-- Left panel: 8 cores, 4 busy -->
+  <g font-size="12" text-anchor="middle">
+    <g class="fill-given-soft stroke-given" stroke-width="1.5">
+      <rect x="30" y="76" width="66" height="50" rx="5"/>
+      <rect x="108" y="76" width="66" height="50" rx="5"/>
+      <rect x="186" y="76" width="66" height="50" rx="5"/>
+      <rect x="264" y="76" width="66" height="50" rx="5"/>
+    </g>
+    <g class="fill-given" font-weight="700">
+      <text x="63" y="106">thread 1</text>
+      <text x="141" y="106">thread 2</text>
+      <text x="219" y="106">thread 3</text>
+      <text x="297" y="106">thread 4</text>
+    </g>
+    <g class="fill-muted-soft stroke-muted" stroke-width="1" stroke-dasharray="4 3">
+      <rect x="30" y="138" width="66" height="50" rx="5"/>
+      <rect x="108" y="138" width="66" height="50" rx="5"/>
+      <rect x="186" y="138" width="66" height="50" rx="5"/>
+      <rect x="264" y="138" width="66" height="50" rx="5"/>
+    </g>
+    <g class="fill-muted">
+      <text x="63" y="168">idle</text>
+      <text x="141" y="168">idle</text>
+      <text x="219" y="168">idle</text>
+      <text x="297" y="168">idle</text>
+    </g>
+  </g>
+
+  <!-- Right panel: 8 cores, 1 busy -->
+  <g font-size="12" text-anchor="middle">
+    <rect x="390" y="76" width="66" height="50" rx="5" class="fill-given-soft stroke-given" stroke-width="1.5"/>
+    <text x="423" y="106" class="fill-given" font-weight="700">thread 1</text>
+    <g class="fill-muted-soft stroke-muted" stroke-width="1" stroke-dasharray="4 3">
+      <rect x="468" y="76" width="66" height="50" rx="5"/>
+      <rect x="546" y="76" width="66" height="50" rx="5"/>
+      <rect x="624" y="76" width="66" height="50" rx="5"/>
+      <rect x="390" y="138" width="66" height="50" rx="5"/>
+      <rect x="468" y="138" width="66" height="50" rx="5"/>
+      <rect x="546" y="138" width="66" height="50" rx="5"/>
+      <rect x="624" y="138" width="66" height="50" rx="5"/>
+    </g>
+    <g class="fill-muted">
+      <text x="501" y="106">idle</text>
+      <text x="579" y="106">idle</text>
+      <text x="657" y="106">idle</text>
+      <text x="423" y="168">idle</text>
+      <text x="501" y="168">idle</text>
+      <text x="579" y="168">idle</text>
+      <text x="657" y="168">idle</text>
+    </g>
+  </g>
+
+  <g font-size="13" text-anchor="middle">
+    <text x="180" y="236">4 of 8 cores busy</text>
+    <text x="540" y="236">1 of 8 cores busy, 7 idle</text>
+  </g>
+</svg>

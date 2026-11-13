@@ -13,7 +13,10 @@ book:
   reader-mode: true
   page-navigation: true
   sidebar:
-    style: docked
+    # floating, not docked: docked pins the page to the left and leaves the
+    # extra width of a wide monitor empty on the right; floating centres
+    # sidebar + text + table of contents. Same on laptops and phones.
+    style: floating
     collapse-level: 1
     # Readers report problems from the left side only: a bug icon at the
     # top of the sidebar (every page) and the last sidebar entry. No

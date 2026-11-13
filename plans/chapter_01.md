@@ -1,11 +1,12 @@
 ---
 title: "Chapter 1 — Orientation: computers and where you compute"
-subtitle: "Chapter plan · core · ready to write"
+subtitle: "Chapter plan · core · written (first draft)"
 date: 2026-11-13
 ---
 
-**Part:** I — Getting set up · **Label:** core · **Status:** reviewed
-(Codex, Antigravity), decisions made; ready to write
+**Part:** I — Getting set up · **Label:** core · **Status:** first draft
+written 2026-11-13 (`chapters/01-orientation.qmd`); reviewed before
+writing by Codex and Antigravity
 
 ## From `PLAN_CHAPTERS.md`
 
@@ -475,7 +476,35 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
 - BAM and count-matrix sizes are measured when Chapter 1 is written, from
   the nf-core/rnaseq test run set up for the book anyway.
 
+## Written (2026-11-13): what changed from the plan
+
+- **Measured sizes.** Docker would not start here, so the nf-core/rnaseq
+  test run was not repeated. Instead `scripts/ch01_file_sizes.R`
+  downloads the sorted BAMs that nf-core stores with the test data (STAR
+  output of nf-core/rnaseq), counts them with featureCounts (Rsubread),
+  and runs DESeq2. Measured for sample `WT_REP2` (one paired run,
+  SRR6357072): FASTQ R1 + R2 4.3 MB, BAM 3.3 MB; count matrix 2.8 kB
+  (124 genes × 5 samples); results table 12.7 kB. `WT_REP2` rather than
+  the reader's own sample, because `WT_REP1` combines two runs
+  (SRR6357070 + SRR6357071). The test reference is yeast chromosome I
+  only, which the table caption says. Inputs and checksums are in
+  `data/README.md`.
+- **`fig-pipeline-file-sizes`** is drawn as bars on a log axis (1 kB to
+  10 MB), from the measured values.
+- **`tbl-my-computer`** columns: Resource · command (Linux/WSL) · what to
+  read · example output · your value. The macOS commands moved to the OS
+  tabset below the table: the long macOS RAM command wrapped badly in a
+  table cell.
+- **Further reading:** Shotts (TLCL, 7th Internet Edition, 25.12),
+  Software Carpentry *The Unix Shell* (Zenodo DOI, June 2019 release),
+  Microsoft's WSL install page, Wu et al. 2018. DOIs verified with scite;
+  BibTeX fetched from the DOI. The SCINet and ISU pages are linked in the
+  text instead of being cited.
+- `SRR6357070_2.fastq.gz` (exercise 1) added to `data/README.md`:
+  50,000 reads, SHA-256 recorded.
+
 ## Open questions
 
-- None. To-do when writing: measure the BAM and count-matrix sizes for
-  `tbl-data-sizes` and `fig-pipeline-file-sizes`.
+- Austin to read the draft. The example outputs in the macOS tabs
+  (16 CPUs, 68 GB, `df` line) come from Austin's Mac; replace them if you
+  would rather show a more typical laptop.

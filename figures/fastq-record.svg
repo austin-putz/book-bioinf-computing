@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="fastq-record-title">
+  <title id="fastq-record-title">The first record of the file SRR6357070_1.fastq.gz, four lines long. Line 1 is the header: it starts with @, then the read ID SRR6357070.25017281, and ends its second word with /1, meaning this read is read 1 of a pair. Line 2 is the 101 bases of the read, shown cut short. Line 3 is a plus sign that separates the bases from their qualities. Line 4 holds one quality character for each of the 101 bases.</title>
+
+  <!-- The record, in a box like a terminal window -->
+  <rect x="150" y="52" width="560" height="296" rx="8" class="fill-surface stroke-line"/>
+
+  <!-- Line names (left column) -->
+  <g font-size="13" font-weight="700">
+    <text x="20" y="88">1 · Header</text>
+    <text x="20" y="160">2 · Bases</text>
+    <text x="20" y="232">3 · Separator</text>
+    <text x="20" y="304">4 · Qualities</text>
+  </g>
+
+  <!-- Labels above the header line -->
+  <g font-size="13" class="fill-given" font-weight="700" text-anchor="middle">
+    <text x="243" y="30">read ID</text>
+    <text x="420" y="30">/1 = read 1 of the pair</text>
+  </g>
+  <g class="stroke-given" stroke-width="1.25">
+    <line x1="243" y1="36" x2="243" y2="72"/>
+    <line x1="395" y1="36" x2="395" y2="72"/>
+  </g>
+
+  <!-- Line 1: header -->
+  <text x="166" y="88" font-size="13" class="mono"><tspan class="fill-given" font-weight="700">@SRR6357070.25017281</tspan><tspan class="fill-given"> 25017281</tspan><tspan class="fill-given" font-weight="700">/1</tspan><tspan class="fill-muted"> kraken:taxid|4932</tspan></text>
+  <text x="166" y="110" font-size="13" class="fill-muted">Starts with @. The rest of the header is explained in Chapter 15.</text>
+
+  <!-- Line 2: bases -->
+  <text x="166" y="160" font-size="13" class="mono fill-given">CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAG…</text>
+  <text x="166" y="182" font-size="13" class="fill-muted">The read itself: 101 bases (A, C, G, T; N if unknown), shown cut short.</text>
+
+  <!-- Line 3: separator -->
+  <text x="166" y="232" font-size="13" class="mono fill-muted" font-weight="700">+</text>
+  <text x="166" y="254" font-size="13" class="fill-muted">Separates the bases from their qualities.</text>
+
+  <!-- Line 4: qualities -->
+  <text x="166" y="304" font-size="13" class="mono fill-given">BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFF…</text>
+  <text x="166" y="326" font-size="13" class="fill-muted">One character per base, 101 in all. B and F are both high scores.</text>
+</svg>

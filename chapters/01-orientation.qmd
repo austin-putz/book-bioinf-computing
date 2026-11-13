@@ -1,20 +1,713 @@
 # Orientation: computers and where you compute {#sec-orientation}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- CPU, cores vs threads; RAM vs disk; I/O as the usual bottleneck
-- Typical data sizes (FASTQ, BAM, VCF, count matrix)
-- macOS, Windows, Linux; Linux distributions briefly
-- Laptop vs HPC cluster vs cloud: what runs where
-- Windows: WSL2; macOS: Terminal, Homebrew
-- Getting an account on SCINet / a university cluster
-- Guided first session: open a terminal, look at a small FASTQ file, save a one-line summary (commands explained in Part II)
+By the end of this chapter you should be able to:
+
+1. Open a terminal on your computer and run a command you were given.
+2. Download a FASTQ file, check that it arrived intact, look at its first
+   records, and count its reads.
+3. Find how many logical CPUs, how much RAM, and how much free disk your
+   computer has.
+4. Estimate a file's size from its read count, and name the resources
+   (CPU, RAM, disk, I/O) a job can be limited by.
+5. Decide whether a job belongs on a laptop, a cluster, or the cloud.
+:::
+
+## What this chapter does {#sec-orientation-intro}
+
+By the end of this chapter you will have run your first commands on a real
+sequencing file: you will download it, check it, look inside it, and count
+its reads. Then we step back and look at the machine that did the work, and
+at the other machines you will use.
+
+In bioinformatics, "the computer" is usually not the one in front of you. It
+is most often someone else's Linux machine, such as a university or USDA
+cluster, that you reach from your laptop. Your laptop is still where you
+edit, look at results, and run small analyses. This chapter starts on the
+laptop, because that is where everything begins.
+
+## Opening a terminal {#sec-orientation-terminal}
+
+Three words first. The **operating system** is the software that runs the
+computer: macOS, Windows, or Linux. The **terminal** is a window where you
+type commands. The **shell** is the program inside that window that reads
+each command, runs it, and prints the result.
+
+Opening a terminal is the one step that really differs between systems.
+Pick yours; every other tabbed box on this page will follow your choice.
+
+::: {.panel-tabset group="os"}
+## macOS
+
+Open **Terminal**: press {{< kbd Cmd-Space >}}, type `Terminal`, and press
+{{< kbd Return >}}. (It lives in *Applications → Utilities*.)
+
+The shell on a Mac is **zsh**. Every command in this chapter works in zsh.
+@sec-shell-basics introduces bash, the shell on most clusters, without changing
+your Mac's settings.
+
+You may read about [Homebrew](https://brew.sh), a popular way to install
+command-line tools on a Mac. You do not need it for this book: @sec-book-setup
+sets up every tool with pixi.
+
+## Windows (WSL2)
+
+Windows does not run the book's commands directly. Instead you install
+**WSL2** (Windows Subsystem for Linux), which runs a real Ubuntu Linux system
+inside Windows. This takes longer than on the other systems: an install, a
+restart, and creating a Linux account. Allow 20–30 minutes.
+
+1. Open **PowerShell as administrator**: open the Start menu, type
+   `PowerShell`, right-click *Windows PowerShell*, and choose *Run as
+   administrator*.
+2. Run this one command, which installs WSL2 with Ubuntu:
+
+   ```{.powershell filename="PowerShell (laptop, as administrator)"}
+   wsl --install
+   ```
+
+3. Restart Windows when it asks.
+4. Open **Ubuntu** from the Start menu. The first time, it asks you to make
+   a Linux user name and password. **Nothing appears while you type the
+   password**: no dots, no stars. That is normal. Type it, press
+   {{< kbd Enter >}}, and type it again.
+
+From now on, every command in this book runs in the Ubuntu window, not in
+PowerShell. Its shell is **bash**.
+
+If the install is blocked, your laptop may be managed by your university;
+ask your IT office. Microsoft's [WSL install
+guide](https://learn.microsoft.com/en-us/windows/wsl/install) has the
+current official steps [@microsoft2025install]. You may also have heard of
+Git Bash; it is a different tool, and this book does not support it.
+
+## Linux
+
+You already have a terminal. On Ubuntu, press {{< kbd Ctrl-Alt-T >}}; on
+other distributions, look for *Terminal* in the applications menu. The
+shell is usually **bash**.
+:::
+
+::: {.callout-warning}
+## Pitfall: Windows folders from WSL
+
+In WSL, keep your work in your Linux home folder (`~`), not under
+`/mnt/c/...`, where Linux sees your Windows files. Windows folders are slow
+to use from Linux and invite line-ending and permission problems
+([Microsoft's advice](https://learn.microsoft.com/en-us/windows/wsl/filesystems)).
+:::
+
+@tbl-terminal-by-os sums up what you now have.
+
+: What you type commands into, by operating system. {#tbl-terminal-by-os}
+
+| Operating system | Terminal app | Default shell | Supported in this book |
+|:-----------------|:-------------|:--------------|:-----------------------|
+| macOS | Terminal | zsh | yes |
+| Windows | Ubuntu (WSL2) | bash | yes |
+| Windows | PowerShell, Git Bash | — | no |
+| Linux (e.g., Ubuntu) | Terminal | bash (usually) | yes |
+
+The terminal shows a **prompt**: a short line ending in `$` (bash) or `%`
+(zsh), often with your user name and folder in front. It means "ready for a
+command". Code blocks in this book leave the prompt out, so you can copy and
+paste them as they are. Each block is labelled with where it runs; in this
+chapter that is always `Terminal (laptop)`.
+
+## Guided first session {#sec-orientation-first-session}
+
+Now run some commands. Copy each one, paste it into your terminal, press
+{{< kbd Enter >}}, and compare what you see with the output shown below it.
+You do not need to understand every part yet: you will learn these commands
+properly in Part II. Seeing them work first makes that easier.
+
+::: {.callout-tip}
+## Pasting into a terminal
+
+Paste with {{< kbd Cmd-V >}} on macOS and {{< kbd Ctrl-Shift-V >}} in most
+Linux and WSL terminals. In a terminal, {{< kbd Ctrl-C >}} does *not* copy:
+it stops the running command.
+:::
+
+The file we use holds yeast (*Saccharomyces cerevisiae*) RNA-seq reads from
+an experiment by @wu2018repression, cut down to 50,000 reads by the nf-core
+project for testing. It is the running dataset of this book; its source and
+license are listed in the book's `data/README.md`.
+
+**Step 1. Make a scratch folder and move into it.**
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-ch01 && cd ~/bioinf-ch01
+```
+
+This prints nothing. In the shell, silence usually means success.
+
+**Step 2. Download one FASTQ file.**
+
+```{.bash filename="Terminal (laptop)"}
+curl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz
+```
+
+`curl` shows a progress table while it works. When it finishes, the last
+line starts with `100`; your speeds and times will differ:
+
+```{.console}
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 2186k  100 2186k    0     0  4146k      0 --:--:-- --:--:-- --:--:-- 4141k
+```
+
+If instead you see `curl: (56) The requested URL returned error: 404`, or
+any other `curl:` error, check that you copied the whole command. If a
+firewall blocks `curl`, download the file in your browser from its [GitHub
+page](https://github.com/nf-core/test-datasets/blob/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz)
+(the *Download raw file* button), then move it into place:
+
+::: {.panel-tabset group="os"}
+## macOS
+```{.bash filename="Terminal (laptop)"}
+mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
+```
+## Windows (WSL2)
+Replace `<your-windows-name>` with your Windows user name.
+
+```{.bash filename="Terminal (laptop)"}
+cp /mnt/c/Users/<your-windows-name>/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
+```
+## Linux
+```{.bash filename="Terminal (laptop)"}
+mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
+```
+:::
+
+**Step 3. Check that the file arrived intact.** First its size:
+
+```{.bash filename="Terminal (laptop)"}
+ls -lh SRR6357070_1.fastq.gz
+```
+
+```{.console}
+-rw-r--r--  1 you  staff   2.1M Nov 13 11:52 SRR6357070_1.fastq.gz
+```
+
+Your name, group, and date will differ. The size shows as `2.1M` on macOS
+and `2.2M` on Linux and WSL; the next section explains why. Then test the
+compression:
+
+```{.bash filename="Terminal (laptop)"}
+gzip -t SRR6357070_1.fastq.gz
+```
+
+This prints nothing if the file is intact. A damaged or incomplete
+download prints an error instead.
+
+**Step 4. Look at the first two reads.** The file is compressed
+(`.gz`), so we decompress it on the fly and show only its first 8 lines:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c SRR6357070_1.fastq.gz | head -n 8
+```
+
+```{.console}
+@SRR6357070.25017281 25017281/1 kraken:taxid|4932
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
++
+BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF
+@SRR6357070.6710070 6710070/1 kraken:taxid|4932
+GTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA
++
+BBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB
+```
+
+We use `gunzip -c` because it works the same on every system. (You may see
+`zcat` elsewhere; on macOS it does not read `.gz` files.)
+
+**Step 5. Count the lines.**
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c SRR6357070_1.fastq.gz | wc -l
+```
+
+```{.console}
+  200000
+```
+
+Linux and WSL print it without the leading spaces.
+
+**Step 6. Count the reads and save the result.** Each read in this file
+takes four lines, as you saw in step 4, so 200,000 lines are
+200,000 / 4 = 50,000 reads. This command does the same count, divides by
+4, and writes one line to a file:
+
+```{.bash filename="Terminal (laptop)"}
+echo "SRR6357070_1 reads: $(( $(gunzip -c SRR6357070_1.fastq.gz | wc -l) / 4 ))" > fastq_summary.txt # <1>
+cat fastq_summary.txt                                                                                # <2>
+```
+1. `$( ... )` runs the line count from step 5 and puts its result here;
+   `$(( ... / 4 ))` divides it by 4; `echo` prints the sentence; and `>`
+   sends that sentence into the file `fastq_summary.txt` instead of the
+   screen.
+2. `cat` prints the file, so you can check what was saved.
+
+```{.console}
+SRR6357070_1 reads: 50000
+```
+
+::: {.callout-warning}
+## Pitfall: stop at the first error
+
+If any step prints an error, stop and fix it before going on. In
+particular, a summary that says `reads: 0` means the download failed or the
+file is broken; the command still "succeeds", because the shell does not
+stop on errors unless told to (@sec-shell-scripts).
+:::
+
+You now have a one-line summary of a real sequencing file. Before moving
+on, look at what a read is. @fig-fastq-record labels the first record from
+step 4.
+
+::: {#fig-fastq-record}
+{{< svg ../figures/fastq-record.svg >}}
+
+The first record of `SRR6357070_1.fastq.gz`. In this file every read takes
+exactly four lines: a header with the read ID, the bases, a `+`
+separator, and one quality character per base. The full format, including
+files that break the four-line pattern, is in @sec-fasta-fastq.
+:::
+
+`~/bioinf-ch01` is a scratch folder: you can delete it whenever you like.
+@sec-organizing-projects starts the book's real project and brings this file, and the
+address you downloaded it from, into it.
+
+::: {.check}
+**Check yourself.** This FASTQ file has 200,000 lines. How many reads does
+it hold?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+50,000. In this file each read takes four lines, so 200,000 / 4 = 50,000.
+:::
+:::
+
+## Parts of a computer that matter for analysis {#sec-orientation-parts}
+
+Start with your own computer. Run the commands for your system and write
+your values in the last column of @tbl-my-computer.
+
+: The resources of one computer. macOS uses different commands for CPUs
+and RAM; all commands are in the tabs below. The example values are from
+one laptop (a Mac); yours will differ. {#tbl-my-computer}
+
+| Resource | Command (Linux / WSL) | Read this | Example output | Your value |
+|:---------|:----------------------|:----------|:---------------|:-----------|
+| Logical CPUs | `nproc` | the number | `16` | |
+| RAM | `free -h` | `total` in the `Mem:` row | `68 GB` | |
+| Free disk | `df -h ~` | the `Avail` column | `744Gi` | |
+
+::: {.panel-tabset group="os"}
+## macOS
+```{.bash filename="Terminal (laptop)"}
+sysctl -n hw.ncpu
+echo "$(( $(sysctl -n hw.memsize) / 1000000000 )) GB"
+df -h ~
+```
+
+```{.console}
+16
+68 GB
+Filesystem      Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk1s1   1.8Ti   1.1Ti   744Gi    60%    6.1M  7.8G    0%   /System/Volumes/Data
+```
+
+Read free disk from the `Avail` column. On a Mac, `Used` and `Avail` need
+not add up to `Size`, because several volumes share one disk.
+
+## Windows (WSL2)
+```{.bash filename="Terminal (laptop)"}
+nproc
+free -h
+df -h ~
+```
+
+For RAM, read the `total` column of the `Mem:` row of `free -h`; for disk,
+the `Avail` column of `df -h ~`. WSL sees only the memory Windows gives its
+virtual machine, by default about half the laptop's RAM, not the full
+amount ([WSL settings](https://learn.microsoft.com/en-us/windows/wsl/wsl-config)).
+
+## Linux
+```{.bash filename="Terminal (laptop)"}
+nproc
+free -h
+df -h ~
+```
+
+For RAM, read the `total` column of the `Mem:` row of `free -h`; for disk,
+the `Avail` column of `df -h ~`.
+:::
+
+These three numbers describe the parts in @fig-computer-parts:
+
+- **CPU** (central processing unit): the part that computes. It has
+  several **physical cores**, each able to work on its own. On many Intel
+  and AMD processors, each core appears to the system as two **logical
+  CPUs**; the commands above count logical CPUs. (The example laptop has 8
+  physical cores and 16 logical CPUs.) A running program splits its work
+  into **threads**, pieces of work that the system places onto CPUs. Many
+  tools take an option that sets how many threads to use: `--threads`,
+  `-t`, or `-p`, depending on the tool. More threads help only if the tool
+  is written to use them.
+- **RAM** (memory): the fast working space a program uses while it runs.
+  It is emptied when the program stops.
+- **Disk** (storage): slow, large, and permanent; it keeps your files. A
+  file's size on disk is not the RAM a program needs to read it. The count
+  in step 6 *streams* through the file a few lines at a time and needs
+  almost no memory, whatever the file's size. Other tools, such as those
+  that build a genome index (@sec-indexing-genomes), hold a lot in memory at once.
+- **I/O** (input/output): reading and writing files, over the disk or the
+  network. Simple steps over big files, such as counting or compressing,
+  often spend most of their time waiting for I/O. Heavier steps, such as
+  aligning reads, are often limited by the CPU, and some by RAM.
+
+::: {#fig-computer-parts}
+{{< svg ../figures/computer-parts.svg >}}
+
+The parts of a computer that matter for analysis, fastest on the left.
+Speeds are typical laptop values, order of magnitude only. Shown is one
+example, an I/O-limited job: blocks of the file crawl from disk into RAM
+while the CPU's cores wait.
+:::
+
+@fig-cores-threads shows what threads do, and do not do, on a computer with
+8 cores.
+
+::: {#fig-cores-threads}
+{{< svg ../figures/cores-threads.svg >}}
+
+Threads on a computer with 8 cores. Left: a tool written to use threads,
+run with 4, keeps 4 cores busy. Right: a single-threaded step keeps 1 core
+busy and leaves 7 idle; asking it for more threads changes nothing.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "More cores always makes it faster"
+**Reality.** Only steps written to use several threads get faster, and only
+until something else limits them. Many steps use one core, and some are
+limited by disk, network, or memory rather than the CPU.
+:::
+
+Each resource fails in its own way when it runs out (@tbl-resource-limits).
+You will meet these messages; recognising them saves hours.
+
+: What it looks like when each resource runs out. {#tbl-resource-limits}
+
+| Resource | What runs out | What you see |
+|:---------|:--------------|:-------------|
+| RAM | Working space while the program runs | The program stops with `Killed` or an "out of memory" message, often with no output file |
+| Disk | Space to write files | `No space left on device` |
+| CPU | Computing power | The job is slow; its cores show 100% busy |
+| I/O | Speed of reading and writing | The job is slow, but its cores are mostly idle |
+
+::: {.callout-important}
+## Key idea
+A job can be limited by CPU, RAM, disk space, or I/O. Extra cores help only
+when the work can use them.
+:::
+
+Finding which one limits a real job is part of @sec-hpc-slurm (on a cluster)
+and @sec-performance.
+
+::: {.check}
+**Check yourself.** A step keeps one core at 100% while seven sit idle.
+Will rerunning it with `--threads 8` make it faster?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Only if the tool supports threads. Many steps use one core whatever you
+ask for, and then nothing changes. Some are limited by disk or memory, not
+the CPU, and more threads will not help those either.
+:::
+:::
+
+## How big is the data? {#sec-orientation-data-sizes}
+
+Start with your own file. It holds 50,000 reads and takes 2.2 MB
+compressed (12.8 MB uncompressed). A typical RNA-seq sample has around 30
+million reads in each mate file, 600 times as many. If those reads are like
+ours, the file is about 600 times larger:
+
+- compressed: 2.2 MB × 600 ≈ 1.3 GB
+- uncompressed: 12.8 MB × 600 ≈ 7.7 GB
+
+A paired-end sample has two such files, one for read 1 (`_1`) and one for
+read 2 (`_2`). Our sample is paired too: your file holds 50,000 reads, and
+its mate file `SRR6357070_2.fastq.gz` holds another 50,000, so the sample is
+50,000 read *pairs* (100,000 reads).
+
+This kind of scaling works only for the same kind of file. Read length,
+header style, and compression all change the result, so treat it as an
+estimate.
+
+A note on units: in this book, 1 MB is 1,000,000 bytes and 1 GB is
+1,000,000,000 bytes. Some tools count in powers of 2 instead
+(1 MiB = 1,048,576 bytes) and often still print `M`. `ls -lh` is one of
+them: your 2,239,317-byte file is 2.14 MiB, which macOS shows as `2.1M`
+and Linux, which always rounds up, as `2.2M`.
+
+Files later in a pipeline fall into two groups (@tbl-data-sizes,
+@fig-pipeline-file-sizes):
+
+- **Read-level files** (FASTQ, BAM) hold every read: gigabytes per sample in
+  a real study. A BAM file holds the same reads placed on the genome, and
+  is often about as large as the compressed FASTQ files it came from,
+  sometimes larger. Sorting it needs temporary disk space on top
+  ([`samtools sort`](https://www.htslib.org/doc/samtools-sort.html)).
+- **Summary files** (count matrix, results table, and in DNA studies often a
+  VCF of variants) hold one row per gene or variant: megabytes or less for
+  RNA-seq, small enough for any laptop.
+
+::: {.wide-table}
+| Format | What it holds | Group | Yeast test set (measured) | Typical study |
+|:-------|:--------------|:------|:--------------------------|:--------------|
+| FASTQ (`.fastq.gz`) | Every read, with a quality per base | read-level | 2.2 MB per mate file; 4.3 MB for one paired sample | about 1 GB per mate file; a few GB per sample |
+| BAM (`.bam`) | Every read, placed on the genome | read-level | 3.3 MB for one sample | a few GB per sample |
+| Count matrix | One count per gene per sample | summary | 2.8 kB (124 genes × 5 samples) | a few MB for the whole study |
+| Results table | One row per gene: fold change, p-value | summary | 12.7 kB (124 genes) | a few MB |
+| VCF (`.vcf.gz`, DNA studies) | One row per variant | summary | none (RNA-seq) | MB for a few samples; GB for large cohorts |
+
+: File sizes in an RNA-seq analysis. The yeast test set is measured; it
+uses only yeast chromosome I, which is why it has 124 genes. A whole yeast
+genome has about 6,000 genes and a mammal 20,000 or more. The typical
+study column is a rough order of magnitude. {#tbl-data-sizes}
+:::
+
+::: {#fig-pipeline-file-sizes}
+{{< svg ../figures/pipeline-file-sizes.svg >}}
+
+Measured file sizes along the pipeline for the yeast test data, on a log
+scale. The sample is `WT_REP2`, one paired run like yours (50,000 read
+pairs). The BAM is the nf-core/rnaseq output stored with the test data;
+the count matrix and results table were made from those BAMs by
+`scripts/ch01_file_sizes.R`. Read-level files are hundreds to thousands of
+times larger than summary files.
+:::
+
+::: {.callout-important}
+## Key idea
+Read-level files (FASTQ, BAM) are large; summary files (count matrices,
+results tables) are usually far smaller. Intermediate and temporary files
+raise the peak disk space a pipeline needs.
+:::
+
+::: {.check}
+**Check yourself.** Our mate file holds 50,000 reads in 2.2 MB. About how
+large is a mate file of the same kind with 30 million reads?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+About 1.3 GB compressed: 30 million is 600 × 50,000, and
+600 × 2.2 MB ≈ 1.3 GB. A paired sample has two such files.
+:::
+:::
+
+## Why Linux {#sec-orientation-linux}
+
+Almost every cluster runs Linux, and most bioinformatics tools are written
+for it first. That is why this book teaches Linux commands. macOS is close
+enough that nearly all of them work unchanged, and WSL gives Windows a real
+Linux system. Where macOS or Windows differ, the book says so.
+
+::: {.callout-note}
+## Background: Linux distributions
+Linux comes in *distributions* that share the same core and commands but
+differ in how software is installed. You will most often meet
+[Ubuntu](https://ubuntu.com) on laptops and WSL, and Red Hat Enterprise
+Linux or [Rocky Linux](https://rockylinux.org) on clusters.
+:::
+
+## Where you compute: laptop, cluster, cloud {#sec-orientation-where}
+
+You will use up to three kinds of computer (@tbl-where-compute).
+
+: Three places to compute. {#tbl-where-compute}
+
+| | Laptop | Cluster (HPC) | Cloud |
+|:--|:--|:--|:--|
+| Cost to you | already paid for | usually free or cheap through your institution | pay for each hour used and each GB stored |
+| Size | a few to ~16 cores; 8–64 GB RAM | thousands of cores; nodes with hundreds of GB of RAM | as large as you pay for |
+| Who manages it | you | research computing staff | you, on the provider's machines |
+| What to run there | editing, plots, R and Python on summary files, small tests | alignment, many samples, pipelines, large-memory jobs | work your cluster cannot do, or when you have no cluster |
+
+A **cluster**, or HPC (high-performance computing) system, is many
+computers, called **nodes**, shared by many people (@fig-cluster-anatomy).
+You connect from your laptop to a **login node**. There you edit files and
+**submit jobs**: requests for some cores, memory, and time. A program called
+the **scheduler** holds each job in a queue until those resources are free,
+then runs it on a **compute node**. Your files sit on shared storage, which
+both the login node and the compute nodes can read. @sec-working-remotely covers
+connecting and @sec-hpc-slurm the scheduler.
+
+::: {#fig-cluster-anatomy}
+{{< svg ../figures/cluster-anatomy.svg >}}
+
+The parts of an HPC cluster. You reach the login node from your laptop with
+`ssh`; work runs on compute nodes when the scheduler starts it; shared
+storage is connected to both. Files do not pass through the scheduler.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "The cluster is just a faster computer"
+**Reality.** A cluster is many ordinary computers shared by many people.
+You ask a scheduler for cores, memory, and time, and your job waits in a
+queue until they are free. A single step is often no faster than on a
+laptop; the gain is running many steps at once, with more memory.
+:::
+
+::: {.callout-warning}
+## Pitfall: heavy work on the login node
+The login node is a shared doorway. Running an analysis there slows it for
+everyone, and many sites kill long-running processes on it. The commands
+in this chapter would work on a login node, but real analysis always runs
+on compute nodes, as a job (@sec-hpc-slurm).
+:::
+
+The **cloud** is computers you rent by the hour from a company. It costs
+money for every hour and every gigabyte, so for most readers it is the
+option for when a cluster cannot do the job. @sec-cloud introduces it.
+
+::: {.check}
+**Check yourself.** Laptop, cluster, or cloud?
+
+1. Editing an analysis script.
+2. Aligning the reads of 48 samples.
+3. Running DESeq2 on this book's small yeast count matrix.
+4. A one-off job that needs 2 TB of RAM, more than any node of your
+   cluster has.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+1. Laptop (or the login node, if the script lives on the cluster).
+2. Cluster compute nodes, submitted as jobs.
+3. Laptop: the matrix is a few kilobytes.
+4. The cloud is one option if you have funding for it; another is a shared
+   facility that has such nodes.
+:::
+:::
+
+## Getting a cluster account {#sec-orientation-account}
+
+Most readers will need a cluster account for the later chapters. Apply
+early, since approval can take days or weeks. Ask your PI or your
+institution's research computing office which cluster you can use.
+
+::: {.callout-tip}
+## Apply for an account now
+ARS scientists and their collaborators can [sign up for
+SCINet](https://scinet.usda.gov/about/signup), USDA's clusters. Universities
+run their own, such as [Iowa State's HPC
+clusters](https://www.hpc.iastate.edu/) (Nova). Step-by-step details are in
+@sec-cluster-sites.
+:::
+
+No cluster yet? Keep going: everything up to @sec-working-remotely runs on your laptop.
+
+## Summary {#sec-orientation-summary}
+
+- A terminal runs a shell (zsh on macOS, bash on Linux and WSL); you type
+  commands, and code blocks in this book leave out the prompt and say where
+  they run.
+- You downloaded a FASTQ file, checked it, looked at its records, and saved
+  a read count: `SRR6357070_1 reads: 50000`.
+- Your computer's logical CPUs, RAM, and free disk are three commands away;
+  a job can be limited by CPU, RAM, disk, or I/O, and more threads help only
+  tools written to use them.
+- Read-level files (FASTQ, BAM) are large; summary files (count matrices,
+  results) are small. File size scales with read count for files of the
+  same kind.
+- Edit and run small analyses on a laptop; run heavy jobs on cluster compute
+  nodes, never on the login node; rent the cloud when neither will do.
+
+## Exercises {#sec-orientation-exercises}
+
+::: {.check}
+**Exercise 1. Read 2.** Download the matching read-2 file and add its count
+as a second line of `fastq_summary.txt`:
+
+```{.bash filename="Terminal (laptop)"}
+curl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz
+echo "SRR6357070_2 reads: $(( $(gunzip -c SRR6357070_2.fastq.gz | wc -l) / 4 ))" >> fastq_summary.txt
+cat fastq_summary.txt
+```
+
+The only change from step 6 is `>>` instead of `>`: `>` replaces a file's
+contents, `>>` adds to the end (@sec-text-tools). Do both files have the same
+count? Why should they?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.console}
+SRR6357070_1 reads: 50000
+SRR6357070_2 reads: 50000
+```
+
+Yes. In a paired-end run each fragment is read from both ends, so read 1
+and read 2 of a pair sit at the same position in the two files, and the
+counts must match. Equal counts do not by themselves prove that the pairs
+line up; @sec-fasta-fastq shows how to check.
+:::
+:::
+
+::: {.check}
+**Exercise 2. Would it fit?** Fill in your column of @tbl-my-computer.
+Would an uncompressed 30-million-read mate file (about 7.7 GB) fit in your
+RAM *if a program loaded all of it at once*, leaving room for the system
+and your other programs?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+It depends on your laptop: with 8 GB of RAM, no; with 32 GB, yes. But the
+count from step 6 never loads the file: it streams through it, so it works
+on any laptop. Some tools do need that much memory or more, which is one
+reason to use a cluster.
+:::
+:::
+
+::: {.check}
+**Exercise 3. How long would it take?** Time the line count:
+
+```{.bash filename="Terminal (laptop)"}
+time gunzip -c SRR6357070_1.fastq.gz | wc -l
+```
+
+Find the elapsed time: the `real` line in bash, or the number before
+`total` in zsh. Estimate the time for a 30-million-read mate file (600
+times larger), then name two reasons the real time could differ from your
+estimate.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+On the example laptop the count took 0.03 seconds, so 600 times that is
+about 20 seconds. Two reasons it could differ: for a file this small, the
+time is mostly spent starting the programs, and the file may already be in
+memory from step 5, so the small run is not a fair sample. And a big file
+may sit on a slower disk or a network filesystem, which makes reading it
+the limit. Measuring what limits a job is part of @sec-hpc-slurm and @sec-performance.
+:::
+:::
+
+## Further reading {#sec-orientation-reading}
+
+- @shotts2025linux, *The Linux Command Line*, chapters 1–3 --- a free,
+  gentle book on what a shell and a terminal are; a second explanation of
+  this chapter and a preview of Part II.
+- @wilson2019swcarpentry, Software Carpentry's [*The Unix
+  Shell*](https://swcarpentry.github.io/shell-novice/), the introduction
+  episode --- the same ideas taught as a workshop lesson, with exercises.
+- @microsoft2025install --- the official, current steps for installing WSL,
+  if anything in the Windows tab has changed.
+- @wu2018repression --- the study our yeast reads come from; read the
+  summary to see what experiment the running dataset measures.

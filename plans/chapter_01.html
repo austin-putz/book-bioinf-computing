@@ -2233,6 +2233,7 @@ vertical-align: -.125em;
   <li><a href="#decisions-2026-11-13-open-questions-round" id="toc-decisions-2026-11-13-open-questions-round" class="nav-link" data-scroll-target="#decisions-2026-11-13-open-questions-round">Decisions (2026-11-13, open questions round)</a></li>
   <li><a href="#decisions-2026-11-13-outside-reviews" id="toc-decisions-2026-11-13-outside-reviews" class="nav-link" data-scroll-target="#decisions-2026-11-13-outside-reviews">Decisions (2026-11-13, outside reviews)</a></li>
   <li><a href="#decisions-2026-11-13-open-questions-round-2" id="toc-decisions-2026-11-13-open-questions-round-2" class="nav-link" data-scroll-target="#decisions-2026-11-13-open-questions-round-2">Decisions (2026-11-13, open questions round 2)</a></li>
+  <li><a href="#written-2026-11-13-what-changed-from-the-plan" id="toc-written-2026-11-13-what-changed-from-the-plan" class="nav-link" data-scroll-target="#written-2026-11-13-what-changed-from-the-plan">Written (2026-11-13): what changed from the plan</a></li>
   <li><a href="#open-questions" id="toc-open-questions" class="nav-link" data-scroll-target="#open-questions">Open questions</a></li>
   </ul>
 </nav>
@@ -2242,7 +2243,7 @@ vertical-align: -.125em;
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Chapter 1 — Orientation: computers and where you compute</h1>
-<p class="subtitle lead">Chapter plan · core · ready to write</p>
+<p class="subtitle lead">Chapter plan · core · written (first draft)</p>
 </div>
 
 
@@ -2265,7 +2266,7 @@ vertical-align: -.125em;
 </header>
 
 
-<p><strong>Part:</strong> I — Getting set up · <strong>Label:</strong> core · <strong>Status:</strong> reviewed (Codex, Antigravity), decisions made; ready to write</p>
+<p><strong>Part:</strong> I — Getting set up · <strong>Label:</strong> core · <strong>Status:</strong> first draft written 2026-11-13 (<code>chapters/01-orientation.qmd</code>); reviewed before writing by Codex and Antigravity</p>
 <section id="from-plan_chapters.md" class="level2">
 <h2 class="anchored" data-anchor-id="from-plan_chapters.md">From <code>PLAN_CHAPTERS.md</code></h2>
 <ul>
@@ -2698,10 +2699,20 @@ BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 <li>BAM and count-matrix sizes are measured when Chapter 1 is written, from the nf-core/rnaseq test run set up for the book anyway.</li>
 </ul>
 </section>
+<section id="written-2026-11-13-what-changed-from-the-plan" class="level2">
+<h2 class="anchored" data-anchor-id="written-2026-11-13-what-changed-from-the-plan">Written (2026-11-13): what changed from the plan</h2>
+<ul>
+<li><strong>Measured sizes.</strong> Docker would not start here, so the nf-core/rnaseq test run was not repeated. Instead <code>scripts/ch01_file_sizes.R</code> downloads the sorted BAMs that nf-core stores with the test data (STAR output of nf-core/rnaseq), counts them with featureCounts (Rsubread), and runs DESeq2. Measured for sample <code>WT_REP2</code> (one paired run, SRR6357072): FASTQ R1 + R2 4.3 MB, BAM 3.3 MB; count matrix 2.8 kB (124 genes × 5 samples); results table 12.7 kB. <code>WT_REP2</code> rather than the reader’s own sample, because <code>WT_REP1</code> combines two runs (SRR6357070 + SRR6357071). The test reference is yeast chromosome I only, which the table caption says. Inputs and checksums are in <code>data/README.md</code>.</li>
+<li><strong><code>fig-pipeline-file-sizes</code></strong> is drawn as bars on a log axis (1 kB to 10 MB), from the measured values.</li>
+<li><strong><code>tbl-my-computer</code></strong> columns: Resource · command (Linux/WSL) · what to read · example output · your value. The macOS commands moved to the OS tabset below the table: the long macOS RAM command wrapped badly in a table cell.</li>
+<li><strong>Further reading:</strong> Shotts (TLCL, 7th Internet Edition, 25.12), Software Carpentry <em>The Unix Shell</em> (Zenodo DOI, June 2019 release), Microsoft’s WSL install page, Wu et al. 2018. DOIs verified with scite; BibTeX fetched from the DOI. The SCINet and ISU pages are linked in the text instead of being cited.</li>
+<li><code>SRR6357070_2.fastq.gz</code> (exercise 1) added to <code>data/README.md</code>: 50,000 reads, SHA-256 recorded.</li>
+</ul>
+</section>
 <section id="open-questions" class="level2">
 <h2 class="anchored" data-anchor-id="open-questions">Open questions</h2>
 <ul>
-<li>None. To-do when writing: measure the BAM and count-matrix sizes for <code>tbl-data-sizes</code> and <code>fig-pipeline-file-sizes</code>.</li>
+<li>Austin to read the draft. The example outputs in the macOS tabs (16 CPUs, 68 GB, <code>df</code> line) come from Austin’s Mac; replace them if you would rather show a more typical laptop.</li>
 </ul>
 </section>
 

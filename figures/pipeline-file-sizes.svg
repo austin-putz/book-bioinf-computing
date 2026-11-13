@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="pipeline-file-sizes-title">
+  <title id="pipeline-file-sizes-title">Measured file sizes for the yeast test data, on a log scale. Read-level files: the paired FASTQ files of one sample are 4.3 MB and its sorted BAM file is 3.3 MB, about as large. Summary files: the count matrix for 124 genes and 5 samples is 2.8 kB, and the differential expression results table for 124 genes is 12.7 kB, a thousand times smaller than the read-level files. A reference genome and annotation enter at the align and count steps.</title>
+  <defs>
+    <marker id="pipeline-file-sizes-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Log axis: y = 300 - (log10(bytes) - 2) * 50 -->
+  <g class="stroke-line" stroke-width="1" stroke-dasharray="3 4">
+    <line x1="80" y1="50" x2="710" y2="50"/>
+    <line x1="80" y1="100" x2="710" y2="100"/>
+    <line x1="80" y1="150" x2="710" y2="150"/>
+    <line x1="80" y1="200" x2="710" y2="200"/>
+    <line x1="80" y1="250" x2="710" y2="250"/>
+  </g>
+  <line x1="80" y1="300" x2="710" y2="300" class="stroke-ink" stroke-width="1.25"/>
+  <g font-size="12" text-anchor="end" class="fill-muted">
+    <text x="72" y="54">10 MB</text>
+    <text x="72" y="104">1 MB</text>
+    <text x="72" y="154">100 kB</text>
+    <text x="72" y="204">10 kB</text>
+    <text x="72" y="254">1 kB</text>
+  </g>
+  <text x="14" y="180" font-size="12" class="fill-muted" transform="rotate(-90 14 180)" text-anchor="middle">size (log scale)</text>
+
+  <!-- Group labels -->
+  <g font-size="13" font-weight="700">
+    <text x="100" y="24">Read-level files: every read</text>
+    <text x="440" y="24">Summary files: one row per gene</text>
+  </g>
+
+  <!-- Bars, drawn from measured sizes; our data is blue throughout -->
+  <g class="fill-given-soft stroke-given" stroke-width="1.5">
+    <rect x="100" y="68.2" width="110" height="231.8"/>
+    <rect x="250" y="74.2" width="110" height="225.8"/>
+    <rect x="440" y="227.4" width="100" height="72.6"/>
+    <rect x="590" y="194.9" width="100" height="105.1"/>
+  </g>
+  <g font-size="13" font-weight="700" text-anchor="middle" class="fill-given">
+    <text x="155" y="60">4.3 MB</text>
+    <text x="305" y="66">3.3 MB</text>
+    <text x="490" y="219">2.8 kB</text>
+    <text x="640" y="187">12.7 kB</text>
+  </g>
+
+  <!-- Steps between files -->
+  <g class="stroke-muted" stroke-width="1.5" marker-end="url(#pipeline-file-sizes-arrow)">
+    <line x1="214" y1="270" x2="246" y2="270"/>
+    <line x1="364" y1="270" x2="436" y2="270"/>
+    <line x1="544" y1="270" x2="586" y2="270"/>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="230" y="260">align</text>
+    <text x="400" y="260">count</text>
+    <text x="565" y="260">test</text>
+  </g>
+
+  <!-- File names and what each size covers -->
+  <g font-size="13" text-anchor="middle">
+    <text x="155" y="320" font-weight="700">FASTQ, R1 + R2</text>
+    <text x="155" y="336" class="fill-muted">one sample</text>
+    <text x="305" y="320" font-weight="700">sorted BAM</text>
+    <text x="305" y="336" class="fill-muted">one sample</text>
+    <text x="490" y="320" font-weight="700">count matrix</text>
+    <text x="490" y="336" class="fill-muted">124 genes × 5 samples</text>
+    <text x="640" y="320" font-weight="700">results table</text>
+    <text x="640" y="336" class="fill-muted">124 genes</text>
+  </g>
+
+  <!-- Reference we bring: enters at align and count -->
+  <rect x="180" y="368" width="250" height="30" rx="5" class="fill-ref-soft stroke-ref"/>
+  <text x="305" y="388" font-size="13" text-anchor="middle">reference: genome + annotation</text>
+  <g class="stroke-ref" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#pipeline-file-sizes-arrow)">
+    <line x1="230" y1="366" x2="230" y2="278"/>
+    <line x1="400" y1="366" x2="400" y2="278"/>
+  </g>
+</svg>

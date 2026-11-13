@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img" aria-labelledby="computer-parts-title">
+  <title id="computer-parts-title">The parts of a computer that matter for analysis, from fastest to slowest: the CPU, whose cores do the work; RAM, the working space, at about 10 to 50 gigabytes per second; the local disk, which keeps files, at about 0.5 to 5 gigabytes per second for a solid-state drive; and the network, which reaches other machines and shared storage, at about 0.1 to 1 gigabyte per second. In this example the job is limited by input and output: blocks of a blue FASTQ file move slowly from disk into RAM while the CPU's cores wait.</title>
+  <style>
+    /* Each block's normal position is its final place in RAM, so the still
+       frame (reduced motion) is the finished picture. It starts on the disk
+       (shifted right) and crawls left; the cores wait meanwhile. */
+    .computer-parts-block { animation: computer-parts-crawl 9s linear infinite; }
+    .computer-parts-b2 { animation-delay: 0.6s; }
+    .computer-parts-b3 { animation-delay: 1.2s; }
+    @keyframes computer-parts-crawl {
+      0%, 8%    { transform: translate(250px, 0); opacity: 0; }
+      12%       { transform: translate(250px, 0); opacity: 1; }
+      70%, 100% { transform: translate(0, 0); opacity: 1; }
+    }
+    .computer-parts-wait { animation: computer-parts-blink 9s steps(1) infinite; }
+    @keyframes computer-parts-blink {
+      0%, 75%   { opacity: 1; }
+      76%, 100% { opacity: 0; }
+    }
+  </style>
+  <defs>
+    <marker id="computer-parts-arrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Boxes -->
+  <g class="fill-surface stroke-line">
+    <rect x="10" y="40" width="140" height="172" rx="10"/>
+    <rect x="200" y="40" width="190" height="172" rx="10"/>
+    <rect x="440" y="40" width="150" height="172" rx="10"/>
+    <rect x="620" y="40" width="90" height="172" rx="10"/>
+  </g>
+  <g font-size="16" font-weight="700">
+    <text x="24" y="66">CPU</text>
+    <text x="214" y="66">RAM</text>
+    <text x="454" y="66">Disk</text>
+    <text x="630" y="66">Network</text>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="24" y="86">cores do the work</text>
+    <text x="214" y="86">working space,</text>
+    <text x="214" y="102">emptied at the end</text>
+    <text x="454" y="86">keeps files</text>
+    <text x="630" y="86">other</text>
+    <text x="630" y="102">machines,</text>
+    <text x="630" y="118">shared</text>
+    <text x="630" y="134">storage</text>
+  </g>
+
+  <!-- Links between parts -->
+  <g class="stroke-muted" stroke-width="1.5" marker-start="url(#computer-parts-arrow)" marker-end="url(#computer-parts-arrow)">
+    <line x1="156" y1="115" x2="194" y2="115"/>
+    <line x1="396" y1="115" x2="434" y2="115"/>
+    <line x1="596" y1="115" x2="614" y2="115"/>
+  </g>
+
+  <!-- CPU: four cores, idle while waiting -->
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="28" y="104" width="44" height="30" rx="4"/>
+    <rect x="86" y="104" width="44" height="30" rx="4"/>
+    <rect x="28" y="142" width="44" height="30" rx="4"/>
+    <rect x="86" y="142" width="44" height="30" rx="4"/>
+  </g>
+  <text x="80" y="198" font-size="13" text-anchor="middle" class="fill-muted computer-parts-wait">waiting for data…</text>
+
+  <!-- Disk: the file stays on disk; copies of its blocks move into RAM -->
+  <rect x="456" y="140" width="118" height="28" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="515" y="159" font-size="12" text-anchor="middle" class="mono">reads.fastq.gz</text>
+
+  <!-- Blocks of the file, drawn where they end up: in RAM -->
+  <g class="fill-given">
+    <rect x="216" y="140" width="44" height="28" rx="4" class="computer-parts-block computer-parts-b1"/>
+    <rect x="270" y="140" width="44" height="28" rx="4" class="computer-parts-block computer-parts-b2"/>
+    <rect x="324" y="140" width="44" height="28" rx="4" class="computer-parts-block computer-parts-b3"/>
+  </g>
+
+  <!-- Typical speeds, order of magnitude only -->
+  <g font-size="13" text-anchor="middle">
+    <text x="80" y="244">billions of steps</text>
+    <text x="80" y="260">per second, per core</text>
+    <text x="295" y="244">about 10–50 GB/s</text>
+    <text x="515" y="244">about 0.5–5 GB/s</text>
+    <text x="515" y="260" class="fill-muted">(solid-state drive)</text>
+    <text x="665" y="244">about</text>
+    <text x="665" y="260">0.1–1 GB/s</text>
+  </g>
+  <text x="360" y="288" font-size="13" text-anchor="middle" class="fill-muted">fastest on the left, slowest on the right; typical laptop values</text>
+</svg>

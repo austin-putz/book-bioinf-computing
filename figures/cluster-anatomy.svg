@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" role="img" aria-labelledby="cluster-anatomy-title">
+  <title id="cluster-anatomy-title">The parts of an HPC cluster. Your laptop connects over SSH to a login node, where you edit files and submit jobs. Submitted jobs wait in the scheduler's queue until the scheduler starts them on compute nodes, where the work runs. Shared storage holding your data is part of the cluster and is connected to both the login node and the compute nodes; files do not pass through the scheduler. The laptop reaches the cluster only through the SSH connection and file transfers.</title>
+  <defs>
+    <marker id="cluster-anatomy-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- The cluster boundary -->
+  <rect x="186" y="10" width="524" height="360" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="202" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+
+  <!-- Laptop -->
+  <rect x="10" y="100" width="130" height="90" rx="10" class="fill-surface stroke-line"/>
+  <text x="24" y="128" font-size="16" font-weight="700">Your laptop</text>
+  <text x="24" y="148" font-size="13" class="fill-muted">edit, view</text>
+  <text x="24" y="164" font-size="13" class="fill-muted">small jobs</text>
+
+  <!-- Laptop to login node: SSH and file transfers -->
+  <line x1="140" y1="145" x2="200" y2="145" class="stroke-muted" stroke-width="1.75" marker-start="url(#cluster-anatomy-arrow)" marker-end="url(#cluster-anatomy-arrow)"/>
+  <text x="161" y="134" font-size="13" text-anchor="middle" class="mono">ssh</text>
+  <text x="161" y="166" font-size="12" text-anchor="middle" class="fill-muted">files</text>
+
+  <!-- Login node -->
+  <rect x="202" y="100" width="130" height="90" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="216" y="128" font-size="16" font-weight="700">Login node</text>
+  <text x="216" y="148" font-size="13" class="fill-muted">edit, submit</text>
+  <text x="216" y="164" font-size="13" class="fill-muted">shared by all</text>
+
+  <!-- Login node to scheduler -->
+  <line x1="332" y1="145" x2="374" y2="145" class="stroke-muted" stroke-width="1.75" marker-end="url(#cluster-anatomy-arrow)"/>
+  <text x="353" y="134" font-size="12" text-anchor="middle" class="fill-muted">submit</text>
+
+  <!-- Scheduler queue -->
+  <rect x="376" y="80" width="134" height="130" rx="10" class="fill-surface stroke-line"/>
+  <text x="390" y="106" font-size="16" font-weight="700">Scheduler</text>
+  <text x="390" y="124" font-size="13" class="fill-muted">jobs wait in a queue</text>
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="390" y="138" width="106" height="16" rx="3"/>
+    <rect x="390" y="160" width="106" height="16" rx="3"/>
+    <rect x="390" y="182" width="106" height="16" rx="3"/>
+  </g>
+  <g font-size="12" class="fill-muted" text-anchor="middle">
+    <text x="443" y="150">job 3</text>
+    <text x="443" y="172">job 2</text>
+    <text x="443" y="194">job 1</text>
+  </g>
+
+  <!-- Scheduler starts jobs on compute nodes -->
+  <g class="stroke-muted" stroke-width="1.75" marker-end="url(#cluster-anatomy-arrow)" fill="none">
+    <path d="M510,130 C536,130 536,72 560,72"/>
+    <path d="M510,145 L560,145"/>
+    <path d="M510,160 C536,160 536,218 560,218"/>
+  </g>
+  <text x="535" y="252" font-size="12" text-anchor="middle" class="fill-muted">starts jobs</text>
+  <text x="535" y="266" font-size="12" text-anchor="middle" class="fill-muted">when free</text>
+
+  <!-- Compute nodes -->
+  <g class="fill-surface stroke-ink" stroke-width="1.25">
+    <rect x="562" y="48" width="134" height="50" rx="8"/>
+    <rect x="562" y="120" width="134" height="50" rx="8"/>
+    <rect x="562" y="192" width="134" height="50" rx="8"/>
+  </g>
+  <g font-size="13">
+    <text x="574" y="70" font-weight="700">Compute node</text>
+    <text x="574" y="88" class="fill-muted">run</text>
+    <text x="574" y="142" font-weight="700">Compute node</text>
+    <text x="574" y="160" class="fill-muted">run</text>
+    <text x="574" y="214" font-weight="700">Compute node</text>
+    <text x="574" y="232" class="fill-muted">run</text>
+  </g>
+
+  <!-- Shared storage: wired to login and compute nodes, not the scheduler -->
+  <rect x="202" y="296" width="494" height="60" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="216" y="322" font-size="16" font-weight="700">Shared storage</text>
+  <text x="216" y="342" font-size="13" class="fill-muted">home, project, and scratch folders</text>
+  <g class="fill-given-soft stroke-given">
+    <rect x="500" y="310" width="54" height="32" rx="4"/>
+    <rect x="562" y="310" width="54" height="32" rx="4"/>
+    <rect x="624" y="310" width="54" height="32" rx="4"/>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-given">
+    <text x="527" y="330">reads</text>
+    <text x="589" y="330">BAMs</text>
+    <text x="651" y="330">counts</text>
+  </g>
+  <g class="stroke-line" stroke-width="2.5">
+    <line x1="267" y1="190" x2="267" y2="296"/>
+    <line x1="704" y1="73" x2="704" y2="326"/>
+    <line x1="696" y1="73" x2="704" y2="73"/>
+    <line x1="696" y1="145" x2="704" y2="145"/>
+    <line x1="696" y1="217" x2="704" y2="217"/>
+    <line x1="696" y1="326" x2="704" y2="326"/>
+  </g>
+</svg>

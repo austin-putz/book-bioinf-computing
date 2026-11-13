@@ -108,6 +108,9 @@ tools.
 - `data/README.md`: every third-party dataset (source, version/commit,
   accession, license, citation, checksums), per series rule. Add a row
   whenever a chapter starts using a new file.
+- `scripts/`: code that produces numbers or files shown in the book, named
+  by chapter (e.g., `ch01_file_sizes.R` measures Chapter 1's file sizes).
+  Code, so MIT. The chapter names the script beside the result.
 - `figures/`: hand-drawn SVGs, named after their figure label without
   `fig-` (e.g., `fastq-record.svg` for `fig-fastq-record`).
 - `references.qmd` + `references.bib`: References page.

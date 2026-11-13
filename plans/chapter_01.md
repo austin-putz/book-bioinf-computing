@@ -515,6 +515,16 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   `nproc` works on macOS, and `time` prints `real`. Recorded in the book's
   `CLAUDE.md` under Decided. The setup was tested in an empty home folder
   with Homebrew's bash 5.3 on macOS 15 (Intel).
+- **Cluster readers** (Austin): a pitfall box before step 1 of the guided
+  session: never on the login node; `srun --cpus-per-task=1 --mem=4G
+  --time=01:00:00 --pty bash -l` first (options checked against the SLURM
+  srun docs), `hostname` to check, `exit` after; site options (`-A`, `-p`)
+  in Appendix A; some compute nodes have no internet. The §7 login-node
+  pitfall and the top of the exercises point back to it.
+- **iTerm2** (Austin): one optional paragraph at the end of the macOS tab
+  (same bash either way; split panes, scrollback search, paste history;
+  `brew install --cask iterm2`), linked to iterm2.com; never assumed.
+  No screenshot: the official site shows it.
 - Review fixes: RAM shown in GiB (the macOS command divides by 2^30, so a
   "64 GB" laptop shows 64, matching `free -h`); "compressing" removed from
   the examples of I/O-limited steps (gzip compression is usually limited by

@@ -46,6 +46,16 @@ Pick yours; every other tabbed box on this page will follow your choice.
 Open **Terminal**: press {{< kbd Cmd-Space >}}, type `Terminal`, and press
 {{< kbd Return >}}. (It lives in *Applications → Utilities*.)
 
+::: {.callout-important}
+## Key idea: switch your Mac from zsh to bash first
+
+A new Mac's Terminal runs **zsh**. Every command, output, and explanation in
+this book assumes **bash**, as on Linux and on clusters. Do all five setup
+steps below before the guided first session, then check that
+`echo "$BASH_VERSION"` prints `5` or higher. If you skip this, some
+commands and outputs will not match the book.
+:::
+
 This book uses **bash**, the shell on Linux and on clusters, everywhere. A
 Mac needs a one-time setup to match: a new Mac's Terminal runs a different
 shell (zsh), its built-in bash is version 3.2 from 2007, and its everyday
@@ -129,6 +139,15 @@ to install a current bash and the GNU tools, and make bash your shell. Allow
 
 From now on your Mac behaves like the Linux machines in this book.
 
+**Optional: iTerm2.** Many Mac users swap Terminal for
+[iTerm2](https://iterm2.com), a free terminal app. Both run the same bash
+with the same settings, so every command in this book works the same in
+either. iTerm2 adds conveniences that help once you work on a cluster all
+day: one window split into several panes (say, your laptop beside a login
+node), search through everything a pane has printed, and a history of what
+you pasted. To try it, install it with `brew install --cask iterm2`. This
+book never assumes you have it.
+
 ## Windows (WSL2)
 
 Windows does not run the book's commands directly. Instead you install
@@ -182,7 +201,7 @@ to use from Linux and invite line-ending and permission problems
 
 | Operating system | Terminal app | Default shell | Supported in this book |
 |:-----------------|:-------------|:--------------|:-----------------------|
-| macOS | Terminal | bash (after the setup above; a new Mac uses zsh) | yes |
+| macOS | Terminal (or iTerm2) | bash (after the setup above; a new Mac uses zsh) | yes |
 | Windows | Ubuntu (WSL2) | bash | yes |
 | Windows | PowerShell, Git Bash | — | no |
 | Linux (e.g., Ubuntu) | Terminal | bash (usually) | yes |
@@ -191,7 +210,8 @@ The terminal shows a **prompt**: a short line ending in `$`, often with
 your user name and folder in front. It means "ready for a
 command". Code blocks in this book leave the prompt out, so you can copy and
 paste them as they are. Each block is labelled with where it runs; in this
-chapter that is always `Terminal (laptop)`.
+chapter that is `Terminal (laptop)`, except for the cluster box in the next
+section.
 
 ## Guided first session {#sec-orientation-first-session}
 
@@ -212,6 +232,31 @@ The file we use holds yeast (*Saccharomyces cerevisiae*) RNA-seq reads from
 an experiment by @wu2018repression, cut down to 50,000 reads by the nf-core
 project for testing. It is the running dataset of this book; its source and
 license are listed in the book's `data/README.md`.
+
+::: {.callout-warning}
+## Pitfall: on a cluster, never on the login node
+
+This session is meant for your laptop. If you do it on a cluster instead
+(say, you already have an account), **do not run it on the login node**,
+the machine you land on when you log in. Ask the scheduler for a
+**compute node** first, and run everything there, downloads included:
+
+```{.bash filename="Terminal (login node)"}
+srun --cpus-per-task=1 --mem=4G --time=01:00:00 --pty bash -l
+```
+
+This asks for 1 core, 4 GB of RAM, and 1 hour, and opens a shell on a
+compute node once they are free; it may take a moment. Run `hostname`: it
+should now print a different machine's name than before. Do steps 1–6
+there, then type `exit` to give the compute node back and return to the
+login node.
+
+Many sites need more options, such as an account (`-A`) or a partition
+(`-p`); SCINet, for example, requires `-A`. Your site's are in
+@sec-cluster-sites. If `curl` cannot connect from a compute node, your
+site may block the internet there; ask your research computing office
+where to download. @sec-hpc-slurm explains all of this properly.
+:::
 
 **Step 1. Make a scratch folder and move into it.**
 
@@ -467,6 +512,23 @@ run with 4, keeps 4 cores busy. Right: a single-threaded step keeps 1 core
 busy and leaves 7 idle; asking it for more threads changes nothing.
 :::
 
+Whether code can use more than one core also depends on the language it is
+written in and the packages it uses (@tbl-language-threads). Some packages
+use several **processes** (separate copies of a running program) instead of
+threads. The cores fill up the same way, but each process needs its own
+memory.
+
+: Using more than one core, by language. Brief; @sec-r-essentials and
+@sec-python-essentials show how, and @sec-performance goes further.
+{#tbl-language-threads}
+
+| Language | Out of the box | Ways to use more cores |
+|:---------|:---------------|:-----------------------|
+| R | One core: R runs one step at a time | `data.table` (threads; by default half your logical CPUs); the `parallel` package (`mclapply` starts extra processes; not on Windows); matrix maths, if R uses a multi-threaded BLAS library such as OpenBLAS |
+| Python | One thread runs Python code at a time, because of the global interpreter lock (GIL) | `multiprocessing` and `concurrent.futures` (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate *free-threaded* build without the GIL (e.g., `python3.14t`) was experimental in 3.13 and is officially supported since 3.14, but it is not the default |
+| Julia | One worker thread, unless you ask for more | Start with `julia --threads auto`, then use `Threads.@threads` loops |
+| C, C++, Java | Real threads, if the program is written to use them | Most heavy bioinformatics tools are written in these (samtools, BWA, and STAR in C or C++; GATK in Java). That is why they take a `--threads` option |
+
 ::: {.callout-caution .misconception}
 ## Misconception: "More cores always makes it faster"
 **Reality.** Only steps written to use several threads get faster, and only
@@ -645,9 +707,9 @@ laptop; the gain is running many steps at once, with more memory.
 ::: {.callout-warning}
 ## Pitfall: heavy work on the login node
 The login node is a shared doorway. Running an analysis there slows it for
-everyone, and many sites kill long-running processes on it. The commands
-in this chapter would work on a login node, but real analysis always runs
-on compute nodes, as a job (@sec-hpc-slurm).
+everyone, and many sites kill long-running processes on it. Run work on a
+compute node instead: interactively with `srun` (the box in
+@sec-orientation-first-session), or as a submitted job (@sec-hpc-slurm).
 :::
 
 The **cloud** is computers you rent by the hour from a company. It costs
@@ -708,6 +770,10 @@ on your laptop.
   nodes, never on the login node; rent the cloud when neither will do.
 
 ## Exercises {#sec-orientation-exercises}
+
+Do these where you did the guided session: on your laptop, or, on a
+cluster, inside an `srun` session on a compute node (see the pitfall box
+in @sec-orientation-first-session), never on the login node.
 
 ::: {.check}
 **Exercise 1. Read 2.** Download the matching read-2 file and add its count

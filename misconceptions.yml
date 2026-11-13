@@ -18,8 +18,8 @@
   claim: "More cores always makes it faster."
   reality: >
     Only steps written to use several threads get faster, and only until
-    something else limits them. Many steps use one core, and many are
-    waiting on the disk or network, not the CPU.
+    something else limits them. Many steps use one core, and some are
+    limited by disk, network, or memory rather than the CPU.
   probe: >
     A step keeps one core at 100% while seven sit idle. Will rerunning it
     with --threads 8 make it faster? (Correct: only if the tool supports
@@ -57,7 +57,9 @@
     RAM is the fast working space a program uses while it runs; it is
     small and emptied when the program stops. Disk is slow, large, and
     keeps files. Running out of RAM gets a job killed; running out of disk
-    gives "No space left on device".
+    gives "No space left on device". A file's size on disk is also not the
+    RAM a program needs: many tools stream through a file without loading
+    it.
   probe: >
     A job stops with the message "Killed" and no output file. Which
     resource most likely ran out? (Correct: RAM, not disk.)

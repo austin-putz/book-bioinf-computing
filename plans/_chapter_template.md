@@ -57,7 +57,8 @@ date: YYYY-MM-DD
 
 ### Code (§6)
 
-- Where each command runs (laptop / login node / compute node); tier
+- Where each command runs (laptop / login node / compute node), shown as
+  `filename="Terminal (laptop)"` etc.; tier
   (executed / shown, not run / precomputed); compute notes for heavy steps;
   annotations for new commands; captured output in `.console` blocks.
 

@@ -105,6 +105,9 @@ tools.
   `animal-models-test`. Misconception callouts and self-check probes are
   written from it. When a chapter plan is agreed, add its misconceptions
   here.
+- `data/README.md`: every third-party dataset (source, version/commit,
+  accession, license, citation, checksums), per series rule. Add a row
+  whenever a chapter starts using a new file.
 - `figures/`: hand-drawn SVGs, named after their figure label without
   `fig-` (e.g., `fastq-record.svg` for `fig-fastq-record`).
 - `references.qmd` + `references.bib`: References page.

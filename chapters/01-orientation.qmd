@@ -228,9 +228,12 @@ Linux and WSL terminals. In a terminal, {{< kbd Ctrl-C >}} does *not* copy:
 it stops the running command.
 :::
 
-The file we use holds yeast (*Saccharomyces cerevisiae*) RNA-seq reads from
-an experiment by @wu2018repression, cut down to 50,000 reads by the nf-core
-project for testing. It is the running dataset of this book; its source and
+The file we use is a **FASTQ** file, the standard format for sequencing
+reads: each read's bases, plus a quality score for every base. It holds
+yeast (*Saccharomyces cerevisiae*) RNA-seq reads from an experiment by
+@wu2018repression, cut down to 50,000 reads for testing by
+[nf-core](https://nf-co.re), a community collection of bioinformatics
+pipelines. It is the running dataset of this book; its source and
 license are listed in the book's `data/README.md`.
 
 ::: {.callout-warning}
@@ -491,6 +494,15 @@ These three numbers describe the parts in @fig-computer-parts:
   network. Simple steps over big files, such as copying them or counting
   their lines, often spend most of their time waiting for I/O. Heavier steps, such as
   aligning reads, are often limited by the CPU, and some by RAM.
+- **GPU** (graphics processing unit): a separate processor with thousands
+  of small cores, built to do the same arithmetic on lots of data at once.
+  Most tools in this book do not use one. Where you will meet GPUs:
+  nanopore basecalling ([Dorado](https://github.com/nanoporetech/dorado)),
+  deep-learning models, and GPU versions of standard tools such as BWA-MEM,
+  STAR, and DeepVariant ([NVIDIA
+  Parabricks](https://docs.nvidia.com/clara/parabricks/latest/index.html)).
+  Clusters usually have a few GPU nodes, which you must ask the scheduler
+  for. @sec-gpu covers them.
 
 ::: {#fig-computer-parts}
 {{< svg ../figures/computer-parts.svg >}}
@@ -571,18 +583,20 @@ the CPU, and more threads will not help those either.
 
 ## How big is the data? {#sec-orientation-data-sizes}
 
-Start with your own file. It holds 50,000 reads and takes 2.2 MB
-compressed (12.8 MB uncompressed). A typical RNA-seq sample has around 30
-million reads in each mate file, 600 times as many. If those reads are like
+Start with your own file. Our sample was sequenced **paired-end**: each
+fragment of RNA (copied to DNA) was read from both ends, so the sample has
+two **mate files**, one for read 1 (`_1`) and one for read 2 (`_2`). Your
+file is the read-1 file. It holds 50,000 reads and takes 2.2 MB compressed
+(12.8 MB uncompressed). A typical RNA-seq sample has around 30 million
+reads in each mate file, 600 times as many. If those reads are like
 ours, the file is about 600 times larger:
 
 - compressed: 2.2 MB × 600 ≈ 1.3 GB
 - uncompressed: 12.8 MB × 600 ≈ 7.7 GB
 
-A paired-end sample has two such files, one for read 1 (`_1`) and one for
-read 2 (`_2`). Our sample is paired too: your file holds 50,000 reads, and
-its mate file `SRR6357070_2.fastq.gz` holds another 50,000, so the sample is
-50,000 read *pairs* (100,000 reads).
+A paired-end sample has two such files. Ours does too: your file holds
+50,000 reads, and its mate file `SRR6357070_2.fastq.gz` holds another
+50,000, so the sample is 50,000 read *pairs* (100,000 reads).
 
 This kind of scaling works only for the same kind of file. Read length,
 header style, and compression all change the result, so treat it as an
@@ -595,13 +609,17 @@ them: your 2,239,317-byte file is 2.14 MiB, which GNU `ls` rounds up to
 `2.2M`. (The `ls` built into macOS rounds to `2.1M`.) Memory is sold in
 binary units too: a laptop sold with "64 GB" has 64 GiB.
 
-Files later in a pipeline fall into two groups (@tbl-data-sizes,
-@fig-pipeline-file-sizes):
+An analysis **pipeline** is a fixed series of steps run in order; for
+RNA-seq, roughly: *align* the reads (find where each one came from in the
+genome), *count* the reads on each gene, and *test* which genes differ
+between groups. Part VI shows how to run whole pipelines. The files along
+the way fall into two groups (@tbl-data-sizes, @fig-pipeline-file-sizes):
 
 - **Read-level files** (FASTQ, BAM) hold every read: gigabytes per sample in
-  a real study. A BAM file holds the same reads placed on the genome, and
-  is often about as large as the compressed FASTQ files it came from,
-  sometimes larger. Sorting it needs temporary disk space on top
+  a real study. A BAM file holds the same reads after aligning, each with
+  its place on the genome, and is often about as large as the compressed
+  FASTQ files it came from, sometimes larger. Sorting it into genome
+  order needs temporary disk space on top
   ([`samtools sort`](https://www.htslib.org/doc/samtools-sort.html)).
 - **Summary files** (count matrix, results table, and in DNA studies often a
   VCF of variants) hold one row per gene or variant: megabytes or less for
@@ -681,7 +699,8 @@ You will use up to three kinds of computer (@tbl-where-compute).
 
 A **cluster**, or HPC (high-performance computing) system, is many
 computers, called **nodes**, shared by many people (@fig-cluster-anatomy).
-You connect from your laptop to a **login node**. There you edit files and
+You connect from your laptop to a **login node** with `ssh` (secure
+shell, the standard way to log in to another computer). There you edit files and
 **submit jobs**: requests for some cores, memory, and time. A program called
 the **scheduler** (on most clusters, including SCINet and Nova,
 [SLURM](https://slurm.schedmd.com)) holds each job in a queue until those resources are free,
@@ -722,7 +741,8 @@ option for when a cluster cannot do the job. @sec-cloud introduces it.
 
 1. Editing an analysis script.
 2. Aligning the reads of 48 samples.
-3. Running DESeq2 on this book's small yeast count matrix.
+3. Running DESeq2 (an R package that finds genes whose expression differs
+   between groups) on this book's small yeast count matrix.
 4. A one-off job that needs 2 TB of RAM, more than any node of your
    cluster has.
 

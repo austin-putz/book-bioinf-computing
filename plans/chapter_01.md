@@ -521,6 +521,13 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   srun docs), `hostname` to check, `exit` after; site options (`-A`, `-p`)
   in Appendix A; some compute nodes have no internet. The §7 login-node
   pitfall and the top of the exercises point back to it.
+- **Definitions and GPU** (Austin): defined at first use: FASTQ and
+  nf-core (§3), paired-end and mate files (§5, now before first use),
+  pipeline with align/count/test, aligned and sorted BAM (§5), `ssh`
+  (§7), DESeq2 (§7 self-check). New GPU bullet in §4: what a GPU is,
+  where readers meet one (Dorado basecalling, deep learning, NVIDIA
+  Parabricks GPU versions of BWA-MEM, STAR, DeepVariant; checked against
+  the official pages), GPU nodes requested from the scheduler, Chapter 37.
 - **`fig-pipeline-file-sizes` redrawn to scale** (Austin): log-scale bars
   made a 2.8 kB file look about a third the height of a 4.3 MB one.
   Now squares with area proportional to size (side = sqrt(bytes) ×

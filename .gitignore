@@ -5,3 +5,6 @@
 
 # Rendered planning docs: local viewing only
 /plans/*.html
+
+# Private: Austin's SCINet account email (local only)
+/plans/scinet_welcome_email.md

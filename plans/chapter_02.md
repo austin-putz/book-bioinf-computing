@@ -6,7 +6,9 @@ date: 2026-11-13
 
 **Part:** I — Getting set up · **Label:** core · **Status:** draft, revised
 after the Codex and Antigravity reviews and the open-questions round
-(2026-11-13; see *Review responses* and *Decisions*)
+(2026-11-13; see *Review responses* and *Decisions*), then updated with
+Austin's hands-on checks on Windows/WSL, Atlas, and Ceres (2026-11-14;
+see *Hands-on checks*)
 
 ## From `PLAN_CHAPTERS.md`
 
@@ -98,7 +100,16 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    them; `pixi shell` starts a shell with them until you type `exit`
    (changing folders does not end it). `pixi add` changes the manifest and
    lockfile; readers following the book do not need it yet. Depth
-   (solving, `PATH`) deferred to Chapters 7 and 23. [`fig-pixi-parts`,
+   (solving, `PATH`) deferred to Chapters 7 and 23. *On a cluster*
+   (one short paragraph, tested on Ceres 2026-11-14): install in project
+   storage, not home (30 GB, fixed) or `/90daydata` (purged after 90
+   days), with `PIXI_CACHE_DIR` there too; run the install from a
+   compute session (OnDemand terminal or `salloc`), not a login node;
+   expect the first install to take from seconds to several minutes
+   depending on the site's storage (reinstall from cache: 57 s on
+   Ceres, 2.4 s on Nova), and don't interrupt it; each cluster has its own storage, so
+   install on the cluster you will use (SCINet's Ceres and Atlas do not
+   share `/project`). [`fig-pixi-parts`,
    `tbl-pixi-commands`; key idea; pitfall: cluster cache; misconception
    callout "installed everywhere"; self-check]
 3. **VS Code: a home for your work.** *Start hands-on:* install VS Code
@@ -108,7 +119,15 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    'copilot' commands in PATH*), then reopen the terminal. Windows:
    install the normal **Windows** application plus its WSL extension;
    never a second Linux copy inside Ubuntu; open the folder with `code .`
-   from the Ubuntu terminal. Linux: `code` is on `PATH` after install.
+   from the Ubuntu terminal. Check it is on `PATH` (`where.exe code` in
+   PowerShell, `which code` in Ubuntu, which shows a
+   `/mnt/c/Users/<you>/…/Microsoft VS Code/bin/code` path because WSL
+   inherits the Windows `PATH`); if not found, close every terminal, run
+   `wsl --shutdown`, reopen, and if still missing rerun the installer
+   with **Add to PATH** ticked (ticked by default; tested 2026-11-14).
+   Windows user names can contain spaces, so `/mnt/c/Users/…` paths may
+   too: one more reason to keep work in the Linux home (quoting paths in
+   Chapter 5). Linux: `code` is on `PATH` after install.
    File → Open Folder works everywhere. Open `~/bioinf-book`, open the
    built-in terminal, and check it runs the same bash as Terminal:
    `echo "$BASH_VERSION"` shows 5.x (macOS) and `sed --version` says GNU.
@@ -135,15 +154,36 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    `yes` (OpenSSH rejects `y`), after which the host is remembered in
    `~/.ssh/known_hosts`. Then MFA if the site uses it (site details in
    Appendix A, `@sec-cluster-sites`). SCINet's SSH login
-   (`ceres.scinet.usda.gov`) first needs the SmallStep `step` program
+   (`ceres.scinet.usda.gov`, or `atlas-login.hpc.msstate.edu` for Atlas)
+   first needs the SmallStep `step` program
    and a browser eAuthentication sign-in about once a day, and SCINet
    recommends Open OnDemand over SSH for most work; so SCINet readers
    may do §5 through Open OnDemand before setting up SSH (checked
-   2026-11-13, scinet.usda.gov/guides/access/ssh-login). Then a minimal `~/.ssh/config` entry
+   2026-11-13, scinet.usda.gov/guides/access/ssh-login). Non-USDA
+   readers sign in with Login.gov using the email tied to their SCINet
+   account. Setup tested on a Mac (2026-11-16): `brew install step`,
+   then `step ca bootstrap …` and `step ssh config …` copied from
+   SCINet's page, then plain `ssh`; the browser opens for sign-in. `step`
+   adds only an `Include` block to `~/.ssh/config` and, for SCINet hosts,
+   supplies the user, a short-lived certificate, and its own
+   `known_hosts`, so SCINet readers do not see the `yes` prompt
+   (confirmed 2026-11-16); the captured host-key session comes from
+   Nova (recorded 2026-11-16: host-key prompt, `yes`, "Permanently
+   added", `Verification code:` then `Password:`, site banner), with one sentence
+   telling SCINet readers not to expect it.
+   No VPN is needed (Nova, by contrast, needs the ISU network
+   or VPN). New SCINet accounts start in a `sandbox` project with a
+   2-hour job limit until a PI adds them to a real project (welcome
+   email, 2026-11-14): one sentence here, details in Appendix A. The
+   captured session also shows that cluster prompts look different
+   (`[user@host ~]$` on Rocky Linux vs `user@host:~$` on Ubuntu). Then a minimal `~/.ssh/config` entry
    (`Host`, `HostName`, `User`) so a short name works. Windows: say which
    home holds which config: the Ubuntu terminal uses the WSL file
    (`~/.ssh/config` in Linux); VS Code's Remote-SSH uses the Windows SSH
-   client and its own config file (section 5). Keys, jump hosts, and
+   client (built-in `C:\Windows\System32\OpenSSH\ssh.exe`) and its own
+   config file (section 5). A fresh Ubuntu has no `~/.ssh` folder until the
+   first `ssh` connection creates it, so `ls ~/.ssh` failing before then is
+   normal (tested 2026-11-14). Keys, jump hosts, and
    `ProxyJump` wait for Chapter 9, unless the reader's site requires them
    to log in at all; then Appendix A gives that step. [self-check]
 5. **Editing on a remote machine.** *First, the site check:* connecting
@@ -160,11 +200,28 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
      release step, so Appendix A adds `scancel`). SSH to
      `nova-vscode` is gone, and the May 19, 2026 maintenance moved VS
      Code off `nova-login-*` because "VSCode processes often rend login
-     nodes unusable". Open OnDemand needs the campus network or VPN.
+     nodes unusable". Open OnDemand needs the campus network or VPN
+     (off campus: Cisco Secure Client, formerly AnyConnect), and Nova
+     login uses a code from an authenticator app (e.g. Google
+     Authenticator), set up at first login (Austin, from experience;
+     to confirm against ISU docs and a fresh session).
    - **SCINet (Ceres):** VS Code Server in Open OnDemand, or a registered
      tunnel started from the OnDemand "VS Code Tunnel" app, both on
      compute nodes. Tunnels need a Microsoft or GitHub account (USDA:
-     Microsoft). Remote-SSH is not mentioned.
+     Microsoft). Remote-SSH is not mentioned. **Tested on Ceres
+     (2026-11-14):** Interactive Apps → Servers → *VS Code*; the form asks
+     Account (choose your project, not `sandbox`), Queue and QOS
+     (`ceres`), cores, memory (e.g. `8G`), hours, and **Working
+     Directory** (set it to your project folder: tested 2026-11-16, the explorer
+     and terminal open there; left blank, the terminal opened in the
+     session's ID-named folder under `~/ondemand/data/sys/…`). In
+     browser VS Code the status bar's left end shows only a remote
+     icon, not `SSH: <host>`, so readers check with `hostname`; the
+     §3 self-check and `fig-vscode-window` caption must allow for this. Its terminal ran on a
+     compute node (`ceres20-compute-2`). *My Interactive Sessions* →
+     Cancel stopped it; the browser tab stays open and is closed by hand.
+     Atlas has its own OnDemand (atlas-ood.hpc.msstate.edu); whether it
+     offers VS Code is not documented, so Ceres is the SCINet example.
 
    *Then hands-on:* readers with a site route (SCINet, Nova, many
    universities) follow its Appendix A recipe: start the OnDemand app or
@@ -172,10 +229,16 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    `hostname` (a compute node). Readers on sites that allow it use
    Remote-SSH (Connect to Host → pick the host → open a folder → terminal
    → `hostname`); Windows readers add the host with *Remote-SSH: Add New
-   SSH Host*, which asks which config file to write (on Windows normally
-   `C:\Users\<you>\.ssh\config`; *Remote-SSH: Open SSH Configuration
-   File…* shows which one VS Code uses). Both routes are
-   shown as captured sessions for no-cluster readers. *Then name the
+   SSH Host*, which asks which config file to write: pick the first,
+   `C:\Users\<you>\.ssh\config` (the second, `C:\ProgramData\ssh\ssh_config`,
+   is system-wide and needs admin). It offers only Windows files even
+   from a `WSL: Ubuntu` window, so Ubuntu's `~/.ssh/config` is never used
+   by Remote-SSH (tested 2026-11-14). Both routes are
+   shown as captured sessions for no-cluster readers. Open the project
+   folder first (the form's Working Directory, or File → Open Folder…)
+   and only then start commands: opening a folder reloads the window and
+   stops whatever its terminal was running (happened on Ceres,
+   2026-11-14). *Then name the
    idea:* the window is local; a VS Code server runs on the remote
    machine, with the files and terminal. Extensions split: UI ones
    (themes) stay local, most others run remotely; in browser code-server
@@ -186,8 +249,10 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    not release it. The server and its extensions live in your home
    directory (`~/.vscode-server` for Remote-SSH, `~/.local/share/
    code-server` for OnDemand) and can exceed the home quota; both sites
-   move the code-server folder to project storage with a symlink
-   (recipe in Appendix A). [`fig-remote-ssh`, `tbl-where-to-edit`;
+   recommend moving the code-server folder to project storage with a
+   symlink (the Ceres form says so too). Chapter 2 only mentions it and
+   points to Appendix A: with no extensions the folder is under 1 MB
+   (976 KB on Ceres), so it only matters once extensions are installed. [`fig-remote-ssh`, `tbl-where-to-edit`;
    misconception callout "runs on my laptop"; pitfall: login-node
    limits; self-check]
 6. **Editing in the terminal: nano and vim.** macOS first (one line in an
@@ -195,7 +260,9 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    install nano` to get GNU nano, the same editor as on Linux and the
    cluster (`nano --version` says GNU nano). *Start hands-on:* `nano
    notes.txt`, type a line, save (`Ctrl-O`, Enter), quit (`Ctrl-X`),
-   `cat notes.txt`. Then vim, only enough to survive: open, `i` to type,
+   `cat notes.txt`. (Clusters have both editors: Atlas has GNU nano
+   5.6.1 and vim, WSL Ubuntu nano 8.7.1 and Vim 9.1; the basics taught
+   here are the same in both nano versions.) Then vim, only enough to survive: open, `i` to type,
    `Esc`, `:wq` to save and quit, `:q!` to quit without saving. Why it
    matters: some tools (e.g., `git commit` without `-m`) open an editor.
    One sentence: to abort such an operation from vim, use `:cq`, not
@@ -293,10 +360,10 @@ stepped SVG.
 | 1 | Learning goals | As drafted above |
 | 2 | Key idea | The manifest describes the software the project needs; the lockfile records the exact packages resolved for each supported platform. Installing from both gives you the environment the book was tested with (same versions, not identical binaries across operating systems) |
 | 2 | Misconception | "Once I install a tool, it works in every terminal" |
-| 2 | Pitfall | On a cluster, pixi's download cache defaults to your home directory and can fill its quota; set `PIXI_CACHE_DIR` to project storage (site paths in Appendix A). Moving the cache does not move `.pixi/envs/`; that option (detached environments) is in Chapter 23 |
+| 2 | Pitfall | On a cluster, pixi's download cache defaults to your home directory and can fill its quota; set `PIXI_CACHE_DIR` to the same project storage as your environments (site paths in Appendix A): on Linux pixi hard-links files from the cache into `.pixi/`, which only works within one filesystem, so a cache in `$HOME` with a project elsewhere doubles the space and lands the copy in home. Moving the cache does not move `.pixi/envs/`; that option (detached environments) is in Chapter 23. Also: the first install on a cluster can take several minutes and is not stuck |
 | 3 | Tip | `code .` opens the current folder in VS Code (from the Ubuntu terminal on Windows; on macOS after the one-time *Install 'code' command* step) |
 | 5 | Misconception | "With Remote-SSH, my code runs on my laptop" |
-| 5 | Pitfall | Check your site's VS Code route before connecting; many sites (including Nova and SCINet) keep VS Code off login nodes. End compute sessions when done, and move the VS Code/code-server folder out of `$HOME` if your site says to |
+| 5 | Pitfall | Check your site's VS Code route before connecting; many sites (including Nova and SCINet) keep VS Code off login nodes. Set the session's working directory to your project folder before you start (opening a folder later reloads the window and stops running commands). End compute sessions when done (closing the tab does not), and move the VS Code/code-server folder out of `$HOME` if your site says to |
 | 6 | Tip | Stuck in vim? Press `Esc`, type `:q!`, press Enter (`:cq` if you want the tool that opened vim, such as `git commit`, to stop) |
 
 Misconceptions without a callout ("I need sudo to install these tools",
@@ -610,22 +677,132 @@ files kept in a scratch folder (`PIXI_HOME`, `PIXI_CACHE_DIR`,
 - macOS `/usr/bin/nano` is a link to UW PICO 5.09, confirming the `brew
   install nano` step.
 
+### Linux run (2026-11-14, WSL Ubuntu, ThinkPad E14, `linux-64`)
+
+Austin ran the Part 4 script from `chapter_02_checks.md` (`pixi install`
+without `--locked`, fresh solve), pixi 0.84.2, `x86_64`, no errors or
+warnings.
+
+- Install: `real 0m9.779s`.
+- Same versions and `seqkit stats` output as on macOS (Python 3.12.16,
+  R 4.4.3, seqkit 2.14.0; 50,000 reads, 5,050,000 bases).
+- **Size: 1.3 GB** in `.pixi/` with **15,524** files; the cache shows
+  only **132 MB** (19,858 files).
+- Why the cache looks small on Linux but was 1.1 GB on macOS: on Linux
+  the environment's files appear to be **hard links** to the cache's
+  copies, so `du` counts them once (under `.pixi`) and the cache shows
+  only what isn't linked (likely the downloaded archives). On the Mac
+  each file has a link count of 1 (copies or APFS clones), so `du`
+  counted the data in both places. Real disk use on Linux is about
+  **1.4 GB in total**, not 1.3 + 1.3. (Confirmed on Ceres: 12,408 linked
+  files; see *Cluster run*.)
+- **Cluster consequence:** hard links only work within one filesystem.
+  If the cache stays in `$HOME` and the project is in `/project` or
+  `/work`, every file is copied and the space (and file count) doubles,
+  with the copy landing in the small home quota. So the §2 pitfall should
+  say: put `PIXI_CACHE_DIR` on the **same** storage as your projects.
+
+### Cluster run (2026-11-14, SCINet Ceres compute node, `linux-64`)
+
+Same script, run in the terminal of an Open OnDemand VS Code Server
+session on `ceres20-compute-2`, with the base folder (and cache) in
+`/project/<project>/`. pixi 0.84.2, `x86_64`, no errors.
+
+- **Install time not usable:** `real 8m23.733s`, but Austin opened the
+  project folder in VS Code mid-run (which restarts the terminal), so
+  the time includes an interrupted attempt and a restart. CPU time was
+  only ~22 s. Re-time on a clean run if the number is needed.
+- **Reinstall from the cache (no downloads):** `rm -rf .pixi && time
+  pixi install` took **`real 0m57.127s`** (`user 0.9 s`, `sys 1.2 s`),
+  versus 9.8 s for a *full* install, downloads included, on WSL. So
+  writing ~15,500 files to project storage alone takes about a minute,
+  almost all of it waiting on the filesystem. A first install with
+  downloads will be at least that, likely a few minutes.
+- Same versions and `seqkit stats` output as on macOS and WSL.
+- **Size: 1.3 GB** in `.pixi/`, 15,524 files; cache 114 MB, 19,858 files.
+- **Hard links confirmed:** 12,408 of the env's files have a link count
+  above 1 (`find .pixi -type f -links +1`), so env and cache share one
+  copy when they are on the same filesystem.
+- **Chapter consequences:** still warn (Austin's call) that the first
+  install on a cluster can be slow, since shared storage is slow with
+  many small files, and is not stuck; run it on a compute node
+  (OnDemand terminal or `salloc`), not a login node; it happens once,
+  and later `pixi run` calls start without reinstalling.
+
+## Hands-on checks (2026-11-14)
+
+Austin's results, recorded in full in `chapter_02_checks.md`; the
+sections above now use them.
+
+- **Windows/WSL (ThinkPad E14):** nano and vim present in fresh Ubuntu;
+  `code` on PATH on both sides; `code .` opens `WSL: Ubuntu` with bash
+  5.3; *Add New SSH Host* offers only Windows config files, even from a
+  WSL window; Windows uses its built-in OpenSSH 9.5; Ubuntu has no
+  `~/.ssh` until first use; pixi trial 9.8 s, 1.3 GB.
+- **Atlas login node:** bash, nano 5.6.1, vim; Rocky Linux 9; `my_quotas`
+  works (home 30 GB, no file-count column).
+- **Ceres SSH (2026-11-16, Mac):** `step` installed and configured in
+  three commands; first `ssh` opened the browser (already signed in to
+  Login.gov) and reached `ceres-login-1`.
+- **Nova login node (2026-11-16):** bash, nano 5.6.1, vim; lands in
+  home. First attempts failed with "Too many authentication failures"
+  (a `Host *` block offering every key); fixed with per-host entries:
+  a Chapter 9 pitfall. First-login session captured. `quota -s` prints
+  nothing; `df -h` shows shared filesystem sizes (home 14 TB, group
+  `/work` 143 TB), not personal limits; banner: `/work`, `/lustre`,
+  `/ptmp` (60-day purge) not backed up, `/lss` is. OnDemand **VS Code
+  Server** ran on compute node `nova18-69` in `/work/<group>/<netid>`.
+  Its form differs from Ceres in names (Slurm Partition `nova` vs
+  Queue/QOS `ceres`; tasks per node vs cores), adds *Extra Modules*, and
+  Working Directory defaults to the last used folder (Ceres: `$HOME`);
+  code-server 4.97 vs 4.17 on Ceres. So §5 teaches the common fields
+  (account, hours, CPUs, memory, folder) and Appendix A lists each
+  site's names. pixi trial in `/work`: reinstall from cache **2.4 s**
+  (Ceres `/project`: 57 s). Closing the tab alone does not end the session (checked:
+  the card stays Running). Ended with **Cancel** on the session card
+  (→ Completed, Delete clears it; kept 7 days); tab closed by hand, as
+  on Ceres, `.pixi` **813 MB** for the same 15,524 files
+  (likely compressed storage), 12,408 hard links. A long pasted block
+  broke in the browser terminal (R's prompt started); short blocks
+  worked.
+- **Ceres:** `my_quotas` (home 29.8 GB; same projects as Atlas but
+  separate storage and quotas; Juno `/LTS` listed); OnDemand VS Code on
+  a compute node, form fields and Cancel behaviour as in §5; pixi trial
+  in `/project` (1.3 GB, hard links confirmed, ~1 min reinstall from a
+  full cache); code-server folder 976 KB.
+
 ## Open questions
 
+- **OnDemand VS Code on Ceres (tested 2026-11-14):** the start form has
+  a **Working Directory** field (defaults to `$HOME`); §5 should tell
+  readers to set it to their project folder, and to choose their real
+  project as Account, not `sandbox`. Cancel stops the session but leaves
+  the tab open. The form recommends symlinking
+  `~/.local/share/code-server` into `/project`: do it in Chapter 2 §5,
+  or defer to Appendix A / Chapter 23 until extensions are installed?
+  (Measured: 976 KB with no extensions, so deferring costs nothing.)
+  Proposed: defer; §5 now says so. Working Directory tested
+  2026-11-16: opens in the project folder.
 - **Environment size target:** with R alone the environment is 1.1 GB
-  and ~14k files on macOS. Keep R in the core environment and drop the
-  1 GB target, or move R (or its heavy dependencies) into a feature?
-  Measure `linux-64` (cluster) and the full core package list first.
+  on macOS and 1.3 GB (~15.5k files) on Linux. Keep R in the core
+  environment and drop the 1 GB target, or move R (or its heavy
+  dependencies) into a feature? Measure the full core package list
+  first, and the cluster numbers (Ceres done: 1.3 GB, 15.5k files;
+  install time not measured cleanly; Nova still to do). Install time on
+  shared storage may matter as well as size: the full core list will be
+  several times more files.
 - **Step-by-step guide for the checks below:**
   `chapter_02_checks.md` (Windows, SCINet, Nova, pixi trial script,
   results table).
-- **Needs Austin (Windows machine):** run *Remote-SSH: Add New SSH Host*
-  in Windows VS Code, record which config file it writes and whether the
-  Windows OpenSSH client is used; in WSL Ubuntu, run `which nano vim` (or
-  `dpkg -l nano vim-tiny`), since the WSL docs do not list packages.
-- **Needs Austin (Nova, SCINet):** `which nano vim` on a login node; a
-  trial `pixi install --locked` in project space to measure `linux-64`
-  size and file count; confirm the VS Code routes with a real session,
-  including how to end each.
+- **Windows checks:** all done 2026-11-14 (see *Hands-on checks*).
+- **SCINet:** all checks done (2026-11-16). Optional: Atlas OnDemand's
+  app list. Optional: Atlas OnDemand's app
+  list (does it offer VS Code?).
+- **Nova:** all hands-on checks done (2026-11-16). Still to look up:
+  Nova home and `/work` limits from ISU docs, since `quota -s` is empty
+  and `df` shows shared totals.
+- **File-count limits:** neither SCINet cluster's `my_quotas` shows file
+  counts; ask SCINet support or check docs before the full environment
+  (several times 15,500 files) is fixed.
 - **Apple Silicon:** solved in the lockfile but not installed; one run on
   an `osx-arm64` Mac if one is available.

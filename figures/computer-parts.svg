@@ -40,7 +40,7 @@
   <g font-size="13" class="fill-muted">
     <text x="24" y="86">cores do the work</text>
     <text x="214" y="86">working space,</text>
-    <text x="214" y="102">emptied at the end</text>
+    <text x="214" y="102">reused between jobs</text>
     <text x="454" y="86">keeps files</text>
     <text x="630" y="86">other</text>
     <text x="630" y="102">machines,</text>

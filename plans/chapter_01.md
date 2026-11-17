@@ -551,6 +551,26 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   matches the `sed` readers run (found while planning Chapter 4).
   Tested in an empty home folder on Intel; Apple silicon still to test.
 
+## Fixes from the Codex review (2026-11-17)
+
+`reviews/chapter_01_codex_review.md`: all six findings accepted.
+
+- WSL tab: `df` shows WSL's virtual disk; also check the Windows drive's
+  free space (File Explorer, *This PC*) and use the smaller.
+- WSL browser fallback: source path quoted; the placeholder is the folder
+  name under `C:\Users`, which can differ from the sign-in name.
+- Exercises: `cd ~/bioinf-ch01` first, repeated in every new terminal or
+  `srun` session.
+- Python row of `tbl-language-threads`:
+  `concurrent.futures.ProcessPoolExecutor`, not all of
+  `concurrent.futures`.
+- RAM: the system takes a program's share back when it stops (not
+  "emptied"); `computer-parts.svg` says "reused between jobs". Keeps the
+  Exercise 3 answer (file still in memory) consistent.
+- Appendix A is still a stub: the `srun` options and the signup tip now
+  say it *will* collect the details, and send readers to their site's
+  documentation, PI, or support until then.
+
 ## Open questions
 
 - Austin to read the draft. The example outputs in the macOS tabs

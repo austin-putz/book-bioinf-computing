@@ -258,8 +258,9 @@ there, then type `exit` to give the compute node back and return to the
 login node.
 
 Many sites need more options, such as an account (`-A`) or a partition
-(`-p`); SCINet, for example, requires `-A`. Your site's are in
-@sec-cluster-sites. If `curl` cannot connect from a compute node, your
+(`-p`); SCINet, for example, requires `-A`. Your site's documentation
+lists them, and @sec-cluster-sites will collect them for Nova and SCINet;
+until then, ask your PI or your site's support which to use. If `curl` cannot connect from a compute node, your
 site may block the internet there; ask your research computing office
 where to download. @sec-hpc-slurm explains all of this properly.
 :::
@@ -299,10 +300,13 @@ page](https://github.com/nf-core/test-datasets/blob/rnaseq/testdata/GSE110004/SR
 mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
 ```
 ## Windows (WSL2)
-Replace `<your-windows-name>` with your Windows user name.
+Replace `<your-windows-name>` with the name of your folder under
+`C:\Users` (check in File Explorer; it can differ from the name you sign
+in with). Keep the quotes: they keep a folder name with a space, such as
+`First Last`, in one piece.
 
 ```{.bash filename="Terminal (laptop)"}
-cp /mnt/c/Users/<your-windows-name>/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
+cp "/mnt/c/Users/<your-windows-name>/Downloads/SRR6357070_1.fastq.gz" ~/bioinf-ch01/
 ```
 ## Linux
 ```{.bash filename="Terminal (laptop)"}
@@ -463,6 +467,11 @@ For RAM, read the `total` column of the `Mem:` row of `free -h`; for disk,
 the `Avail` column of `df -h ~`. WSL sees only the memory Windows gives its
 virtual machine, by default about half the laptop's RAM, not the full
 amount ([WSL settings](https://learn.microsoft.com/en-us/windows/wsl/wsl-config)).
+Disk is similar: `df` describes WSL's virtual disk, which can report more
+space than the Windows drive holding it has
+([WSL disk space](https://learn.microsoft.com/en-us/windows/wsl/disk-space)).
+Also check that drive's free space in File Explorer, under *This PC*;
+the smaller of the two is what you really have.
 
 ## Linux
 ```{.bash filename="Terminal (laptop)"}
@@ -487,7 +496,8 @@ These three numbers describe the parts in @fig-computer-parts:
   `-t`, or `-p`, depending on the tool. More threads help only if the tool
   is written to use them.
 - **RAM** (memory): the fast working space a program uses while it runs.
-  It is emptied when the program stops.
+  When a program stops, the system takes its share back for other
+  programs; anything you want to keep must be saved to disk.
 - **Disk** (storage): slow, large, and permanent; it keeps your files. A
   file's size on disk is not the RAM a program needs to read it. The count
   in step 6 *streams* through the file a few lines at a time and needs
@@ -540,7 +550,7 @@ memory.
 | Language | Out of the box | Ways to use more cores |
 |:---------|:---------------|:-----------------------|
 | R | One core: R runs one step at a time | `data.table` (threads; by default half your logical CPUs); the `parallel` package (`mclapply` starts extra processes; not on Windows); matrix maths, if R uses a multi-threaded BLAS library such as OpenBLAS |
-| Python | One thread runs Python code at a time, because of the global interpreter lock (GIL) | `multiprocessing` and `concurrent.futures` (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate *free-threaded* build without the GIL (e.g., `python3.14t`) was experimental in 3.13 and is officially supported since 3.14, but it is not the default |
+| Python | One thread runs Python code at a time, because of the global interpreter lock (GIL) | `multiprocessing` and `concurrent.futures.ProcessPoolExecutor` (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate *free-threaded* build without the GIL (e.g., `python3.14t`) was experimental in 3.13 and is officially supported since 3.14, but it is not the default |
 | Julia | One worker thread, unless you ask for more | Start with `julia --threads auto`, then use `Threads.@threads` loops |
 | C, C++, Java | Real threads, if the program is written to use them | Most heavy bioinformatics tools are written in these (samtools, BWA, and STAR in C or C++; GATK in Java). That is why they take a `--threads` option |
 
@@ -770,8 +780,8 @@ institution's research computing office which cluster you can use.
 ARS scientists and their collaborators can [sign up for
 SCINet](https://scinet.usda.gov/about/signup), USDA's clusters. Universities
 run their own, such as [Iowa State's HPC
-clusters](https://www.hpc.iastate.edu/) (Nova). Step-by-step details are in
-@sec-cluster-sites.
+clusters](https://www.hpc.iastate.edu/) (Nova). @sec-cluster-sites will
+add step-by-step details for both.
 :::
 
 No cluster yet? Keep going: everything before @sec-working-remotely runs
@@ -798,6 +808,13 @@ on your laptop.
 Do these where you did the guided session: on your laptop, or, on a
 cluster, inside an `srun` session on a compute node (see the pitfall box
 in @sec-orientation-first-session), never on the login node.
+The exercises use the files from the guided session, so first move back
+into its folder. A new terminal or a new `srun` session starts in your
+home folder, so repeat this each time:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-ch01
+```
 
 ::: {.check}
 **Exercise 1. Read 2.** Download the matching read-2 file and add its count

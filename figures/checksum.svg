@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 290" role="img" aria-labelledby="checksum-title">
+  <title id="checksum-title">A checksum is a fingerprint of every byte. Three files go through md5sum. The original SRR6357070_1.fastq.gz gives d19f3c7a followed by more digits. An exact copy gives the same value, so it matches. A copy with one byte changed, out of more than two million, gives a completely different value, 78027ba8, so it does not match.</title>
+  <defs>
+    <marker id="checksum-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Column headings -->
+  <text x="20" y="24" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">FILE (2,239,317 BYTES)</text>
+  <text x="440" y="24" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">MD5 CHECKSUM</text>
+
+  <!-- md5sum box in the middle -->
+  <rect x="306" y="40" width="96" height="232" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="354" y="152" font-size="14" font-weight="700" text-anchor="middle" class="mono">md5sum</text>
+  <text x="354" y="172" font-size="12" text-anchor="middle" class="fill-muted">reads every</text>
+  <text x="354" y="188" font-size="12" text-anchor="middle" class="fill-muted">byte</text>
+
+  <!-- Row 1: original -->
+  <rect x="20" y="40" width="250" height="64" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="34" y="62" font-size="13" font-weight="700">original</text>
+  <text x="34" y="88" font-size="12" class="mono">1f 8b 08 00 …</text>
+  <text x="142" y="88" font-size="12" text-anchor="middle" class="mono">6a</text>
+  <text x="166" y="88" font-size="12" text-anchor="middle" class="mono">1c</text>
+  <text x="180" y="88" font-size="12" class="mono">…</text>
+  <line x1="272" y1="72" x2="304" y2="72" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"/>
+  <line x1="404" y1="72" x2="436" y2="72" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"/>
+  <text x="440" y="70" font-size="13" class="mono">d19f3c7a…a1a1</text>
+  <text x="440" y="90" font-size="12" class="fill-muted">the expected value</text>
+
+  <!-- Row 2: exact copy -->
+  <rect x="20" y="124" width="250" height="64" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="34" y="146" font-size="13" font-weight="700">exact copy</text>
+  <text x="34" y="172" font-size="12" class="mono">1f 8b 08 00 …</text>
+  <text x="142" y="172" font-size="12" text-anchor="middle" class="mono">6a</text>
+  <text x="166" y="172" font-size="12" text-anchor="middle" class="mono">1c</text>
+  <text x="180" y="172" font-size="12" class="mono">…</text>
+  <line x1="272" y1="156" x2="304" y2="156" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"/>
+  <line x1="404" y1="156" x2="436" y2="156" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"/>
+  <text x="440" y="154" font-size="13" class="mono">d19f3c7a…a1a1</text>
+  <text x="440" y="174" font-size="13" class="fill-good">✓ same: OK</text>
+
+  <!-- Row 3: one byte changed -->
+  <rect x="20" y="208" width="250" height="64" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="34" y="230" font-size="13" font-weight="700">copy, one byte changed</text>
+  <text x="34" y="256" font-size="12" class="mono">1f 8b 08 00 …</text>
+  <text x="166" y="256" font-size="12" text-anchor="middle" class="mono">1c</text>
+  <text x="180" y="256" font-size="12" class="mono">…</text>
+  <rect x="132" y="243" width="20" height="18" rx="3" class="fill-surface stroke-ink" stroke-width="1.5"/>
+  <text x="142" y="256" font-size="12" text-anchor="middle" class="mono">6b</text>
+  <line x1="272" y1="240" x2="304" y2="240" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"/>
+  <line x1="404" y1="240" x2="436" y2="240" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"/>
+  <text x="440" y="238" font-size="13" class="mono">78027ba8…ca55</text>
+  <text x="440" y="258" font-size="13">✗ different: FAILED</text>
+</svg>

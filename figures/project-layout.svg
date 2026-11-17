@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" role="img" aria-labelledby="project-layout-title">
+  <title id="project-layout-title">The book's project folder, ~/bioinf-book, in three groups. Inputs: data/raw holds the two FASTQ files and checksums.md5 and is read-only; data/meta holds reads.tsv, samples.tsv, and the upstream sample sheet; data/ref is a link to the shared reference. How: src holds the script 01_count_reads.sh, and pixi.toml, pixi.lock, and .pixi hold the software. Outputs: results holds read_counts.tsv, which can be rebuilt; logs holds one log per run, which you keep. The script reads the inputs and writes the outputs. Along the bottom, README.md, NOTEBOOK.md, and data/README.md record what the project is, what you did, and where every input came from.</title>
+  <defs>
+    <marker id="project-layout-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <text x="20" y="28" font-size="15" font-weight="700" class="mono">~/bioinf-book/</text>
+
+  <!-- Group headings -->
+  <text x="20" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">INPUTS</text>
+  <text x="282" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">HOW</text>
+  <text x="494" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">OUTPUTS</text>
+
+  <!-- Inputs: data/raw -->
+  <rect x="20" y="72" width="230" height="96" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="34" y="94" font-size="14" font-weight="700" class="mono">data/raw/</text>
+  <text x="236" y="94" font-size="12" text-anchor="end" class="fill-muted">read-only</text>
+  <text x="34" y="116" font-size="12" class="mono">SRR6357070_1.fastq.gz</text>
+  <text x="34" y="135" font-size="12" class="mono">SRR6357070_2.fastq.gz</text>
+  <text x="34" y="154" font-size="12" class="mono fill-good">checksums.md5</text>
+
+  <!-- Inputs: data/meta -->
+  <rect x="20" y="180" width="230" height="96" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="34" y="202" font-size="14" font-weight="700" class="mono">data/meta/</text>
+  <text x="236" y="202" font-size="12" text-anchor="end" class="fill-muted">metadata</text>
+  <text x="34" y="224" font-size="12" class="mono">reads.tsv</text>
+  <text x="34" y="243" font-size="12" class="mono">samples.tsv</text>
+  <text x="34" y="262" font-size="12" class="mono">samplesheet_upstream.csv</text>
+
+  <!-- Inputs: data/ref, a link -->
+  <rect x="20" y="288" width="230" height="64" rx="8" class="fill-ref-soft stroke-ref" stroke-width="1.25"/>
+  <text x="34" y="310" font-size="14" font-weight="700" class="mono">data/ref →</text>
+  <text x="236" y="310" font-size="12" text-anchor="end" class="fill-muted">a link</text>
+  <text x="34" y="334" font-size="12" class="fill-muted">to the shared reference</text>
+
+  <!-- How: src -->
+  <rect x="282" y="72" width="176" height="96" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="296" y="94" font-size="14" font-weight="700" class="mono">src/</text>
+  <text x="444" y="94" font-size="12" text-anchor="end" class="fill-muted">code</text>
+  <text x="296" y="116" font-size="12" class="mono">01_count_reads.sh</text>
+  <text x="296" y="148" font-size="12" class="fill-muted">numbered in run order</text>
+
+  <!-- How: software -->
+  <rect x="282" y="180" width="176" height="96" rx="8" class="fill-surface stroke-line" stroke-width="1.25"/>
+  <text x="296" y="202" font-size="14" font-weight="700">software</text>
+  <text x="296" y="224" font-size="12" class="mono">pixi.toml</text>
+  <text x="296" y="243" font-size="12" class="mono">pixi.lock</text>
+  <text x="296" y="262" font-size="12" class="mono">.pixi/</text>
+
+  <!-- Outputs: results -->
+  <rect x="494" y="72" width="206" height="96" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="508" y="94" font-size="14" font-weight="700" class="mono">results/</text>
+  <text x="508" y="116" font-size="12" class="mono">read_counts.tsv</text>
+  <text x="508" y="148" font-size="12" class="fill-muted">can be rebuilt</text>
+
+  <!-- Outputs: logs -->
+  <rect x="494" y="180" width="206" height="96" rx="8" class="fill-good-soft stroke-good" stroke-width="1.25"/>
+  <text x="508" y="202" font-size="14" font-weight="700" class="mono">logs/</text>
+  <text x="508" y="224" font-size="12" class="mono">01_count_reads_…log</text>
+  <text x="508" y="256" font-size="12" class="fill-muted">one per run; keep</text>
+
+  <!-- Arrows: inputs are read, outputs are written -->
+  <line x1="252" y1="120" x2="280" y2="120" class="stroke-muted" stroke-width="1.75" marker-end="url(#project-layout-arrow)"/>
+  <line x1="460" y1="112" x2="492" y2="112" class="stroke-muted" stroke-width="1.75" marker-end="url(#project-layout-arrow)"/>
+  <line x1="460" y1="136" x2="492" y2="200" class="stroke-muted" stroke-width="1.75" marker-end="url(#project-layout-arrow)"/>
+
+  <!-- Records along the bottom -->
+  <rect x="20" y="372" width="680" height="58" rx="8" class="fill-surface stroke-line" stroke-dasharray="4 3"/>
+  <text x="34" y="396" font-size="13" class="mono">README.md   NOTEBOOK.md   data/README.md</text>
+  <text x="34" y="417" font-size="12" class="fill-muted">records: what the project is and how to rerun it, what you did and why, where every input came from</text>
+</svg>

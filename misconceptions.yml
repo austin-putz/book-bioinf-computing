@@ -161,3 +161,71 @@
     A command opened vim and the screen fills with `~` lines. How do you
     leave without saving? (Correct: Esc, `:q!`, Enter.)
   chapters: [02-book-setup, 08-shell-scripts]
+
+# Chapter 3 -----------------------------------------------------------------
+
+- id: checksum-proves-correct
+  claim: "If the checksums match, my data are correct."
+  reality: >
+    A match proves the file is byte-for-byte the one the checksum was made
+    from. It says nothing about whether that file was the right sample or
+    good data.
+  probe: >
+    A facility mislabelled a file before computing its MD5. Does
+    `md5sum -c` catch the mistake? (Correct: no; it prints OK.)
+  chapters: [03-organizing-projects, 20-reference-data]
+
+- id: symlink-is-copy
+  claim: "A symbolic link is a copy, so editing or deleting through it is safe."
+  reality: >
+    A link is another route to the same data. Writing through it changes
+    the original, and `rm -r link/` with a trailing slash can delete the
+    target (captured 2026-11-17: on macOS the whole folder, on Ubuntu every
+    file inside it). Remove only the link with
+    `unlink link` or `rm link`, no slash.
+  probe: >
+    You run `unlink data/ref`. Is the reference genome gone? (Correct: no,
+    only the link.)
+  chapters: [03-organizing-projects, 05-shell-basics]
+
+- id: readonly-cant-delete
+  claim: "A read-only file can't be deleted."
+  reality: >
+    Deleting, moving, and adding files are controlled by the folder's
+    permissions. Protect the folder as well as the files.
+  probe: >
+    A file is read-only but its folder is writable. Does `rm -f file`
+    remove it? (Correct: yes.)
+  chapters: [07-linux-system, 03-organizing-projects]
+
+- id: cluster-is-backed-up
+  claim: "Everything on the cluster is backed up."
+  reality: >
+    Scratch is purged and never backed up. Which other areas are backed up
+    or snapshotted, and for how long, differs by site; SCINet backs up none
+    of its cluster storage.
+  probe: >
+    Your only copy of the raw reads is in `/90daydata`. What happens in
+    three months? (Correct: they are deleted permanently.)
+  chapters: [03-organizing-projects, 10-hpc-slurm]
+
+- id: sync-is-backup
+  claim: "My Dropbox/OneDrive/Google Drive folder is my backup."
+  reality: >
+    Sync copies deletions and overwrites to every device: one copy in two
+    places, protected only by version history for as long as the service
+    keeps it.
+  probe: >
+    You overwrite a file in your OneDrive folder by mistake. Is the old
+    version safe? (Correct: only if version history still holds it.)
+  chapters: [03-organizing-projects]
+
+- id: ill-remember
+  claim: "I'll remember where this file came from and how I made it."
+  reality: >
+    Weeks later no one does. Record source, version, checksum, script,
+    command, software, and a log when the file is made.
+  probe: >
+    A reviewer asks which seqkit version made a table. Where do you look?
+    (Correct: the run's log and the lockfile; not memory.)
+  chapters: [03-organizing-projects, 23-environments]

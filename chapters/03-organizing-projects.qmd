@@ -1,23 +1,1356 @@
 # Organizing projects and data {#sec-organizing-projects}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- Project folder structure (`src/`, `data/`, `results/`, …)
-- File and script naming (`00_`, `01_`, …; no spaces)
-- Raw data is read-only; link shared lab data and references into a project (symlinks) rather than copying them
-- Checksums (`md5sum`) for raw data
-- Backups (3-2-1); scratch is not a backup
-- Sample sheets and metadata as first-class files
-- Provenance: link each output to input accessions/checksums, reference release, software or pipeline version, parameters, and logs
-- READMEs and a lab-notebook habit
-- FAIR principles (brief)
-- Start the recurring project
+By the end of this chapter you should be able to:
+
+1. Lay out a project folder that keeps raw data, reference, metadata,
+   code, results, and logs apart, and name files so they sort well and
+   avoid common path problems.
+2. Verify downloaded files with checksums, and protect raw data from
+   accidental changes and deletion.
+3. Link shared data into a project with a symbolic link, and say what
+   removing the link does and does not remove.
+4. Record where every input and output came from (source, version,
+   checksum, script, software version, log) in files kept in the project.
+5. Say which of your storage locations are backed up, for how long, and
+   who would restore them.
+:::
+
+## What this chapter does {#sec-organizing-projects-intro}
+
+A month from now, someone (your PI, a reviewer, or you) will point at a
+number and ask: which file is this, where did it come from, and how was
+it made? If the answer lives only in your memory, it is already fading.
+This chapter sets up a folder, and a few habits, that answer those
+questions without memory.
+
+You will turn `~/bioinf-book`, the folder from @sec-book-setup, into the
+book's project. By the end it holds:
+
+- the two FASTQ files from @sec-orientation, moved in, checked, and
+  protected from accidental changes;
+- a reference genome kept in a shared folder and linked in, not copied;
+- small tables that say which files belong to which sample;
+- a numbered script that counts the reads and writes a log of every run;
+- a README, a data record, and a notebook that say where everything came
+  from.
+
+Every later chapter starts from this folder. The commands are
+copy-and-run, as in @sec-orientation; `mkdir`, `mv`, `ln`, `chmod` and
+the rest are explained properly in Part II (@sec-shell-basics,
+@sec-linux-system). Practice files, and anything broken on purpose, go
+in a separate scratch folder, `~/bioinf-ch03`, never in the project.
+
+## A folder for each project {#sec-organizing-projects-layout}
+
+Do this on your laptop (in WSL2's Ubuntu terminal on Windows). Go to the
+book folder and make the empty folders of the layout:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+mkdir -p data/raw data/meta src results logs # <1>
+ls
+```
+1. `mkdir` makes folders; `-p` makes `data/` on the way to `data/raw`,
+   and says nothing if a folder already exists.
+
+```{.console}
+data  logs  notes.txt  pixi.lock  pixi.toml  README.md  results  src
+```
+
+`pixi.toml` and `pixi.lock` are the book environment from
+@sec-book-setup; `README.md` and `notes.txt` are your editor practice
+from its exercises (delete `notes.txt` with `rm notes.txt` if you like).
+The hidden `.pixi/` folder is there too; `ls -a` shows it.
+
+@fig-project-layout shows where the chapter is going: the same folder
+with every file it will hold by the end.
+
+::: {#fig-project-layout}
+{{< svg ../figures/project-layout.svg >}}
+
+The book's project at the end of this chapter. Inputs (left) are never
+changed by your work; code and software (middle) say how results are
+made; outputs (right) are written by the script. The records along the
+bottom explain all of it.
+:::
+
+The rules behind it, one sentence each:
+
+- **One project, one folder.** Everything an analysis needs, or points
+  to, is inside it.
+- **Inputs, code, and outputs apart.** Raw data and metadata in `data/`,
+  scripts in `src/`, results in `results/`, logs in `logs/`. You never
+  write into `data/raw/`, and nothing in `results/` is edited by hand.
+- **Results can be rebuilt.** Everything in `results/` should come back
+  if you rerun the code in `src/` on the inputs in `data/`, with the same
+  software. Exercise 4 tests it.
+- **Paths inside the project are relative to its top folder**
+  (`data/raw/SRR6357070_1.fastq.gz`, not `/home/you/bioinf-book/data/…`),
+  so scripts keep working if the folder moves (more on moving in
+  @sec-organizing-projects-shared).
+
+@tbl-project-folders lists the parts.
+
+::: {.wide-table}
+: The folders and files of the book's project. "Back it up?" is
+discussed in @sec-organizing-projects-backups; git arrives in @sec-git. {#tbl-project-folders}
+
+| Folder or file | What goes in it | Who writes it | Back it up? | In git later? |
+|:---------------|:----------------|:--------------|:------------|:--------------|
+| `data/raw/` | reads as received, and their checksums | you, once | yes | no (too big; archived elsewhere) |
+| `data/meta/` | sample sheets and other metadata | you | yes | yes |
+| `data/ref` | link to a shared reference | you, once | the shared copy: someone must | no |
+| `src/` | numbered scripts | you | yes | yes |
+| `results/` | tables and figures made by scripts | scripts | yes if costly to rebuild | usually not |
+| `logs/` | one log per run | scripts | yes | small ones, often |
+| `pixi.toml`, `pixi.lock` | the software (@sec-book-setup) | pixi | yes | yes |
+| `.pixi/` | the installed environment | pixi | no: reinstall it | no |
+| `README.md`, `NOTEBOOK.md`, `data/README.md` | what, why, where from | you | yes | yes |
+:::
+
+::: {.callout-important}
+## Key idea
+Keep inputs, code, and outputs apart, so that every output can be
+rebuilt from preserved inputs, code, settings, and software records. That
+gives you the ingredients for reproducing an analysis; actually
+rebuilding it is the test.
+:::
+
+This is one sensible layout, not the only one. @noble2009quick and
+@wilson2017good describe close relatives; pipelines add a `work/` folder
+of their own (@sec-workflow-managers), and later books adapt the layout
+to their tools. What matters is that a stranger can find the raw data,
+the code, and the results, and tell them apart.
+
+**On a cluster** the same layout goes in project storage
+(`/project/<your-project>/` on SCINet, `/work/<your-group>/` on Nova),
+not in your small home folder or in scratch space that is purged
+(@sec-book-setup-pixi). Large intermediate files may live in scratch
+while a job runs, with only the final results kept in the project
+(@sec-hpc-slurm). Making folders and moving files is light work, fine on
+a login node; checksumming many large files is not.
+
+::: {.check}
+**Check yourself.** You delete `results/read_counts.tsv` by mistake (you
+will make it later in this chapter). What do you need to get it back?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Nothing but the project itself: rerun the script on `data/raw/` with the
+same environment. A large published analysis is different: rebuilding
+it can take days of computing, or need a reference or a software version
+that is no longer available, which is why important final results are
+backed up too.
+:::
+:::
+
+## Names that work {#sec-organizing-projects-names}
+
+Start with a puzzle. In the scratch folder, make seven empty files with
+names like the ones on many lab drives, then list them:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-ch03/names && cd ~/bioinf-ch03/names
+touch run1.sh run2.sh run10.sh final.txt "Final FINAL (2).txt" "9-15-25 counts.csv" "10-2-26 counts.csv" # <1>
+ls -1 # <2>
+```
+1. `touch` makes empty files. The quotes keep each name with spaces in
+   one piece.
+2. `-1` (the digit one) lists one name per line.
+
+```{.console}
+'10-2-26 counts.csv'
+'9-15-25 counts.csv'
+'Final FINAL (2).txt'
+final.txt
+run1.sh
+run10.sh
+run2.sh
+```
+
+(Captured on a Mac. On Linux with English language settings, `run10.sh`
+comes before `run1.sh`; the order depends on the system's language
+settings, but the two problems below appear everywhere.) `ls` sorts names character by
+character, so `run10.sh` lands before `run2.sh`, and October 2026
+(`10-2-26`) before September 2025 (`9-15-25`). `ls` puts quotes around
+names with spaces to warn you, and spaces break commands that are not
+quoted:
+
+```{.bash filename="Terminal (laptop)"}
+wc -l 10-2-26 counts.csv
+```
+
+```{.console}
+wc: 10-2-26: No such file or directory
+wc: counts.csv: No such file or directory
+0 total
+```
+
+The shell split the name at the space and looked for two files. Quoting
+fixes it (`wc -l "10-2-26 counts.csv"`), and you will still learn to
+quote paths (@sec-shell-basics), but names without spaces never need it.
+@tbl-file-names gives the rules, each with a better name.
+
+::: {.wide-table}
+: Rules for file names, with the problem each one avoids. {#tbl-file-names}
+
+| Rule | Problem name | Why it causes trouble | Better name |
+|:-----|:-------------|:----------------------|:------------|
+| Only letters, digits, `_`, `-`, `.` | `Final FINAL (2).txt` | spaces and brackets must be quoted in every command | `2026-11-17_read_counts.tsv` |
+| One case, usually lowercase | `Data.csv` and `data.csv` | usually the same file on a Mac or in Windows folders, but two files on Linux, including your WSL home folder and the cluster | `data.csv` |
+| Dates as `YYYY-MM-DD` ([ISO 8601](https://www.iso.org/iso-8601-date-and-time-format.html)) | `10-2-26 counts.csv` | sorts by month, not by time; day and month order is ambiguous | `2026-10-02_counts.csv` |
+| Zero-padded numbers, scripts in run order | `run2.sh`, `run10.sh` | `run10` sorts before `run2` | `02_trim.sh`, `10_report.sh` |
+| Say what is inside; keep the extension true | `results.txt` holding tabs | `.txt` hides that it is a table | `read_counts.tsv` |
+| Versions say what changed | `final_v2.txt` | no one knows what v2 changed, or which is newest | `yeast_R64-1-1_test`, `report_2026-11-17.html`; later, git (@sec-git) |
+:::
+
+Number scripts in the order they run: `00_` for one-time setup such as
+downloads, then `01_`, `02_`, …, so `ls src/` shows the analysis in
+order. Two exceptions to renaming. First, IDs that come from a facility
+or an archive (`SRR6357070`, `WT_REP1`) stay exactly as given, so they
+still match the records; rename only your own files. Second, a name
+whose meaning you do not know: is `11-3-25 counts.csv` 3 November or
+11 March, 2025 or 2011? Renaming cannot recover what you do not know.
+Ask whoever made it, then rename.
+
+::: {.check}
+**Check yourself.** In what order does `ls` list `run1.sh`, `run2.sh`,
+and `run10.sh`, and how would you rename them?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`run1.sh`, `run10.sh`, `run2.sh` (on Linux, possibly `run10.sh` first;
+`run2.sh` always comes after `run10.sh`). Pad the numbers and say what
+each step does: `01_download.sh`, `02_trim.sh`, `10_report.sh`.
+:::
+:::
+
+## Raw data: move it in, check it, protect it {#sec-organizing-projects-raw}
+
+**Move it in.** The two FASTQ files from @sec-orientation are still in
+the scratch folder `~/bioinf-ch01`. Move them into the project:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+mv ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/ # <1>
+ls -l data/raw
+```
+1. `mv` moves files; the last name is where they go. Moving within one
+   disk only changes where the file is listed, so it is instant.
+
+```{.console}
+total 4368
+-rw-r--r-- 1 you you 2239317 Nov 17 11:22 SRR6357070_1.fastq.gz
+-rw-r--r-- 1 you you 2232117 Nov 17 11:22 SRR6357070_2.fastq.gz
+```
+
+From now on the files live here: if you go back to a command in
+Chapters 1–2, use `~/bioinf-book/data/raw/` instead of `~/bioinf-ch01/`.
+`~/bioinf-ch01` keeps `fastq_summary.txt`; you can delete it later.
+
+::: {.callout-tip}
+## Missing a file?
+If `mv` says `cannot stat … No such file or directory` for a file (you
+skipped the read-2 exercise, or deleted `~/bioinf-ch01`), the other file
+still moved. Download each missing one straight into `data/raw/`:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+curl -fL -o data/raw/SRR6357070_1.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_1.fastq.gz
+curl -fL -o data/raw/SRR6357070_2.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_2.fastq.gz
+```
+
+Run only the line for the file you are missing. If a file is already in
+`data/raw/` from an earlier visit to this chapter, leave it: the check
+below tells you whether it is intact.
+:::
+
+**Check it.** A sequencing facility, or an archive such as ENA, gives
+you a checksum for every file: a short value computed from every byte of
+it. Here are the MD5 checksums of the two files, as the book recorded
+them. Make a file `data/raw/checksums.md5` (`code
+data/raw/checksums.md5` opens it in VS Code; nano works too), paste the
+two lines, and save:
+
+```{.default filename="data/raw/checksums.md5"}
+d19f3c7a8b4016fa641458257b99a1a1  SRR6357070_1.fastq.gz
+d126cc66ed169f69af2c07da0dd73e02  SRR6357070_2.fastq.gz
+```
+
+Each line is a checksum, two spaces, and a file name. Now check the
+files against it:
+
+```{.bash filename="Terminal (laptop)"}
+cd data/raw
+md5sum -c checksums.md5 # <1>
+cd ~/bioinf-book
+```
+1. `md5sum` computes MD5 checksums; `-c` (check) reads a list of them,
+   recomputes each file's, and compares.
+
+```{.console}
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+```
+
+The names in `checksums.md5` have no folder, so the check runs inside
+the folder that holds the files. Facilities ship their lists the same
+way. Run it from the wrong folder and every file "fails":
+
+```{.console}
+md5sum: SRR6357070_1.fastq.gz: No such file or directory
+SRR6357070_1.fastq.gz: FAILED open or read
+md5sum: SRR6357070_2.fastq.gz: No such file or directory
+SRR6357070_2.fastq.gz: FAILED open or read
+md5sum: WARNING: 2 listed files could not be read
+```
+
+**Now name the idea** (@fig-checksum). A checksum is a fingerprint of a
+file: the same bytes always give the same value, and changing a single
+byte gives a completely different one. A matching checksum means your
+copy is byte-for-byte the file the checksum was made from.
+
+::: {#fig-checksum}
+{{< svg ../figures/checksum.svg >}}
+
+Checksums of the real read-1 file. An exact copy gives the same MD5
+value; changing one byte out of 2,239,317 (`6a` to `6b`, halfway
+through) gives a completely different value.
+:::
+
+Run `md5sum -c` after every download or transfer, before any analysis
+(@sec-working-remotely reuses it after copying to a cluster). Two kinds
+of failure mean different things:
+
+- **`FAILED`**: the bytes differ, usually an incomplete or damaged copy.
+  Download or copy the file again and recheck. Never "fix" the list by
+  computing a new checksum from the damaged copy.
+- **`FAILED open or read`** with `No such file or directory`: the file
+  is missing, misnamed, or you are in the wrong folder. Check that
+  before assuming damage.
+
+`sha256sum` works the same way (`sha256sum -c`) with a longer, stronger
+value (both are documented in the [GNU coreutils
+manual](https://www.gnu.org/software/coreutils/manual/html_node/md5sum-invocation.html)); the book's own `data/README.md` records both. MD5 is still what
+most facilities and ENA supply, and it is fine for catching damaged
+copies.
+
+::: {.callout-caution .misconception}
+## Misconception: "If the checksums match, my data are correct"
+**Reality.** A match proves your copy is identical to the file the
+checksum was made from. It says nothing about whether that file was the
+right sample, or good data: if a facility mislabels a file before
+computing its checksum, `md5sum -c` happily prints `OK`.
+:::
+
+**Protect it, first on a toy.** Raw data is never edited, so make it
+read-only. Try it first on a practice folder with one small file:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-ch03/practice/locked && cd ~/bioinf-ch03/practice
+echo "first line" > locked/notes.txt
+chmod a-w locked/notes.txt locked # <1>
+echo "second line" >> locked/notes.txt # <2>
+rm -f locked/notes.txt # <3>
+mv locked/notes.txt notes_moved.txt
+touch locked/new.txt
+```
+1. `chmod` changes a file's permissions; `a-w` removes (`-`) write
+   permission (`w`) for all users (`a`). Here it locks both the file and
+   the folder that holds it.
+2. Try to add a line, then (next lines) to delete the file, move it out,
+   and add a new file.
+3. `-f` deletes without asking. Without it, `rm` may stop to ask about
+   a read-only file; a job running unattended cannot answer.
+
+```{.console}
+bash: locked/notes.txt: Permission denied
+rm: cannot remove 'locked/notes.txt': Permission denied
+mv: cannot move 'locked/notes.txt' to 'notes_moved.txt': Permission denied
+touch: cannot touch 'locked/new.txt': Permission denied
+```
+
+All four were refused. Why lock the folder too? Deleting, moving, and
+adding files change the folder's list of names, so the folder's
+permission controls them, not the file's. A read-only file in a
+writable folder can still be deleted:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p open && echo "first line" > open/notes.txt
+chmod a-w open/notes.txt
+rm -f open/notes.txt
+ls open
+```
+
+`rm -f` printed nothing and `ls` shows an empty folder: the read-only
+file is gone. (Without `-f`, `rm` asks before deleting a read-only file
+when its input is a terminal, even from a script you started there. With
+`-f`, or in a job running unattended, nothing asks.)
+
+**Now protect the real raw data**, files and folder:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+chmod a-w data/raw/* data/raw
+ls -ld data/raw # <1>
+ls -l data/raw
+```
+1. `-d` lists the folder itself instead of its contents.
+
+```{.console}
+dr-xr-xr-x 2 you you 4096 Nov 17 11:22 data/raw
+total 4372
+-r--r--r-- 1 you you     112 Nov 17 11:22 checksums.md5
+-r--r--r-- 1 you you 2239317 Nov 17 11:22 SRR6357070_1.fastq.gz
+-r--r--r-- 1 you you 2232117 Nov 17 11:22 SRR6357070_2.fastq.gz
+```
+
+The `w` letters are gone. This guards against accidents (a script that
+writes to the wrong path, a slip of `rm`), not against you: as the
+owner you can always give write permission back. To add a file later,
+unlock the folder and the checksum list (the existing reads can stay
+locked), add the file and its line from the source's checksum list,
+check, and lock everything again:
+
+```{.bash filename="Terminal (laptop)"}
+chmod u+w data/raw data/raw/checksums.md5
+# add the new file and its line in checksums.md5, then:
+cd data/raw && md5sum -c checksums.md5 && cd ~/bioinf-book
+chmod a-w data/raw/* data/raw
+```
+
+ @sec-linux-system explains
+permissions properly. Keep raw reads compressed, and never unzip them in
+place: every tool in this book reads `.gz` directly.
+
+::: {.callout-important}
+## Key idea
+Raw data is read-only: check it once with checksums, protect it, and
+never edit it. Every change happens in a script that writes somewhere
+else.
+:::
+
+::: {.check}
+**Check yourself.** `md5sum -c` prints `FAILED` for a file you just
+copied from the cluster. What happened, and what do you do? What if it
+says `FAILED open or read`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`FAILED`: your copy's bytes differ from the original, usually an
+incomplete transfer. Copy it again and recheck; do not analyse it.
+`FAILED open or read`: the file is missing or misnamed, or you ran the
+check from the wrong folder.
+:::
+:::
+
+## Shared data: link, don't copy {#sec-organizing-projects-shared}
+
+On a cluster, a lab keeps one copy of each reference genome and big
+shared dataset in a shared folder, something like
+`/project/<lab>/references/`, and every project points to it. No one
+copies a 3 GB genome into each project, and no one's quota pays twice.
+You will make a **stand-in** for such a folder in your home folder and
+link it into the project.
+
+**Make the shared folder.** Download the test genome (yeast chromosome I
+only, 71 kB) and its annotation into it:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-shared/references/yeast_R64-1-1_test
+cd ~/bioinf-shared/references/yeast_R64-1-1_test
+curl -fLO {{< var testdata-url >}}/reference/genome.fa.gz
+curl -fLO {{< var testdata-url >}}/reference/genes.gtf.gz
+```
+
+Give it a checksum list, as the person who set up the folder would:
+
+```{.default filename="~/bioinf-shared/references/yeast_R64-1-1_test/checksums.md5"}
+4222a07bf01b12782245e0ff774459fe  genome.fa.gz
+504334f6741ee771c665ae845429087f  genes.gtf.gz
+```
+
+```{.bash filename="Terminal (laptop)"}
+md5sum -c checksums.md5
+```
+
+```{.console}
+genome.fa.gz: OK
+genes.gtf.gz: OK
+```
+
+And a README, so anyone who finds the folder knows what it is:
+
+```{.markdown filename="~/bioinf-shared/references/yeast_R64-1-1_test/README.md"}
+# Yeast test reference (stand-in for a lab's shared references)
+
+- genome.fa.gz: S. cerevisiae R64-1-1, chromosome I only (one sequence, >I)
+- genes.gtf.gz: matching gene annotation (test subset)
+- Source: nf-core/test-datasets, rnaseq branch, folder reference/,
+  commit 9dd6d014f560e182047992834a8d267214fbccd1
+- Downloaded: 2026-11-17 (write your date)
+- Checksums: checksums.md5 (MD5)
+- License: MIT (nf-core/test-datasets)
+```
+
+Then protect the folder, as a lab would protect its shared references:
+
+```{.bash filename="Terminal (laptop)"}
+chmod a-w ~/bioinf-shared/references/yeast_R64-1-1_test/* ~/bioinf-shared/references/yeast_R64-1-1_test
+```
+
+**Link it into the project:**
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+ln -s ~/bioinf-shared/references/yeast_R64-1-1_test data/ref # <1>
+ls -l data/ref
+ls data/ref/
+```
+1. `ln -s target name` makes a symbolic link called `name` that points
+   to `target`.
+
+```{.console}
+lrwxrwxrwx 1 you you 53 Nov 17 11:22 data/ref -> /home/you/bioinf-shared/references/yeast_R64-1-1_test
+checksums.md5  genes.gtf.gz  genome.fa.gz  README.md
+```
+
+`ls -l` shows the link itself: an `l` at the start, and an arrow to the
+path it holds (on a Mac the path starts with `/Users/`). `ls data/ref/`,
+with the slash, looks through the link and lists the shared folder's
+files.
+
+**Now name the idea** (@fig-symlink). A **symbolic link** (symlink) is
+another route to the same data, not a copy: a tiny entry that holds only
+a path. Programs that open `data/ref/genome.fa.gz` read the file in the
+shared folder.
+
+::: {#fig-symlink}
+{{< svg ../figures/symlink.svg >}}
+
+What a symbolic link is, and what each action does to it. Use *Next* to
+step through.
+:::
+
+See both halves of that on a toy link in the practice folder (never on
+the real reference). Writing through a link writes to the original, and
+removing the link leaves the original alone:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-ch03/practice
+mkdir -p target && echo "original line" > target/note.txt
+ln -s target toylink
+echo "added through the link" >> toylink/note.txt
+cat target/note.txt
+unlink toylink # <1>
+ls
+cat target/note.txt
+```
+1. `unlink` removes one link (or file) and nothing else.
+
+```{.console}
+original line
+added through the link
+locked  open  target
+original line
+added through the link
+```
+
+The line written through `toylink` landed in `target/note.txt`; after
+`unlink`, the link is gone and the target still holds both lines. (Try
+the same write on `data/ref/README.md` and you get `Permission denied`:
+the protection you added to the shared folder stops it, as step 3 of
+@fig-symlink shows.) A link whose target is moved or renamed is
+**broken**: `ls -l` still shows the arrow (in red in many terminals),
+and opening a file through it says `No such file or directory`.
+
+::: {.callout-warning}
+## Pitfall: `rm -r data/ref/` deletes the shared data
+Remove a link with `unlink data/ref` or `rm data/ref`: no slash at the
+end, no `-r`. With a trailing slash, which {{< kbd Tab >}} completion
+adds for you, `rm -r` follows the link. On a Mac with GNU coreutils 9.11
+(and with macOS's own `rm`), this deleted the entire shared folder
+without a word, and left the link behind, now broken:
+
+```{.console}
+$ rm -r proj/ref/
+$ echo $?
+0
+$ ls -l proj
+total 0
+lrwxr-xr-x 1 you staff 20 Nov 17 11:34 ref -> /home/you/shared/ref
+$ ls -A shared/ref
+ls: cannot access 'shared/ref': No such file or directory
+```
+
+(Captured in a test folder, with `$` before each command: `echo $?`
+prints `0`, the code for success, and the shared folder `shared/ref` is
+gone.) On Linux (Ubuntu 24.04, GNU coreutils 9.4) the result differs but
+is no better: `rm` deleted every file inside the shared folder, then
+stopped with `rm: cannot remove 'proj/ref/': Not a directory`, leaving
+the folder empty.
+
+Do not run this. The shared folder you made survives it only because
+you protected it: `rm` then stops with `Permission denied`. A lab's real
+shared folder may not be protected from you.
+:::
+
+**Moving the project.** Relative paths in scripts let the project move,
+but a link is only a pointer: copy the project to another machine (say,
+laptop to cluster) and `data/ref` points at a path that does not exist
+there. Moving a project means three steps: copy the project's files;
+reinstall the environment from `pixi.toml` and `pixi.lock`
+(@sec-book-setup); and recreate `data/ref` to point at that machine's
+copy of the same reference, which `data/README.md` identifies by source,
+release, and checksums (@sec-organizing-projects-provenance). Transfer
+commands come in @sec-working-remotely. And a link is not a backup of
+its target: someone (you, the lab, or the site) must look after the
+shared copy (@sec-organizing-projects-backups). Which genome release to
+use, and why chromosome names differ between sources, is
+@sec-reference-data.
+
+::: {.check}
+**Check yourself.** You run `unlink data/ref`. Is the reference genome
+gone? What must you do to use the project on a second machine?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+No, only the link is gone; the shared folder is untouched. On the second
+machine, recreate the link to that machine's copy of the same
+reference, identified by its source, release, and checksums in
+`data/README.md`, and reinstall the environment from the lockfile.
+:::
+:::
+
+## Backups: where do your files really live? {#sec-organizing-projects-backups}
+
+Start with a question for each place you keep files: if you deleted a
+file there by mistake today, could you get it back? @tbl-storage-backup
+answers it for a laptop and the two clusters this book uses as examples.
+Copy its rows for your own storage into your notebook (you will start it
+in @sec-organizing-projects-records) and fill them in from your site's
+documentation.
+
+::: {.wide-table}
+: Is it backed up? Site facts from SCINet's [storage
+guide](https://scinet.usda.gov/guides/data/storage) and ISU's [HPC file
+storage guide](https://research.it.iastate.edu/file-storage), checked
+2026-11-17, and Nova's login banner (@sec-book-setup-ssh); your site's own pages are the authority, and policies change
+(@sec-cluster-sites). "Not stated": the site's guide does not say. {#tbl-storage-backup}
+
+| Storage | Example path | Backed up? | Purged? | Who restores a deleted file |
+|:--------|:-------------|:-----------|:--------|:----------------------------|
+| Laptop disk | `~/bioinf-book` | only if you set up a backup | no | you, from your backup |
+| Sync folder (OneDrive, Dropbox, Google Drive) | `~/OneDrive/…` | no: a copy that follows your changes | no | you, from version history, for as long as it is kept |
+| SCINet home | `/home/<user>` (30 GB) | no: "Cluster storage is not backed up" | not stated | no one |
+| SCINet project | `/project/<project>` | no (same rule) | not stated | no one |
+| SCINet 90-day scratch | `/90daydata/<project>` | no | files older than 90 days, permanently | no one |
+| SCINet Juno | (long-term storage) | the place to back up data that "cannot be easily reproduced" | not stated | not stated |
+| Nova home | `/home/<netid>` (10 GB) | not stated | not stated | not stated |
+| Nova group work | `/work/<group>` | daily snapshots, 7 kept | not stated | the file-system admins: ask ISU support |
+| Nova scratch | `/ptmp/<you>` | no | files not used for 60 days | no one |
+| Nova Large Scale Storage | `/lss/research/<group>` | yes, per Nova's login banner ("a backed-up system like /lss") | not stated | ask ISU support |
+| A compute node's local disk | `$TMPDIR` | no | at the end of each job | no one |
+:::
+
+::: {.callout-warning}
+## Pitfall: scratch is purged and not backed up
+Files in scratch space (`/90daydata`, `/ptmp`) are deleted
+automatically; on SCINet the deletion "is permanent and the files cannot
+be recovered". Use scratch for
+files a job can make again, copy results you need into project storage,
+and find out which other areas are backed up, and for how long, before
+you trust them.
+:::
+
+**Then name the rule: 3-2-1.** Keep three copies of anything you cannot
+recreate, on two kinds of storage, with one somewhere else (off site).
+For raw sequence data, the facility's copy or the public archive (SRA or
+ENA, once you have submitted) can be one of the three, but only if you
+know it is kept and for how long. An archive of the original reads does
+not preserve a subset or a fix you made yourself.
+
+A few points the table makes:
+
+- **Cluster storage is often not a backup at all.** SCINet says so for
+  all of its cluster storage, and scratch is purged everywhere. Even
+  storage with snapshots (Nova's `/work`) should not be your only copy:
+  Nova's login banner says so.
+- **A sync folder copies your mistakes too.** Delete or overwrite a file
+  and the change syncs everywhere. It is one copy in two places, unless
+  version history is kept and you know for how long.
+- **Git keeps the history of code** (@sec-git), but only a copy stored
+  somewhere else, such as a remote repository (@sec-github), protects it
+  if your machine is lost.
+
+What to back up: raw data, metadata, code, the notebook, logs, and the
+records that explain results; important final results too. A result you
+can rebuild in seconds, such as this chapter's read counts, needs no
+backup of its own. A large or published analysis may need days of
+computing, a reference that is no longer online, or an old software
+version to rebuild, so keep it. Intermediate files that a pipeline can
+make again can follow a lighter rule. And test a restore once: a backup
+you have never restored from is a hope, not a backup.
+
+::: {.callout-caution .misconception}
+## Misconception: "My Dropbox (or OneDrive) folder is my backup"
+**Reality.** Sync copies deletions and overwrites to every device. It
+protects you only through version history, for as long as the service
+keeps it, which you need to check.
+:::
+
+::: {.check}
+**Check yourself.** Your raw FASTQ files are in cluster scratch and in a
+OneDrive folder on your laptop. Is that a backup you can rely on? What
+would you check?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Not as it stands: scratch is purged and not backed up, and OneDrive
+copies deletions. Check how long OneDrive keeps old versions, whether
+the facility or SRA keeps the original reads (and for how long), and put
+a copy in storage that is backed up.
+:::
+:::
+
+## Sample sheets and metadata {#sec-organizing-projects-metadata}
+
+Reads mean nothing without knowing which sample each file came from.
+That knowledge is **metadata**, and it lives in tables. Start with the
+sample sheet nf-core uses to test its RNA-seq pipeline, kept with the
+book's reads in [nf-core/test-datasets](https://github.com/nf-core/test-datasets/tree/rnaseq). Download it into `data/meta/` and keep it exactly as
+it came, under a name that says so:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+curl -fL -o data/meta/samplesheet_upstream.csv {{< var testdata-url >}}/samplesheet/v3.10/samplesheet_test.csv
+md5sum data/meta/samplesheet_upstream.csv
+code data/meta/samplesheet_upstream.csv
+```
+
+```{.console}
+fb28ab0a8cda268b2befd974804b2925  data/meta/samplesheet_upstream.csv
+```
+
+The checksum matches the one in the book's `data/README.md`, so you have
+the same file. Its contents, with the long download addresses shortened
+to `…/` (the real file has the full URL of each FASTQ file):
+
+```{.default filename="data/meta/samplesheet_upstream.csv (shortened)"}
+sample,fastq_1,fastq_2,strandedness
+WT_REP1,…/SRR6357070_1.fastq.gz,…/SRR6357070_2.fastq.gz,auto
+WT_REP1,…/SRR6357071_1.fastq.gz,…/SRR6357071_2.fastq.gz,auto
+WT_REP2,…/SRR6357072_1.fastq.gz,…/SRR6357072_2.fastq.gz,reverse
+RAP1_UNINDUCED_REP1,…/SRR6357073_1.fastq.gz,,reverse
+RAP1_UNINDUCED_REP2,…/SRR6357074_1.fastq.gz,,reverse
+RAP1_UNINDUCED_REP2,…/SRR6357075_1.fastq.gz,,reverse
+RAP1_IAA_30M_REP1,…/SRR6357076_1.fastq.gz,…/SRR6357076_2.fastq.gz,reverse
+```
+
+Look before reading on. There are 7 rows but only 5 sample labels:
+`WT_REP1` and `RAP1_UNINDUCED_REP2` each have two rows. Three rows have
+an empty `fastq_2`, so those runs are given as single-end. And a
+`strandedness` column says how each library was made. In this sheet
+each row is one sequencing run, with its mate files; rows that share a
+label are merged into one sample by the pipeline (@sec-nf-core).
+
+**Now check the labels against the source.** The runs are public, so
+the archive has a record for each. The European Nucleotide Archive's
+records ([ENA](https://www.ebi.ac.uk/ena/browser/view/SRR6357070), for
+the first run) (checked 2026-11-17)
+tell a different story: the seven runs are **seven different biological
+samples** (GSM2879618 to GSM2879624), and all seven were sequenced
+paired-end (@fig-sample-sheet). The two `WT_REP1` runs are wild-type
+replicates 1 and 2; the sheet's `WT_REP2` is replicate 3.
+
+::: {#fig-sample-sheet}
+{{< svg ../figures/sample-sheet.svg >}}
+
+The test sample sheet beside the archive record. The sheet groups 7 runs
+under 5 labels and gives three as single-end; ENA lists 7 biological
+samples, all paired-end. Only SRR6357070's two files are in this
+project.
+:::
+
+Nothing is wrong with the sheet: it is a pipeline **test fixture**.
+Its labels group runs so the test exercises merging and single-end
+input; they were never meant to describe the experiment. The lesson is
+general. A sample label is a claim: check it against the source record,
+and never infer the biology from names alone. (How to design an
+experiment with replicates is the Transcriptomics book's subject.)
+
+**Now the project's own metadata**, for the files actually in
+`data/raw/`. Two small tables, one per question. `reads.tsv` says which
+files belong to which run and sample; `samples.tsv` says what each
+sample is, from its archive record. These commands write them, one line
+at a time (`printf` prints its text, `\t` is a tab, `\n` ends the line;
+`>` starts the file and `>>` adds to it, as in @sec-orientation):
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+printf 'sample\trun\tfastq_1\tfastq_2\n' > data/meta/reads.tsv
+printf 'WT_REP1\tSRR6357070\tdata/raw/SRR6357070_1.fastq.gz\tdata/raw/SRR6357070_2.fastq.gz\n' >> data/meta/reads.tsv
+printf 'sample\trun\tgeo_sample\tcondition\treplicate\n' > data/meta/samples.tsv
+printf 'WT_REP1\tSRR6357070\tGSM2879618\twild_type\t1\n' >> data/meta/samples.tsv
+cat data/meta/reads.tsv data/meta/samples.tsv
+```
+
+```{.console}
+sample  run     fastq_1 fastq_2
+WT_REP1 SRR6357070      data/raw/SRR6357070_1.fastq.gz  data/raw/SRR6357070_2.fastq.gz
+sample  run     geo_sample      condition       replicate
+WT_REP1 SRR6357070      GSM2879618      wild_type       1
+```
+
+(The columns are separated by tabs, which the terminal shows as jumps
+to the next multiple of 8 characters, so they do not line up. Open the
+files in VS Code to see them as columns.) A real project has one
+row per run in `reads.tsv` and one per sample in `samples.tsv`; the
+`sample` column is how the two tables join (@sec-tabular-data).
+
+**Now name the idea.** Metadata is data, not a note on the side: kept
+beside the reads, checked, and changed only on purpose. The rules:
+
+- One row per run (or per sample), one column per property.
+- Plain CSV or TSV files, not spreadsheets with merged cells, colour
+  coding, or notes in the margins (spreadsheet pitfalls:
+  @sec-tabular-data).
+- Sample IDs are spelled the same in every table: `WT_REP1` in one and
+  `WT_rep1` or `WT_REP1 ` (with a trailing space) in another are
+  different IDs.
+- File-path columns point at the right files. Sample IDs and file names
+  need not match (`WT_REP1` and `SRR6357070_1.fastq.gz`): the table is
+  what connects them.
+- Values come from the source record, with the record's ID
+  (`GSM2879618`) kept so anyone can check them.
+
+nf-core's own sample-sheet format, and how it merges runs, are covered
+in @sec-nf-core.
+
+::: {.check}
+**Check yourself.** The upstream sheet has two rows labelled `WT_REP1`.
+Are they two runs of one biological sample? How would you find out?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Not here: ENA lists them as different biological samples, wild-type
+replicates 1 and 2. The test sheet groups them to test merging. Check
+the archive record, not the label.
+:::
+:::
+
+## Provenance: where did this number come from? {#sec-organizing-projects-provenance}
+
+In @sec-orientation you typed a read count into `fastq_summary.txt` by
+hand. Nothing in that file says which file was counted, with what, or
+when. Now make a result that records how it was made.
+
+**Add the script.** Open a new file in VS Code (`code
+src/01_count_reads.sh`), paste the script below, and save. You run it in
+this chapter; @sec-shell-scripts explains every line.
+
+```{.bash filename="src/01_count_reads.sh"}
+#!/usr/bin/env bash
+# 01_count_reads.sh: check the raw FASTQ files, then count their reads.
+# Run from the project folder:  pixi run bash src/01_count_reads.sh
+set -euo pipefail
+
+mkdir -p results logs
+log="$(mktemp "logs/01_count_reads_$(date +%Y-%m-%dT%H%M%S)_XXXX.log")"
+
+{
+  echo "started:  $(date "+%Y-%m-%d %H:%M:%S %z")"
+  echo "host:     $(hostname)"
+  echo "script:   $(md5sum src/01_count_reads.sh)"
+  echo "seqkit:   $(seqkit version)"
+  echo "checking inputs against data/raw/checksums.md5:"
+  (cd data/raw && md5sum -c checksums.md5)
+  echo "command:  seqkit stats -T data/raw/*.fastq.gz"
+  seqkit stats --quiet -T data/raw/*.fastq.gz > results/read_counts.tsv.tmp
+  mv results/read_counts.tsv.tmp results/read_counts.tsv
+  echo "output:   $(md5sum results/read_counts.tsv)"
+  echo "finished: $(date "+%Y-%m-%d %H:%M:%S %z")"
+} 2>&1 | tee "$log"
+```
+
+**Run it** from the project folder, through pixi, so it finds seqkit:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+pixi run bash src/01_count_reads.sh
+```
+
+```{.console}
+started:  2026-11-17 12:24:53 -0600
+host:     your-laptop
+script:   76fa8eb6a7b90f212042cfbe6d95cfcc  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-17 12:24:53 -0600
+```
+
+Your date, time, host, and log name will differ. Then look at what it made:
+
+```{.bash filename="Terminal (laptop)"}
+cat results/read_counts.tsv
+ls logs
+```
+
+```{.console}
+file    format  type    num_seqs        sum_len min_len avg_len max_len
+data/raw/SRR6357070_1.fastq.gz  FASTQ   DNA     50000   5050000 101     101.0   101
+data/raw/SRR6357070_2.fastq.gz  FASTQ   DNA     50000   5050000 101     101.0   101
+01_count_reads_2026-11-17T122453_7WFs.log
+```
+
+(Tab-separated again: `-T` asks seqkit for a plain table that other
+programs can read, without the commas and aligned columns of
+@sec-book-setup. `num_seqs` is 50,000 in each file.) What the script did, in plain words:
+
+1. Checked the inputs against `checksums.md5`, and would have stopped
+   there if any failed.
+2. Recorded the date, the machine, the script's own checksum, the
+   seqkit version, and the command.
+3. Counted the reads into a temporary file, and only then moved it into
+   `results/`. A run that fails half-way cannot replace a good result
+   with an empty one.
+4. Recorded the output's checksum.
+5. Saved everything it printed, including any messages from seqkit, in
+   a new log in `logs/`, named by date and time plus four random
+   characters (`_7WFs`; `mktemp` picks a name no other file has), so
+   every run keeps its own log, even two runs in the same second.
+
+The log is the run's record. A log with no `finished:` line means the
+run failed, and its last lines say where (@sec-getting-help starts from
+exactly that). When one input was corrupted on purpose, the run stopped
+at `FAILED`, kept the old result, and left the failure in its log.
+
+**Record where the inputs came from.** The log says what the script
+read; `data/README.md` says where those files came from. Make it from
+this template (the book keeps the same record for its own data):
+
+```{.markdown filename="data/README.md"}
+# Data in this project
+
+## Raw reads: data/raw/
+
+- Files: SRR6357070_1.fastq.gz, SRR6357070_2.fastq.gz (paired-end, read 1 and read 2)
+- What: S. cerevisiae RNA-seq, run SRR6357070 (GEO sample GSM2879618,
+  wild type, biological replicate 1), sub-sampled to 50,000 read pairs
+  by nf-core for testing
+- Source: {{< var testdata-url >}}/testdata/GSE110004/
+- Accessions: GEO GSE110004; SRA run SRR6357070
+- Downloaded: 2026-11-13 (Chapter 1; write your own date)
+- Checksums: data/raw/checksums.md5 (MD5). SHA-256:
+  3f50541fa9cf2bedc87e7b682ada0fccfdfcd6d27b9bb81f17be230ff140ebe7  SRR6357070_1.fastq.gz
+  8590e1e01e568fba256aa7dced40519604cbb111ee44ab106a3dcb869660aaf4  SRR6357070_2.fastq.gz
+- License: MIT (nf-core/test-datasets); original reads public in SRA
+- Cite: Wu et al. (2018), Molecular Cell 72(6), 942-954.e7,
+  doi:10.1016/j.molcel.2018.10.018
+
+## Reference: data/ref (a link)
+
+- Points to: ~/bioinf-shared/references/yeast_R64-1-1_test (see its README.md)
+- What: S. cerevisiae R64-1-1, chromosome I only, with gene annotation (test subset)
+- Source: {{< var testdata-url >}}/reference/
+- Checksums (MD5):
+  4222a07bf01b12782245e0ff774459fe  genome.fa.gz
+  504334f6741ee771c665ae845429087f  genes.gtf.gz
+- On another machine: link data/ref to a copy with these checksums
+
+## Metadata: data/meta/
+
+- samplesheet_upstream.csv: nf-core's test sheet, unchanged.
+  Source: {{< var testdata-url >}}/samplesheet/v3.10/samplesheet_test.csv
+  MD5 fb28ab0a8cda268b2befd974804b2925
+- reads.tsv: which local files belong to which run and sample (written by hand)
+- samples.tsv: what each sample is, from its ENA record (checked 2026-11-17)
+```
+
+`{{< var testdata-url >}}` is the full download address, pinned to one
+commit of nf-core/test-datasets, so the files at that address can never
+change.
+
+**Now name the idea** (@fig-provenance-chain). **Provenance** is the
+record of where something came from. For `read_counts.tsv`, every link
+in the chain is now in the project.
+
+::: {#fig-provenance-chain}
+{{< svg ../figures/provenance-chain.svg >}}
+
+The provenance of `results/read_counts.tsv`. The code, the software, the
+inputs it read, and the log of the run point to the result; the inputs
+point back to their sources. The reference and the upstream sample
+sheet are project records, but this result did not read them.
+:::
+
+@tbl-provenance-record lists what to record and where it lives.
+
+: What to record for each result, and where it lives in the book's
+project. {#tbl-provenance-record}
+
+| What to record | In this project | Where it lives |
+|:---------------|:----------------|:---------------|
+| Source of each input | download address, commit, accession, date | `data/README.md` |
+| Exact input files | MD5 of each file | `data/raw/checksums.md5`, checked in the log |
+| Code | `src/01_count_reads.sh` and its MD5 | `src/`, the log |
+| Command and options | `seqkit stats -T data/raw/*.fastq.gz` | the log |
+| Software versions | seqkit v2.14.0; every package | the log; `pixi.lock` |
+| When, where, what happened | start and end times, host, check results | the log |
+| The output | `read_counts.tsv` and its MD5 | `results/`, the log |
+| Why, and what went wrong | decisions and dead ends | `NOTEBOOK.md` (next section) |
+
+Most of this costs nothing if you record it when the file is made, and
+is impossible to rebuild later. Later chapters add to the chain: git
+commits for the script (@sec-git), parameters and random seeds
+(@sec-environments), and pipeline versions and reports (@sec-nf-core).
+
+::: {.callout-important}
+## Key idea
+Record provenance when the file is made: source, version, checksum,
+script, command, software, log. It costs a minute now and cannot be
+rebuilt later.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "I'll remember where this file came from"
+**Reality.** Weeks later no one does, including you. A file whose source,
+version, and making are not written down cannot be trusted, and often
+cannot be used in a paper.
+:::
+
+::: {.check}
+**Check yourself.** A reviewer asks which version of seqkit made
+`read_counts.tsv`. Where in the project is the answer?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+In the run's log in `logs/` (the `seqkit:` line), and in `pixi.lock`.
+:::
+:::
+
+## Writing it down: README, notebook, FAIR {#sec-organizing-projects-records}
+
+**The README.** Open `README.md` from @sec-book-setup and replace its
+two lines with an outline like this one. It answers the first questions
+a stranger (or you, in a year) will ask:
+
+```{.markdown filename="README.md"}
+# Computing for Bioinformatics: book project
+
+Worked project for the book *Computing for Bioinformatics*. Counts the
+reads in one yeast RNA-seq run; later chapters add to it.
+
+## Layout
+
+- data/raw/   reads as received, read-only; checksums in checksums.md5
+- data/meta/  sample sheets and metadata
+- data/ref    link to the shared reference (see data/README.md)
+- src/        scripts, numbered in run order
+- results/    made by the scripts; can be rebuilt
+- logs/       one log per run
+
+## Data
+
+Where every input came from: data/README.md.
+
+## How to rerun
+
+    pixi install --locked
+    pixi run bash src/01_count_reads.sh
+
+## Software
+
+pixi.toml and pixi.lock (installed with pixi 0.84.2).
+```
+
+**The notebook.** A script shows what was done; it does not show why,
+what you tried first, or what went wrong. That goes in a notebook. Make
+`NOTEBOOK.md` in the project and give it a first dated entry:
+
+```{.markdown filename="NOTEBOOK.md"}
+# Notebook
+
+## 2026-11-17
+
+- Organized the project (Chapter 3): moved the reads from ~/bioinf-ch01
+  into data/raw/, checked them with md5sum -c (both OK), made them read-only.
+- Linked the test reference from ~/bioinf-shared/ instead of copying it.
+- The nf-core test sheet groups 7 runs under 5 labels, but ENA lists
+  7 biological samples, all paired-end: the labels are a test grouping.
+  Used the ENA record for samples.tsv.
+- Ran src/01_count_reads.sh: 50,000 reads in each file.
+- Next: ...
+```
+
+Newest entries go at the bottom (or the top: pick one and keep to it).
+Write a few lines each day you work: what you did, why, what went
+wrong, and what is next. A plain Markdown file in the project is the
+book's default; if your lab already uses an electronic lab notebook,
+use that. The habit matters, not the tool.
+
+::: {.callout-tip}
+## Markdown in one box
+`README.md` and `NOTEBOOK.md` are **Markdown**: plain text with a few
+marks. `#` starts a heading (`##` a smaller one), `-` starts a list
+item, and backticks mark code (`` `md5sum -c` ``). VS Code shows a
+preview with {{< kbd Cmd-Shift-V >}} ({{< kbd Ctrl-Shift-V >}} on Windows
+and Linux). Quarto (@sec-r-essentials) uses the same marks; see its
+[Markdown basics](https://quarto.org/docs/authoring/markdown-basics.html).
+:::
+
+**FAIR, briefly.** Funders and journals increasingly ask for data that
+is **FAIR**: Findable, Accessible, Interoperable, and Reusable
+[@wilkinson2016fair]. @tbl-fair shows which habits from this chapter
+support each principle.
+
+::: {.callout-note}
+## Background: the FAIR principles
+
+: The FAIR principles [@wilkinson2016fair], and habits from this
+chapter that support them. {#tbl-fair}
+
+| Principle | What it means | Habits from this chapter that support it |
+|:----------|:--------------|:-----------------------------------------|
+| Findable | Data have persistent identifiers and rich metadata, so they can be found | citing accessions (`SRR6357070`, `GSM2879618`, `GSE110004`) in `data/README.md` |
+| Accessible | Anyone can learn how to get the data, by a standard method; access may need a login | download addresses pinned to a commit; where each input came from |
+| Interoperable | Data use standard formats and shared vocabularies | FASTQ, FASTA, and GTF files; plain CSV/TSV metadata with clear columns |
+| Reusable | Data come with a license, provenance, and enough description to be used again | the license and citation for each input; checksums, logs, and the README |
+:::
+
+A README and a tidy CSV do not by themselves make a project FAIR; that
+takes depositing data, with good metadata, in an archive that gives it
+identifiers (@sec-reference-data, @sec-github). They make it much
+easier. And Accessible does not have to mean open to everyone: data
+behind a login are fine, as long as how to get access is clear. More on
+FAIR at [GO FAIR](https://www.go-fair.org/fair-principles/).
+
+::: {.check}
+**Check yourself.** Which FAIR principle does citing `SRR6357070` and
+`GSE110004` in your README support?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Findable, through persistent identifiers (and Reusable, since others can
+trace and credit the data).
+:::
+:::
+
+## Summary {#sec-organizing-projects-summary}
+
+- One project, one folder, with inputs (`data/`), code (`src/`), and
+  outputs (`results/`, `logs/`) apart, so results can be rebuilt. Names
+  without spaces, ISO dates, zero-padded numbers, scripts numbered in
+  run order.
+- Raw data is checked with `md5sum -c` (in the folder that holds the
+  files) after every download or transfer, then protected with
+  `chmod a-w` on the files **and** the folder. `FAILED` means damaged;
+  `FAILED open or read` means missing or the wrong folder.
+- Shared data is linked, not copied: `ln -s target data/ref`. Remove a
+  link with `unlink data/ref`, never `rm -r data/ref/`. A link does not
+  travel with the project; `data/README.md` says what to link on another
+  machine.
+- Each result has a record of its provenance: the inputs' sources and
+  checksums (`data/README.md`, `checksums.md5`), the script, the
+  software (`pixi.lock`), and a log of every run. `README.md` and
+  `NOTEBOOK.md` say what the project is and why you did what you did.
+- Know which of your storage is backed up, for how long, and who
+  restores it. Scratch is purged; a sync folder copies mistakes;
+  3-2-1 for anything you cannot recreate.
+
+The project now looks like this:
+
+```{.default}
+~/bioinf-book/
+├── README.md
+├── NOTEBOOK.md
+├── pixi.toml  pixi.lock  .pixi/
+├── data/
+│   ├── README.md
+│   ├── raw/        SRR6357070_1.fastq.gz  SRR6357070_2.fastq.gz  checksums.md5
+│   ├── meta/       reads.tsv  samples.tsv  samplesheet_upstream.csv
+│   └── ref -> ~/bioinf-shared/references/yeast_R64-1-1_test
+├── src/            01_count_reads.sh
+├── results/        read_counts.tsv
+└── logs/           01_count_reads_2026-11-17T122453_7WFs.log
+```
+
+## Exercises {#sec-organizing-projects-exercises}
+
+Practice files go in `~/bioinf-ch03/`, not in the project.
+
+::: {.check}
+**Exercise 1. Rename a messy folder.** Make a folder of badly named
+files:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-ch03/messy && cd ~/bioinf-ch03/messy
+touch "SRR6357070 R1.fastq.gz" "Analysis.R" "plot 1.png" "plot 2.png" "plot 10.png" "counts final.txt" "counts final_v2.txt" "11-3-25 notes.txt"
+```
+
+`counts final.txt` and `counts final_v2.txt` are really tab-separated
+tables, and `_v2` added one sample. Write down a new name for each file,
+then rename them with `mv`, quoting the old names, for example:
+
+```{.bash filename="Terminal (laptop)"}
+mv "plot 1.png" plot_01.png
+```
+
+What would you ask before renaming `11-3-25 notes.txt`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+One good set:
+
+| Old name | New name | Why |
+|:---------|:---------|:----|
+| `SRR6357070 R1.fastq.gz` | `SRR6357070_1.fastq.gz` | no space; keep the archive's ID and its `_1` convention |
+| `Analysis.R` | `01_analysis.R` | lowercase; numbered in run order (better: say what it analyses) |
+| `plot 1.png`, `plot 2.png`, `plot 10.png` | `plot_01.png`, `plot_02.png`, `plot_10.png` | zero-padded, so they sort 1, 2, 10 |
+| `counts final.txt` | `counts_7samples.tsv` | true extension; says what it holds |
+| `counts final_v2.txt` | `counts_8samples.tsv` | says what changed, instead of `v2` |
+| `11-3-25 notes.txt` | ask first | |
+
+Now `ls -1` lists the plots in order. For the date, ask whoever wrote
+it: is it 3 November or 11 March, and which year? Then rename to
+`2025-11-03_notes.txt` or `2025-03-11_notes.txt` (or the right year).
+:::
+:::
+
+::: {.check}
+**Exercise 2. Catch a broken transfer.** Make a truncated copy of read 1
+in the practice folder, as an interrupted transfer would, copy the
+checksum list beside it, and check:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-ch03/practice
+head -c 1000000 ~/bioinf-book/data/raw/SRR6357070_1.fastq.gz > SRR6357070_1.fastq.gz
+cp ~/bioinf-book/data/raw/checksums.md5 .
+md5sum -c checksums.md5
+gzip -t SRR6357070_1.fastq.gz
+```
+
+(`head -c 1000000` keeps the first million bytes. Read 2 is missing on
+purpose.) Which kind of failure does each file give? Both checks catch
+this copy; which one would catch a file that is complete, but the wrong
+sample?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.console}
+SRR6357070_1.fastq.gz: FAILED
+md5sum: SRR6357070_2.fastq.gz: No such file or directory
+SRR6357070_2.fastq.gz: FAILED open or read
+md5sum: WARNING: 1 listed file could not be read
+md5sum: WARNING: 1 computed checksum did NOT match
+gzip: SRR6357070_1.fastq.gz: unexpected end of file
+gzip: SRR6357070_1.fastq.gz: uncompress failed
+```
+
+Read 1 is `FAILED` (bytes differ); read 2 is `FAILED open or read`
+(missing). `gzip -t` catches truncation too. Only the checksum, compared
+against the facility's list, catches a wrong file that is still valid
+gzip. Neither tells you whether the facility's own file was right
+(the misconception in @sec-organizing-projects-raw).
+:::
+:::
+
+::: {.check}
+**Exercise 3. Labels against records.** Here are the ENA records for all
+seven runs in the upstream sheet (captured 2026-11-17 from ENA's
+[file report](https://www.ebi.ac.uk/ena/portal/api/) for each run):
+
+| Run | GEO sample | Sample title | Layout |
+|:----|:-----------|:-------------|:-------|
+| SRR6357070 | GSM2879618 | Wild-type total RNA-Seq biological replicate 1 | PAIRED |
+| SRR6357071 | GSM2879619 | Wild-type total RNA-Seq biological replicate 2 | PAIRED |
+| SRR6357072 | GSM2879620 | Wild-type total RNA-Seq biological replicate 3 | PAIRED |
+| SRR6357073 | GSM2879621 | Rap1-AID degron no induction total RNA-Seq biological replicate 1 | PAIRED |
+| SRR6357074 | GSM2879622 | Rap1-AID degron no induction total RNA-Seq biological replicate 2 | PAIRED |
+| SRR6357075 | GSM2879623 | Rap1-AID degron no induction total RNA-Seq biological replicate 3 | PAIRED |
+| SRR6357076 | GSM2879624 | Rap1-AID degron induction 30 minutes total RNA-Seq biological replicate 1 | PAIRED |
+
+Copy the upstream sheet into the practice folder (`cp
+~/bioinf-book/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/`), open
+the copy in VS Code, and add `geo_sample` and `condition` columns from
+this table. How many biological samples are there? How many runs are
+really paired-end? Why might a test fixture group them differently? And
+what goes wrong if a sample ID in one table has a trailing space?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Seven biological samples, all paired-end. The fixture's labels exist to
+test the pipeline: two labels with two runs each test merging, and three
+runs given as read 1 only test single-end input. A trailing space makes
+a different ID (`WT_REP1 ` is not `WT_REP1`), so the two tables fail to
+match when joined; @sec-tabular-data shows how to detect it.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Rebuild and compare.** Save a copy of the result outside
+`results/`, delete `results/`, rerun the script, and compare:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+cp results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv
+rm -r results
+pixi run bash src/01_count_reads.sh
+cmp ~/bioinf-ch03/read_counts_before.tsv results/read_counts.tsv # <1>
+ls logs
+```
+1. `cmp` compares two files byte by byte and prints nothing if they are
+   identical.
+
+Then add a `NOTEBOOK.md` entry for today.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`cmp` prints nothing: the rebuilt result is identical. `logs/` now has
+two logs, one per run, with different names, which is why outputs
+and logs are kept apart. The result could be deleted safely because the
+inputs, code, and software records were all kept.
+:::
+:::
+
+::: {.check}
+**Exercise 5. Your own storage.** (Cluster readers.) Make the same
+layout in your project storage, link a reference your site or lab
+already provides (@sec-cluster-sites) or the test reference, and fill in
+the rows of @tbl-storage-backup for your site from its documentation,
+including who restores a deleted file. No cluster yet? Fill in the rows
+for your laptop and any sync folder you use.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Answers depend on the site. A complete row names the path, whether it is
+backed up or snapshotted and for how long, whether it is purged and
+after how long, and whom to ask (with the link to the page you used).
+If the documentation does not say, write "not stated" and ask your
+site's support rather than assume.
+:::
+:::
+
+## Further reading {#sec-organizing-projects-reading}
+
+- @wilson2017good, "Good enough practices in scientific computing" ---
+  the closest match to this chapter: data management, project
+  organization, and keeping track of changes, as a short checklist.
+- @noble2009quick, "A quick guide to organizing computational biology
+  projects" --- the classic project layout and lab-notebook advice;
+  compare its folders with ours.
+- @wilkinson2016fair --- the paper that defined the FAIR principles; read
+  the box of principles, not the whole paper.
+- @shotts2025linux, *The Linux Command Line*, the chapters on links and
+  on permissions --- for readers who want `ln` and `chmod` explained
+  before @sec-shell-basics and @sec-linux-system.

@@ -9,7 +9,7 @@ CC BY-NC-SA or MIT licenses.
 
 | Field | Value |
 |:------|:------|
-| What | *Saccharomyces cerevisiae* RNA-seq test data of nf-core/rnaseq: 5 samples (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`, `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) from 7 runs in `samplesheet/v3.10/samplesheet_test.csv`, each run sub-sampled to 50,000 reads (pairs, for paired runs; 4 runs paired-end, 3 used single-end). The book's own files so far: run SRR6357070 (`WT_REP1`), paired. Counts checked 2026-11-17 |
+| What | *Saccharomyces cerevisiae* RNA-seq test data of nf-core/rnaseq: 5 sample labels (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`, `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) over 7 runs in `samplesheet/v3.10/samplesheet_test.csv`, each run sub-sampled to 50,000 reads (pairs, for paired runs; 4 runs used paired-end, 3 single-end). The labels group runs for pipeline testing: ENA lists the 7 runs as 7 biological samples (GSM2879618–24), all paired-end. The book's own files so far: run SRR6357070 (GSM2879618, wild type, biological replicate 1), paired. Counts and ENA records checked 2026-11-17 |
 | Source | [nf-core/test-datasets](https://github.com/nf-core/test-datasets), branch `rnaseq`, folder `testdata/GSE110004/` |
 | Version | Last commit touching `SRR6357070_1.fastq.gz`: `58ec9dc30549f0f28a01fae5971bdb2f1386f185` (2021-04-12); checked 2026-11-13 |
 | Accession | GEO [GSE110004](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE110004) (reads in SRA, e.g. SRR6357070) |
@@ -27,6 +27,33 @@ MD5 is what Chapter 3 teaches readers to check with `md5sum -c`
 
 `SRR6357070_2.fastq.gz`: same last commit as R1 (`58ec9dc`, 2021-04-12);
 used in Chapter 1, exercise 1. Checked 2026-11-13.
+
+**Pinned source (from Chapter 3, 2026-11-17).** Readers download every
+file from one commit of nf-core/test-datasets,
+`9dd6d014f560e182047992834a8d267214fbccd1` (`rnaseq` branch head on
+2026-11-09), through `testdata-url` in `_variables.yml`. The two FASTQ
+files above and the three files below are byte-identical at that commit
+to the versions recorded here (checked 2026-11-17). The size-measuring
+files further down are fetched by `scripts/ch01_file_sizes.R` from the
+branch, not from this commit.
+
+Files added in Chapter 3 (same source and license):
+
+| File | Path at the commit | Last changed | Size (bytes) | MD5 | SHA-256 |
+|:-----|:-------------------|:-------------|-------------:|:----|:--------|
+| `samplesheet_test.csv` | `samplesheet/v3.10/` | `0a8d404` (2023-03-24) | 1,335 | `fb28ab0a8cda268b2befd974804b2925` | `beeb7811b14bfa973233616625a9648ba649736d97b2e84af51d619ac89691c4` |
+| `genome.fa.gz` | `reference/` | `bae247f` (2020-08-24) | 71,440 | `4222a07bf01b12782245e0ff774459fe` | `dbfd9767961571e91a42022a728d7bcf5022c1078ee361cf475986520e2bc999` |
+| `genes.gtf.gz` | `reference/` | `cfc925e` (2023-11-16) | 10,452 | `504334f6741ee771c665ae845429087f` | `72dadd0ce0b719fa71f849f35e6b3c4475f3edc63cf9d3f60eb7911c2a787aaa` |
+
+`genome.fa.gz` holds one sequence, `>I` (yeast chromosome I). Readers save
+the sample sheet as `data/meta/samplesheet_upstream.csv` and keep the
+reference in a stand-in shared folder linked into the project.
+
+ENA records for the seven runs (Chapter 3, §7 and exercise 3), checked
+2026-11-17 with ENA's file-report API: SRR6357070–75 are GSM2879618–23,
+wild type biological replicates 1–3 and "Rap1-AID degron no induction"
+replicates 1–3; SRR6357076 is GSM2879624, "Rap1-AID degron induction 30
+minutes" replicate 1. All `PAIRED`.
 
 ### Files used only to measure sizes (Chapter 1)
 

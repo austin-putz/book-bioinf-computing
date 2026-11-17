@@ -67,11 +67,15 @@ optional and lives in Part VIII.
     doi:10.1016/j.molcel.2018.10.018): total and poly(A) RNA-seq (about
     45 million 101 bp stranded paired-end reads per library) and TSS-seq.
   - **nf-core test fixture:** `samplesheet/v3.10/samplesheet_test.csv`:
-    5 samples (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`,
-    `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) from 7 runs, each
+    5 sample labels (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`,
+    `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) over 7 runs, each
     sub-sampled to 50,000 reads (pairs, for paired runs); 4 runs are used
-    paired-end and 3 single-end; `WT_REP1` and `RAP1_UNINDUCED_REP2` have
-    two runs each. Reference: yeast chromosome I only (R64-1-1).
+    paired-end and 3 single-end; `WT_REP1` and `RAP1_UNINDUCED_REP2`
+    have two runs each. The grouping is for testing the pipeline: ENA
+    lists the 7 runs as 7 different biological samples (GSM2879618–24:
+    wild type ×3, Rap1-AID uninduced ×3, induced 30 min ×1), all
+    paired-end (checked 2026-11-17). Reference: yeast chromosome I only
+    (R64-1-1).
   - **The book's own files:** run SRR6357070 (`WT_REP1`, paired,
     50,000 read pairs), from Chapter 1 on; more of the fixture when a
     chapter needs it.

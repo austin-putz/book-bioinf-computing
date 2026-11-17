@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="sample-sheet-title">
+  <title id="sample-sheet-title">nf-core's test sample sheet compared with the archive record. The sheet has 5 sample labels over 7 runs: WT_REP1 has runs SRR6357070 and SRR6357071; WT_REP2 has SRR6357072; RAP1_UNINDUCED_REP1 has SRR6357073; RAP1_UNINDUCED_REP2 has SRR6357074 and SRR6357075; RAP1_IAA_30M_REP1 has SRR6357076. The sheet lists read 1 and read 2 for four runs and read 1 only for three. Only SRR6357070's two files are in this project. ENA lists each of the 7 runs as its own biological sample, GSM2879618 to GSM2879624, all paired-end: wild type replicates 1 to 3, Rap1 degron without induction replicates 1 to 3, and Rap1 degron induced for 30 minutes replicate 1.</title>
+
+  <!-- Headings -->
+  <text x="20" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">SAMPLE LABEL</text>
+  <text x="232" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">RUN</text>
+  <text x="352" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">FILES IN THE SHEET</text>
+  <text x="510" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">ENA: BIOLOGICAL SAMPLE</text>
+  <text x="20" y="38" font-size="12" class="fill-muted">(nf-core test sheet)</text>
+  <text x="510" y="38" font-size="12" class="fill-muted">(the archive record)</text>
+
+  <!-- Sample labels, each spanning its runs (rows 36 units apart, first row centre y=66) -->
+  <g font-size="12" class="mono">
+    <rect x="20" y="50" width="190" height="68" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="32" y="89">WT_REP1</text>
+    <rect x="20" y="122" width="190" height="32" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="32" y="143">WT_REP2</text>
+    <rect x="20" y="158" width="190" height="32" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="32" y="179">RAP1_UNINDUCED_REP1</text>
+    <rect x="20" y="194" width="190" height="68" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="32" y="233">RAP1_UNINDUCED_REP2</text>
+    <rect x="20" y="266" width="190" height="32" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="32" y="287">RAP1_IAA_30M_REP1</text>
+  </g>
+
+  <!-- Runs -->
+  <g font-size="12" class="mono">
+    <text x="232" y="71" font-weight="700">SRR6357070</text>
+    <text x="232" y="107">SRR6357071</text>
+    <text x="232" y="143">SRR6357072</text>
+    <text x="232" y="179">SRR6357073</text>
+    <text x="232" y="215">SRR6357074</text>
+    <text x="232" y="251">SRR6357075</text>
+    <text x="232" y="287">SRR6357076</text>
+  </g>
+
+  <!-- Files listed in the sheet -->
+  <g font-size="12">
+    <rect x="348" y="54" width="138" height="24" rx="4" class="fill-given-soft stroke-given" stroke-width="1.5"/>
+    <text x="356" y="71" class="mono" font-weight="700">_1 + _2</text>
+    <text x="420" y="71" class="fill-muted">in data/raw</text>
+    <text x="356" y="107" class="mono">_1 + _2</text>
+    <text x="356" y="143" class="mono">_1 + _2</text>
+    <text x="356" y="179" class="mono">_1 only</text>
+    <text x="356" y="215" class="mono">_1 only</text>
+    <text x="356" y="251" class="mono">_1 only</text>
+    <text x="356" y="287" class="mono">_1 + _2</text>
+  </g>
+
+  <!-- ENA: every run is its own biological sample, all paired -->
+  <line x1="498" y1="50" x2="498" y2="298" class="stroke-line" stroke-width="1.5"/>
+  <g font-size="12">
+    <text x="510" y="71"><tspan class="mono">GSM2879618</tspan> WT rep 1</text>
+    <text x="510" y="107"><tspan class="mono">GSM2879619</tspan> WT rep 2</text>
+    <text x="510" y="143"><tspan class="mono">GSM2879620</tspan> WT rep 3</text>
+    <text x="510" y="179"><tspan class="mono">GSM2879621</tspan> Rap1 no ind. 1</text>
+    <text x="510" y="215"><tspan class="mono">GSM2879622</tspan> Rap1 no ind. 2</text>
+    <text x="510" y="251"><tspan class="mono">GSM2879623</tspan> Rap1 no ind. 3</text>
+    <text x="510" y="287"><tspan class="mono">GSM2879624</tspan> Rap1 30 min 1</text>
+  </g>
+
+  <!-- Footnote -->
+  <text x="20" y="326" font-size="13">Sheet: 5 labels, 7 runs, 3 used single-end. Archive: 7 biological samples, all paired.</text>
+  <text x="20" y="346" font-size="12" class="fill-muted">The labels group runs to test the pipeline; they do not describe the experiment.</text>
+</svg>

@@ -79,6 +79,50 @@ made; outputs (right) are written by the script. The records along the
 bottom explain all of it.
 :::
 
+The same project as text: this is what the `tree` command prints, run
+inside `~/bioinf-computing` at the end of the chapter. `tree` comes with
+the book environment, so start it with `pixi run`, as you did seqkit in
+@sec-book-setup. Indentation shows
+what is inside what, `->` marks a link and where it points, and the
+last line counts what it found.
+
+```{.bash filename="Terminal (laptop)"}
+pixi run tree
+```
+
+```{.console}
+.
+├── data
+│   ├── meta
+│   │   ├── reads.tsv
+│   │   ├── samples.tsv
+│   │   └── samplesheet_upstream.csv
+│   ├── raw
+│   │   ├── checksums.md5
+│   │   ├── SRR6357070_1.fastq.gz
+│   │   └── SRR6357070_2.fastq.gz
+│   ├── README.md
+│   └── ref -> /home/you/bioinf-shared/references/yeast_R64-1-1_test
+├── logs
+│   └── 01_count_reads_2026-11-17T122453_7WFs.log
+├── NOTEBOOK.md
+├── pixi.lock
+├── pixi.toml
+├── README.md
+├── results
+│   └── read_counts.tsv
+└── src
+    └── 01_count_reads.sh
+
+7 directories, 15 files
+```
+
+`tree` sorts by name and, like `ls`, hides names that start with a dot,
+so `.pixi/` is missing; `tree -a` shows it (and its thousands of files).
+`tree -L 2` stops two levels down, which helps in big projects. Later
+chapters use `tree` to show a tool's inputs and outputs; run it yourself
+to check your folder against the book.
+
 The rules behind it, one sentence each:
 
 - **One project, one folder.** Everything an analysis needs, or points

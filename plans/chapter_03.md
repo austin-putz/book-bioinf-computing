@@ -947,3 +947,17 @@ accepted:
    Chapter 2's R2 command to it, so every chapter uses the same commit.
    Files are byte-identical to the branch versions today (*checked*),
    so no captured output changes.
+
+## Decisions (2026-11-17): `tree` output beside the layout figure
+
+- Austin asked for the layout as text as well as the figure. §2 now
+  shows `pixi run tree` and its output right after `fig-project-layout`.
+  The output is real `tree` v2.3.2, captured on a copy of the
+  end-of-chapter project (empty files, `data/ref` linked to
+  `/home/you/bioinf-shared/...`, the same target as the `ls -l`
+  output), in a UTF-8 locale.
+- `tree` added to the book environment (`setup/pixi.toml`) so every
+  reader has it, including on clusters without it. Later chapters can
+  use it to show a tool's inputs and outputs. `pixi.lock` must be
+  regenerated.
+- The Summary keeps its hand-drawn, annotated tree as a compact recap.

@@ -454,6 +454,7 @@ End-of-chapter exercises (core chapter, so required):
   r-base = "4.4.*"
   seqkit = "*"
   nano = "*"                 # fallback editor (pixi run nano)
+  tree = "*"                 # folder layouts (pixi run tree), from Chapter 3
 
   [tasks]
   check = "python --version && R --version | head -n 1 && seqkit version"

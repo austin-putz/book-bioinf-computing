@@ -276,7 +276,7 @@ This prints nothing. In the shell, silence usually means success.
 **Step 2. Download one FASTQ file.**
 
 ```{.bash filename="Terminal (laptop)"}
-curl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz
+curl -fLO {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_1.fastq.gz
 ```
 
 `curl` shows a progress table while it works. When it finishes, the last
@@ -291,7 +291,7 @@ line starts with `100`; your speeds and times will differ:
 If instead you see `curl: (56) The requested URL returned error: 404`, or
 any other `curl:` error, check that you copied the whole command. If a
 firewall blocks `curl`, download the file in your browser from its [GitHub
-page](https://github.com/nf-core/test-datasets/blob/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz)
+page]({{< var testdata-page >}}/testdata/GSE110004/SRR6357070_1.fastq.gz)
 (the *Download raw file* button), then move it into place:
 
 ::: {.panel-tabset group="os"}
@@ -821,7 +821,7 @@ cd ~/bioinf-ch01
 as a second line of `fastq_summary.txt`:
 
 ```{.bash filename="Terminal (laptop)"}
-curl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz
+curl -fLO {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_2.fastq.gz
 echo "SRR6357070_2 reads: $(( $(gunzip -c SRR6357070_2.fastq.gz | wc -l) / 4 ))" >> fastq_summary.txt
 cat fastq_summary.txt
 ```

@@ -107,7 +107,10 @@ tools.
   here.
 - `data/README.md`: every third-party dataset (source, version/commit,
   accession, license, citation, checksums), per series rule. Add a row
-  whenever a chapter starts using a new file.
+  whenever a chapter starts using a new file. Readers download test data
+  from one pinned commit of nf-core/test-datasets: `testdata-url` (and
+  `testdata-page` for browser links) in `_variables.yml`, never the
+  branch URL (decided 2026-11-17).
 - `setup/`: `pixi.toml` + `pixi.lock`, the book environment readers
   download in Chapter 2. Its download URL is `setup-url` in
   `_variables.yml` (used in chapters as `{{< var setup-url >}}`); point

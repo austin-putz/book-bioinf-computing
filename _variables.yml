@@ -4,3 +4,10 @@
 # release tag once the core package list is settled and tagged.
 setup-url: "https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/main/setup"
 pixi-version: "0.84.2"
+# testdata-url: the book's test data, pinned to one commit of
+# nf-core/test-datasets (rnaseq branch head on 2026-11-09), so the files
+# cannot change under the reader. testdata-page: the same commit on
+# GitHub's web pages (browser download fallback). Re-pin both together
+# and recheck the checksums in data/README.md.
+testdata-url: "https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1"
+testdata-page: "https://github.com/nf-core/test-datasets/blob/9dd6d014f560e182047992834a8d267214fbccd1"

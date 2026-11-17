@@ -998,7 +998,7 @@ exercise, or deleted `~/bioinf-ch01`, download the file first:
 
 ```{.bash filename="Terminal (laptop)"}
 mkdir -p ~/bioinf-ch01
-curl -fL -o ~/bioinf-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz
+curl -fL -o ~/bioinf-ch01/SRR6357070_2.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_2.fastq.gz
 ```
 
 Do the two files have the same `num_seqs`?

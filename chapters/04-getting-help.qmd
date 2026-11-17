@@ -44,12 +44,12 @@ enough: some problems (a broken node, a full quota) only an
 administrator can fix, and a clear request is a skill in its own right.
 
 Commands run on your laptop, from the book's project folder,
-`~/bioinf-book` (@sec-organizing-projects). Practice files go in a
+`~/bioinf-computing` (@sec-organizing-projects). Practice files go in a
 scratch folder, `~/bioinf-ch04`, like Chapter 1's `~/bioinf-ch01`, so
 the project stays clean. Make it now:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 mkdir -p ~/bioinf-ch04
 ```
 
@@ -516,7 +516,7 @@ error would come later.) The fix is the folder, not the command:
 
 ```{.bash filename="Terminal (laptop)"}
 pwd
-cd ~/bioinf-book
+cd ~/bioinf-computing
 ```
 
 **Case 2: a pattern that matches nothing.**
@@ -1071,11 +1071,11 @@ Copy it from this page exactly, faults and all:
 
 ```{.bash filename="~/bioinf-ch04/count.sh"}
 # count.sh: count reads in both raw files (has three faults)
-# Run from ~/bioinf-book:  pixi run bash ~/bioinf-ch04/count.sh
+# Run from ~/bioinf-computing:  pixi run bash ~/bioinf-ch04/count.sh
 seqkit stats –T --paired data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz
 ```
 
-From `~/bioinf-book`, run it with `pixi run bash ~/bioinf-ch04/count.sh`.
+From `~/bioinf-computing`, run it with `pixi run bash ~/bioinf-ch04/count.sh`.
 It fails three times. Fix one fault at a time, using only the message
 and `--help`, and rerun after each fix. Note in `NOTEBOOK.md`
 (@sec-organizing-projects) what each message said and what you changed.

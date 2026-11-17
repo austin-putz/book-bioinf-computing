@@ -74,11 +74,11 @@ body:
     id: environment
     attributes:
       label: Your environment
-      description: The output of `pixi info`, run in `~/bioinf-book`. On a cluster, also any `module load` lines you ran first.
+      description: The output of `pixi info`, run in `~/bioinf-computing`. On a cluster, also any `module load` lines you ran first.
       render: text
   - type: input
     id: tool-version
     attributes:
       label: Version of the failing tool
-      description: Optional. For example, the output of `pixi run seqkit version`, run in `~/bioinf-book`.
+      description: Optional. For example, the output of `pixi run seqkit version`, run in `~/bioinf-computing`.
       placeholder: "seqkit v2.14.0"

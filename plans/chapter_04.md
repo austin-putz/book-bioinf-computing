@@ -32,7 +32,7 @@ checked while drafting.
   means the download failed"; stop-on-error checkpoints.
 - Chapter 2: `pixi run`, `pixi info`, `pixi list`, why bare `seqkit` is
   "not found"; VS Code's terminal; `hostname` to know where you are.
-- Chapter 3: the project in `~/bioinf-book` (raw data read-only, the log
+- Chapter 3: the project in `~/bioinf-computing` (raw data read-only, the log
   in `logs/`, `data/README.md`), checksums, and the provenance chain.
   A good help request is that chain written out for someone else.
   **Dependency:** Chapter 3's supplied script must write the tool's own
@@ -101,7 +101,7 @@ Same pattern as Chapters 1–3: each section opens with something readers
 run, read, or diagnose, then names the idea. All examples use the book's
 own files and environment, so every error readers see in the chapter is
 one they can reproduce, or read in the captured output. Commands run on
-the laptop, from `~/bioinf-book` unless a step says otherwise. Visual
+the laptop, from `~/bioinf-computing` unless a step says otherwise. Visual
 items in brackets are specified under *Visuals and teaching aids*.
 
 1. **What this chapter does.** Learning-goals callout. One paragraph:
@@ -188,7 +188,7 @@ items in brackets are specified under *Visuals and teaching aids*.
      find pixi.toml or pyproject.toml with tool.pixi at directory …`
      (*captured*; the text adds that the message can differ if another
      `pixi.toml` sits in a parent folder). Solved at the checklist's
-     third question (`pwd`). Then `cd ~/bioinf-book` before going on.
+     third question (`pwd`). Then `cd ~/bioinf-computing` before going on.
    - **A pattern that matches nothing.** `pixi run seqkit stats -T
      data/raw/*.fq.gz` (the files end in `.fastq.gz`): bash passes the
      unmatched pattern on unchanged, and seqkit answers `[ERRO] stat
@@ -427,7 +427,7 @@ Pipe tables, caption above, `tbl-` label, cited by label.
 
   ```bash
   # count.sh: count reads in both raw files (has three faults)
-  # Run from ~/bioinf-book:  pixi run bash ~/bioinf-ch04/count.sh
+  # Run from ~/bioinf-computing:  pixi run bash ~/bioinf-ch04/count.sh
   seqkit stats –T --paired data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz
   ```
 
@@ -502,7 +502,7 @@ material):
 
 1. **Fix a broken script.** Copy the supplied `~/bioinf-ch04/count.sh`.
    Run it with `pixi run bash ~/bioinf-ch04/count.sh` from
-   `~/bioinf-book`. It fails three times; fix one fault at a time from
+   `~/bioinf-computing`. It fails three times; fix one fault at a time from
    the message and `--help` alone, rerunning after each, and note in
    `NOTEBOOK.md` what each message said and what you changed. (*Order:
    unknown flag, en dash, typo; final output as in the check.*)
@@ -544,7 +544,7 @@ material):
   3's exercise 2), a 100-read FASTQ (`seqkit head -n 100`), the broken
   script, the bad and good help requests.
 - Running dataset: `data/raw/SRR6357070_1.fastq.gz` and `_2` in
-  `~/bioinf-book` (Chapter 3); nothing new to download, so no new rows
+  `~/bioinf-computing` (Chapter 3); nothing new to download, so no new rows
   in `data/README.md`.
 - Paper: Wu et al. 2018, *Mol Cell* 72(6):942–954.e7,
   doi:10.1016/j.molcel.2018.10.018, PMC6310685, **CC BY** (Europe PMC,
@@ -704,7 +704,7 @@ the v3.10 sample sheet, scite). Accepted and applied above:
   visible.
 - **Log and starting state:** §4 no longer relies on Chapter 3's log
   until that plan is fixed (dependency noted at the top); return to
-  `~/bioinf-book` after `cd ~`; note on another `pixi.toml` in a
+  `~/bioinf-computing` after `cd ~`; note on another `pixi.toml` in a
   parent folder and on a different seqkit on `PATH`; exercise 2 uses
   `pixi run`.
 - **Smaller points:** `[ERRO]` as a severity label; "earliest relevant

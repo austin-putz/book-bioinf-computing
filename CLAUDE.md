@@ -199,3 +199,7 @@ file beside the source (`embed-resources: true`: no `_files/` folder).
 - Running dataset: the yeast (*S. cerevisiae*) paired-end RNA-seq subset
   from nf-core/rnaseq's test profile (GEO GSE110004). Details in
   `PLAN_CHAPTERS.md`.
+- Reader's project folder: `~/bioinf-computing` (renamed from
+  `~/bioinf-book`, 2026-11-17), also the pixi workspace `name`. Each
+  book in the series gets its own `~/bioinf-<topic>` folder, matching its
+  repo suffix, so books never share one folder.

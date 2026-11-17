@@ -4,7 +4,7 @@
 # tagged release (plans/chapter_02.md, Decisions 2026-11-16).
 
 [workspace]
-name = "bioinf-book"
+name = "bioinf-computing"
 channels = ["conda-forge", "bioconda"]
 # No win-64: bioconda does not build for Windows; Windows readers use WSL2.
 platforms = ["linux-64", "osx-arm64", "osx-64"]

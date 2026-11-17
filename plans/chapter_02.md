@@ -31,7 +31,7 @@ Austin's hands-on checks on Windows/WSL, Atlas, Ceres, and Nova
   open a remote folder using their site's supported method. On a bare
   server they can edit, save, and quit a file in nano, and leave vim
   without saving.
-- **Check:** two commands from `~/bioinf-book`:
+- **Check:** two commands from `~/bioinf-computing`:
   - `pixi run check` prints the Python, R, and seqkit versions recorded
     for the book release (it checks the environment only, so it keeps
     working wherever data files later move).
@@ -91,7 +91,7 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    `~/.zshrc`, bash is not yet the login shell, so go back to Chapter 1's
    macOS setup. Open a new terminal, then check `pixi --version`
    (the book states the pixi version it was tested with). Make
-   `~/bioinf-book`, download `pixi.toml` and `pixi.lock` from one fixed
+   `~/bioinf-computing`, download `pixi.toml` and `pixi.lock` from one fixed
    book release with `curl -fLO`, run `pixi install --locked`, then
    `pixi run check`, then `pixi run seqkit stats` on the Chapter 1 file.
    **Checkpoint:** if a download or the install fails, stop there (as in
@@ -132,7 +132,7 @@ Visual items in brackets are specified under *Visuals and teaching aids*.
    Windows user names can contain spaces, so `/mnt/c/Users/…` paths may
    too: one more reason to keep work in the Linux home (quoting paths in
    Chapter 5). Linux: `code` is on `PATH` after install.
-   File → Open Folder works everywhere. Open `~/bioinf-book`, open the
+   File → Open Folder works everywhere. Open `~/bioinf-computing`, open the
    built-in terminal, and check it runs the same bash as Terminal:
    `echo "$BASH_VERSION"` shows 5.x (macOS) and `sed --version` says GNU.
    On macOS this should already hold: VS Code's terminal starts `$SHELL`
@@ -385,7 +385,7 @@ in self-checks.
 Self-checks (`.check` blocks with collapsed answers), one per concept
 section:
 
-- §2 (a): In a fresh terminal in `~/bioinf-book`, `seqkit stats …` says
+- §2 (a): In a fresh terminal in `~/bioinf-computing`, `seqkit stats …` says
   `command not found`, but `pixi run seqkit stats …` works. You have not
   installed seqkit any other way. Why? (*Installing the environment does
   not put its tools in every terminal; `pixi run` runs the command with
@@ -400,7 +400,7 @@ section:
 - §4: After `ssh` you type `hostname` and see a login-node name. Which
   computer runs your next command? (*The cluster's login node.*)
 - §5: In a remote window you open a terminal and run `ls`. Whose files do
-  you see, and is `~/bioinf-book` there? (*The cluster's; your laptop
+  you see, and is `~/bioinf-computing` there? (*The cluster's; your laptop
   folder is not copied over.*)
 - §6: A command opened vim and your terminal fills with `~` lines. How do
   you leave without saving? (*`Esc`, `:q!`, Enter.*)
@@ -414,7 +414,7 @@ End-of-chapter exercises (core chapter, so required):
    exercise (change `_1` to `_2`; if you skipped that exercise, the
    supplied `curl -fLO` command downloads it into `~/bioinf-ch01`). Do
    the two files have the same `num_seqs`?
-3. In nano, create `README.md` in `~/bioinf-book` with one line saying
+3. In nano, create `README.md` in `~/bioinf-computing` with one line saying
    what the folder is for. Then open it in vim, add a second line, and
    save with `:wq`. Run `cat README.md` in VS Code's terminal to check
    both lines.
@@ -433,8 +433,8 @@ End-of-chapter exercises (core chapter, so required):
   `~/bioinf-ch01/` (2,239,317 bytes, 50,000 reads of 101 bases, verified
   2026-11-13). Chapter 2 does not move data: Chapter 1 promises that
   Chapter 3 brings these files and their source URLs into the project,
-  and Chapter 3 does so inside `~/bioinf-book`.
-- Folder plan: `~/bioinf-book` is created here and holds `pixi.toml`,
+  and Chapter 3 does so inside `~/bioinf-computing`.
+- Folder plan: `~/bioinf-computing` is created here and holds `pixi.toml`,
   `pixi.lock`, and the README from exercise 3. Chapter 3 organizes the
   same folder into the recurring project (`data/`, `src/`, `results/`,
   …), so `pixi.toml` stays at the project root for the whole book.
@@ -445,7 +445,7 @@ End-of-chapter exercises (core chapter, so required):
 
   ```toml
   [workspace]
-  name = "bioinf-book"
+  name = "bioinf-computing"
   channels = ["conda-forge", "bioconda"]
   platforms = ["linux-64", "osx-arm64", "osx-64"]
 
@@ -467,7 +467,7 @@ End-of-chapter exercises (core chapter, so required):
   curl -fsSL https://pixi.sh/install.sh | sh     # pixi docs, checked 2026-11-13
   # open a new terminal (installer added ~/.pixi/bin to PATH), then:
   pixi --version
-  mkdir -p ~/bioinf-book && cd ~/bioinf-book
+  mkdir -p ~/bioinf-computing && cd ~/bioinf-computing
   curl -fLO https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/<tag>/setup/pixi.toml
   curl -fLO https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/<tag>/setup/pixi.lock
   pixi install --locked
@@ -513,7 +513,7 @@ is in brackets.
 
 - Builds on: Chapter 1 (terminal, the FASTQ files in `~/bioinf-ch01`,
   laptop vs login node).
-- Leads to: Chapter 3 (organizes `~/bioinf-book` into the recurring
+- Leads to: Chapter 3 (organizes `~/bioinf-computing` into the recurring
   project and brings the Chapter 1 files in); Chapter 7 (`PATH`,
   environment variables, permanent `EDITOR`); Chapter 9 (SSH keys,
   config, jump hosts; pitfall "Too many authentication failures" when
@@ -598,7 +598,7 @@ Codex (`chapter_02_codex_review.md`) and Antigravity
 
 Not adopted:
 
-- **Copying the Chapter 1 files into `~/bioinf-book` in Chapter 2**
+- **Copying the Chapter 1 files into `~/bioinf-computing` in Chapter 2**
   (both reviews). Chapter 1 says Chapter 3 brings these files into the
   project; moving them here would put raw data in the folder root one
   chapter before Chapter 3 organizes it. Chapter 2 uses them in place in

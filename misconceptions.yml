@@ -123,7 +123,7 @@
     the laptop's environment are not copied over.
   probe: >
     In a VS Code window connected to the cluster you open a terminal and run
-    `ls ~/bioinf-book`, a folder on your laptop. What happens? (Correct:
+    `ls ~/bioinf-computing`, a folder on your laptop. What happens? (Correct:
     "No such file or directory", unless you made that folder on the
     cluster too.)
   chapters: [02-book-setup, 09-working-remotely]

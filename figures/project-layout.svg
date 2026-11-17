@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 440" role="img" aria-labelledby="project-layout-title">
-  <title id="project-layout-title">The book's project folder, ~/bioinf-book, in three groups. Inputs: data/raw holds the two FASTQ files and checksums.md5 and is read-only; data/meta holds reads.tsv, samples.tsv, and the upstream sample sheet; data/ref is a link to the shared reference. How: src holds the script 01_count_reads.sh, and pixi.toml, pixi.lock, and .pixi hold the software. Outputs: results holds read_counts.tsv, which can be rebuilt; logs holds one log per run, which you keep. The script reads the inputs and writes the outputs. Along the bottom, README.md, NOTEBOOK.md, and data/README.md record what the project is, what you did, and where every input came from.</title>
+  <title id="project-layout-title">The book's project folder, ~/bioinf-computing, in three groups. Inputs: data/raw holds the two FASTQ files and checksums.md5 and is read-only; data/meta holds reads.tsv, samples.tsv, and the upstream sample sheet; data/ref is a link to the shared reference. How: src holds the script 01_count_reads.sh, and pixi.toml, pixi.lock, and .pixi hold the software. Outputs: results holds read_counts.tsv, which can be rebuilt; logs holds one log per run, which you keep. The script reads the inputs and writes the outputs. Along the bottom, README.md, NOTEBOOK.md, and data/README.md record what the project is, what you did, and where every input came from.</title>
   <defs>
     <marker id="project-layout-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
     </marker>
   </defs>
 
-  <text x="20" y="28" font-size="15" font-weight="700" class="mono">~/bioinf-book/</text>
+  <text x="20" y="28" font-size="15" font-weight="700" class="mono">~/bioinf-computing/</text>
 
   <!-- Group headings -->
   <text x="20" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">INPUTS</text>

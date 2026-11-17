@@ -35,11 +35,11 @@ From the written Chapters 1 and 2 (check the wording again when drafting):
 - Chapter 1 (§3): "`~/bioinf-ch01` is a scratch folder … this chapter
   starts the book's real project and brings this file, **and the address
   you downloaded it from**, into it."
-- Chapter 2 (§2): "`~/bioinf-book` is the book's project folder from now
+- Chapter 2 (§2): "`~/bioinf-computing` is the book's project folder from now
   on … this chapter organizes it." It already holds `pixi.toml`,
   `pixi.lock`, `.pixi/`, and `README.md` (Chapter 2 exercise 3).
 - Chapter 2 plan: `pixi.toml` stays at the project root for the whole
-  book, so the recurring project **is** `~/bioinf-book`.
+  book, so the recurring project **is** `~/bioinf-computing`.
 - `PLAN_CHAPTERS.md` conventions: the recurring project collects input
   provenance, metadata, scripts or workflow config, environment info,
   logs, and a rendered summary as skills appear. This chapter starts the
@@ -49,7 +49,7 @@ From the written Chapters 1 and 2 (check the wording again when drafting):
 
 ## Outcome and check
 
-- **Outcome:** readers turn `~/bioinf-book` into an organized project:
+- **Outcome:** readers turn `~/bioinf-computing` into an organized project:
   raw reads moved in from Chapter 1, verified with checksums, and
   protected from accidental changes; a shared reference linked in, not
   copied; an inventory of the local read files and their sample
@@ -57,14 +57,14 @@ From the written Chapters 1 and 2 (check the wording again when drafting):
   own log; and a README, a data record, and a notebook entry that say
   where every file came from. They can also say which of their storage
   locations are backed up, and who would recover them.
-- **Check:** from `~/bioinf-book` (all *checked* in a scratch copy of
+- **Check:** from `~/bioinf-computing` (all *checked* in a scratch copy of
   the project):
 
   ```bash
   cd data/raw
   md5sum -c checksums.md5              # SRR6357070_1.fastq.gz: OK
                                        # SRR6357070_2.fastq.gz: OK
-  cd ~/bioinf-book
+  cd ~/bioinf-computing
   ls -l data/ref                       # data/ref -> /home/you/bioinf-shared/…
   pixi run bash src/01_count_reads.sh  # both files OK, then the counts
   cat results/read_counts.tsv          # num_seqs 50000 for both files
@@ -95,9 +95,9 @@ By the end of this chapter you should be able to:
 
 Same pattern as Chapters 1–2: each section opens with something readers
 run or look at, then names the idea. The hands-on thread is one project
-built step by step in `~/bioinf-book`; each section adds one piece, so
+built step by step in `~/bioinf-computing`; each section adds one piece, so
 the folder at the end of the chapter is the starting point for every
-later chapter. Every section starts with `cd ~/bioinf-book`. Commands are
+later chapter. Every section starts with `cd ~/bioinf-computing`. Commands are
 copy-and-run; `mkdir`, `mv`, `ln -s`, `chmod` and the rest are explained
 in Part II (Chapters 5–7), as in Chapter 1. Practice and deliberately
 broken files go in a scratch folder, `~/bioinf-ch03/`, never in the
@@ -108,14 +108,14 @@ teaching aids*.
    month from now, you (or your PI, or a reviewer) will ask "which file
    is this, where did it come from, and how was this number made?"; this
    chapter sets up the folder and the habits that answer that without
-   memory. Chapter 2's `~/bioinf-book` becomes the book's project.
+   memory. Chapter 2's `~/bioinf-computing` becomes the book's project.
 2. **A folder for each project.** *Start hands-on:* one `mkdir -p` that
-   creates the layout inside `~/bioinf-book`, then `ls` to see it beside
+   creates the layout inside `~/bioinf-computing`, then `ls` to see it beside
    `pixi.toml`. *Then name the parts* with the layout figure and table.
    The tree as it stands at the end of the chapter:
 
    ```
-   ~/bioinf-book/
+   ~/bioinf-computing/
    ├── README.md          what this project is; how to rerun it
    ├── NOTEBOOK.md        dated log of what you did and why
    ├── pixi.toml  pixi.lock  .pixi/   software (Chapter 2)
@@ -180,7 +180,7 @@ teaching aids*.
    archive (`SRR…`, `WT_REP1`) are kept as given so they still match the
    records; rename only your own files. [`tbl-file-names`; self-check]
 4. **Raw data: move it in, check it, protect it.** *Start hands-on:*
-   `cd ~/bioinf-book`, then move both FASTQ files from `~/bioinf-ch01/`
+   `cd ~/bioinf-computing`, then move both FASTQ files from `~/bioinf-ch01/`
    into `data/raw/`. Recovery, one mate at a time: readers who never
    downloaded R2 (an exercise in Chapters 1–2), or whose
    `~/bioinf-ch01` is gone, use the supplied `curl -fLO` for each missing
@@ -191,7 +191,7 @@ teaching aids*.
    to Chapter 1–2 commands use the new `data/raw/` paths. Create
    `data/raw/checksums.md5` from the two lines the book supplies (in VS
    Code or nano: Chapter 2's editors), then `cd data/raw`,
-   `md5sum -c checksums.md5` → two `OK`, `cd ~/bioinf-book`. One
+   `md5sum -c checksums.md5` → two `OK`, `cd ~/bioinf-computing`. One
    sentence: the file names in `checksums.md5` have no folder, so the
    check runs in the folder that holds them (sequencing facilities ship
    them the same way). *Then name the idea:* a checksum is a short
@@ -224,7 +224,7 @@ teaching aids*.
    genome (`genome.fa.gz`, 71 kB) and annotation (`genes.gtf.gz`, 10 kB)
    into it with pinned `curl -fLO` commands, check them against supplied
    MD5 values, and give the folder a short README (source, commit, date,
-   checksums). Then from `~/bioinf-book`:
+   checksums). Then from `~/bioinf-computing`:
    `ln -s ~/bioinf-shared/references/yeast_R64-1-1_test data/ref`,
    `ls -l data/ref` (the arrow), and `ls data/ref/` (the files, seen
    through the link). *Then name the idea:* a symbolic link is another
@@ -392,7 +392,7 @@ neutral (`ink`, `line`, `muted`); `warn` only in the symlink pitfall.
 
 | Label | Section | Kind | What it shows |
 |:------|:-------:|:-----|:--------------|
-| `fig-project-layout` | 2 | static | The `~/bioinf-book` tree with real file names, grouped into three bands: **inputs** (`data/raw` blue with a lock icon, `data/meta` blue, `data/ref` orange with a link arrow), **how** (`src/`, `pixi.toml`/`pixi.lock`, neutral), **outputs** (`results/` blue, marked "rebuildable"; `logs/` green, marked "keep"). One arrow: inputs + how → outputs. |
+| `fig-project-layout` | 2 | static | The `~/bioinf-computing` tree with real file names, grouped into three bands: **inputs** (`data/raw` blue with a lock icon, `data/meta` blue, `data/ref` orange with a link arrow), **how** (`src/`, `pixi.toml`/`pixi.lock`, neutral), **outputs** (`results/` blue, marked "rebuildable"; `logs/` green, marked "keep"). One arrow: inputs + how → outputs. |
 | `fig-checksum` | 4 | static | Two copies of a file go through the same checksum box: identical copy → identical fingerprint (green tick); a copy with one changed byte (highlighted) → a completely different fingerprint. Real first 8 hex digits of the real MD5 on the left. |
 | `fig-symlink` | 5 | stepped (4 states) | Each from an intact link, not a command sequence: (1) the shared folder with the reference (orange) and the project's `data/ref` signpost pointing to it; (2) reading through the link: `ls data/ref/` shows the target's files; (3) editing a toy file through a toy link changes the original; (4) `unlink`: the signpost goes, the target stays. The recursive-delete pitfall is not a step: it is a separate captured-output box labelled with the tested platform. |
 | `fig-sample-sheet` | 7 | static | Three columns: sample label → run → mate files. The upstream sheet's 5 labels, 7 runs, and their files (basenames only), with the two downloaded files marked; a side note from ENA: 7 runs = 7 biological samples, so the labels are a test grouping. |
@@ -569,7 +569,7 @@ commands or templates; practice files go in `~/bioinf-ch03/`):
    would ask. (*Answer key: one good set of names, and why `ls` now
    sorts them in order.*)
 2. **Catch a broken transfer.** Make a truncated copy in the practice
-   folder (`head -c 1000000 ~/bioinf-book/data/raw/SRR6357070_1.fastq.gz
+   folder (`head -c 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz
    > ~/bioinf-ch03/practice/SRR6357070_1.fastq.gz`), copy
    `checksums.md5` beside it, and run `md5sum -c` there (expected:
    `FAILED` for the copy, `FAILED open or read` for the missing R2; both
@@ -675,7 +675,7 @@ is in brackets.
 
 - Builds on: Chapter 1 (the FASTQ files in `~/bioinf-ch01`, the
   hand-made `fastq_summary.txt`, `curl -fLO`, `gzip -t`); Chapter 2
-  (`~/bioinf-book`, pixi, `pixi run`, VS Code and nano for editing,
+  (`~/bioinf-computing`, pixi, `pixi run`, VS Code and nano for editing,
   `README.md` from exercise 3, project vs home storage on clusters).
 - Leads to: Chapter 4 (finding the log; a good help request quotes the
   log and versions); Chapter 5 (paths, quoting, `ln -s`, `find`);
@@ -826,7 +826,7 @@ Where I differ from the review:
 
 - **Running the checksum check:** Codex suggested a one-line subshell,
   `(cd data/raw && md5sum -c checksums.md5)`. In the chapter I use
-  three plain lines (`cd data/raw`, `md5sum -c …`, `cd ~/bioinf-book`):
+  three plain lines (`cd data/raw`, `md5sum -c …`, `cd ~/bioinf-computing`):
   readers already know `cd`, and parentheses would need explaining in
   Chapter 3. The supplied script, which readers do not have to read
   line by line, uses the subshell.

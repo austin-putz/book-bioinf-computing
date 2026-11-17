@@ -28,7 +28,7 @@ it made? If the answer lives only in your memory, it is already fading.
 This chapter sets up a folder, and a few habits, that answer those
 questions without memory.
 
-You will turn `~/bioinf-book`, the folder from @sec-book-setup, into the
+You will turn `~/bioinf-computing`, the folder from @sec-book-setup, into the
 book's project. By the end it holds:
 
 - the two FASTQ files from @sec-orientation, moved in, checked, and
@@ -51,7 +51,7 @@ Do this on your laptop (in WSL2's Ubuntu terminal on Windows). Go to the
 book folder and make the empty folders of the layout:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 mkdir -p data/raw data/meta src results logs # <1>
 ls
 ```
@@ -90,7 +90,7 @@ The rules behind it, one sentence each:
   if you rerun the code in `src/` on the inputs in `data/`, with the same
   software. Exercise 4 tests it.
 - **Paths inside the project are relative to its top folder**
-  (`data/raw/SRR6357070_1.fastq.gz`, not `/home/you/bioinf-book/data/…`),
+  (`data/raw/SRR6357070_1.fastq.gz`, not `/home/you/bioinf-computing/data/…`),
   so scripts keep working if the folder moves (more on moving in
   @sec-organizing-projects-shared).
 
@@ -236,7 +236,7 @@ each step does: `01_download.sh`, `02_trim.sh`, `10_report.sh`.
 the scratch folder `~/bioinf-ch01`. Move them into the project:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 mv ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/ # <1>
 ls -l data/raw
 ```
@@ -250,7 +250,7 @@ total 4368
 ```
 
 From now on the files live here: if you go back to a command in
-Chapters 1–2, use `~/bioinf-book/data/raw/` instead of `~/bioinf-ch01/`.
+Chapters 1–2, use `~/bioinf-computing/data/raw/` instead of `~/bioinf-ch01/`.
 `~/bioinf-ch01` keeps `fastq_summary.txt`; you can delete it later.
 
 ::: {.callout-tip}
@@ -260,7 +260,7 @@ skipped the read-2 exercise, or deleted `~/bioinf-ch01`), the other file
 still moved. Download each missing one straight into `data/raw/`:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 curl -fL -o data/raw/SRR6357070_1.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_1.fastq.gz
 curl -fL -o data/raw/SRR6357070_2.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_2.fastq.gz
 ```
@@ -288,7 +288,7 @@ files against it:
 ```{.bash filename="Terminal (laptop)"}
 cd data/raw
 md5sum -c checksums.md5 # <1>
-cd ~/bioinf-book
+cd ~/bioinf-computing
 ```
 1. `md5sum` computes MD5 checksums; `-c` (check) reads a list of them,
    recomputes each file's, and compares.
@@ -395,7 +395,7 @@ when its input is a terminal, even from a script you started there. With
 **Now protect the real raw data**, files and folder:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 chmod a-w data/raw/* data/raw
 ls -ld data/raw # <1>
 ls -l data/raw
@@ -420,7 +420,7 @@ check, and lock everything again:
 ```{.bash filename="Terminal (laptop)"}
 chmod u+w data/raw data/raw/checksums.md5
 # add the new file and its line in checksums.md5, then:
-cd data/raw && md5sum -c checksums.md5 && cd ~/bioinf-book
+cd data/raw && md5sum -c checksums.md5 && cd ~/bioinf-computing
 chmod a-w data/raw/* data/raw
 ```
 
@@ -507,7 +507,7 @@ chmod a-w ~/bioinf-shared/references/yeast_R64-1-1_test/* ~/bioinf-shared/refere
 **Link it into the project:**
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 ln -s ~/bioinf-shared/references/yeast_R64-1-1_test data/ref # <1>
 ls -l data/ref
 ls data/ref/
@@ -645,7 +645,7 @@ storage guide](https://research.it.iastate.edu/file-storage), checked
 
 | Storage | Example path | Backed up? | Purged? | Who restores a deleted file |
 |:--------|:-------------|:-----------|:--------|:----------------------------|
-| Laptop disk | `~/bioinf-book` | only if you set up a backup | no | you, from your backup |
+| Laptop disk | `~/bioinf-computing` | only if you set up a backup | no | you, from your backup |
 | Sync folder (OneDrive, Dropbox, Google Drive) | `~/OneDrive/…` | no: a copy that follows your changes | no | you, from version history, for as long as it is kept |
 | SCINet home | `/home/<user>` (30 GB) | no: "Cluster storage is not backed up" | not stated | no one |
 | SCINet project | `/project/<project>` | no (same rule) | not stated | no one |
@@ -727,7 +727,7 @@ book's reads in [nf-core/test-datasets](https://github.com/nf-core/test-datasets
 it came, under a name that says so:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 curl -fL -o data/meta/samplesheet_upstream.csv {{< var testdata-url >}}/samplesheet/v3.10/samplesheet_test.csv
 md5sum data/meta/samplesheet_upstream.csv
 code data/meta/samplesheet_upstream.csv
@@ -792,7 +792,7 @@ at a time (`printf` prints its text, `\t` is a tab, `\n` ends the line;
 `>` starts the file and `>>` adds to it, as in @sec-orientation):
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 printf 'sample\trun\tfastq_1\tfastq_2\n' > data/meta/reads.tsv
 printf 'WT_REP1\tSRR6357070\tdata/raw/SRR6357070_1.fastq.gz\tdata/raw/SRR6357070_2.fastq.gz\n' >> data/meta/reads.tsv
 printf 'sample\trun\tgeo_sample\tcondition\treplicate\n' > data/meta/samples.tsv
@@ -881,7 +881,7 @@ log="$(mktemp "logs/01_count_reads_$(date +%Y-%m-%dT%H%M%S)_XXXX.log")"
 **Run it** from the project folder, through pixi, so it finds seqkit:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 pixi run bash src/01_count_reads.sh
 ```
 
@@ -1170,7 +1170,7 @@ trace and credit the data).
 The project now looks like this:
 
 ```{.default}
-~/bioinf-book/
+~/bioinf-computing/
 ├── README.md
 ├── NOTEBOOK.md
 ├── pixi.toml  pixi.lock  .pixi/
@@ -1233,8 +1233,8 @@ checksum list beside it, and check:
 
 ```{.bash filename="Terminal (laptop)"}
 cd ~/bioinf-ch03/practice
-head -c 1000000 ~/bioinf-book/data/raw/SRR6357070_1.fastq.gz > SRR6357070_1.fastq.gz
-cp ~/bioinf-book/data/raw/checksums.md5 .
+head -c 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz > SRR6357070_1.fastq.gz
+cp ~/bioinf-computing/data/raw/checksums.md5 .
 md5sum -c checksums.md5
 gzip -t SRR6357070_1.fastq.gz
 ```
@@ -1281,7 +1281,7 @@ seven runs in the upstream sheet (captured 2026-11-17 from ENA's
 | SRR6357076 | GSM2879624 | Rap1-AID degron induction 30 minutes total RNA-Seq biological replicate 1 | PAIRED |
 
 Copy the upstream sheet into the practice folder (`cp
-~/bioinf-book/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/`), open
+~/bioinf-computing/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/`), open
 the copy in VS Code, and add `geo_sample` and `condition` columns from
 this table. How many biological samples are there? How many runs are
 really paired-end? Why might a test fixture group them differently? And
@@ -1302,7 +1302,7 @@ match when joined; @sec-tabular-data shows how to detect it.
 `results/`, delete `results/`, rerun the script, and compare:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 cp results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv
 rm -r results
 pixi run bash src/01_count_reads.sh

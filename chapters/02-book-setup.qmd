@@ -29,7 +29,7 @@ small editors that work on any server.
 You will finish with:
 
 - the **book environment**, installed with **pixi**, in a folder called
-  `~/bioinf-book`;
+  `~/bioinf-computing`;
 - **VS Code**, the book's editor, with its built-in terminal;
 - a first login to a cluster with `ssh`, and VS Code running there by your
   site's supported route (if you have an account);
@@ -105,12 +105,12 @@ installing if you prefer not to
 **Step 2. Make the book folder and download its two setup files.**
 
 ```{.bash filename="Terminal (laptop)"}
-mkdir -p ~/bioinf-book && cd ~/bioinf-book
+mkdir -p ~/bioinf-computing && cd ~/bioinf-computing
 curl -fLO {{< var setup-url >}}/pixi.toml
 curl -fLO {{< var setup-url >}}/pixi.lock
 ```
 
-`~/bioinf-book` is the book's project folder from now on. Unlike
+`~/bioinf-computing` is the book's project folder from now on. Unlike
 `~/bioinf-ch01`, you keep it; @sec-organizing-projects organizes it.
 
 **Step 3. Install the environment.**
@@ -234,7 +234,7 @@ off. @sec-linux-system explains how the shell finds commands, and
 
 ::: {.callout-caution .misconception}
 ## Misconception: "Once I install a tool, it works in every terminal"
-**Reality.** The book environment lives in `~/bioinf-book/.pixi/`. Its
+**Reality.** The book environment lives in `~/bioinf-computing/.pixi/`. Its
 tools run when you start them with `pixi run`, or inside `pixi shell`,
 from that folder. A plain terminal does not see them, and you did not
 need administrator rights (`sudo`) to install them.
@@ -242,7 +242,7 @@ need administrator rights (`sudo`) to install them.
 
 @tbl-pixi-commands lists the pixi commands this book uses.
 
-: The pixi commands used in this book. Run them from `~/bioinf-book`. {#tbl-pixi-commands}
+: The pixi commands used in this book. Run them from `~/bioinf-computing`. {#tbl-pixi-commands}
 
 | Command | What it does | When you use it |
 |:--------|:-------------|:----------------|
@@ -289,7 +289,7 @@ site paths in @sec-cluster-sites).
 :::
 
 ::: {.check}
-**Check yourself.** (a) In a fresh terminal in `~/bioinf-book`, `seqkit
+**Check yourself.** (a) In a fresh terminal in `~/bioinf-computing`, `seqkit
 stats …` says `command not found`, but `pixi run seqkit stats …` works.
 You have not installed seqkit any other way. Why? (b) Which file says
 exactly which version of each package you have: `pixi.toml` or
@@ -379,7 +379,7 @@ which code
 **Step 2. Open the book folder.**
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 code .
 ```
 
@@ -792,11 +792,11 @@ it to project storage once you install extensions; the steps are in
 ::: {.check}
 **Check yourself.** In a VS Code window connected to a cluster you open a
 terminal and run `ls`. Whose files do you see, and is your laptop's
-`~/bioinf-book` there?
+`~/bioinf-computing` there?
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Answer
-The cluster's files. Your laptop's `~/bioinf-book` is not there: nothing
+The cluster's files. Your laptop's `~/bioinf-computing` is not there: nothing
 is copied over, so you make the folder (and install the environment) on
 the cluster if you need it.
 :::
@@ -813,13 +813,13 @@ escape, because some tools open vim for you.
 On a Mac, the `nano` that comes with macOS is really a different editor
 (pico). Install GNU nano, the same editor as on Linux and clusters:
 `brew install nano`, then check that `nano --version` says `GNU nano`.
-On any system, `pixi run nano` also works from `~/bioinf-book`, since the
+On any system, `pixi run nano` also works from `~/bioinf-computing`, since the
 book environment includes nano.
 
 **nano.** Open a new file in the book folder:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-book
+cd ~/bioinf-computing
 nano notes.txt
 ```
 
@@ -940,7 +940,7 @@ need RStudio for R or Jupyter for Python.
 
 ## Summary {#sec-book-setup-summary}
 
-- pixi installs the book environment into `~/bioinf-book/.pixi/` from two
+- pixi installs the book environment into `~/bioinf-computing/.pixi/` from two
   files: `pixi.toml` (what the project needs) and `pixi.lock` (the exact
   packages). `pixi install --locked` installs it; on a cluster, install in
   project storage, with the cache there too, from a compute session.
@@ -962,7 +962,7 @@ need RStudio for R or Jupyter for Python.
 ## Exercises {#sec-book-setup-exercises}
 
 ::: {.check}
-**Exercise 1. What did you install?** Run `pixi list` in `~/bioinf-book`
+**Exercise 1. What did you install?** Run `pixi list` in `~/bioinf-computing`
 and find the versions of Python, R, and seqkit. Do they match what
 `pixi run check` printed? Then open `pixi.lock` in VS Code, search for
 `seqkit` ({{< kbd Ctrl-F >}}, or {{< kbd Cmd-F >}} on a Mac), and find
@@ -1013,7 +1013,7 @@ lines. seqkit can take both files at once:
 
 ::: {.check}
 **Exercise 3. Two editors, one file.** In nano, create `README.md` in
-`~/bioinf-book` with one line saying what the folder is for. Then open it
+`~/bioinf-computing` with one line saying what the folder is for. Then open it
 in vim, add a second line (`G`, then `o`), and save with `:wq`. Run `cat README.md` in VS
 Code's terminal to check both lines are there.
 

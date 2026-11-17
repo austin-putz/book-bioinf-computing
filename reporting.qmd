@@ -1,12 +1,10 @@
 # Report an Issue {.unnumbered}
 
-::: {.callout-important icon=false}
-## Not open yet
-
-The book's GitHub repository is not public yet, so the links on this page
-do not work. They will once it is. Until then, this page describes how
-reporting will work.
-:::
+**Quick links:** [report an error](https://github.com/austin-putz/book-bioinf-computing/issues/new?template=error.yml) ·
+[something doesn't run](https://github.com/austin-putz/book-bioinf-computing/issues/new?template=doesnt-run.yml) ·
+[ask a question](https://github.com/austin-putz/book-bioinf-computing/discussions/categories/q-a) ·
+[suggest an idea](https://github.com/austin-putz/book-bioinf-computing/discussions/categories/ideas) ·
+[open issues](https://github.com/austin-putz/book-bioinf-computing/issues)
 
 A computing book goes wrong in more ways than most: a command that worked
 last year fails with a new tool version, a cluster behaves differently from
@@ -21,13 +19,13 @@ itself.
 
 | You have found | Use |
 |---|---|
-| A **wrong command, output, or claim** | An issue, using the *Error in the book* form |
-| A **command or install that fails for you** (pixi, VS Code, a tool, a cluster step) | An issue, using the *Something doesn't run* form |
+| A **wrong command, output, or claim** | An issue, using the [*Error in the book*](https://github.com/austin-putz/book-bioinf-computing/issues/new?template=error.yml) form |
+| A **command or install that fails for you** (pixi, VS Code, a tool, a cluster step) | An issue, using the [*Something doesn't run*](https://github.com/austin-putz/book-bioinf-computing/issues/new?template=doesnt-run.yml) form |
 | A **broken link, moved download, or outdated tool version** | An issue, using the *Error in the book* form |
 | A **typo or awkward sentence** you are willing to fix | A pull request (see below) |
 | A typo you would rather just report | The *Error in the book* form |
-| A section you **did not follow**, or are not sure is right | A question in Discussions › Q&A |
-| A **suggestion**: a better example, a missing topic or tool | An idea in Discussions › Ideas |
+| A section you **did not follow**, or are not sure is right | A question in [Discussions › Q&A](https://github.com/austin-putz/book-bioinf-computing/discussions/categories/q-a) |
+| A **suggestion**: a better example, a missing topic or tool | An idea in [Discussions › Ideas](https://github.com/austin-putz/book-bioinf-computing/discussions/categories/ideas) |
 | Something that should **not be public** | Email the author (the address on the GitHub profile) |
 
 Issues and Discussions are kept separate on purpose. The issue tracker holds
@@ -42,13 +40,13 @@ section is a sign the explanation failed, and that does become an issue.
 book changes often while it is being written, so say roughly when you read
 it.
 
-**Search the open issues.** If someone has already reported it, add a comment
+**Search the [open issues](https://github.com/austin-putz/book-bioinf-computing/issues).** If someone has already reported it, add a comment
 there rather than opening a second one. A second report on the same problem
 is still useful: it says how many readers it affects.
 
 ## Reporting an error
 
-You need a free GitHub account. The *Error in the book* form asks for:
+You need a free [GitHub account](https://github.com/signup). The [*Error in the book*](https://github.com/austin-putz/book-bioinf-computing/issues/new?template=error.yml) form asks for:
 
 - **Chapter and section**, with the command, code chunk, table, or figure if
   there is one.
@@ -59,7 +57,7 @@ You need a free GitHub account. The *Error in the book* form asks for:
 ## Reporting something that doesn't run
 
 Problems with installs and commands are the most common reports, and the
-hardest to fix without details. The *Something doesn't run* form asks for:
+hardest to fix without details. The [*Something doesn't run*](https://github.com/austin-putz/book-bioinf-computing/issues/new?template=doesnt-run.yml) form asks for:
 
 - **Where you ran it:** laptop, cluster login node, or compute node; the
   operating system (macOS, Windows with WSL2, or Linux); the cluster name if
@@ -83,7 +81,7 @@ For a typo or a wording fix, the fastest route is to make the change and
 propose it on GitHub:
 
 1. Open the page's source file in the repository. Chapters live in
-   `chapters/`, one `.qmd` file each (Markdown with code), named by number:
+   [`chapters/`](https://github.com/austin-putz/book-bioinf-computing/tree/main/chapters), one `.qmd` file each (Markdown with code), named by number:
    chapter 5 is `chapters/05-shell-basics.qmd`.
 2. Click the pencil icon. GitHub offers to **fork** the repository into your
    own account; accept.

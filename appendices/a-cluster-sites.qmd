@@ -14,8 +14,14 @@ by @sec-orientation, @sec-working-remotely, and @sec-hpc-slurm.
 
 - Who can get an account, and how to apply (SCINet for USDA-affiliated
   users; ISU Nova for Iowa State users); how long approval takes
-- Logging in: host names, multi-factor authentication, first login
+- Logging in: host names, multi-factor authentication, first login,
+  published host-key fingerprints
+- Data transfer nodes: Nova `novadtn.its.iastate.edu`; SCINet
+  `ceres-dtn.scinet.usda.gov`, `atlas-dtn.hpc.msstate.edu`; Globus
 - Storage areas, quotas, and what is backed up (home, project, scratch)
+- Ceres vs Atlas: one comparison table (login, DTN, and OnDemand hosts;
+  separate storage and quotas for the same projects; OnDemand apps;
+  hardware and partitions; location), checked against SCINet's pages
 - Software on the site: modules, containers, and where pixi fits
 - VS Code on each site: the supported route (Nova: VS Code Tunnel app or
   VS Code Server in Open OnDemand, Remote-SSH only to compute nodes;

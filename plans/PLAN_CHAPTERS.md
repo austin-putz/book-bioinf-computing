@@ -177,7 +177,9 @@ Short: get readers to a first successful command quickly.
 
 - SSH and SSH keys; `~/.ssh/config`; jump hosts (`ProxyJump`)
 - tmux / screen so work survives a dropped connection
-- Moving data: `scp`, `rsync`, Globus
+- Moving data: `scp`, `rsync`, Globus, through the site's data transfer
+  node (DTN), not the login node (Nova `novadtn`; SCINet `ceres-dtn`,
+  `atlas-dtn`)
 - Checksums to confirm a transfer
 
 ### 10. HPC and SLURM [core]
@@ -519,6 +521,9 @@ chapters stay site-neutral.
 - Who can get an account and how to apply; how long approval takes
 - Logging in: host names, multi-factor authentication, first login
 - Storage areas, quotas, and what is backed up
+- Data transfer nodes (Nova `novadtn`; SCINet `ceres-dtn`, `atlas-dtn`)
+- Ceres vs Atlas: one comparison table (hosts, storage and quotas,
+  OnDemand apps, hardware, location), checked against SCINet's pages
 - Site software: modules, containers, and where pixi fits
 - VS Code on each site: supported route (Open OnDemand VS Code Server,
   VS Code Tunnel app, Remote-SSH to compute nodes), ending sessions, moving

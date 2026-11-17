@@ -486,6 +486,20 @@ on your laptop, and they run on the other machine. On SCINet you can skip
 this section for now: SCINet recommends its browser portal, Open OnDemand,
 for most work, so you can go straight to @sec-book-setup-remote.
 
+@fig-ssh-basics shows the idea before you try it. Your laptop keeps the
+keyboard and the screen; every command you type is sent through an
+encrypted connection, runs on the cluster, and only its output comes
+back.
+
+::: {#fig-ssh-basics}
+{{< svg ../figures/ssh-basics.svg >}}
+
+What SSH does. `ssh` opens an encrypted connection from your laptop to
+the cluster's login node; both sides prove who they are; then each
+command travels to the login node, runs there, and sends its output back
+to your screen. `exit` closes the connection.
+:::
+
 **Log in, look, log out.** From your laptop's terminal, with your cluster
 user name and its login host (Nova's is shown, with `<netid>` to replace
 by your own; others are in @tbl-ssh-sites):
@@ -522,9 +536,11 @@ What happened, line by line:
 1. **The host-key question.** The first time you connect to a machine,
    SSH cannot yet tell whether it is the real one, so it shows the
    machine's key fingerprint and asks. If your site publishes its
-   fingerprints, compare them first; if they differ, or something looks
-   wrong (a typo in the host name, say), answer `no` and ask your site's
-   support ([OpenSSH: verifying host
+   fingerprints, compare them first. Nova does
+   ([Nova SSH host key fingerprints](https://research.it.iastate.edu/nova-ssh-host-key-fingerprints)),
+   and the `ED25519` line above matches it. If a fingerprint differs, or
+   something looks wrong (a typo in the host name, say), answer `no` and
+   ask your site's support ([OpenSSH: verifying host
    keys](https://man.openbsd.org/ssh.1#VERIFYING_HOST_KEYS)). Otherwise
    type the whole word `yes` and press {{< kbd Enter >}}; `y` is not
    accepted. SSH saves the machine's key in `~/.ssh/known_hosts` on your
@@ -569,11 +585,32 @@ Steps checked 2026-11-16; your site's own pages are the authority
 | Sign-in | authenticator code, then password | a browser sign-in (eAuthentication; Login.gov for non-USDA users), about once a day |
 | One-time setup | none | install SmallStep's `step` program and run the two setup commands from [SCINet's SSH page](https://scinet.usda.gov/guides/access/ssh-login) (on a Mac, `brew install step` first) |
 | Host-key question | yes, on first login | no: `step` supplies the host keys |
+| Data transfer node (for moving files) | `novadtn.its.iastate.edu` | `ceres-dtn.scinet.usda.gov`, `atlas-dtn.hpc.msstate.edu` |
 
 On SCINet, `step` also supplies your user name, so `ssh
 ceres.scinet.usda.gov` is enough; the first time, it opens your browser
 to sign in. New SCINet accounts start in a `sandbox` project (jobs up to
 2 hours) until a PI adds them to a real one.
+
+**Login node or transfer node?** The login node is for logging in,
+editing, and submitting jobs. Clusters also have a **data transfer node
+(DTN)**: a machine set aside for moving files in and out, with the same
+storage as the login node, so files you copy to it appear in your
+`/work` or `/project` folder. @tbl-ssh-sites lists the DTN names;
+@sec-working-remotely teaches the transfer commands.
+
+::: {.callout-warning}
+## Pitfall: copying files through the login node
+Send every file transfer (`scp`, `rsync`, FileZilla, Cyberduck) to your
+site's data transfer node, not the login node. Both Nova and SCINet ask
+for this: large copies through the shared login node slow it for
+everyone, and SCINet notes that some transfer tools give errors there
+([ISU: transferring
+files](https://research.it.iastate.edu/transferring-files), [SCINet:
+data transfer](https://scinet.usda.gov/guides/data/transfer)). Your first
+connection to a DTN asks the host-key question again: it is a different
+machine with its own key.
+:::
 
 **A short name for the host.** Typing the full host name gets old. A
 **config file** on your laptop, `~/.ssh/config`, can give it a short
@@ -914,7 +951,8 @@ need RStudio for R or Jupyter for Python.
   `hostname` in its terminal tells you which machine you are on.
 - `ssh` logs you in to a cluster's login node; the first time, check
   the fingerprint where your site publishes it and type `yes`; `exit`
-  leaves. VS Code reaches a cluster by your site's route
+  leaves. File transfers go to the site's data transfer node, not the
+  login node. VS Code reaches a cluster by your site's route
   (on SCINet and Nova, Open OnDemand, on a compute node): the window is
   local, the files and terminal are on the cluster, and **Cancel** ends
   the session.

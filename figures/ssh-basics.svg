@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" role="img" aria-labelledby="ssh-basics-title"
+     data-step-labels="Connect|Sign in|Command|Reply">
+  <title id="ssh-basics-title">How SSH works, in four steps. Your laptop runs ssh, which opens an encrypted connection over the internet to the cluster's login node. Both sides prove who they are: the server with its host key, you with a code and your password. Each command you type, such as hostname, travels through the connection and runs on the login node, using its CPUs and its files. The output, here nova-login-2, travels back and appears in your laptop's terminal. Typing exit closes the connection.</title>
+  <desc data-caption="1">You type ssh with your user name and the cluster's address. It opens an encrypted connection from your laptop to the login node.</desc>
+  <desc data-caption="2">Both sides prove who they are: the server shows its host key (the yes question), and you give your code and password.</desc>
+  <desc data-caption="3">Now each command you type, such as hostname, travels through the connection and runs on the login node, not on your laptop.</desc>
+  <desc data-caption="4">The output travels back and appears on your screen. Typing exit closes the connection, and you are back on your laptop.</desc>
+  <defs>
+    <marker id="ssh-basics-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Laptop: screen with a terminal, and a base -->
+  <rect x="20" y="40" width="190" height="130" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"/>
+  <rect x="30" y="50" width="170" height="110" rx="3" class="fill-muted-soft"/>
+  <path d="M8,170 L222,170 L232,184 L-2,184 Z" class="fill-surface stroke-ink" stroke-width="1.5" transform="translate(4,0)"/>
+  <g font-size="12" class="mono">
+    <text x="38" y="70">ssh you@nova…</text>
+    <text x="38" y="92" data-show="3">hostname</text>
+    <text x="38" y="112" data-show="4" class="fill-given">nova-login-2</text>
+    <text x="38" y="134" data-show="4">exit</text>
+  </g>
+  <text x="115" y="212" font-size="15" font-weight="700" text-anchor="middle">Your laptop</text>
+  <text x="115" y="232" font-size="13" text-anchor="middle" class="fill-muted">you type, you see</text>
+
+  <!-- Login node: a server -->
+  <rect x="530" y="40" width="170" height="144" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"/>
+  <g class="stroke-line" stroke-width="1.5">
+    <line x1="548" y1="64" x2="682" y2="64"/>
+    <line x1="548" y1="80" x2="682" y2="80"/>
+    <line x1="548" y1="96" x2="682" y2="96"/>
+  </g>
+  <g class="fill-muted">
+    <circle cx="672" cy="168" r="3.5"/>
+    <circle cx="658" cy="168" r="3.5"/>
+  </g>
+  <text x="615" y="212" font-size="15" font-weight="700" text-anchor="middle">Cluster login node</text>
+  <text x="615" y="232" font-size="13" text-anchor="middle" class="fill-muted">commands run here:</text>
+  <text x="615" y="250" font-size="13" text-anchor="middle" class="fill-muted">its CPUs, its files</text>
+  <g data-show="3">
+    <rect x="548" y="120" width="134" height="30" rx="4" class="fill-surface stroke-ink" stroke-width="1"/>
+    <text x="615" y="140" font-size="13" text-anchor="middle">runs <tspan class="mono">hostname</tspan></text>
+  </g>
+
+  <!-- The SSH connection: an encrypted pipe over the internet -->
+  <rect x="210" y="96" width="320" height="58" rx="6" class="fill-muted-soft stroke-line" stroke-width="1.5"/>
+  <text x="370" y="176" font-size="13" text-anchor="middle" class="fill-muted">encrypted SSH connection, over the internet</text>
+  <!-- Lock -->
+  <path d="M362,72 v-8 a8,8 0 0 1 16,0 v8" fill="none" class="stroke-ink" stroke-width="2"/>
+  <rect x="356" y="72" width="28" height="20" rx="3" class="fill-ink"/>
+
+  <!-- Step 2: who are you? -->
+  <g data-show="2" font-size="13">
+    <text x="232" y="212" class="fill-good">✓ the server proves it is Nova (host key)</text>
+    <text x="232" y="232" class="fill-good">✓ you prove it is you (code, password)</text>
+  </g>
+
+  <!-- Step 3: the command travels to the login node -->
+  <g data-show="3" data-move="3" style="--dx:-210px">
+    <rect x="430" y="104" width="88" height="20" rx="10" class="fill-surface stroke-ink" stroke-width="1"/>
+    <text x="474" y="118" font-size="12" text-anchor="middle" class="mono">hostname</text>
+  </g>
+  <line x1="300" y1="114" x2="424" y2="114" class="stroke-muted" stroke-width="1.5" marker-end="url(#ssh-basics-arrow)" data-show="3"/>
+
+  <!-- Step 4: the output travels back -->
+  <g data-show="4" data-move="4" style="--dx:200px">
+    <rect x="222" y="127" width="100" height="20" rx="10" class="fill-given-soft stroke-given" stroke-width="1"/>
+    <text x="272" y="141" font-size="12" text-anchor="middle" class="mono fill-given">nova-login-2</text>
+  </g>
+  <line x1="440" y1="137" x2="328" y2="137" class="stroke-muted" stroke-width="1.5" marker-end="url(#ssh-basics-arrow)" data-show="4"/>
+
+  <!-- Bottom line -->
+  <text x="360" y="300" font-size="13" text-anchor="middle">One keyboard and screen (yours); the work happens on the other computer.</text>
+</svg>

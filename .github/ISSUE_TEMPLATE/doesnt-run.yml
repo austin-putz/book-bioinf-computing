@@ -1,0 +1,68 @@
+name: Something doesn't run
+description: A command, install, or cluster step from the book fails for you.
+title: "[Ch. ] "
+labels: ["doesnt-run"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Issues are public: never paste passwords, SSH
+        keys, tokens, or private data. Replace user names, paths, and host
+        names you would rather not share with placeholders such as `<user>`.
+  - type: input
+    id: where-in-book
+    attributes:
+      label: Chapter and section
+      placeholder: "Chapter 2, §2.2 Installing pixi, step 3"
+    validations:
+      required: true
+  - type: dropdown
+    id: machine
+    attributes:
+      label: Where you ran it
+      options:
+        - Laptop
+        - Cluster login node
+        - Cluster compute node (srun, salloc, or Open OnDemand app)
+        - Other
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      options:
+        - macOS (Apple silicon)
+        - macOS (Intel)
+        - Windows with WSL2 (Ubuntu)
+        - Linux
+        - Cluster (Linux)
+    validations:
+      required: true
+  - type: input
+    id: cluster
+    attributes:
+      label: Cluster, if any
+      placeholder: "SCINet Ceres, SCINet Atlas, ISU Nova, ..."
+  - type: textarea
+    id: command
+    attributes:
+      label: The exact command
+      description: Copied, not retyped.
+      render: bash
+    validations:
+      required: true
+  - type: textarea
+    id: error
+    attributes:
+      label: The complete error message
+      description: Copied as text, not a screenshot, and not shortened. The useful line is often the first error, not the last.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Your environment
+      description: The output of `pixi info`, run in `~/bioinf-book`. On a cluster, also any `module load` lines you ran first.
+      render: text

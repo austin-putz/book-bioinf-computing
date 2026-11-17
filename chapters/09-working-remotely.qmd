@@ -13,5 +13,5 @@ will change as the chapter is written.
 
 - SSH and SSH keys; `~/.ssh/config`; jump hosts (`ProxyJump`)
 - tmux / screen so work survives a dropped connection
-- Moving data: `scp`, `rsync`, Globus
+- Moving data: `scp`, `rsync`, Globus, through the site's data transfer node (DTN), not the login node
 - Checksums to confirm a transfer

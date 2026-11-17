@@ -118,12 +118,18 @@ tools.
 - `figures/`: hand-drawn SVGs, named after their figure label without
   `fig-` (e.g., `fastq-record.svg` for `fig-fastq-record`).
 - `references.qmd` + `references.bib`: References page.
-- `reporting.qmd`: "Report an Issue" page, the last sidebar entry, adapted
+- `reporting.qmd`: "Report an Issue" page, a top-level sidebar entry
+  shown as **Report an issue!** (bold, set by `text:` in `_quarto.yml`)
+  after References, never inside a collapsed part or Appendices, so
+  readers always see it (Austin, 2026-11-17). Adapted
   from `../../linear-models-in-animal-breeding/reporting.qmd`. Reached from
   the left side only: that entry plus a bug icon in `sidebar: tools:`.
   Do not use `repo-actions` or `issue-url` (they put links in the right
-  margin, which Austin does not want). GitHub links and issue forms get
-  added once the remote exists.
+  margin, which Austin does not want). Its links go to the issue forms in
+  `.github/ISSUE_TEMPLATE/` (`error.yml`, `doesnt-run.yml`; blank issues
+  off; `config.yml` links Discussions Q&A and Ideas, enabled 2026-11-17)
+  and labels `error`, `doesnt-run`, `typo`, `link`. Keep the page, forms,
+  and labels in step.
 - `_extensions/bioinf/`: copy of the shared theme (`quarto add`); never
   edit it here, change `book-bioinf-theme` and update.
 - `LICENSE` (CC BY-NC-SA 4.0), `LICENSE-CODE` (MIT), `LICENSING.md`

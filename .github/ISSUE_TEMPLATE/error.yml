@@ -1,0 +1,49 @@
+name: Error in the book
+description: A wrong command, output, or claim; a broken link; an outdated version; a typo.
+title: "[Ch. ] "
+labels: ["error"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Issues are public: never paste passwords, SSH
+        keys, tokens, or private data. Search the open issues first; if yours
+        is there, add a comment instead.
+  - type: input
+    id: where
+    attributes:
+      label: Chapter and section
+      description: The page URL or chapter number, the section heading, and the command, table, or figure if there is one.
+      placeholder: "Chapter 2, §2.2 Installing pixi, step 3"
+    validations:
+      required: true
+  - type: textarea
+    id: wrong
+    attributes:
+      label: What is wrong
+      description: Quote it as it appears in the book.
+    validations:
+      required: true
+  - type: textarea
+    id: should
+    attributes:
+      label: What it should be
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: How you know (optional, most useful)
+      description: The command you ran and its output, or a link to the tool's documentation.
+      render: text
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind of problem
+      options:
+        - Wrong command, output, or claim
+        - Broken link or moved download
+        - Outdated tool version
+        - Typo or wording
+    validations:
+      required: true

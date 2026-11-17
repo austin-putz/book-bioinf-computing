@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question about a section (Q&A)
+    url: https://github.com/austin-putz/book-bioinf-computing/discussions/categories/q-a
+    about: '"I did not follow this step" or "is this right?" Other readers can answer too.'
+  - name: Suggestion or idea
+    url: https://github.com/austin-putz/book-bioinf-computing/discussions/categories/ideas
+    about: A better example, a missing topic or tool, a clearer explanation.

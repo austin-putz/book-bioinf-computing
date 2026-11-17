@@ -98,11 +98,13 @@ book:
         - chapters/38-cloud.qmd
 
     - references.qmd
+    # Top level, never inside a collapsed part, so readers always see it.
+    - href: reporting.qmd
+      text: "**Report an issue!**"
 
   # Confirmed appendices only; candidates stay in plans/PLAN_CHAPTERS.md.
   appendices:
     - appendices/a-cluster-sites.qmd
-    - reporting.qmd
 
 # The only per-book styling. See ../book-bioinf-theme/STYLE-GUIDE.md §1.
 bioinf:

@@ -862,6 +862,18 @@ Chapter written from this plan. Choices made while writing:
   guides linked where Appendix A is still a stub. The plan's draft
   `pixi.toml` above still shows the old task; `setup/pixi.toml` is the
   current one.
+- **Data transfer nodes** (Austin, 2026-11-17): §4 now says file
+  transfers go to the site's DTN, not the login node (Nova
+  `novadtn.its.iastate.edu`; SCINet `ceres-dtn.scinet.usda.gov`,
+  `atlas-dtn.hpc.msstate.edu`, from ISU's and SCINet's transfer pages),
+  with a DTN row in `tbl-ssh-sites`; commands stay in Chapter 9 (topic
+  added to `PLAN_CHAPTERS.md`, the Chapter 9 stub, and Appendix A).
+  ISU publishes Nova's host-key fingerprints; the captured ED25519
+  fingerprint matches, and the chapter links the page.
+- **`fig-ssh-basics`** (Austin, 2026-11-17, for the spring genomics
+  course): a simple stepped SVG at the start of §4: Connect, Sign in,
+  Command, Reply (laptop keeps keyboard and screen; commands run on the
+  login node; output comes back; `exit` closes).
 - Citations added: `gruning2018bioconda`, `shen2016seqkit` (verified
   with scite), `prefix2026pixi`, `microsoft2026remotessh` (url +
   urldate).

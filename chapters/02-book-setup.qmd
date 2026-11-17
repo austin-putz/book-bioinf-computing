@@ -135,22 +135,26 @@ error if it does not match `pixi.toml`", instead of quietly choosing new
 versions.
 
 **Step 4. Check it.** The book's setup file defines a small task, `check`,
-that prints the version of each main tool:
+that prints the version of each main tool and stops with an error if any
+of them fails to run:
 
 ```{.bash filename="Terminal (laptop)"}
 pixi run check
 ```
 
 ```{.console}
-✨ Pixi task (check): python --version && R --version | head -n 1 && seqkit version
+✨ Pixi task (check): python --version && Rscript --version && seqkit version
 Python 3.12.16
-R version 4.4.3 (2025-02-28) -- "Trophy Case"
+Rscript (R) version 4.4.3 (2025-02-28)
 seqkit v2.14.0
 ```
 
 Then use a real tool on real data. [SeqKit](https://bioinf.shenwei.me/seqkit/)
 [@shen2016seqkit] summarizes FASTA and FASTQ files; run it on the file you
-downloaded in @sec-orientation:
+downloaded in @sec-orientation. (If you deleted `~/bioinf-ch01`, which
+Chapter 1 said you could, download the file again first:
+`mkdir -p ~/bioinf-ch01`, then the `curl` command from
+@sec-orientation-first-session, step 2, run inside that folder.)
 
 ```{.bash filename="Terminal (laptop)"}
 pixi run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz
@@ -260,9 +264,11 @@ Ceres and Atlas do not share project storage either.) Three rules:
   `/work/<your-group>/` on Nova. Not in your home folder, which is small
   (30 GB on SCINet, 10 GB on Nova), and not in scratch space that is
   purged (`/90daydata` on SCINet, `/ptmp` on Nova).
-- **Install from a compute session** (an Open OnDemand terminal, see
-  @sec-book-setup-remote, or `srun` as in @sec-orientation-first-session),
-  not on the login node.
+- **Install from a compute session**, not on the login node: the
+  terminal inside the VS Code app from @sec-book-setup-remote, or `srun`
+  as in @sec-orientation-first-session. Run `hostname` first; it should
+  name a compute node. Open OnDemand's *Clusters → Shell Access* is a
+  terminal on a login node, so it does not count.
 - **Let it finish.** Shared storage is slow with many small files: a
   reinstall that took 2 seconds on one cluster took a minute on another
   (measured 2026-11-16). A first install can take several minutes and is
@@ -514,10 +520,15 @@ Last login: Mon Nov 16 17:55:22 2026 from <address>
 What happened, line by line:
 
 1. **The host-key question.** The first time you connect to a machine,
-   SSH cannot yet tell whether it is the real one, so it asks. Type the
-   whole word `yes` and press {{< kbd Enter >}}; `y` is not accepted. SSH
-   saves the machine's key in `~/.ssh/known_hosts` on your laptop and
-   does not ask again.
+   SSH cannot yet tell whether it is the real one, so it shows the
+   machine's key fingerprint and asks. If your site publishes its
+   fingerprints, compare them first; if they differ, or something looks
+   wrong (a typo in the host name, say), answer `no` and ask your site's
+   support ([OpenSSH: verifying host
+   keys](https://man.openbsd.org/ssh.1#VERIFYING_HOST_KEYS)). Otherwise
+   type the whole word `yes` and press {{< kbd Enter >}}; `y` is not
+   accepted. SSH saves the machine's key in `~/.ssh/known_hosts` on your
+   laptop and does not ask again.
 2. **The sign-in.** Nova asks for a code from an authenticator app
    (such as Google Authenticator) first, then your password. Neither shows
    anything as you type; that is normal.
@@ -697,8 +708,11 @@ bar, choose *Connect to Host…*, pick your host, open a folder, open a
 terminal, and run `hostname`. On Windows, add hosts with *Remote-SSH: Add
 New SSH Host…* and choose the first file it offers,
 `C:\Users\<you>\.ssh\config`; Remote-SSH reads only Windows' config files,
-even from a WSL window. The VS Code tunnel route and Nova's Remote-SSH to
-a compute node are recipes in @sec-cluster-sites.
+even from a WSL window. For the VS Code tunnel route and Nova's
+Remote-SSH to a compute node, follow
+[ISU's](https://research.it.iastate.edu/using-vs-code-cluster) or
+[SCINet's](https://scinet.usda.gov/guides/ide/vscode) VS Code guide;
+@sec-cluster-sites will collect these recipes.
 
 **Now the idea** (@fig-remote-ssh). Whichever route you use, the window
 you look at is on your laptop. The files, the terminal, and the programs
@@ -733,8 +747,10 @@ copied over. Run `hostname` in the terminal to see which machine it is.
 The VS Code server and its extensions are stored in your home folder on
 the cluster (`~/.vscode-server` for Remote-SSH, `~/.local/share/code-server`
 for Open OnDemand). Without extensions it is small (under 1 MB on Ceres),
-but extensions can fill a small home quota; both sites recommend moving
-it to project storage, and @sec-cluster-sites shows how.
+but extensions can fill a small home quota. Both sites recommend moving
+it to project storage once you install extensions; the steps are in
+[ISU's](https://research.it.iastate.edu/using-vs-code-cluster) and
+[SCINet's](https://scinet.usda.gov/guides/ide/vscode) VS Code guides.
 
 ::: {.check}
 **Check yourself.** In a VS Code window connected to a cluster you open a
@@ -798,8 +814,10 @@ seems to do strange things. Open the same file:
 vim notes.txt
 ```
 
-1. Press `i` to enter *Insert* mode (`-- INSERT --` appears at the
-   bottom), and type a second line.
+1. Press `G` (capital G: go to the last line), then `o` to open a new
+   line below it and enter *Insert* mode (`-- INSERT --` appears at the
+   bottom). Type a second line. (`i` also enters Insert mode, but types
+   at the cursor, on the line you are on.)
 2. Press {{< kbd Esc >}} to go back to Normal mode.
 3. Type `:wq` and press {{< kbd Enter >}}: write (save) and quit.
 
@@ -809,8 +827,8 @@ Open it once more, type anything, then leave **without** saving: press
 ::: {#fig-vim-modes}
 {{< svg ../figures/vim-modes.svg >}}
 
-vim's two modes for beginners. `i` enters Insert mode, where keys type
-text; {{< kbd Esc >}} returns to Normal mode, where `:` commands save and
+vim's two modes for beginners. `i` (type at the cursor) or `o` (type on
+a new line below) enters Insert mode, where keys type text; {{< kbd Esc >}} returns to Normal mode, where `:` commands save and
 quit. `:cq` quits with an error, which tells the program that opened vim
 to stop.
 :::
@@ -842,7 +860,8 @@ instead.
 | Action | nano | vim |
 |:-------|:-----|:----|
 | Open a file | `nano file.txt` | `vim file.txt` |
-| Start typing | just type | `i` (Insert mode) |
+| Go to the last line | {{< kbd Alt-/ >}} | `G` |
+| Start typing | just type | `i` (at the cursor) or `o` (on a new line below) |
 | Stop typing | — | {{< kbd Esc >}} (Normal mode) |
 | Save | {{< kbd Ctrl-O >}}, then {{< kbd Enter >}} | `:w` |
 | Save and quit | {{< kbd Ctrl-O >}}, {{< kbd Enter >}}, {{< kbd Ctrl-X >}} | `:wq` |
@@ -893,8 +912,9 @@ need RStudio for R or Jupyter for Python.
   did by hand in Chapter 1.
 - VS Code is the book's editor: explorer, editor, terminal, status bar.
   `hostname` in its terminal tells you which machine you are on.
-- `ssh` logs you in to a cluster's login node; type `yes` the first time
-  and `exit` to leave. VS Code reaches a cluster by your site's route
+- `ssh` logs you in to a cluster's login node; the first time, check
+  the fingerprint where your site publishes it and type `yes`; `exit`
+  leaves. VS Code reaches a cluster by your site's route
   (on SCINet and Nova, Open OnDemand, on a compute node): the window is
   local, the files and terminal are on the cluster, and **Cancel** ends
   the session.
@@ -936,9 +956,10 @@ The version is part of the package's address.
 ::: {.check}
 **Exercise 2. Read 2.** Run `pixi run seqkit stats` on the read-2 file
 from Chapter 1's exercise (change `_1` to `_2`). If you skipped that
-exercise, download the file first:
+exercise, or deleted `~/bioinf-ch01`, download the file first:
 
 ```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-ch01
 curl -fL -o ~/bioinf-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz
 ```
 
@@ -955,7 +976,7 @@ lines. seqkit can take both files at once:
 ::: {.check}
 **Exercise 3. Two editors, one file.** In nano, create `README.md` in
 `~/bioinf-book` with one line saying what the folder is for. Then open it
-in vim, add a second line, and save with `:wq`. Run `cat README.md` in VS
+in vim, add a second line (`G`, then `o`), and save with `:wq`. Run `cat README.md` in VS
 Code's terminal to check both lines are there.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
@@ -968,7 +989,8 @@ Book environment installed with pixi (Chapter 2).
 ```
 
 If the second line is missing, you probably left vim with `:q!` or
-typed it in Normal mode (forgot `i`).
+typed it in Normal mode (forgot `o`). If your text landed at the start of
+the first line, you pressed `i` instead of `G` and `o`.
 :::
 :::
 

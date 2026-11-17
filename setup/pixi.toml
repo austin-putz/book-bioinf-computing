@@ -16,4 +16,4 @@ seqkit = "*"
 nano = "*"                 # fallback editor: pixi run nano
 
 [tasks]
-check = "python --version && R --version | head -n 1 && seqkit version"
+check = "python --version && Rscript --version && seqkit version"

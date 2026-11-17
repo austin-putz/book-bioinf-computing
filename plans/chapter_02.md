@@ -851,6 +851,17 @@ Chapter written from this plan. Choices made while writing:
   callout, to stay under three per screen in §5.
 - Figures: `pixi-parts` (stepped, 4 steps), `vscode-window`,
   `remote-ssh` (desktop and OnDemand routes), `vim-modes`.
+- **Codex review of the draft** (`reviews/chapter_02_codex_review.md`,
+  2026-11-16), all six findings accepted and fixed: host-key fingerprint
+  check before `yes`; Open OnDemand *Shell Access* is a login node, so
+  install from the VS Code app's terminal after `hostname`; the `check`
+  task now uses `Rscript --version` (the old `R --version | head -n 1`
+  hid an R failure: confirmed in pixi 0.84.2, `false | head` returned
+  0); vim teaches `G` then `o` for a new line (`i` typed before line 1);
+  recovery step if `~/bioinf-ch01` was deleted; official ISU/SCINet
+  guides linked where Appendix A is still a stub. The plan's draft
+  `pixi.toml` above still shows the old task; `setup/pixi.toml` is the
+  current one.
 - Citations added: `gruning2018bioconda`, `shen2016seqkit` (verified
   with scite), `prefix2026pixi`, `microsoft2026remotessh` (url +
   urldate).

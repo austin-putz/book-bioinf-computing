@@ -845,18 +845,18 @@ div.csl-indent {
 </div>
 <pre class="console"><code>✔ The default environment has been installed.</code></pre>
 <p><code>--locked</code> means “install exactly what <code>pixi.lock</code> lists, and stop with an error if it does not match <code>pixi.toml</code>”, instead of quietly choosing new versions.</p>
-<p><strong>Step 4. Check it.</strong> The book’s setup file defines a small task, <code>check</code>, that prints the version of each main tool:</p>
+<p><strong>Step 4. Check it.</strong> The book’s setup file defines a small task, <code>check</code>, that prints the version of each main tool and stops with an error if any of them fails to run:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run check</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<pre class="console"><code>✨ Pixi task (check): python --version &amp;&amp; R --version | head -n 1 &amp;&amp; seqkit version
+<pre class="console"><code>✨ Pixi task (check): python --version &amp;&amp; Rscript --version &amp;&amp; seqkit version
 Python 3.12.16
-R version 4.4.3 (2025-02-28) -- "Trophy Case"
+Rscript (R) version 4.4.3 (2025-02-28)
 seqkit v2.14.0</code></pre>
-<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>:</p>
+<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>. (If you deleted <code>~/bioinf-ch01</code>, which Chapter 1 said you could, download the file again first: <code>mkdir -p ~/bioinf-ch01</code>, then the <code>curl</code> command from <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>, step 2, run inside that folder.)</p>
 <div class="no-row-height column-margin column-container"></div><div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
@@ -1060,7 +1060,7 @@ Table&nbsp;2.1: The pixi commands used in this book. Run them from <code>~/bioin
 <p>Each cluster has its own storage, so install the environment on the cluster where you will use it; your laptop’s copy is not shared. (SCINet’s Ceres and Atlas do not share project storage either.) Three rules:</p>
 <ul>
 <li><strong>Install in project storage</strong>: <code>/project/&lt;your-project&gt;/</code> on SCINet, <code>/work/&lt;your-group&gt;/</code> on Nova. Not in your home folder, which is small (30 GB on SCINet, 10 GB on Nova), and not in scratch space that is purged (<code>/90daydata</code> on SCINet, <code>/ptmp</code> on Nova).</li>
-<li><strong>Install from a compute session</strong> (an Open OnDemand terminal, see <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>, or <code>srun</code> as in <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>), not on the login node.</li>
+<li><strong>Install from a compute session</strong>, not on the login node: the terminal inside the VS Code app from <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>, or <code>srun</code> as in <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>. Run <code>hostname</code> first; it should name a compute node. Open OnDemand’s <em>Clusters → Shell Access</em> is a terminal on a login node, so it does not count.</li>
 <li><strong>Let it finish.</strong> Shared storage is slow with many small files: a reinstall that took 2 seconds on one cluster took a minute on another (measured 2026-11-16). A first install can take several minutes and is not stuck. It happens once; later <code>pixi run</code> commands start at once.</li>
 </ul>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -1383,7 +1383,7 @@ Warning: Permanently added 'nova.its.iastate.edu' (ED25519) to the list of known
 Last login: Mon Nov 16 17:55:22 2026 from &lt;address&gt;</code></pre>
 <p>What happened, line by line:</p>
 <ol type="1">
-<li><strong>The host-key question.</strong> The first time you connect to a machine, SSH cannot yet tell whether it is the real one, so it asks. Type the whole word <code>yes</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>; <code>y</code> is not accepted. SSH saves the machine’s key in <code>~/.ssh/known_hosts</code> on your laptop and does not ask again.</li>
+<li><strong>The host-key question.</strong> The first time you connect to a machine, SSH cannot yet tell whether it is the real one, so it shows the machine’s key fingerprint and asks. If your site publishes its fingerprints, compare them first; if they differ, or something looks wrong (a typo in the host name, say), answer <code>no</code> and ask your site’s support (<a href="https://man.openbsd.org/ssh.1#VERIFYING_HOST_KEYS">OpenSSH: verifying host keys</a>). Otherwise type the whole word <code>yes</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>; <code>y</code> is not accepted. SSH saves the machine’s key in <code>~/.ssh/known_hosts</code> on your laptop and does not ask again.</li>
 <li><strong>The sign-in.</strong> Nova asks for a code from an authenticator app (such as Google Authenticator) first, then your password. Neither shows anything as you type; that is normal.</li>
 <li><strong>The banner</strong>: the site’s notices, worth reading once. This one already says which storage is not backed up.</li>
 </ol>
@@ -1593,7 +1593,7 @@ Table&nbsp;2.4: Ways to edit files on a cluster. Most sites support only some of
 <p>The session is a job that keeps its compute node until you click <strong>Cancel</strong> or its hours run out. Closing the browser tab only closes your view of it: the card still says <em>Running</em>. Two more habits: set the Working Directory on the form, because opening a different folder later reloads the window and stops anything running in its terminal; and paste short blocks into the browser terminal, since a long pasted block can break.</p>
 </div>
 </div>
-<p><strong>Other routes.</strong> On sites that allow Remote-SSH, the steps are similar in desktop VS Code: click the remote button at the left end of the status bar, choose <em>Connect to Host…</em>, pick your host, open a folder, open a terminal, and run <code>hostname</code>. On Windows, add hosts with <em>Remote-SSH: Add New SSH Host…</em> and choose the first file it offers, <code>C:\Users\&lt;you&gt;\.ssh\config</code>; Remote-SSH reads only Windows’ config files, even from a WSL window. The VS Code tunnel route and Nova’s Remote-SSH to a compute node are recipes in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
+<p><strong>Other routes.</strong> On sites that allow Remote-SSH, the steps are similar in desktop VS Code: click the remote button at the left end of the status bar, choose <em>Connect to Host…</em>, pick your host, open a folder, open a terminal, and run <code>hostname</code>. On Windows, add hosts with <em>Remote-SSH: Add New SSH Host…</em> and choose the first file it offers, <code>C:\Users\&lt;you&gt;\.ssh\config</code>; Remote-SSH reads only Windows’ config files, even from a WSL window. For the VS Code tunnel route and Nova’s Remote-SSH to a compute node, follow <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU’s</a> or <a href="https://scinet.usda.gov/guides/ide/vscode">SCINet’s</a> VS Code guide; <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> will collect these recipes.</p>
 <p><strong>Now the idea</strong> (<a href="#fig-remote-ssh" class="quarto-xref">Figure&nbsp;<span>2.3</span></a>). Whichever route you use, the window you look at is on your laptop. The files, the terminal, and the programs you run are on the cluster, run by the VS Code server.</p>
 <div id="fig-remote-ssh" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
@@ -1675,7 +1675,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 <p><strong>Reality.</strong> The window is local, but the files, the terminal, and the language tools run on the remote machine. Your laptop’s files are not copied over. Run <code>hostname</code> in the terminal to see which machine it is.</p>
 </div>
 </div>
-<p>The VS Code server and its extensions are stored in your home folder on the cluster (<code>~/.vscode-server</code> for Remote-SSH, <code>~/.local/share/code-server</code> for Open OnDemand). Without extensions it is small (under 1 MB on Ceres), but extensions can fill a small home quota; both sites recommend moving it to project storage, and <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> shows how.</p>
+<p>The VS Code server and its extensions are stored in your home folder on the cluster (<code>~/.vscode-server</code> for Remote-SSH, <code>~/.local/share/code-server</code> for Open OnDemand). Without extensions it is small (under 1 MB on Ceres), but extensions can fill a small home quota. Both sites recommend moving it to project storage once you install extensions; the steps are in <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU’s</a> and <a href="https://scinet.usda.gov/guides/ide/vscode">SCINet’s</a> VS Code guides.</p>
 <div class="check">
 <p><strong>Check yourself.</strong> In a VS Code window connected to a cluster you open a terminal and run <code>ls</code>. Whose files do you see, and is your laptop’s <code>~/bioinf-book</code> there?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -1730,7 +1730,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">vim</span> notes.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol type="1">
-<li>Press <code>i</code> to enter <em>Insert</em> mode (<code>-- INSERT --</code> appears at the bottom), and type a second line.</li>
+<li>Press <code>G</code> (capital G: go to the last line), then <code>o</code> to open a new line below it and enter <em>Insert</em> mode (<code>-- INSERT --</code> appears at the bottom). Type a second line. (<code>i</code> also enters Insert mode, but types at the cursor, on the line you are on.)</li>
 <li>Press <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> to go back to Normal mode.</li>
 <li>Type <code>:wq</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>: write (save) and quit.</li>
 </ol>
@@ -1739,7 +1739,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-vim-modes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 300" role="img" aria-labelledby="vim-modes-title">
-  <title id="vim-modes-title">vim's two modes for beginners. vim starts in Normal mode, where keys are commands. Pressing i enters Insert mode, where keys type text; pressing Esc returns to Normal mode. From Normal mode, :wq saves and quits, :q! quits without saving, and :cq quits with an error, which tells the program that opened vim, such as git commit, to stop.</title>
+  <title id="vim-modes-title">vim's two modes for beginners. vim starts in Normal mode, where keys are commands. Pressing i (type at the cursor) or o (type on a new line below) enters Insert mode, where keys type text; pressing Esc returns to Normal mode. From Normal mode, :wq saves and quits, :q! quits without saving, and :cq quits with an error, which tells the program that opened vim, such as git commit, to stop.</title>
   <defs>
     <marker id="vim-modes-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
@@ -1759,7 +1759,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
   <text x="605" y="114" font-size="13" text-anchor="middle" class="fill-muted">keys type text</text>
   <!-- i: Normal to Insert; Esc: Insert to Normal -->
   <path d="M388,78 C430,50 468,50 508,78" fill="none" class="stroke-muted" stroke-width="1.75" marker-end="url(#vim-modes-arrow)"></path>
-  <text x="449" y="46" font-size="14" font-weight="700" text-anchor="middle" class="mono">i</text>
+  <text x="449" y="46" font-size="14" font-weight="700" text-anchor="middle" class="mono">i <tspan font-weight="400" class="fill-muted">or</tspan> o</text>
   <path d="M510,122 C468,150 430,150 390,122" fill="none" class="stroke-muted" stroke-width="1.75" marker-end="url(#vim-modes-arrow)"></path>
   <text x="449" y="166" font-size="14" font-weight="700" text-anchor="middle" class="mono">Esc</text>
   <!-- Exits from Normal mode -->
@@ -1778,7 +1778,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vim-modes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.4: vim’s two modes for beginners. <code>i</code> enters Insert mode, where keys type text; <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> returns to Normal mode, where <code>:</code> commands save and quit. <code>:cq</code> quits with an error, which tells the program that opened vim to stop.
+Figure&nbsp;2.4: vim’s two modes for beginners. <code>i</code> (type at the cursor) or <code>o</code> (type on a new line below) enters Insert mode, where keys type text; <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> returns to Normal mode, where <code>:</code> commands save and quit. <code>:cq</code> quits with an error, which tells the program that opened vim to stop.
 </figcaption>
 </figure>
 </div>
@@ -1830,36 +1830,41 @@ Table&nbsp;2.5: nano and vim side by side. In nano, <code>^O</code> means <kbd t
 <td style="text-align: left;"><code>vim file.txt</code></td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">Start typing</td>
-<td style="text-align: left;">just type</td>
-<td style="text-align: left;"><code>i</code> (Insert mode)</td>
+<td style="text-align: left;">Go to the last line</td>
+<td style="text-align: left;"><p><kbd title="Alt-/" aria-hidden="true">Alt-/</kbd><span class="visually-hidden">Alt-/</span></p></td>
+<td style="text-align: left;"><code>G</code></td>
 </tr>
 <tr class="odd">
+<td style="text-align: left;">Start typing</td>
+<td style="text-align: left;">just type</td>
+<td style="text-align: left;"><code>i</code> (at the cursor) or <code>o</code> (on a new line below)</td>
+</tr>
+<tr class="even">
 <td style="text-align: left;">Stop typing</td>
 <td style="text-align: left;">—</td>
 <td style="text-align: left;"><kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> (Normal mode)</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Save</td>
 <td style="text-align: left;"><kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span>, then <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span></td>
 <td style="text-align: left;"><code>:w</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Save and quit</td>
 <td style="text-align: left;"><kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span>, <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>, <kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span></td>
 <td style="text-align: left;"><code>:wq</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Quit without saving</td>
 <td style="text-align: left;"><kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span>, then <code>N</code></td>
 <td style="text-align: left;"><code>:q!</code></td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td style="text-align: left;">Quit and stop the tool that opened the editor</td>
 <td style="text-align: left;">—</td>
 <td style="text-align: left;"><code>:cq</code></td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td style="text-align: left;">Search</td>
 <td style="text-align: left;"><p><kbd title="Ctrl-W" aria-hidden="true">Ctrl-W</kbd><span class="visually-hidden">Ctrl-W</span></p></td>
 <td style="text-align: left;"><code>/text</code>, then <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span></td>
@@ -1964,7 +1969,7 @@ Table&nbsp;2.6: Other editors and tools you may meet. For reference only.
 <li>pixi installs the book environment into <code>~/bioinf-book/.pixi/</code> from two files: <code>pixi.toml</code> (what the project needs) and <code>pixi.lock</code> (the exact packages). <code>pixi install --locked</code> installs it; on a cluster, install in project storage, with the cache there too, from a compute session.</li>
 <li>Tools in the environment run with <code>pixi run</code> (or inside <code>pixi shell</code>), not on their own. <code>pixi run seqkit stats</code> counted 50,000 reads, as you did by hand in Chapter 1.</li>
 <li>VS Code is the book’s editor: explorer, editor, terminal, status bar. <code>hostname</code> in its terminal tells you which machine you are on.</li>
-<li><code>ssh</code> logs you in to a cluster’s login node; type <code>yes</code> the first time and <code>exit</code> to leave. VS Code reaches a cluster by your site’s route (on SCINet and Nova, Open OnDemand, on a compute node): the window is local, the files and terminal are on the cluster, and <strong>Cancel</strong> ends the session.</li>
+<li><code>ssh</code> logs you in to a cluster’s login node; the first time, check the fingerprint where your site publishes it and type <code>yes</code>; <code>exit</code> leaves. VS Code reaches a cluster by your site’s route (on SCINet and Nova, Open OnDemand, on a compute node): the window is local, the files and terminal are on the cluster, and <strong>Cancel</strong> ends the session.</li>
 <li>nano edits a file (<kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span> saves, <kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span> quits); in vim, <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> then <code>:q!</code> gets you out.</li>
 </ul>
 </section>
@@ -1997,12 +2002,13 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 </div>
 </div>
 <div class="check">
-<p><strong>Exercise 2. Read 2.</strong> Run <code>pixi run seqkit stats</code> on the read-2 file from Chapter 1’s exercise (change <code>_1</code> to <code>_2</code>). If you skipped that exercise, download the file first:</p>
+<p><strong>Exercise 2. Read 2.</strong> Run <code>pixi run seqkit stats</code> on the read-2 file from Chapter 1’s exercise (change <code>_1</code> to <code>_2</code>). If you skipped that exercise, or deleted <code>~/bioinf-ch01</code>, download the file first:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> ~/bioinf-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch01</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> ~/bioinf-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Do the two files have the same <code>num_seqs</code>?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -2023,7 +2029,7 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 </div>
 </div>
 <div class="check">
-<p><strong>Exercise 3. Two editors, one file.</strong> In nano, create <code>README.md</code> in <code>~/bioinf-book</code> with one line saying what the folder is for. Then open it in vim, add a second line, and save with <code>:wq</code>. Run <code>cat README.md</code> in VS Code’s terminal to check both lines are there.</p>
+<p><strong>Exercise 3. Two editors, one file.</strong> In nano, create <code>README.md</code> in <code>~/bioinf-book</code> with one line saying what the folder is for. Then open it in vim, add a second line (<code>G</code>, then <code>o</code>), and save with <code>:wq</code>. Run <code>cat README.md</code> in VS Code’s terminal to check both lines are there.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -2039,7 +2045,7 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 <p>For example:</p>
 <pre class="console"><code>Project folder for Computing for Bioinformatics.
 Book environment installed with pixi (Chapter 2).</code></pre>
-<p>If the second line is missing, you probably left vim with <code>:q!</code> or typed it in Normal mode (forgot <code>i</code>).</p>
+<p>If the second line is missing, you probably left vim with <code>:q!</code> or typed it in Normal mode (forgot <code>o</code>). If your text landed at the start of the first line, you pressed <code>i</code> instead of <code>G</code> and <code>o</code>.</p>
 </div>
 </div>
 </div>

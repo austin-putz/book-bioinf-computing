@@ -26,7 +26,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -53,6 +107,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-d4a656369b10048819d5ba4205b32a06.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
+<script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
+<link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -86,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating slimcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -643,12 +700,35 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#planned-topics" id="toc-planned-topics" class="nav-link active" data-scroll-target="#planned-topics"><span class="header-section-number">4.1</span> Planned topics</a></li>
+  <li><a href="#sec-getting-help-intro" id="toc-sec-getting-help-intro" class="nav-link active" data-scroll-target="#sec-getting-help-intro"><span class="header-section-number">4.1</span> What this chapter does</a></li>
+  <li><a href="#sec-getting-help-docs" id="toc-sec-getting-help-docs" class="nav-link" data-scroll-target="#sec-getting-help-docs"><span class="header-section-number">4.2</span> Asking the tool itself: <code>--help</code>, <code>man</code>, docs</a>
+  <ul class="collapse">
+  <li><a href="#reading-a-usage-line" id="toc-reading-a-usage-line" class="nav-link" data-scroll-target="#reading-a-usage-line"><span class="header-section-number">4.2.1</span> Reading a usage line</a></li>
+  </ul></li>
+  <li><a href="#sec-getting-help-errors" id="toc-sec-getting-help-errors" class="nav-link" data-scroll-target="#sec-getting-help-errors"><span class="header-section-number">4.3</span> Reading an error message</a>
+  <ul class="collapse">
+  <li><a href="#who-what-and-on-what" id="toc-who-what-and-on-what" class="nav-link" data-scroll-target="#who-what-and-on-what"><span class="header-section-number">4.3.1</span> Who, what, and on what</a></li>
+  <li><a href="#errors-and-warnings" id="toc-errors-and-warnings" class="nav-link" data-scroll-target="#errors-and-warnings"><span class="header-section-number">4.3.2</span> Errors and warnings</a></li>
+  <li><a href="#exit-status" id="toc-exit-status" class="nav-link" data-scroll-target="#exit-status"><span class="header-section-number">4.3.3</span> Exit status</a></li>
+  </ul></li>
+  <li><a href="#sec-getting-help-checklist" id="toc-sec-getting-help-checklist" class="nav-link" data-scroll-target="#sec-getting-help-checklist"><span class="header-section-number">4.4</span> Before you ask: a troubleshooting checklist</a></li>
+  <li><a href="#sec-getting-help-methods" id="toc-sec-getting-help-methods" class="nav-link" data-scroll-target="#sec-getting-help-methods"><span class="header-section-number">4.5</span> Reading a methods section</a></li>
+  <li><a href="#sec-getting-help-search" id="toc-sec-getting-help-search" class="nav-link" data-scroll-target="#sec-getting-help-search"><span class="header-section-number">4.6</span> Searching, and choosing where to ask</a></li>
+  <li><a href="#sec-getting-help-asking" id="toc-sec-getting-help-asking" class="nav-link" data-scroll-target="#sec-getting-help-asking"><span class="header-section-number">4.7</span> Asking for help</a>
+  <ul class="collapse">
+  <li><a href="#a-minimal-reproducible-example" id="toc-a-minimal-reproducible-example" class="nav-link" data-scroll-target="#a-minimal-reproducible-example"><span class="header-section-number">4.7.1</span> A minimal reproducible example</a></li>
+  <li><a href="#text-not-screenshots" id="toc-text-not-screenshots" class="nav-link" data-scroll-target="#text-not-screenshots"><span class="header-section-number">4.7.2</span> Text, not screenshots</a></li>
+  <li><a href="#privacy-and-etiquette" id="toc-privacy-and-etiquette" class="nav-link" data-scroll-target="#privacy-and-etiquette"><span class="header-section-number">4.7.3</span> Privacy and etiquette</a></li>
+  </ul></li>
+  <li><a href="#sec-getting-help-ai" id="toc-sec-getting-help-ai" class="nav-link" data-scroll-target="#sec-getting-help-ai"><span class="header-section-number">4.8</span> AI coding assistants</a></li>
+  <li><a href="#sec-getting-help-summary" id="toc-sec-getting-help-summary" class="nav-link" data-scroll-target="#sec-getting-help-summary"><span class="header-section-number">4.9</span> Summary</a></li>
+  <li><a href="#sec-getting-help-exercises" id="toc-sec-getting-help-exercises" class="nav-link" data-scroll-target="#sec-getting-help-exercises"><span class="header-section-number">4.10</span> Exercises</a></li>
+  <li><a href="#sec-getting-help-reading" id="toc-sec-getting-help-reading" class="nav-link" data-scroll-target="#sec-getting-help-reading"><span class="header-section-number">4.11</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content" tabindex="-1">
+<main class="content page-columns page-full" id="quarto-document-content" tabindex="-1">
 
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-orientation.html">Getting set up</a></li><li class="breadcrumb-item"><a href="../chapters/04-getting-help.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Getting help</span></a></li></ol></nav>
@@ -670,33 +750,1763 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-important no-icon callout-titled">
+<p><strong>Core.</strong> Work through it, with the exercises.</p>
+<div class="goals callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Under construction
+<span class="screen-reader-only">Note</span>Learning goals
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This chapter is a placeholder. The topics below are the current plan and will change as the chapter is written.</p>
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Look up how to use a tool with <code>--help</code>, <code>man</code>, and its official documentation, and read a usage line.</li>
+<li>Read an error or warning: find which command printed it, what failed, and on what.</li>
+<li>Work through a short checklist (message, log, location, environment, inputs, resources, recent changes) before asking for help.</li>
+<li>Find the tools, versions, parameters, and reference reported in a paper’s methods section, and say what the passage does not report.</li>
+<li>Write a help request with the exact command, the complete message, versions, and a minimal example that still fails, with no passwords or private data, and check AI-suggested code before you run it.</li>
+</ol>
 </div>
 </div>
-<p><strong>Core.</strong> Work through it, with the exercises.</p>
-<section id="planned-topics" class="level2" data-number="4.1">
-<h2 data-number="4.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">4.1</span> Planned topics</h2>
+<section id="sec-getting-help-intro" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="sec-getting-help-intro"><span class="header-section-number">4.1</span> What this chapter does</h2>
+<p>Things break, for everyone, every day: a typo in a file name, a flag that does not exist, a script run from the wrong folder, a download cut short. Experienced people do not avoid errors; they get from a message to a fix quickly, and they know when and how to ask. Most fixes take the steps in this chapter, not expertise.</p>
+<p>You will use the book’s own files and environment throughout, so every error in the chapter is one you can reproduce yourself, or read in the captured output. You will finish able to:</p>
 <ul>
-<li><code>--help</code>, <code>man</code> pages, tool documentation</li>
-<li>Routine troubleshooting: read the error or warning; find the log; check paths, inputs, and requested resources; know when to ask</li>
-<li>Reading a methods section to find tools, versions, parameters</li>
-<li>Searching well; Biostars, Bioconductor support site</li>
-<li>Asking for help: code, complete messages, session info; a minimal reproducible example</li>
-<li>Using AI coding assistants responsibly (verify output; no data or credentials pasted in)</li>
-<li>GitHub issues covered later (Part V)</li>
+<li>ask a tool how to use it (<code>--help</code>, <code>man</code>, its website);</li>
+<li>read an error message, and tell an error from a warning;</li>
+<li>work through a short checklist that solves most problems on its own;</li>
+<li>read a paper’s methods section for tools, versions, and parameters;</li>
+<li>search well, and write a help request someone can answer;</li>
+<li>check a command an AI assistant suggests before you trust it.</li>
+</ul>
+<p>Asking for help is part of the job, not a sign that you are not good enough: some problems (a broken node, a full quota) only an administrator can fix, and a clear request is a skill in its own right.</p>
+<p>Commands run on your laptop, from the book’s project folder, <code>~/bioinf-book</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>). Practice files go in a scratch folder, <code>~/bioinf-ch04</code>, like Chapter 1’s <code>~/bioinf-ch01</code>, so the project stays clean. Make it now:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch04</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Cluster readers can run the same commands on a login node: they are small and quick.</p>
+</section>
+<section id="sec-getting-help-docs" class="level2 page-columns page-full" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="sec-getting-help-docs"><span class="header-section-number">4.2</span> Asking the tool itself: <code>--help</code>, <code>man</code>, docs</h2>
+<p>Every tool you use can tell you how to use it. Start with seqkit, from the book environment:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit <span class="at">--help</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>SeqKit -- a cross-platform and ultrafast toolkit for FASTA/Q file manipulation
+
+Version: 2.14.0
+
+Author: Wei Shen &lt;shenwei356@gmail.com&gt;
+
+Documents  : http://bioinf.shenwei.me/seqkit
+Source code: https://github.com/shenwei356/seqkit
+Please cite: https://doi.org/10.1002/imt2.191
+...
+Usage:
+  seqkit [command]
+
+Commands for Basic Operation:
+  faidx           create the FASTA index file and extract subsequences
+  ...
+  stats           simple statistics of FASTA/Q files
+  ...</code></pre>
+<p>(<code>...</code> marks lines left out here; the real output is longer.) The top already answers three questions you will have often: <strong>which version</strong> you have (2.14.0), <strong>where the documentation is</strong>, and <strong>what to cite</strong>. SeqKit’s authors ask you to cite the SeqKit2 paper <span class="citation" data-cites="shen2024seqkit2">(<a href="../references.html#ref-shen2024seqkit2" role="doc-biblioref">Shen et al. 2024</a>)</span>. Below that comes the list of <strong>subcommands</strong>: seqkit is one program with many tools inside, and <code>stats</code>, which you ran in <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>, is one of them. Each subcommand has its own help:</p>
+<div class="no-row-height column-margin column-container"><div id="ref-shen2024seqkit2" class="csl-entry" role="listitem">
+Shen, Wei, Botond Sipos, and Liuyang Zhao. 2024. <span>“<span>SeqKit2</span>: A <span>Swiss</span> Army Knife for Sequence and Alignment Processing.”</span> <em>iMeta</em> 3 (3). <a href="https://doi.org/10.1002/imt2.191">https://doi.org/10.1002/imt2.191</a>.
+</div></div><div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">--help</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Scroll to the <code>Flags:</code> part. Find the flag that prints a table for other programs to read, and the one that sets how many CPUs seqkit uses:</p>
+<pre class="console"><code>  -T, --tabular              output in machine-friendly tabular format
+  ...
+  -j, --threads int                     number of CPUs. can also set with environment variable
+                                        SEQKIT_THREADS) (default 4)</code></pre>
+<p>Now a tool that came with the system. On Linux and WSL, <code>gzip</code> is GNU gzip; on a Mac it is the GNU gzip you installed in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">--help</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Usage: gzip [OPTION]... [FILE]...
+Compress or uncompress FILEs (by default, compress FILES in-place).
+
+Mandatory arguments to long options are mandatory for short options too.
+
+  -c, --stdout      write on standard output, keep original files unchanged
+  -d, --decompress  decompress
+  ...
+  -t, --test        test compressed file integrity
+  ...
+With no FILE, or when FILE is -, read standard input.</code></pre>
+<p>Most command-line programs also have a <strong>manual page</strong>, a longer description that opens in a pager:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">man</span> gzip</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Move with <kbd title="Space" aria-hidden="true">Space</kbd><span class="visually-hidden">Space</span> and the arrow keys, search with <code>/</code> followed by a word and <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>, and quit with <code>q</code> (these are the keys of <code>less</code>, <a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a>). Now try seqkit:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run man seqkit</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>No manual entry for seqkit</code></pre>
+<p>Many bioinformatics tools have no manual page, only <code>--help</code> and a website. That is normal.</p>
+<section id="reading-a-usage-line" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="reading-a-usage-line"><span class="header-section-number">4.2.1</span> Reading a usage line</h3>
+<p>Help text uses a compact notation, shown in <a href="#fig-usage-line" class="quarto-xref">Figure&nbsp;<span>4.1</span></a>.</p>
+<div id="fig-usage-line" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-usage-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 340" role="img" aria-labelledby="usage-line-title">
+  <title id="usage-line-title">How to read help text. Top: GNU gzip's usage line, Usage: gzip [OPTION]... [FILE]... Square brackets mark something optional, three dots mean it may repeat, and words in capitals stand for a value you supply; none of the brackets or dots are typed. Bottom: two flag lines from seqkit stats --help. The first, -T, --tabular, output in machine-friendly tabular format, shows a short form, a long form of the same flag, and its description. The second, -j, --threads int, number of CPUs, shows a flag that takes a value, typed as -j 4 or --threads 4.</title>
+  <!-- Panel 1: a usage line -->
+  <rect x="10" y="10" width="700" height="146" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="26" y="34" font-size="13" class="fill-muted">from <tspan class="mono">gzip --help</tspan> (GNU)</text>
+  <g font-size="18" class="mono">
+    <text x="40" y="74">Usage:</text>
+    <text x="126" y="74" font-weight="700">gzip</text>
+    <text x="196" y="74">[OPTION]...</text>
+    <text x="356" y="74">[FILE]...</text>
+  </g>
+  <!-- Brackets under the tokens -->
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M126 86 v6 h46 v-6"></path>
+    <path d="M196 86 v6 h88 v-6"></path>
+    <path d="M288 86 v6 h32 v-6"></path>
+    <path d="M356 86 v6 h66 v-6"></path>
+    <path d="M425 86 v6 h32 v-6"></path>
+  </g>
+  <g font-size="13" class="fill-muted" text-anchor="middle">
+    <text x="148" y="112">the program</text>
+    <text x="239" y="112">optional</text>
+    <text x="304" y="130">may repeat</text>
+    <text x="388" y="112">optional</text>
+    <text x="441" y="130">may repeat</text>
+  </g>
+  <g font-size="13">
+    <text x="486" y="70">Capitals (<tspan class="mono">OPTION</tspan>, <tspan class="mono">FILE</tspan>):</text>
+    <text x="486" y="88">something you supply.</text>
+    <text x="486" y="112" font-weight="700">Never type the brackets</text>
+    <text x="486" y="130" font-weight="700">or the dots.</text>
+  </g>
+  <!-- Panel 2: flag lines -->
+  <rect x="10" y="172" width="700" height="158" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="26" y="196" font-size="13" class="fill-muted">from <tspan class="mono">pixi run seqkit stats --help</tspan> (seqkit 2.14.0)</text>
+  <g font-size="15" class="mono">
+    <text x="40" y="232" font-weight="700">-T,</text>
+    <text x="80" y="232" font-weight="700">--tabular</text>
+    <text x="300" y="232">output in machine-friendly tabular format</text>
+    <text x="40" y="286" font-weight="700">-j,</text>
+    <text x="80" y="286" font-weight="700">--threads</text>
+    <text x="176" y="286">int</text>
+    <text x="300" y="286">number of CPUs …</text>
+  </g>
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M40 240 v5 h20 v-5"></path>
+    <path d="M80 240 v5 h84 v-5"></path>
+    <path d="M300 240 v5 h370 v-5"></path>
+    <path d="M176 294 v5 h28 v-5"></path>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="50" y="262" text-anchor="middle">short</text>
+    <text x="142" y="262" text-anchor="middle">long form, same flag</text>
+    <text x="485" y="262" text-anchor="middle">what it does</text>
+    <text x="190" y="316" text-anchor="middle">takes a value</text>
+  </g>
+  <text x="440" y="316" font-size="13">typed as <tspan class="mono">-j 4</tspan> or <tspan class="mono">--threads 4</tspan></text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-usage-line-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.1: How to read help text. In a usage line, square brackets mark something optional, <code>...</code> means it may repeat, and capitals stand for something you supply; you never type the brackets or dots. Flag lines give a short and a long form of the same flag, a description, and, for flags that take a value, the type of value.
+</figcaption>
+</figure>
+</div>
+<p>The conventions, from <code>Usage: gzip [OPTION]... [FILE]...</code>:</p>
+<ul>
+<li><strong>Square brackets</strong> mark something optional. <code>[FILE]</code> means you may give a file; with none, gzip reads its input from elsewhere (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</li>
+<li><strong><code>...</code></strong> means “may repeat”: any number of options, any number of files.</li>
+<li><strong>Capitals</strong>, or words in angle brackets such as <code>&lt;file&gt;</code>, commonly stand for a value you supply.</li>
+<li><strong>You never type the brackets or the dots.</strong> <code>gzip -t reads.fastq.gz</code>, not <code>gzip [-t] [reads.fastq.gz]...</code>.</li>
+</ul>
+<p>These are common conventions, not rules every tool follows, but most do. Flags come in a <strong>short form</strong> (<code>-T</code>, one dash, one letter) and a <strong>long form</strong> (<code>--tabular</code>, two dashes, a word); both mean the same, and the long one is easier to read later. Some flags take a <strong>value</strong>: <code>-j 4</code> and <code>--threads 4</code> both ask for four CPUs. Tools with subcommands, such as <code>seqkit stats</code>, <code>samtools sort</code>, or <code>git commit</code>, have help at each level. Not every tool answers <code>--help</code>: some use <code>-h</code>, some <code>help</code>, and some print their usage when run with no arguments at all.</p>
+<p><a href="#tbl-help-sources" class="quarto-xref">Table&nbsp;<span>4.1</span></a> lists where to look.</p>
+<div class="wide-table">
+<div id="tbl-help-sources" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-help-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.1: Where to find out how a tool works. Only the ones that come from the program you run are sure to match your installed version.
+</figcaption>
+<div aria-describedby="tbl-help-sources-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Source</th>
+<th style="text-align: left;">What it gives</th>
+<th style="text-align: left;">Matches your installed version?</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>--help</code> or <code>-h</code></td>
+<td style="text-align: left;">Usage line, flags, short descriptions</td>
+<td style="text-align: left;">yes: the program prints it</td>
+<td style="text-align: left;"><code>pixi run seqkit --help</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Subcommand help</td>
+<td style="text-align: left;">The flags of one subcommand</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;"><code>pixi run seqkit stats --help</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>man</code> page</td>
+<td style="text-align: left;">A longer manual, in a pager</td>
+<td style="text-align: left;">usually; on a Mac, check (below)</td>
+<td style="text-align: left;"><code>man gzip</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Official documentation site</td>
+<td style="text-align: left;">Tutorials, examples, every option</td>
+<td style="text-align: left;">the latest release, which may not be yours</td>
+<td style="text-align: left;"><a href="https://bioinf.shenwei.me/seqkit/">bioinf.shenwei.me/seqkit</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>--version</code></td>
+<td style="text-align: left;">The version you have</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;"><code>gzip --version</code>, <code>pixi run seqkit version</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R’s <code>?</code></td>
+<td style="text-align: left;">The help page of an R function</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;"><code>?read.csv</code> (<a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Python’s <code>help()</code></td>
+<td style="text-align: left;">The help of a Python function or module</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;"><code>help(open)</code> (<a href="13-python-essentials.html" class="quarto-xref"><span>Chapter 13</span></a>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Why the version matters.</strong> A website describes the latest release; your environment has the version in <code>pixi.lock</code> (<code>pixi list</code> shows it, <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>). If a flag from the website is not in your <code>--help</code>, the website is probably ahead of your copy.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span><code>--help</code> always matches what you run
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>--help</code> is printed by the program you actually run, so it matches your version. Online docs may describe a newer one, and on a Mac, <code>man</code> may show the page of a different program with the same name.</p>
+</div>
+</div>
+<p>That last point is a macOS detail. After <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>’s setup, <code>ls</code> and <code>sed</code> run the GNU tools, and the <code>MANPATH</code> lines you added there make <code>man ls</code> open the GNU page too. If a <code>man</code> page ever describes options your command rejects, trust <code>--help</code>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> In <code>Usage: gzip [OPTION]... [FILE]...</code>, must you give a file?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>No.&nbsp;<code>[FILE]</code> is in square brackets, so it is optional; with no file, gzip reads standard input, as the last line of its help says (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-getting-help-errors" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="sec-getting-help-errors"><span class="header-section-number">4.3</span> Reading an error message</h2>
+<p><strong>A diagnosis round first.</strong> Below are six commands that fail, each run on the book’s files with its real output (captured with seqkit 2.14.0, R 4.4.3, and pixi 0.84.2). For each one, say what went wrong before you open the answer. Two need a file you make first, a copy of the first read file cut short:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> ~/bioinf-ch04/broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>(<code>head -c 1000000</code> keeps the first million bytes, under half the file. It writes to the scratch folder, never into <code>data/raw/</code>.)</p>
+<p><strong>1.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> stats data/raw/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>bash: seqkit: command not found</code></pre>
+<p><strong>2.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats data/raw/SRR6357070_l.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>[ERRO] stat data/raw/SRR6357070_l.fastq.gz: no such file or directory</code></pre>
+<p><strong>3.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats –T data/raw/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>[ERRO] stat –T: no such file or directory</code></pre>
+<p><strong>4.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">--paired</span> data/raw/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Error: unknown flag: --paired
+Usage:
+  seqkit stats [flags]
+...
+unknown flag: --paired</code></pre>
+<p><strong>5.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-ch04/broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+[ERRO]
+file    format  type    num_seqs    sum_len min_len avg_len max_len</code></pre>
+<p><strong>6.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run Rscript <span class="at">-e</span> <span class="st">'read.csv("data/meta/samples.csv")'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Error in file(file, "rt") : cannot open the connection
+Calls: read.csv -&gt; read.table -&gt; file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'data/meta/samples.csv': No such file or directory
+Execution halted</code></pre>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answers
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong><code>command not found</code></strong>, printed by the shell (<code>bash:</code>): no program called <code>seqkit</code> is on this shell’s <code>PATH</code>, so it never started. The fix is <code>pixi run</code> (<a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>). If another copy of seqkit were installed somewhere else, the bare command would have run <em>that</em> copy instead, possibly a different version (<a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a>).</li>
+<li><strong>A typo.</strong> The file name has a lowercase letter <code>l</code> where the digit <code>1</code> belongs: <code>_l.fastq.gz</code>. <code>ls data/raw/</code> shows the real names.</li>
+<li><strong>An en dash.</strong> <code>–T</code> starts with an en dash (<code>–</code>), not a hyphen (<code>-</code>). This happens when a command is copied from a PDF or a word processor. seqkit does not recognise it as a flag, so it treats <code>–T</code> as a file name and cannot find it. Retype the dash.</li>
+<li><strong>A flag that does not exist.</strong> seqkit stats has no <code>--paired</code>; it prints its usage to show what it does accept. (<a href="#sec-getting-help-ai" class="quarto-xref"><span>Section 4.8</span></a> comes back to where this flag came from.)</li>
+<li><strong>A file cut short.</strong> The <code>[ERRO]</code> line says <code>unexpected EOF</code> (end of file): the gzip data stops in the middle. seqkit still printed the table’s header line, with no rows.</li>
+<li><strong>The wrong file name.</strong> The error says only <em>cannot open the connection</em>; the warning below it says which file and why: there is no <code>data/meta/samples.csv</code>. The file in <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> is <code>samples.tsv</code>.</li>
+</ol>
+</div>
+</div>
+</div>
+<section id="who-what-and-on-what" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="who-what-and-on-what"><span class="header-section-number">4.3.1</span> Who, what, and on what</h3>
+<p>You may have noticed a pattern. <a href="#fig-error-anatomy" class="quarto-xref">Figure&nbsp;<span>4.2</span></a> shows it on two of the messages.</p>
+<div id="fig-error-anatomy" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-error-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 520" role="img" aria-labelledby="error-anatomy-title">
+  <title id="error-anatomy-title">Reading two real error messages for who printed them, what failed, and on what. Top, from seqkit: [ERRO] stat data/raw/SRR6357070_l.fastq.gz: no such file or directory. Who: seqkit, the program you ran; [ERRO] is a severity label, not a name. What: stat, looking up the file, found no such file. On what: the file name, which has the letter l where the digit 1 belongs. Bottom, from R: Error in file(file, "rt") : cannot open the connection, followed by the call chain read.csv to read.table to file, and a warning: cannot open file 'data/meta/samples.csv': No such file or directory. Who: R's file() function, called by read.csv. What: cannot open the connection. On what: the file name, given only in the warning below the error, which holds the reason.</title>
+  <!-- Panel A: seqkit -->
+  <rect x="10" y="10" width="700" height="190" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="26" y="34" font-size="13" class="fill-muted">you ran <tspan class="mono">pixi run seqkit stats data/raw/SRR6357070_l.fastq.gz</tspan></text>
+  <g font-size="15" class="mono">
+    <text x="30" y="78" font-weight="700">[ERRO]</text>
+    <text x="96" y="78">stat</text>
+    <text x="144" y="78" class="fill-given" font-weight="700">data/raw/SRR6357070_l.fastq.gz:</text>
+    <text x="432" y="78">no such file or directory</text>
+  </g>
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M30 88 v5 h54 v-5"></path>
+    <path d="M96 88 v5 h36 v-5"></path>
+    <path d="M432 88 v5 h226 v-5"></path>
+  </g>
+  <path d="M144 88 v5 h276 v-5" class="stroke-given" stroke-width="2" fill="none"></path>
+  <!-- the "what" bracket joins stat and its result -->
+  <path d="M114 93 v12 h430 v-12" class="stroke-muted" stroke-width="1" fill="none" stroke-dasharray="3 3"></path>
+  <g font-size="13">
+    <text x="30" y="132" font-weight="700">who</text>
+    <text x="30" y="150">seqkit: the program</text>
+    <text x="30" y="166">you ran. <tspan class="mono">[ERRO]</tspan> is a</text>
+    <text x="30" y="182">severity label, not a name</text>
+    <text x="240" y="132" font-weight="700">on what</text>
+    <text x="240" y="150">the file name: <tspan class="mono">_l</tspan>, the letter,</text>
+    <text x="240" y="166">where the digit <tspan class="mono">_1</tspan> belongs</text>
+    <text x="470" y="132" font-weight="700">what</text>
+    <text x="470" y="150"><tspan class="mono">stat</tspan> (looking the file up)</text>
+    <text x="470" y="166">found no such file</text>
+  </g>
+  <!-- Panel B: R -->
+  <rect x="10" y="214" width="700" height="296" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="26" y="238" font-size="13" class="fill-muted">you ran <tspan class="mono">pixi run Rscript -e 'read.csv("data/meta/samples.csv")'</tspan></text>
+  <!-- the line that holds the reason -->
+  <rect x="22" y="345" width="566" height="26" rx="4" class="fill-muted-soft stroke-line"></rect>
+  <g font-size="13" class="mono">
+    <text x="30" y="272" font-weight="700">Error in file(file, "rt")</text>
+    <text x="232" y="272">: cannot open the connection</text>
+    <text x="30" y="294" class="fill-muted">Calls: read.csv -&gt; read.table -&gt; file</text>
+    <text x="30" y="316">In addition: Warning message:</text>
+    <text x="30" y="338">In file(file, "rt") :</text>
+    <text x="46" y="362">cannot open file</text>
+    <text x="180" y="362" class="fill-given" font-weight="700">'data/meta/samples.csv'</text>
+    <text x="362" y="362">: No such file or directory</text>
+    <text x="30" y="384" class="fill-muted">Execution halted</text>
+  </g>
+  <text x="600" y="362" font-size="13">← the reason</text>
+  <g font-size="13">
+    <text x="30" y="420" font-weight="700">who</text>
+    <text x="30" y="438">R's <tspan class="mono">file()</tspan> function,</text>
+    <text x="30" y="454">called by <tspan class="mono">read.csv</tspan></text>
+    <text x="240" y="420" font-weight="700">on what</text>
+    <text x="240" y="438">the file name, only in the</text>
+    <text x="240" y="454">warning <tspan font-style="italic">after</tspan> the error</text>
+    <text x="470" y="420" font-weight="700">what</text>
+    <text x="470" y="438">cannot open the connection:</text>
+    <text x="470" y="454">no file by that name</text>
+  </g>
+  <text x="30" y="490" font-size="13" class="fill-muted">Not every message has all three; when one is missing, the log and the checklist carry the diagnosis.</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-error-anatomy-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.2: A reading strategy for error messages: find <strong>who</strong> printed it, <strong>what</strong> failed, and <strong>on what</strong> (the file, flag, or object, often quoted). In seqkit’s message, <code>[ERRO]</code> is a severity label; you know seqkit printed it because you ran seqkit. In R’s, the function is named, and the file is only in the warning that follows the error.
+</figcaption>
+</figure>
+</div>
+<ul>
+<li><strong>Who</strong> printed it. A message starting <code>bash:</code> comes from the shell: it could not even start the program. Otherwise it usually comes from the program you ran, which you know from your command. <code>[ERRO]</code>, <code>Error</code>, and <code>WARNING</code> are <strong>severity labels</strong>, not names. R’s <code>Error in file(...)</code> names the function that failed.</li>
+<li><strong>What</strong> failed: <code>stat</code> (looking a file up), <code>cannot open</code>, <code>unknown flag</code>, <code>unexpected EOF</code>.</li>
+<li><strong>On what</strong>: the file, flag, or object, often in quotes. Read it character by character; that is where <code>_l</code> and <code>–T</code> were hiding.</li>
+</ul>
+<p>Not every message has all three. A program that runs out of memory may print only <code>Killed</code>; a crash may print almost nothing. Then the log and the checklist (<a href="#sec-getting-help-checklist" class="quarto-xref"><span>Section 4.4</span></a>) carry the diagnosis.</p>
+<p><strong>Read all of it.</strong> Long messages are common, and the last line is not always the one that matters. Look for the <strong>earliest relevant failure in this run</strong>: later lines are often consequences of the first one. But the useful detail can sit further down, as in R’s message, where the reason is in the warning <em>after</em> the error. And a log you append to may still hold errors from earlier runs; check the times.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Look for who printed the message, what failed, and on what. Read all of it, and find the earliest relevant failure in this run. An exit status of 0 means “reported success”, not “right answer”.</p>
+</div>
+</div>
+</section>
+<section id="errors-and-warnings" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="errors-and-warnings"><span class="header-section-number">4.3.2</span> Errors and warnings</h3>
+<p>An <strong>error</strong> reports that something failed. Whether the program or your script then stops depends on the program and the script (<a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>). A <strong>warning</strong> asks you to look: sometimes the result is still what you wanted, sometimes not. In R:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run Rscript <span class="at">-e</span> <span class="st">'as.integer(c("12","7","n/a"))'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>[1] 12  7 NA
+Warning message:
+NAs introduced by coercion</code></pre>
+<p>R turned <code>"n/a"</code> into <code>NA</code> (missing) and carried on. That is right if <code>n/a</code> really means “missing” in that column, and wrong if it was a typo for a number. Only you know which.</p>
+</section>
+<section id="exit-status" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="exit-status"><span class="header-section-number">4.3.3</span> Exit status</h3>
+<p>Every command, when it finishes, reports a number to the shell: its <strong>exit status</strong>. <code>0</code> means the program reports success; anything else means it reports a failure. <code>echo $?</code> prints the status of the command just before it, so run it <strong>immediately</strong> after: any other command in between replaces the number.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> version</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>bash: seqkit: command not found
+127</code></pre>
+<p><code>127</code> is the shell’s code for “command not found”. Now the truncated file from round 5:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-ch04/broken.fastq.gz</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+[ERRO]
+file    format  type    num_seqs    sum_len min_len avg_len max_len
+0</code></pre>
+<p>seqkit 2.14.0 printed an error <strong>and</strong> reported success. (SeqKit’s current <a href="https://bioinf.shenwei.me/seqkit/">documentation</a> says read errors give a nonzero status, so a later version may behave differently.) That is the lesson, whatever the version: the exit status says what the program <em>reported</em>. It does not prove the output answers your question. Read the messages, and check the result against something you know: here, a table with no rows instead of 50,000 reads. How scripts and pipelines use exit status is <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “If no error appears, the result is right”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> Warnings let runs continue, and some tool versions report success after printing an error (seqkit 2.14.0 on a truncated file). Check outputs against something you know: a read count, a file size, a number from the paper.</p>
+</div>
+</div>
+<p><a href="#tbl-common-errors" class="quarto-xref">Table&nbsp;<span>4.2</span></a> collects the messages you are most likely to meet in the first part of this book.</p>
+<div class="wide-table">
+<div id="tbl-common-errors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-common-errors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.2: Common messages in Part I, and what to check first.
+</figcaption>
+<div aria-describedby="tbl-common-errors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 25%">
+<col style="width: 22%">
+<col style="width: 37%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Message</th>
+<th style="text-align: left;">Who prints it</th>
+<th style="text-align: left;">Usual cause</th>
+<th style="text-align: left;">First thing to check</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>command not found</code></td>
+<td style="text-align: left;">the shell</td>
+<td style="text-align: left;">program not installed, or not on <code>PATH</code></td>
+<td style="text-align: left;"><code>pixi run</code> in front? the right folder? (<a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>No such file or directory</code></td>
+<td style="text-align: left;">the shell or the program</td>
+<td style="text-align: left;">wrong name or path, wrong folder</td>
+<td style="text-align: left;"><code>pwd</code>, <code>ls</code>; spelling, <code>l</code> vs <code>1</code>, extension</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Permission denied</code></td>
+<td style="text-align: left;">the shell or the program</td>
+<td style="text-align: left;">writing where you may not, such as read-only <code>data/raw/</code></td>
+<td style="text-align: left;">write somewhere else (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>unknown flag</code>, <code>unrecognized option</code></td>
+<td style="text-align: left;">the program</td>
+<td style="text-align: left;">flag does not exist in your version, or an en dash</td>
+<td style="text-align: left;"><code>--help</code>; retype dashes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>unexpected EOF</code></td>
+<td style="text-align: left;">the program</td>
+<td style="text-align: left;">file cut short (failed download or copy)</td>
+<td style="text-align: left;"><code>gzip -t</code>, checksums (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>No space left on device</code></td>
+<td style="text-align: left;">the program or the system</td>
+<td style="text-align: left;">disk full</td>
+<td style="text-align: left;"><code>df -h .</code> (<a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>Disk quota exceeded</code></td>
+<td style="text-align: left;">the system</td>
+<td style="text-align: left;">your share of shared storage is full</td>
+<td style="text-align: left;">your site’s quota command (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Killed</code></td>
+<td style="text-align: left;">the shell</td>
+<td style="text-align: left;">often, not always, out of memory</td>
+<td style="text-align: left;">the scheduler’s records (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Other languages have their own common messages (R’s <code>could not find function</code>, Python’s <code>ModuleNotFoundError</code>); they come with <a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a> and <a href="13-python-essentials.html" class="quarto-xref"><span>Chapter 13</span></a>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> A message starts <code>bash: samtools: command not found</code>. Did samtools run?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>No.&nbsp;The message comes from the shell (<code>bash:</code>), which could not find a program called <code>samtools</code>, so it never started. Check whether you need <code>pixi run</code> (or, on a cluster, <code>module load</code>).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-getting-help-checklist" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="sec-getting-help-checklist"><span class="header-section-number">4.4</span> Before you ask: a troubleshooting checklist</h2>
+<p>Two cases first.</p>
+<p><strong>Case 1: the wrong folder.</strong> Go to your home folder and run Chapter 3’s script, the way you ran it there:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Error:   × could not find pixi.toml or pyproject.toml with tool.pixi at directory /home/you</code></pre>
+<p>pixi looks for <code>pixi.toml</code> in the folder you are in (and the folders above it) and finds none. (If some folder above yours held a <code>pixi.toml</code>, the message would differ: pixi would use that one, and the error would come later.) The fix is the folder, not the command:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Case 2: a pattern that matches nothing.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> data/raw/<span class="pp">*</span>.fq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>[ERRO] stat data/raw/*.fq.gz: no such file or directory</code></pre>
+<p>The clue is the <code>*</code> inside the message. bash replaces a pattern such as <code>*.fq.gz</code> with the matching file names, but when nothing matches it passes the pattern on unchanged, and seqkit looks for a file literally called <code>*.fq.gz</code>. <code>ls data/raw/</code> shows the files end in <code>.fastq.gz</code>, not <code>.fq.gz</code>. Why bash does this is <a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a>.</p>
+<p>Both cases are solved by a question you can ask of almost any problem. <a href="#fig-troubleshooting-checklist" class="quarto-xref">Figure&nbsp;<span>4.3</span></a> puts those questions in order.</p>
+<div id="fig-troubleshooting-checklist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-troubleshooting-checklist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 468" role="img" aria-labelledby="troubleshooting-checklist-title" data-step-labels="Read|Log|Where|Inputs|Resources|Changes|Small">
+  <title id="troubleshooting-checklist-title">A troubleshooting checklist in seven steps, each with an exit when the problem is solved. 1, read the message, all of it. 2, find the log. 3, where am I, with what: pwd, hostname, ls, pixi run or not. 4, do the inputs exist and look right: ls -l, head, gzip -t, md5sum -c. 5, are resources short: disk space, quota, time limit, Killed. 6, what changed since it last worked. 7, make it small: 100 reads, one sample. The wrong-folder case stops at step 3 and the unmatched *.fq.gz case at step 4. If the problem is still not solved after step 7, leave the checklist and ask for help.</title>
+  <desc data-caption="1">Step 1. Read the whole message: who printed it, what failed, and on what. Often that is enough, and you stop.</desc>
+  <desc data-caption="2">Step 2. Not solved? Find the log. The terminal may show only the last lines; a log can hold the first error.</desc>
+  <desc data-caption="3">Step 3. Check where you are and with which software. The wrong-folder case stops here: pwd shows you are not in the project.</desc>
+  <desc data-caption="4">Step 4. Check that the inputs exist and look right. The *.fq.gz case stops here: ls shows the files end in .fastq.gz.</desc>
+  <desc data-caption="5">Step 5. Check resources: disk space, quota, time, memory.</desc>
+  <desc data-caption="6">Step 6. Ask what changed since it last worked: data, versions, folders, machines.</desc>
+  <desc data-caption="7">Step 7. Make it small. Still stuck after that? Leave the checklist and ask, with what you checked.</desc>
+  <defs>
+    <marker id="troubleshooting-checklist-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+    <marker id="troubleshooting-checklist-arrow-good" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-good"></path>
+    </marker>
+  </defs>
+  <text x="650" y="20" font-size="13" text-anchor="middle" class="fill-good" font-weight="700">solved?</text>
+  <g data-show="1">
+    <rect x="56" y="34" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="54" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="59" font-size="14" font-weight="700" text-anchor="middle">1</text>
+    <text x="68" y="51" font-size="14" font-weight="700">Read the message, all of it</text>
+    <text x="68" y="68" font-size="12.5" class="mono fill-muted">who, what, on what; the earliest relevant failure</text>
+    <line x1="580" y1="54" x2="616" y2="54" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="42" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="59" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="2">
+    <line x1="32" y1="69" x2="32" y2="90" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="56" y="86" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="106" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="111" font-size="14" font-weight="700" text-anchor="middle">2</text>
+    <text x="68" y="103" font-size="14" font-weight="700">Find the log</text>
+    <text x="68" y="120" font-size="12.5" class="mono fill-muted">the terminal · logs/ · later: slurm-&lt;jobid&gt;.out</text>
+    <line x1="580" y1="106" x2="616" y2="106" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="94" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="111" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="3">
+    <line x1="32" y1="121" x2="32" y2="142" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="56" y="138" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="158" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="163" font-size="14" font-weight="700" text-anchor="middle">3</text>
+    <text x="68" y="155" font-size="14" font-weight="700">Where am I, with what?</text>
+    <text x="68" y="172" font-size="12.5" class="mono fill-muted">pwd · hostname · ls · pixi run or not?</text>
+    <line x1="580" y1="158" x2="616" y2="158" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="146" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="163" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="4">
+    <line x1="32" y1="173" x2="32" y2="194" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="56" y="190" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="210" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="215" font-size="14" font-weight="700" text-anchor="middle">4</text>
+    <text x="68" y="207" font-size="14" font-weight="700">Do the inputs exist and look right?</text>
+    <text x="68" y="224" font-size="12.5" class="mono fill-muted">ls -l · head · gzip -t · md5sum -c</text>
+    <line x1="580" y1="210" x2="616" y2="210" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="198" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="215" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="5">
+    <line x1="32" y1="225" x2="32" y2="246" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="56" y="242" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="262" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="267" font-size="14" font-weight="700" text-anchor="middle">5</text>
+    <text x="68" y="259" font-size="14" font-weight="700">Are resources short?</text>
+    <text x="68" y="276" font-size="12.5" class="mono fill-muted">disk space · quota · time limit · Killed</text>
+    <line x1="580" y1="262" x2="616" y2="262" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="250" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="267" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="6">
+    <line x1="32" y1="277" x2="32" y2="298" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="56" y="294" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="314" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="319" font-size="14" font-weight="700" text-anchor="middle">6</text>
+    <text x="68" y="311" font-size="14" font-weight="700">What changed since it last worked?</text>
+    <text x="68" y="328" font-size="12.5" class="mono fill-muted">new data · new version · new folder · new machine</text>
+    <line x1="580" y1="314" x2="616" y2="314" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="302" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="319" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="7">
+    <line x1="32" y1="329" x2="32" y2="350" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="56" y="346" width="520" height="42" rx="6" class="fill-surface stroke-line"></rect>
+    <circle cx="32" cy="366" r="14" class="fill-surface stroke-ink" stroke-width="1.5"></circle>
+    <text x="32" y="371" font-size="14" font-weight="700" text-anchor="middle">7</text>
+    <text x="68" y="363" font-size="14" font-weight="700">Make it small</text>
+    <text x="68" y="380" font-size="12.5" class="mono fill-muted">100 reads · one sample · does it still fail?</text>
+    <line x1="580" y1="366" x2="616" y2="366" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"></line>
+    <rect x="620" y="354" width="60" height="24" rx="12" class="fill-good-soft stroke-good"></rect>
+    <text x="650" y="371" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="3">
+    <rect x="462" y="144" width="104" height="30" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="514" y="157" font-size="12" text-anchor="middle">case:</text>
+    <text x="514" y="170" font-size="12" text-anchor="middle" class="mono">wrong folder</text>
+  </g>
+  <g data-show="4">
+    <rect x="462" y="196" width="104" height="30" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="514" y="209" font-size="12" text-anchor="middle">case:</text>
+    <text x="514" y="222" font-size="12" text-anchor="middle" class="mono">*.fq.gz</text>
+  </g>
+  <g data-show="7">
+    <line x1="32" y1="381" x2="32" y2="408" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"></line>
+    <rect x="12" y="412" width="564" height="46" rx="8" class="fill-surface stroke-ink" stroke-width="1.5" stroke-dasharray="6 4"></rect>
+    <text x="28" y="432" font-size="14" font-weight="700">Still stuck? Leave the checklist and ask.</text>
+    <text x="28" y="450" font-size="13" class="fill-muted">Search first, then write a help request that says what you checked.</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-troubleshooting-checklist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.3: A troubleshooting checklist. Each step has an exit: stop as soon as the problem is solved. The wrong-folder case stops at step 3, the <code>*.fq.gz</code> case at step 4. Still stuck after step 7? Leave the checklist and ask.
+</figcaption>
+</figure>
+</div>
+<ol type="1">
+<li><strong>Read the message</strong>, all of it (<a href="#sec-getting-help-errors" class="quarto-xref"><span>Section 4.3</span></a>).</li>
+<li><strong>Find the log.</strong> The terminal may show only the last lines; a log can hold the first error. More below.</li>
+<li><strong>Where am I, with what?</strong> <code>pwd</code>, <code>hostname</code>, <code>ls</code>; did you use <code>pixi run</code>? On a cluster, which modules are loaded?</li>
+<li><strong>Do the inputs exist and look right?</strong> <code>ls -l</code>, <code>head</code>, <code>gzip -t</code>, <code>md5sum -c</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>); do the names in your sample sheet match the file names?</li>
+<li><strong>Are resources short?</strong> <code>No space left on device</code>, <code>Disk quota exceeded</code>, a time limit, <code>Killed</code> (<a href="01-orientation.html#tbl-resource-limits" class="quarto-xref">Table&nbsp;<span>1.4</span></a>).</li>
+<li><strong>What changed</strong> since it last worked? New data, a new version, a new folder, a new machine?</li>
+<li><strong>Make it small.</strong> Does it still fail on 100 reads, on one sample? (<a href="#sec-getting-help-asking" class="quarto-xref"><span>Section 4.7</span></a> shows how.)</li>
+</ol>
+<p>Not every step is needed every time; stop when it is solved. If it is still not solved after step 7, the way out is to <strong>ask</strong> (<a href="#sec-getting-help-search" class="quarto-xref"><span>Section 4.6</span></a>, <a href="#sec-getting-help-asking" class="quarto-xref"><span>Section 4.7</span></a>), with what you checked.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Most problems are found by the same few questions: where am I, with which software, on which inputs, with enough resources, and what changed. Stop when it is solved.</p>
+</div>
+</div>
+<p><strong>Finding the log.</strong> Chapter 3’s script writes a log in <code>logs/</code> every time it runs, one file per run, with everything it printed. Here is the log of a run that failed because a raw file had been moved out of <code>data/raw/</code> (captured; the host name is replaced):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>logs/01_count_reads_2026-11-17T122821_jlSC.log</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="logs/01_count_reads_2026-11-17T122821_jlSC.log"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>started:  2026-11-17 12:28:21 -0600</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>host:     &lt;laptop&gt;</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>script:   76fa8eb6a7b90f212042cfbe6d95cfcc  src/01_count_reads.sh</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>seqkit:   seqkit v2.14.0</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>checking inputs against data/raw/checksums.md5:</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>SRR6357070_1.fastq.gz: OK</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>md5sum: SRR6357070_2.fastq.gz: No such file or directory</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>SRR6357070_2.fastq.gz: FAILED open or read</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>md5sum: WARNING: 1 listed file could not be read</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>No <code>finished:</code> line, so the run stopped early. The earliest relevant failure is the line naming <code>SRR6357070_2.fastq.gz</code>: who (<code>md5sum</code>), what (could not open it), on what (the R2 file). The run never reached <code>seqkit stats</code>, so <code>results/</code> still holds the <em>previous</em> run’s counts: another reason to check the log, not only whether a results file exists. The log keeps all this after the terminal is closed, with the date, the machine, and the versions.</p>
+<p>Not every program writes a log, and a log does not always name the cause. Later chapters add more places to look: a cluster job’s output file, <code>slurm-&lt;jobid&gt;.out</code> (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>), and a pipeline’s <code>.nextflow.log</code> and each task’s <code>.command.err</code> (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>). On a cluster, steps 3 and 5 matter more: which node you are on, which modules are loaded, and which quota is full.</p>
+<p><strong>When to ask.</strong> If you have made no progress for about an hour, that is a good point to stop and ask; your lab’s habits come first, and it is not a limit you must reach. Ask <strong>at once</strong> for anything about accounts, passwords, or keys; when a fix could damage data or affect other users; and when something that worked stops working in a way your own changes do not explain (a slow or missing filesystem, a module that will not load, a quota). You do not need to know whether the system is at fault: report what you saw and what you checked.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: changing many things at once
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Change one thing, rerun, and look. Three changes at once leave you not knowing which one fixed the problem, or which one broke something else.</p>
+</div>
+</div>
+<p><a href="#tbl-checklist" class="quarto-xref">Table&nbsp;<span>4.3</span></a> is the same checklist as a table, with the chapter that goes deeper on each step.</p>
+<div id="tbl-checklist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-checklist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.3: The troubleshooting checklist.
+</figcaption>
+<div aria-describedby="tbl-checklist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 10%">
+<col style="width: 17%">
+<col style="width: 49%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">Question</th>
+<th style="text-align: left;">Commands or places to look</th>
+<th style="text-align: left;">Goes deeper</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">What does the message say?</td>
+<td style="text-align: left;">who, what, on what; the earliest relevant failure</td>
+<td style="text-align: left;">this chapter</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">Where is the log?</td>
+<td style="text-align: left;">the terminal; <code>logs/</code>; <code>slurm-&lt;jobid&gt;.out</code>; <code>.nextflow.log</code></td>
+<td style="text-align: left;"><a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>, <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>, <a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">Where am I, with what?</td>
+<td style="text-align: left;"><code>pwd</code>, <code>hostname</code>, <code>ls</code>, <code>pixi run</code>, <code>module list</code></td>
+<td style="text-align: left;"><a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">Do the inputs exist and look right?</td>
+<td style="text-align: left;"><code>ls -l</code>, <code>head</code>, <code>gzip -t</code>, <code>md5sum -c</code></td>
+<td style="text-align: left;"><a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>, <a href="15-fasta-fastq.html" class="quarto-xref"><span>Chapter 15</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">Are resources short?</td>
+<td style="text-align: left;"><code>df -h .</code>, quota commands, job records</td>
+<td style="text-align: left;"><a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">What changed?</td>
+<td style="text-align: left;"><code>NOTEBOOK.md</code>, <code>pixi.lock</code>, dates in <code>logs/</code></td>
+<td style="text-align: left;"><a href="21-git.html" class="quarto-xref"><span>Chapter 21</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">7</td>
+<td style="text-align: left;">Does it fail when small?</td>
+<td style="text-align: left;">100 reads, one sample</td>
+<td style="text-align: left;"><a href="#sec-getting-help-asking" class="quarto-xref"><span>Section 4.7</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> A script worked yesterday and fails today with <code>No such file or directory</code>. Name two checklist questions to ask first.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Where am I (<code>pwd</code>)? Do the inputs exist (<code>ls -l</code>)? And what changed: a moved folder, a renamed file?</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-getting-help-methods" class="level2 page-columns page-full" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="sec-getting-help-methods"><span class="header-section-number">4.5</span> Reading a methods section</h2>
+<p>When you want to repeat or build on an analysis, the paper’s methods section is where you find out which tools, versions, and parameters were used. The book’s running dataset comes from <span class="citation" data-cites="wu2018repression">Wu et al. (<a href="../references.html#ref-wu2018repression" role="doc-biblioref">2018</a>)</span>, which is openly licensed (CC BY), so it can be quoted here. Open it in <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC6310685/">PubMed Central</a> and find two places: the <em>Software and Algorithms</em> rows of the <strong>Key Resources Table</strong>, and the paragraph <em>Differential Expression Analysis</em> in the methods.</p>
+<div class="no-row-height column-margin column-container"></div><p>Four words you will meet there, one line each (the Transcriptomics book explains them):</p>
+<ul>
+<li><strong>Adapter trimming</strong>: cutting the sequencing adapters off the ends of reads.</li>
+<li><strong>Alignment</strong>: finding where in the genome each read comes from.</li>
+<li><strong>Counting</strong>: how many reads fall in each gene.</li>
+<li><strong>Differential expression</strong>: which genes change between conditions.</li>
+</ul>
+<p><strong>Your turn.</strong> Fill in <a href="#tbl-methods-extract" class="quarto-xref">Table&nbsp;<span>4.4</span></a> for the RNA-seq analysis from those two places, before you open the answer. The last two columns matter: what the paper <em>prints</em>, and what you would <em>type</em>.</p>
+<div id="tbl-methods-extract" class="quarto-float quarto-figure quarto-figure-center anchored page-columns page-full">
+<figure class="quarto-float quarto-float-tbl figure page-columns page-full">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-methods-extract-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.4: What the methods of <span class="citation" data-cites="wu2018repression">Wu et al. (<a href="../references.html#ref-wu2018repression" role="doc-biblioref">2018</a>)</span> report for the RNA-seq analysis. “As printed” keeps the paper’s typography, spaces included; see the discoveries below.
+</figcaption>
+<div class="no-row-height column-margin column-container"></div><div aria-describedby="tbl-methods-extract-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 10%">
+<col style="width: 27%">
+<col style="width: 28%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Parameters as printed</th>
+<th style="text-align: left;">As you would type them</th>
+<th style="text-align: left;">Reference, data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Trim adapters</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Align and quantify</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Differential expression</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">?</td>
+<td style="text-align: left;">—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-11-contents" aria-controls="callout-11" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-11" class="callout-11-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 10%">
+<col style="width: 27%">
+<col style="width: 28%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Step</th>
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Version</th>
+<th style="text-align: left;">Parameters as printed</th>
+<th style="text-align: left;">As you would type them</th>
+<th style="text-align: left;">Reference, data</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Trim adapters</td>
+<td style="text-align: left;">cutadapt</td>
+<td style="text-align: left;">1.9.1</td>
+<td style="text-align: left;"><code>–minimum-length=25–quality-cutoff=20 -a AGATCGGAAGAGC -A AGATCGGAAGAGC</code></td>
+<td style="text-align: left;"><code>--minimum-length=25 --quality-cutoff=20 -a AGATCGGAAGAGC -A AGATCGGAAGAGC</code></td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Align and quantify</td>
+<td style="text-align: left;">RSEM with STAR</td>
+<td style="text-align: left;">1.3.0; STAR 2.5.2a</td>
+<td style="text-align: left;"><code>–star-output-genome-bam–forward-prob 0</code>, all else default</td>
+<td style="text-align: left;"><code>--star-output-genome-bam --forward-prob 0</code></td>
+<td style="text-align: left;"><em>S. cerevisiae</em> genes from Ensembl, assembly R64-1-1, release 90</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Differential expression</td>
+<td style="text-align: left;">DESeq2</td>
+<td style="text-align: left;">1.12.3, in R 3.3.1</td>
+<td style="text-align: left;">not reported in this excerpt</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;">—</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Three things to notice.</p>
+<p><strong>The dashes and the spaces.</strong> The paper prints <code>–minimum-length</code> and <code>–forward-prob</code> with a single en dash: typesetting turned the two hyphens of <code>--</code> into one <code>–</code>. Copied as printed, they fail exactly like round 3 of <a href="#sec-getting-help-errors" class="quarto-xref"><span>Section 4.3</span></a>. Look again at the spacing, too: <code>–minimum-length=25–quality-cutoff=20</code> and <code>–star-output-genome-bam–forward-prob</code> have no space between the two options, so a program would read each pair as one long, unknown word. Both faults need repairing before the command can run.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: commands copied from PDFs and web pages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Typesetting turns <code>--</code> into <code>–</code> and straight quotes (<code>"</code>, <code>'</code>) into curly ones (<code>“</code>, <code>’</code>). The command looks right and fails, or worse, does something else. Retype dashes and quotes when you copy from a paper.</p>
+</div>
+</div>
+<p><strong>The strandedness setting.</strong> <code>--forward-prob 0</code> says how the library was made: which strand of the gene each read comes from (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a> and the Transcriptomics book explain strandedness). The nf-core test sheet the book uses (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>) says <code>auto</code> for our sample, <code>WT_REP1</code>. <code>auto</code> asks the pipeline to <em>work out</em> the strandedness from the reads; it does not state it, so it is not a second source for the paper’s value.</p>
+<p><strong>What this excerpt does not report.</strong> The STAR and RSEM index settings, DESeq2’s design and thresholds, and any code. Before saying the paper <em>omits</em> them, check its supplements and any deposited code. A complete methods section names the tool, the version, the parameters, the reference release, and where the code and data are: the same chain you recorded for your own project in <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>.</p>
+<p>Two cautions. First, the book later runs these reads through nf-core/rnaseq (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>). That is a different, newer analysis, not a reconstruction of the paper’s. Second, a methods section can describe several kinds of library: this paper also has single-end TSS-seq reads of 76 bases. Which paragraph describes <em>our</em> reads? Exercise 4 checks it against the run’s public record.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> The excerpt says “STAR (version 2.5.2a)” but not the index options. Can you reproduce the alignment exactly from the excerpt?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Not for certain: index settings can change the results. Check the supplements and any deposited code; then either assume the defaults (and say so) or ask the authors.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-getting-help-search" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="sec-getting-help-search"><span class="header-section-number">4.6</span> Searching, and choosing where to ask</h2>
+<p>Most errors have been seen before. Searching well means turning <em>your</em> message into one that matches other people’s. Take this one, from a truncated file on a cluster:</p>
+<pre class="console"><code>[ERRO] /home/&lt;user&gt;/proj/sample_17_R1.fq.gz: unexpected EOF</code></pre>
+<p>Remove what is yours (the path, the sample name), keep the distinctive part in quotes, and add the tool’s name:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>seqkit "unexpected EOF"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>Search the tool’s own GitHub issues too, for example <a href="https://github.com/shenwei356/seqkit/issues">seqkit’s</a>, <strong>including closed ones</strong>: a closed issue often holds the answer. Reading issues is all you need here; filing one is 1.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Search tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Search the distinctive part of the message in quotes, without your paths and sample names, plus the tool’s name.</p>
+</div>
+</div>
+<p><strong>Where to ask</strong> depends on the kind of problem (<a href="#tbl-where-to-ask" class="quarto-xref">Table&nbsp;<span>4.5</span></a>). If your lab has local experts and asks them first, do that.</p>
+<div class="wide-table">
+<div id="tbl-where-to-ask" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-where-to-ask-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.5: Where to ask, by kind of problem.
+</figcaption>
+<div aria-describedby="tbl-where-to-ask-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Kind of problem</th>
+<th style="text-align: left;">Where to ask</th>
+<th style="text-align: left;">Who answers</th>
+<th style="text-align: left;">Before posting</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Account, password, quota, node, module, anything about one cluster</td>
+<td style="text-align: left;">your cluster’s help desk: <a href="https://scinet.usda.gov/support/contact">SCINet’s VRSC</a>, <a href="https://research.it.iastate.edu/contact-us">ISU Research IT</a> for Nova, or your own site’s (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>)</td>
+<td style="text-align: left;">the site’s staff</td>
+<td style="text-align: left;">say which cluster, node, and job</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">How to use a Bioconductor package</td>
+<td style="text-align: left;"><a href="https://support.bioconductor.org">Bioconductor support site</a></td>
+<td style="text-align: left;">package authors and users</td>
+<td style="text-align: left;">read its <a href="https://bioconductor.org/help/support/posting-guide/">posting guide</a>; include <code>sessionInfo()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">An nf-core pipeline</td>
+<td style="text-align: left;"><a href="https://nf-co.re/join">nf-core’s channels</a> (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>)</td>
+<td style="text-align: left;">pipeline developers and users</td>
+<td style="text-align: left;">the pipeline version and command</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Another tool</td>
+<td style="text-align: left;">its documentation, then its GitHub issues or discussions</td>
+<td style="text-align: left;">the tool’s authors</td>
+<td style="text-align: left;">search closed issues first</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A general bioinformatics question</td>
+<td style="text-align: left;"><a href="https://www.biostars.org">Biostars</a></td>
+<td style="text-align: left;">other bioinformaticians</td>
+<td style="text-align: left;">search first</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">General R, Python, or shell</td>
+<td style="text-align: left;"><a href="https://stackoverflow.com">Stack Overflow</a></td>
+<td style="text-align: left;">programmers</td>
+<td style="text-align: left;">a <a href="https://stackoverflow.com/help/minimal-reproducible-example">minimal reproducible example</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A command from this book</td>
+<td style="text-align: left;">the book’s <a href="../reporting.html"><strong>Report an issue!</strong></a> page</td>
+<td style="text-align: left;">the author</td>
+<td style="text-align: left;">the <em>Something doesn’t run</em> form</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Judging an answer.</strong> How old is it, and which version does it assume? Is it from the tool’s authors or documentation? Does it explain <em>why</em>? And does it work on your small example? A 2015 answer may name flags that no longer exist.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> Your job on the cluster cannot write to <code>/project</code>, and the quota command shows you at your limit. Where do you ask?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Your cluster’s help desk, or your PI if the project’s quota is theirs to raise. Not Biostars: nobody there can change your quota.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-getting-help-asking" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="sec-getting-help-asking"><span class="header-section-number">4.7</span> Asking for help</h2>
+<p>Here is a request that is hard to answer:</p>
+<blockquote class="blockquote">
+<p>seqkit doesn’t work on the cluster, help!!</p>
+<p><em>[a screenshot of the last few lines of a terminal]</em></p>
+</blockquote>
+<p>A helper cannot tell which command, which files, which version, or even which error: the screenshot cuts off the first line. They have to ask four questions before they can start. <a href="#fig-good-request" class="quarto-xref">Figure&nbsp;<span>4.4</span></a> shows the same problem written so that someone can answer at once.</p>
+<div id="fig-good-request" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-good-request-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 576" role="img" aria-labelledby="good-request-title">
+  <title id="good-request-title">A help request built from the book's Something doesn't run form plus four added fields, with why each field matters. Title: seqkit stats, unknown flag --paired when counting read pairs. Where it ran: laptop, macOS 15, no cluster. What I wanted and expected: count read pairs in the two mate files, one number for the sample. Exact command, copied. Complete message as text: Error: unknown flag: --paired. What I tried: seqkit stats --help shows no --paired flag. Versions: seqkit v2.14.0 from pixi run seqkit version, and pixi info with the home folder replaced by the placeholder &lt;home&gt;. Small example: the error appears with no input file at all, pixi run seqkit stats --paired, rerun to check. Before posting: replace home paths and user names with placeholders, never include passwords, keys, or tokens, and keep the fault itself visible.</title>
+  <rect x="10" y="10" width="430" height="484" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="26" y="34" font-size="14" font-weight="700">seqkit stats: <tspan class="mono">unknown flag: --paired</tspan></text>
+  <text x="472" y="34" font-size="13" font-weight="700">why it is there</text>
+  <text x="30" y="58" font-size="13" font-weight="700">Where it ran</text>
+  <text x="38" y="76" font-size="13">laptop · macOS 15 (Intel) · no cluster</text>
+  <text x="472" y="58" font-size="13" class="fill-muted">laptop, login node, and compute</text>
+  <text x="472" y="74" font-size="13" class="fill-muted">node can behave differently</text>
+  <line x1="452" y1="54" x2="464" y2="54" class="stroke-line" stroke-width="1.5"></line>
+  <text x="30" y="106" font-size="13" font-weight="700">What I wanted, and expected</text>
+  <text x="38" y="124" font-size="13">count read pairs in the two mate files;</text>
+  <text x="38" y="140" font-size="13">expected one number for the sample</text>
+  <text x="472" y="106" font-size="13" class="fill-muted">helpers can spot a wrong</text>
+  <text x="472" y="122" font-size="13" class="fill-muted">approach, not just a wrong flag</text>
+  <line x1="452" y1="102" x2="464" y2="102" class="stroke-line" stroke-width="1.5"></line>
+  <text x="30" y="170" font-size="13" font-weight="700">Exact command (copied)</text>
+  <text x="38" y="188" font-size="12" class="mono">pixi run seqkit stats --paired \</text>
+  <text x="38" y="204" font-size="12" class="mono">  data/raw/SRR6357070_1.fastq.gz \</text>
+  <text x="38" y="220" font-size="12" class="mono">  data/raw/SRR6357070_2.fastq.gz</text>
+  <text x="472" y="170" font-size="13" class="fill-muted">copied, not retyped: the fault</text>
+  <text x="472" y="186" font-size="13" class="fill-muted">may be a single character</text>
+  <line x1="452" y1="166" x2="464" y2="166" class="stroke-line" stroke-width="1.5"></line>
+  <text x="30" y="250" font-size="13" font-weight="700">Complete message (as text)</text>
+  <text x="38" y="268" font-size="12" class="mono">Error: unknown flag: --paired</text>
+  <text x="38" y="284" font-size="12" class="mono">Usage: … (full output attached)</text>
+  <text x="472" y="250" font-size="13" class="fill-muted">text can be searched, quoted,</text>
+  <text x="472" y="266" font-size="13" class="fill-muted">and read by screen readers</text>
+  <line x1="452" y1="246" x2="464" y2="246" class="stroke-line" stroke-width="1.5"></line>
+  <text x="30" y="314" font-size="13" font-weight="700">What I tried</text>
+  <text x="38" y="332" font-size="13">seqkit stats --help: no --paired flag</text>
+  <text x="472" y="314" font-size="13" class="fill-muted">saves helpers repeating it</text>
+  <line x1="452" y1="310" x2="464" y2="310" class="stroke-line" stroke-width="1.5"></line>
+  <text x="30" y="362" font-size="13" font-weight="700">Versions</text>
+  <text x="38" y="380" font-size="12" class="mono">seqkit v2.14.0  (pixi run seqkit version)</text>
+  <text x="38" y="396" font-size="12" class="mono">pixi info: Platform osx-64,</text>
+  <text x="38" y="412" font-size="12" class="mono">  Manifest file: <tspan class="fill-warn" font-weight="700">&lt;home&gt;</tspan>/bioinf-book/pixi.toml</text>
+  <text x="472" y="362" font-size="13" class="fill-muted">the tool's own version, and</text>
+  <text x="472" y="378" font-size="13" class="fill-muted">where and how it was installed</text>
+  <line x1="452" y1="358" x2="464" y2="358" class="stroke-line" stroke-width="1.5"></line>
+  <text x="30" y="442" font-size="13" font-weight="700">Small example</text>
+  <text x="38" y="460" font-size="13">fails with no input file at all:</text>
+  <text x="38" y="476" font-size="13"><tspan class="mono" font-size="12">pixi run seqkit stats --paired</tspan> (rerun: same error)</text>
+  <text x="472" y="442" font-size="13" class="fill-muted">someone else can reproduce it</text>
+  <text x="472" y="458" font-size="13" class="fill-muted">in seconds</text>
+  <line x1="452" y1="438" x2="464" y2="438" class="stroke-line" stroke-width="1.5"></line>
+  <rect x="10" y="510" width="700" height="52" rx="8" class="fill-warn-soft stroke-warn"></rect>
+  <text x="26" y="531" font-size="13"><tspan font-weight="700">Before posting:</tspan> home paths and user names become placeholders (<tspan class="mono">&lt;home&gt;</tspan>); no passwords,</text>
+  <text x="26" y="549" font-size="13">keys, or tokens. Keep the fault visible: the <tspan class="mono">l</tspan> in <tspan class="mono">_l.fastq.gz</tspan>, an en dash, the wrong flag.</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-good-request-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;4.4: A help request someone can answer. It starts from the book’s <em>Something doesn’t run</em> form (where it ran, the exact command, the complete message as text, <code>pixi info</code>) and adds what a question about a tool needs: what you wanted and expected, what you tried, the tool’s version, and a small example. Private details become placeholders that keep the fault visible.
+</figcaption>
+</figure>
+</div>
+<p>The book’s own <a href="../reporting.html"><em>Something doesn’t run</em></a> form is a good starting model: <strong>where it ran</strong> (laptop, login node, or compute node; operating system; cluster), the <strong>exact command</strong>, copied, the <strong>complete message as text</strong>, and <code>pixi info</code>. A question about a tool also needs:</p>
+<ul>
+<li><strong>what you were trying to do</strong>, and what you expected;</li>
+<li><strong>what you tried</strong> already;</li>
+<li><strong>the failing tool’s version</strong>;</li>
+<li><strong>a small example</strong> that still fails.</li>
+</ul>
+<p><strong>Versions, each for its own question.</strong></p>
+<ul>
+<li><code>pixi info</code> describes where and how: the platform, pixi’s version, the environment, and its folders. It does <strong>not</strong> list package versions.</li>
+<li><code>pixi run seqkit version</code> gives the version of the tool that failed. With <code>pixi run</code>, it reports the copy that actually ran.</li>
+<li><code>pixi list</code> shows every package’s version, when several might matter.</li>
+<li>In R, <code>pixi run Rscript -e 'sessionInfo()'</code> (<a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a>).</li>
+</ul>
+<p>Do not paste the whole <code>pixi.lock</code>; it is thousands of lines.</p>
+<section id="a-minimal-reproducible-example" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="a-minimal-reproducible-example"><span class="header-section-number">4.7.1</span> A minimal reproducible example</h3>
+<p>A <strong>minimal reproducible example</strong> is the smallest input and the shortest command that still show the problem. Shrink until it still fails, and <strong>rerun after every cut, to check that it still fails the same way</strong>. Fewer files, one sample, the first 100 reads:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit head <span class="at">-n</span> 100 data/raw/SRR6357070_1.fastq.gz <span class="dt">\</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> ~/bioinf-ch04/small_R1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>That writes the first 100 reads (10,100 bases) to the scratch folder, never to <code>data/raw/</code>. Now the catch. Do the same with the truncated file, and check the small copy:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit head <span class="at">-n</span> 100 ~/bioinf-ch04/broken.fastq.gz <span class="dt">\</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> ~/bioinf-ch04/small_broken.fastq.gz</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-ch04/small_broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>file    format  type    num_seqs    sum_len min_len avg_len max_len
+/home/you/bioinf-ch04/small_broken.fastq.gz FASTQ   DNA 100 10100   101 101.0   101</code></pre>
+<p>No error. The first 100 reads of the broken file are intact; the damage is at its end. Shrinking removed the bug: this example is too small. That is why you rerun after every cut. Some failures need no real data at all (a wrong file name fails on any file), and often the shrinking finds the bug for you. In R, the <code>reprex</code> package builds such examples (<a href="https://reprex.tidyverse.org">reprex.tidyverse.org</a>, <a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a>).</p>
+</section>
+<section id="text-not-screenshots" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="text-not-screenshots"><span class="header-section-number">4.7.2</span> Text, not screenshots</h3>
+<p>Paste commands and messages as <strong>text</strong>. Text can be searched, copied, quoted, and read by screen readers; a screenshot can do none of these, and it usually cuts off the first error. Put it in a Markdown code block, between lines of three backticks (Markdown, <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>Error: unknown flag: --paired</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>```</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>A screenshot can <strong>add</strong> to the text when the problem is something on screen, such as a VS Code panel or a dialog. For a long log, post the relevant part with a few lines around it, and keep the full log to share if the venue asks for it.</p>
+</section>
+<section id="privacy-and-etiquette" class="level3" data-number="4.7.3">
+<h3 data-number="4.7.3" class="anchored" data-anchor-id="privacy-and-etiquette"><span class="header-section-number">4.7.3</span> Privacy and etiquette</h3>
+<p>Before you post, replace user names, paths, and host names you would rather not share with placeholders, and do it consistently (always <code>&lt;home&gt;</code>, always <code>&lt;user&gt;</code>). Keep the fault visible while you do: the relative layout, the extension, upper and lower case, the <code>l</code> vs <code>1</code>, the en dash. <code>pixi info</code>, for example, prints paths in your home folder.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: secrets in public
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Never post passwords, SSH private keys, tokens, unpublished data, or data under a use agreement (ask your PI if unsure). Forums and issue trackers are public, and what you post is copied and indexed: deleting it later does not take it back.</p>
+</div>
+</div>
+<p>Two habits of good askers: if you post the same question in two places, say so in each; and when it is solved, post the answer and mark it solved, for the next person who searches.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> Why paste the error as text rather than a screenshot?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Text can be searched, copied into a search engine, quoted in a reply, and read by screen readers. Screenshots often cut off the first error, and they hide the command.</p>
+</div>
+</div>
+</div>
+</div>
+<p><a href="#tbl-request-checklist" class="quarto-xref">Table&nbsp;<span>4.6</span></a> sums up what goes into a request.</p>
+<div class="wide-table">
+<div id="tbl-request-checklist" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-request-checklist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.6: What a help request includes, and what it never includes.
+</figcaption>
+<div aria-describedby="tbl-request-checklist-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 23%">
+<col style="width: 13%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Include</th>
+<th style="text-align: left;">Example</th>
+<th style="text-align: left;">Why</th>
+<th style="text-align: left;">Never include</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Where it ran</td>
+<td style="text-align: left;">laptop, macOS 15; or Nova, compute node</td>
+<td style="text-align: left;">systems behave differently</td>
+<td style="text-align: left;">host names you were asked not to share</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">What you wanted and expected</td>
+<td style="text-align: left;">“count read pairs; one number per sample”</td>
+<td style="text-align: left;">helpers can spot a wrong approach</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The exact command</td>
+<td style="text-align: left;">copied from the terminal</td>
+<td style="text-align: left;">the fault may be one character</td>
+<td style="text-align: left;">passwords typed on the command line</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The complete message, as text</td>
+<td style="text-align: left;">from the first relevant line</td>
+<td style="text-align: left;">searchable, quotable</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">What you tried</td>
+<td style="text-align: left;">“<code>--help</code> has no <code>--paired</code>”</td>
+<td style="text-align: left;">saves repeating it</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Versions</td>
+<td style="text-align: left;"><code>pixi run seqkit version</code>; <code>pixi info</code></td>
+<td style="text-align: left;">behaviour changes between versions</td>
+<td style="text-align: left;">your home path (use <code>&lt;home&gt;</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A small example</td>
+<td style="text-align: left;">100 reads that still fail</td>
+<td style="text-align: left;">others can reproduce it</td>
+<td style="text-align: left;">unpublished or restricted data</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-getting-help-ai" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="sec-getting-help-ai"><span class="header-section-number">4.8</span> AI coding assistants</h2>
+<p>AI coding assistants can explain an error, suggest a command, or draft a help request. They can also be confidently wrong. Here is an answer to “count read pairs in my paired FASTQ files with seqkit”. It was written for this book to show a typical mistake, not captured from a particular assistant:</p>
+<blockquote class="blockquote">
+<p>Use seqkit’s stats command with the <code>--paired</code> flag:</p>
+<pre><code>seqkit stats --paired data/raw/SRR6357070_1.fastq.gz data/raw/SRR6357070_2.fastq.gz</code></pre>
+</blockquote>
+<p>Check it, in three steps:</p>
+<ol type="1">
+<li><p><strong>Is the flag real?</strong> <code>pixi run seqkit stats --help</code> lists no <code>--paired</code>.</p></li>
+<li><p><strong>Run it.</strong> You did, in round 4 of <a href="#sec-getting-help-errors" class="quarto-xref"><span>Section 4.3</span></a>: <code>Error: unknown flag: --paired</code>.</p></li>
+<li><p><strong>Fix it, then check what the answer means.</strong> Without the invented flag, the command runs:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats data/raw/SRR6357070_1.fastq.gz data/raw/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>It prints one row per file, each with 50,000 reads. The two files are the two mates of the same fragments (<a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>), so the run has <strong>50,000 read pairs</strong>, not 100,000. A command that runs is not yet an answer to the question.</p></li>
+</ol>
+<p><strong>Rules for using an assistant:</strong></p>
+<ul>
+<li>Treat its suggestions as coming from a fast, confident colleague who is sometimes wrong.</li>
+<li>Check every flag against <code>--help</code> for <strong>your</strong> version.</li>
+<li>Test on small data with a known answer before real data.</li>
+<li>Understand any command before you run it, above all ones that delete or overwrite (<code>rm</code>, <code>&gt;</code>, <code>mv</code>). Never run those unread on raw data or on shared systems.</li>
+<li>Paste error text and small toy examples. Never paste credentials, private or unpublished data, or anything your institution’s or your data agreement’s current policy restricts.</li>
+<li>Follow your journal’s and your university’s rules on disclosing AI use.</li>
+</ul>
+<p>Used this way, assistants are good at the two skills this chapter teaches: explaining an error message, and drafting a help request. As long as you check the result.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: trusting an AI-suggested flag
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Check every flag against <code>--help</code>, and test on data with a known answer, before you run an AI-suggested command on real data.</p>
+</div>
+</div>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “Code from an AI assistant works; I can assume it has been tested”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> It is generated text. Flags can be invented or belong to another version, and even code described as tested may have been tested on other inputs or another system. Check flags in <code>--help</code> and reproduce a known result.</p>
+</div>
+</div>
+<p><a href="#tbl-ai-checks" class="quarto-xref">Table&nbsp;<span>4.7</span></a> lists the checks.</p>
+<div id="tbl-ai-checks" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ai-checks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;4.7: Checks for an AI-suggested command.
+</figcaption>
+<div aria-describedby="tbl-ai-checks-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 24%">
+<col style="width: 17%">
+<col style="width: 58%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Check</th>
+<th style="text-align: left;">How</th>
+<th style="text-align: left;">What it catches</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">The flag exists</td>
+<td style="text-align: left;"><code>--help</code> for your version</td>
+<td style="text-align: left;">invented flags, flags from other tools</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The version matches</td>
+<td style="text-align: left;"><code>pixi run &lt;tool&gt; version</code>, <code>pixi list</code></td>
+<td style="text-align: left;">flags from a newer or older release</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">It works on toy data</td>
+<td style="text-align: left;">100 reads with a known answer</td>
+<td style="text-align: left;">wrong output that looks plausible</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">The output means what you asked</td>
+<td style="text-align: left;">compare with what you know (reads vs pairs)</td>
+<td style="text-align: left;">an answer to a different question</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nothing is destroyed</td>
+<td style="text-align: left;">read every <code>rm</code>, <code>&gt;</code>, <code>mv</code> before running</td>
+<td style="text-align: left;">lost or overwritten data</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nothing private is sent</td>
+<td style="text-align: left;">paste only the question and toy examples</td>
+<td style="text-align: left;">leaked data and credentials</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> An assistant suggests <code>pixi run seqkit stats --count-pairs data/raw/*.fastq.gz</code>. What do you check before trusting it?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>That <code>--count-pairs</code> appears in <code>pixi run seqkit stats --help</code> for your version. It does not in seqkit 2.14.0: running it gives <code>Error: unknown flag: --count-pairs</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-getting-help-summary" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="sec-getting-help-summary"><span class="header-section-number">4.9</span> Summary</h2>
+<ul>
+<li><code>--help</code> comes from the program you run, so it matches your version; <code>man</code> pages and websites may not. In a usage line, brackets mean optional, <code>...</code> means repeatable, and you type neither.</li>
+<li>Read the whole message for who printed it, what failed, and on what, and find the earliest relevant failure. An exit status of 0 means the program reported success, not that the result is right.</li>
+<li>Before asking, work through the checklist: message, log, where and with what, inputs, resources, what changed, a small example. Stop as soon as it is solved.</li>
+<li>A methods section should give tool, version, parameters, and reference; retype its dashes, and say “not reported in this excerpt” until you have checked the supplements.</li>
+<li>A good help request has the exact command, the complete message as text, versions, and a small example that still fails, with nothing private in it. Check every AI-suggested flag in <code>--help</code> and test on data with a known answer.</li>
+</ul>
+</section>
+<section id="sec-getting-help-exercises" class="level2 page-columns page-full" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="sec-getting-help-exercises"><span class="header-section-number">4.10</span> Exercises</h2>
+<div class="check">
+<p><strong>Exercise 1. Fix a broken script.</strong> Make the script below in the scratch folder (in VS Code: <code>code ~/bioinf-ch04/count.sh</code>, paste, save). Copy it from this page exactly, faults and all:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/bioinf-ch04/count.sh</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" data-filename="~/bioinf-ch04/count.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># count.sh: count reads in both raw files (has three faults)</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run from ~/bioinf-book:  pixi run bash ~/bioinf-ch04/count.sh</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> stats –T <span class="at">--paired</span> data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>From <code>~/bioinf-book</code>, run it with <code>pixi run bash ~/bioinf-ch04/count.sh</code>. It fails three times. Fix one fault at a time, using only the message and <code>--help</code>, and rerun after each fix. Note in <code>NOTEBOOK.md</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>) what each message said and what you changed.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>seqkit checks its flags before it looks at files, so the faults appear in this order (exit status in brackets):</p>
+<ol type="1">
+<li><code>Error: unknown flag: --paired</code>, followed by the usage [255]. Delete <code>--paired</code>.</li>
+<li><code>[ERRO] stat –T: no such file or directory</code> [255]. The en dash made <code>–T</code> a file name; retype it as <code>-T</code>.</li>
+<li><code>[ERRO] stat data/raw/SRR6357070_l.fastq.gz: no such file or directory</code> [255]. Change the letter <code>l</code> to the digit <code>1</code>.</li>
+</ol>
+<p>The fixed line is <code>seqkit stats -T data/raw/SRR6357070_1.fastq.gz data/raw/SRR6357070_2.fastq.gz</code>, and it prints [0]:</p>
+<pre class="console"><code>file    format  type    num_seqs    sum_len min_len avg_len max_len
+data/raw/SRR6357070_1.fastq.gz  FASTQ   DNA 50000   5050000 101 101.0   101
+data/raw/SRR6357070_2.fastq.gz  FASTQ   DNA 50000   5050000 101 101.0   101</code></pre>
+<p>With several files, seqkit may also show a <code>processed files: 2 / 2</code> progress line; it is not an error.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 2. Read the help.</strong> From <code>pixi run seqkit stats --help</code>, find the flag that adds quartiles and N50. Run <code>pixi run seqkit stats</code> with that flag and <code>-T</code> on both raw files. Which columns appear that were not there before? Do the two files differ in any of them?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>-a, --all</code>. The command is <code>pixi run seqkit stats -a -T data/raw/*.fastq.gz</code>. The new columns are <code>Q1</code>, <code>Q2</code>, <code>Q3</code> (quartiles of read length), <code>sum_gap</code>, <code>N50</code>, <code>N50_num</code>, <code>Q20(%)</code>, <code>Q30(%)</code>, <code>AvgQual</code>, <code>GC(%)</code>, and <code>sum_n</code>. With every read 101 bases long, the length columns are all 101. The quality columns differ: R1 has <code>Q30(%)</code> 92 and <code>AvgQual</code> 26.89, R2 90 and 23.28; R2 also has far more <code>N</code> bases (<code>sum_n</code> 18,842 vs 280). Read 2 being a little worse is common in Illumina data (<a href="15-fasta-fastq.html" class="quarto-xref"><span>Chapter 15</span></a>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 3. Write a help request.</strong> Pretend that exercise 1’s first error is one you cannot solve. Write the request in <code>~/bioinf-ch04/help_request.md</code>, following <a href="#fig-good-request" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>: the <em>Something doesn’t run</em> fields (where it ran, the exact command, the complete message as text, <code>pixi info</code> with your home path replaced by <code>&lt;home&gt;</code>), plus what you expected, what you tried, the output of <code>pixi run seqkit version</code>, and a small example. For the example, make a 100-read file with the <code>seqkit head</code> command from <a href="#sec-getting-help-asking" class="quarto-xref"><span>Section 4.7</span></a>, and <strong>check that the same error still appears with it</strong>. Then shrink once more: does the error need an input file at all? Do not submit the request. Then test it: could someone reproduce the failure from the request alone, without access to your home folder?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The 100-read file gives the same <code>unknown flag</code> error, so the example works. But one more cut shows it is not needed: the error appears with no input file at all, because seqkit rejects the flag before it looks for files:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">--paired</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Error: unknown flag: --paired
+Usage:
+  seqkit stats [flags]
+...
+unknown flag: --paired
+255</code></pre>
+<p>So the smallest example is the command alone. A model request:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>**seqkit stats: `unknown flag: --paired` when counting read pairs**</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>Where it ran: laptop, macOS 15 (Intel); no cluster.</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>Trying to: count read pairs in two mate files; expected one number.</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a>Command (copied, run from the book's project folder):</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a>pixi run seqkit stats --paired</span>
+<span id="cb48-10"><a href="#cb48-10" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb48-11"><a href="#cb48-11" aria-hidden="true" tabindex="-1"></a>No input file is needed: the same error appears with or without one.</span>
+<span id="cb48-12"><a href="#cb48-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-13"><a href="#cb48-13" aria-hidden="true" tabindex="-1"></a>Message (abbreviated here; the full output, with the usage and</span>
+<span id="cb48-14"><a href="#cb48-14" aria-hidden="true" tabindex="-1"></a>flag list, is attached as error.txt):</span>
+<span id="cb48-15"><a href="#cb48-15" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb48-16"><a href="#cb48-16" aria-hidden="true" tabindex="-1"></a>Error: unknown flag: --paired</span>
+<span id="cb48-17"><a href="#cb48-17" aria-hidden="true" tabindex="-1"></a>Usage:</span>
+<span id="cb48-18"><a href="#cb48-18" aria-hidden="true" tabindex="-1"></a>  seqkit stats [flags]</span>
+<span id="cb48-19"><a href="#cb48-19" aria-hidden="true" tabindex="-1"></a>...</span>
+<span id="cb48-20"><a href="#cb48-20" aria-hidden="true" tabindex="-1"></a>unknown flag: --paired</span>
+<span id="cb48-21"><a href="#cb48-21" aria-hidden="true" tabindex="-1"></a>```</span>
+<span id="cb48-22"><a href="#cb48-22" aria-hidden="true" tabindex="-1"></a>Exit status: 255.</span>
+<span id="cb48-23"><a href="#cb48-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-24"><a href="#cb48-24" aria-hidden="true" tabindex="-1"></a>Tried: `pixi run seqkit stats --help` lists no `--paired`.</span>
+<span id="cb48-25"><a href="#cb48-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-26"><a href="#cb48-26" aria-hidden="true" tabindex="-1"></a>Versions: seqkit v2.14.0 (`pixi run seqkit version`), installed from</span>
+<span id="cb48-27"><a href="#cb48-27" aria-hidden="true" tabindex="-1"></a>the book environment (pixi.toml and pixi.lock from Chapter 2 of</span>
+<span id="cb48-28"><a href="#cb48-28" aria-hidden="true" tabindex="-1"></a>Computing for Bioinformatics). `pixi info`: Platform osx-64.</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The test: yes, someone could reproduce it, because it needs only seqkit 2.14.0 and one command, with no data, and the request says where the environment comes from. Two things made the first draft fail the test: a message cut with <code>...</code> but called complete, and a file name (<code>small_R1.fastq.gz</code>) that a helper does not have. The fact most often left out is the <strong>tool’s version</strong> (<code>pixi info</code> does not show it); a helper’s first reply would be to ask for it.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check page-columns page-full">
+<p><strong>Exercise 4. Match the paper to the data.</strong> Open the ENA record for the book’s run, <a href="https://www.ebi.ac.uk/ena/browser/view/SRR6357070">SRR6357070</a>. Find the library layout, the instrument, and the read count, and say what unit the read count is in. Which methods paragraph of <span class="citation" data-cites="wu2018repression">Wu et al. (<a href="../references.html#ref-wu2018repression" role="doc-biblioref">2018</a>)</span> describes this run: the RNA-seq one, or the TSS-seq one?</p>
+<div class="no-row-height column-margin column-container"><div id="ref-wu2018repression" class="csl-entry" role="listitem">
+Wu, Andrew C. K., Harshil Patel, Minghao Chia, et al. 2018. <span>“Repression of Divergent Noncoding Transcription by a Sequence-Specific Transcription Factor.”</span> <em>Molecular Cell</em> 72 (6): 942–954.e7. <a href="https://doi.org/10.1016/j.molcel.2018.10.018">https://doi.org/10.1016/j.molcel.2018.10.018</a>.
+</div></div><div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Recorded 2026-11-17, in case the page changes: sample GSM2879618, “Wild-type total RNA-Seq biological replicate 1”; layout <code>PAIRED</code>; Illumina HiSeq 2500; <code>read_count</code> 47,629,288; <code>base_count</code> 9,621,116,176. For a paired run, ENA’s read count is in <strong>read pairs</strong>: 9,621,116,176 bases ÷ 47,629,288 = 202 bases per pair, which is 101 + 101.</p>
+<p>It is the <strong>RNA-seq</strong> paragraph: about 45 million 101-base, strand-specific, paired-end reads on a HiSeq 2500 or 4000. The TSS-seq reads were 76 bases, single-end, on a HiSeq 4000. Our files are a 50,000-pair subset made by nf-core, so ENA’s checksums are for the full files, not ours (<a href="20-reference-data.html" class="quarto-xref"><span>Chapter 20</span></a>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 5. Check an AI answer.</strong> Take the assistant’s answer from <a href="#sec-getting-help-ai" class="quarto-xref"><span>Section 4.8</span></a>, or, if you already use an AI assistant, ask it for a seqkit command that counts read pairs in <code>data/raw/</code>. Check every flag in <code>--help</code>, run the command, and say whether the output answers the question: pairs, not reads. Record in <code>NOTEBOOK.md</code> what you checked. If you use an assistant, paste only the question, no files.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The book’s answer fails at the first check (<code>--paired</code> is not in <code>--help</code>) and at the second (<code>unknown flag</code>). Without the flag, seqkit prints one row per mate file, 50,000 reads each, so the run has 50,000 pairs. An answer that adds the two <code>num_seqs</code> and reports 100,000 pairs has run correctly and still answered the wrong question. Another assistant may suggest something else; the checks are the same.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-getting-help-reading" class="level2 page-columns page-full" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="sec-getting-help-reading"><span class="header-section-number">4.11</span> Further reading</h2>
+<ul>
+<li><span class="citation" data-cites="dallolio2011ten">Dall’Olio et al. (<a href="../references.html#ref-dallolio2011ten" role="doc-biblioref">2011</a>)</span> — written by people from Biostars and other bioinformatics forums: how to ask so that strangers want to answer.</li>
+<li><span class="citation" data-cites="haller2022ten">Haller (<a href="../references.html#ref-haller2022ten" role="doc-biblioref">2022</a>)</span> — what makes a bug report fixable, from a tool developer’s side; useful now, and again when you file issues in
+<ol class="example" type="1">
+<li></li>
+</ol></li>
+<li><span class="citation" data-cites="auslander2026ten">Auslander (<a href="../references.html#ref-auslander2026ten" role="doc-biblioref">2026</a>)</span> — rules for using AI assistants in computational biology, among them owning every line of generated code and using chatbots to recall syntax, not scientific reasoning.</li>
+<li><span class="citation" data-cites="stackoverflow2026minimal">Stack Overflow (<a href="../references.html#ref-stackoverflow2026minimal" role="doc-biblioref">2026</a>)</span>, <a href="https://stackoverflow.com/help/minimal-reproducible-example"><em>How to create a Minimal, Reproducible Example</em></a> — one short page on shrinking a problem until someone else can run it.</li>
 </ul>
 
 
+<div class="no-row-height column-margin column-container"><div id="ref-dallolio2011ten" class="csl-entry" role="listitem">
+Dall’Olio, Giovanni M., Jacopo Marino, Michael Schubert, et al. 2011. <span>“Ten Simple Rules for Getting Help from Online Scientific Communities.”</span> <em>PLoS Computational Biology</em> 7 (9): e1002202. <a href="https://doi.org/10.1371/journal.pcbi.1002202">https://doi.org/10.1371/journal.pcbi.1002202</a>.
+</div><div id="ref-haller2022ten" class="csl-entry" role="listitem">
+Haller, Benjamin C. 2022. <span>“Ten Simple Rules for Reporting a Bug.”</span> <em>PLOS Computational Biology</em> 18 (10): e1010540. <a href="https://doi.org/10.1371/journal.pcbi.1010540">https://doi.org/10.1371/journal.pcbi.1010540</a>.
+</div><div id="ref-auslander2026ten" class="csl-entry" role="listitem">
+Auslander, Noam. 2026. <span>“Ten Simple Rules for Responsible Use of <span>AI</span> and <span>LLMs</span> in Computational Biology.”</span> <em>PLOS Computational Biology</em> 22 (10): e1014882. <a href="https://doi.org/10.1371/journal.pcbi.1014882">https://doi.org/10.1371/journal.pcbi.1014882</a>.
+</div><div id="ref-stackoverflow2026minimal" class="csl-entry" role="listitem">
+Stack Overflow. 2026. <em>How to Create a Minimal, Reproducible Example</em>. Stack Overflow Help Center. <a href="https://stackoverflow.com/help/minimal-reproducible-example">https://stackoverflow.com/help/minimal-reproducible-example</a>.
+</div></div>
 </section>
 
 </main> <!-- /main -->

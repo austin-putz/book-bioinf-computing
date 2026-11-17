@@ -26,7 +26,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -53,6 +107,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-d4a656369b10048819d5ba4205b32a06.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
+<script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
+<link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -86,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating slimcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -643,12 +700,23 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#planned-topics" id="toc-planned-topics" class="nav-link active" data-scroll-target="#planned-topics"><span class="header-section-number">3.1</span> Planned topics</a></li>
+  <li><a href="#sec-organizing-projects-intro" id="toc-sec-organizing-projects-intro" class="nav-link active" data-scroll-target="#sec-organizing-projects-intro"><span class="header-section-number">3.1</span> What this chapter does</a></li>
+  <li><a href="#sec-organizing-projects-layout" id="toc-sec-organizing-projects-layout" class="nav-link" data-scroll-target="#sec-organizing-projects-layout"><span class="header-section-number">3.2</span> A folder for each project</a></li>
+  <li><a href="#sec-organizing-projects-names" id="toc-sec-organizing-projects-names" class="nav-link" data-scroll-target="#sec-organizing-projects-names"><span class="header-section-number">3.3</span> Names that work</a></li>
+  <li><a href="#sec-organizing-projects-raw" id="toc-sec-organizing-projects-raw" class="nav-link" data-scroll-target="#sec-organizing-projects-raw"><span class="header-section-number">3.4</span> Raw data: move it in, check it, protect it</a></li>
+  <li><a href="#sec-organizing-projects-shared" id="toc-sec-organizing-projects-shared" class="nav-link" data-scroll-target="#sec-organizing-projects-shared"><span class="header-section-number">3.5</span> Shared data: link, don’t copy</a></li>
+  <li><a href="#sec-organizing-projects-backups" id="toc-sec-organizing-projects-backups" class="nav-link" data-scroll-target="#sec-organizing-projects-backups"><span class="header-section-number">3.6</span> Backups: where do your files really live?</a></li>
+  <li><a href="#sec-organizing-projects-metadata" id="toc-sec-organizing-projects-metadata" class="nav-link" data-scroll-target="#sec-organizing-projects-metadata"><span class="header-section-number">3.7</span> Sample sheets and metadata</a></li>
+  <li><a href="#sec-organizing-projects-provenance" id="toc-sec-organizing-projects-provenance" class="nav-link" data-scroll-target="#sec-organizing-projects-provenance"><span class="header-section-number">3.8</span> Provenance: where did this number come from?</a></li>
+  <li><a href="#sec-organizing-projects-records" id="toc-sec-organizing-projects-records" class="nav-link" data-scroll-target="#sec-organizing-projects-records"><span class="header-section-number">3.9</span> Writing it down: README, notebook, FAIR</a></li>
+  <li><a href="#sec-organizing-projects-summary" id="toc-sec-organizing-projects-summary" class="nav-link" data-scroll-target="#sec-organizing-projects-summary"><span class="header-section-number">3.10</span> Summary</a></li>
+  <li><a href="#sec-organizing-projects-exercises" id="toc-sec-organizing-projects-exercises" class="nav-link" data-scroll-target="#sec-organizing-projects-exercises"><span class="header-section-number">3.11</span> Exercises</a></li>
+  <li><a href="#sec-organizing-projects-reading" id="toc-sec-organizing-projects-reading" class="nav-link" data-scroll-target="#sec-organizing-projects-reading"><span class="header-section-number">3.12</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content" tabindex="-1">
+<main class="content page-columns page-full" id="quarto-document-content" tabindex="-1">
 
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-orientation.html">Getting set up</a></li><li class="breadcrumb-item"><a href="../chapters/03-organizing-projects.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Organizing projects and data</span></a></li></ol></nav>
@@ -670,36 +738,1911 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-important no-icon callout-titled">
+<p><strong>Core.</strong> Work through it, with the exercises.</p>
+<div class="goals callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Under construction
+<span class="screen-reader-only">Note</span>Learning goals
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This chapter is a placeholder. The topics below are the current plan and will change as the chapter is written.</p>
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Lay out a project folder that keeps raw data, reference, metadata, code, results, and logs apart, and name files so they sort well and avoid common path problems.</li>
+<li>Verify downloaded files with checksums, and protect raw data from accidental changes and deletion.</li>
+<li>Link shared data into a project with a symbolic link, and say what removing the link does and does not remove.</li>
+<li>Record where every input and output came from (source, version, checksum, script, software version, log) in files kept in the project.</li>
+<li>Say which of your storage locations are backed up, for how long, and who would restore them.</li>
+</ol>
 </div>
 </div>
-<p><strong>Core.</strong> Work through it, with the exercises.</p>
-<section id="planned-topics" class="level2" data-number="3.1">
-<h2 data-number="3.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">3.1</span> Planned topics</h2>
+<section id="sec-organizing-projects-intro" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="sec-organizing-projects-intro"><span class="header-section-number">3.1</span> What this chapter does</h2>
+<p>A month from now, someone (your PI, a reviewer, or you) will point at a number and ask: which file is this, where did it come from, and how was it made? If the answer lives only in your memory, it is already fading. This chapter sets up a folder, and a few habits, that answer those questions without memory.</p>
+<p>You will turn <code>~/bioinf-book</code>, the folder from <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>, into the book’s project. By the end it holds:</p>
 <ul>
-<li>Project folder structure (<code>src/</code>, <code>data/</code>, <code>results/</code>, …)</li>
-<li>File and script naming (<code>00_</code>, <code>01_</code>, …; no spaces)</li>
-<li>Raw data is read-only; link shared lab data and references into a project (symlinks) rather than copying them</li>
-<li>Checksums (<code>md5sum</code>) for raw data</li>
-<li>Backups (3-2-1); scratch is not a backup</li>
-<li>Sample sheets and metadata as first-class files</li>
-<li>Provenance: link each output to input accessions/checksums, reference release, software or pipeline version, parameters, and logs</li>
-<li>READMEs and a lab-notebook habit</li>
-<li>FAIR principles (brief)</li>
-<li>Start the recurring project</li>
+<li>the two FASTQ files from <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, moved in, checked, and protected from accidental changes;</li>
+<li>a reference genome kept in a shared folder and linked in, not copied;</li>
+<li>small tables that say which files belong to which sample;</li>
+<li>a numbered script that counts the reads and writes a log of every run;</li>
+<li>a README, a data record, and a notebook that say where everything came from.</li>
+</ul>
+<p>Every later chapter starts from this folder. The commands are copy-and-run, as in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>; <code>mkdir</code>, <code>mv</code>, <code>ln</code>, <code>chmod</code> and the rest are explained properly in Part II (<a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a>, <a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a>). Practice files, and anything broken on purpose, go in a separate scratch folder, <code>~/bioinf-ch03</code>, never in the project.</p>
+</section>
+<section id="sec-organizing-projects-layout" class="level2 page-columns page-full" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="sec-organizing-projects-layout"><span class="header-section-number">3.2</span> A folder for each project</h2>
+<p>Do this on your laptop (in WSL2’s Ubuntu terminal on Windows). Go to the book folder and make the empty folders of the layout:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> data/raw data/meta src results logs</span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="2" data-code-annotation="1"><code>mkdir</code> makes folders; <code>-p</code> makes <code>data/</code> on the way to <code>data/raw</code>, and says nothing if a folder already exists.</span>
+</dd>
+</dl>
+<pre class="console"><code>data  logs  notes.txt  pixi.lock  pixi.toml  README.md  results  src</code></pre>
+<p><code>pixi.toml</code> and <code>pixi.lock</code> are the book environment from <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>; <code>README.md</code> and <code>notes.txt</code> are your editor practice from its exercises (delete <code>notes.txt</code> with <code>rm notes.txt</code> if you like). The hidden <code>.pixi/</code> folder is there too; <code>ls -a</code> shows it.</p>
+<p><a href="#fig-project-layout" class="quarto-xref">Figure&nbsp;<span>3.1</span></a> shows where the chapter is going: the same folder with every file it will hold by the end.</p>
+<div id="fig-project-layout" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-project-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 440" role="img" aria-labelledby="project-layout-title">
+  <title id="project-layout-title">The book's project folder, ~/bioinf-book, in three groups. Inputs: data/raw holds the two FASTQ files and checksums.md5 and is read-only; data/meta holds reads.tsv, samples.tsv, and the upstream sample sheet; data/ref is a link to the shared reference. How: src holds the script 01_count_reads.sh, and pixi.toml, pixi.lock, and .pixi hold the software. Outputs: results holds read_counts.tsv, which can be rebuilt; logs holds one log per run, which you keep. The script reads the inputs and writes the outputs. Along the bottom, README.md, NOTEBOOK.md, and data/README.md record what the project is, what you did, and where every input came from.</title>
+  <defs>
+    <marker id="project-layout-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <text x="20" y="28" font-size="15" font-weight="700" class="mono">~/bioinf-book/</text>
+  <!-- Group headings -->
+  <text x="20" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">INPUTS</text>
+  <text x="282" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">HOW</text>
+  <text x="494" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">OUTPUTS</text>
+  <!-- Inputs: data/raw -->
+  <rect x="20" y="72" width="230" height="96" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="34" y="94" font-size="14" font-weight="700" class="mono">data/raw/</text>
+  <text x="236" y="94" font-size="12" text-anchor="end" class="fill-muted">read-only</text>
+  <text x="34" y="116" font-size="12" class="mono">SRR6357070_1.fastq.gz</text>
+  <text x="34" y="135" font-size="12" class="mono">SRR6357070_2.fastq.gz</text>
+  <text x="34" y="154" font-size="12" class="mono fill-good">checksums.md5</text>
+  <!-- Inputs: data/meta -->
+  <rect x="20" y="180" width="230" height="96" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="34" y="202" font-size="14" font-weight="700" class="mono">data/meta/</text>
+  <text x="236" y="202" font-size="12" text-anchor="end" class="fill-muted">metadata</text>
+  <text x="34" y="224" font-size="12" class="mono">reads.tsv</text>
+  <text x="34" y="243" font-size="12" class="mono">samples.tsv</text>
+  <text x="34" y="262" font-size="12" class="mono">samplesheet_upstream.csv</text>
+  <!-- Inputs: data/ref, a link -->
+  <rect x="20" y="288" width="230" height="64" rx="8" class="fill-ref-soft stroke-ref" stroke-width="1.25"></rect>
+  <text x="34" y="310" font-size="14" font-weight="700" class="mono">data/ref →</text>
+  <text x="236" y="310" font-size="12" text-anchor="end" class="fill-muted">a link</text>
+  <text x="34" y="334" font-size="12" class="fill-muted">to the shared reference</text>
+  <!-- How: src -->
+  <rect x="282" y="72" width="176" height="96" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="296" y="94" font-size="14" font-weight="700" class="mono">src/</text>
+  <text x="444" y="94" font-size="12" text-anchor="end" class="fill-muted">code</text>
+  <text x="296" y="116" font-size="12" class="mono">01_count_reads.sh</text>
+  <text x="296" y="148" font-size="12" class="fill-muted">numbered in run order</text>
+  <!-- How: software -->
+  <rect x="282" y="180" width="176" height="96" rx="8" class="fill-surface stroke-line" stroke-width="1.25"></rect>
+  <text x="296" y="202" font-size="14" font-weight="700">software</text>
+  <text x="296" y="224" font-size="12" class="mono">pixi.toml</text>
+  <text x="296" y="243" font-size="12" class="mono">pixi.lock</text>
+  <text x="296" y="262" font-size="12" class="mono">.pixi/</text>
+  <!-- Outputs: results -->
+  <rect x="494" y="72" width="206" height="96" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="508" y="94" font-size="14" font-weight="700" class="mono">results/</text>
+  <text x="508" y="116" font-size="12" class="mono">read_counts.tsv</text>
+  <text x="508" y="148" font-size="12" class="fill-muted">can be rebuilt</text>
+  <!-- Outputs: logs -->
+  <rect x="494" y="180" width="206" height="96" rx="8" class="fill-good-soft stroke-good" stroke-width="1.25"></rect>
+  <text x="508" y="202" font-size="14" font-weight="700" class="mono">logs/</text>
+  <text x="508" y="224" font-size="12" class="mono">01_count_reads_…log</text>
+  <text x="508" y="256" font-size="12" class="fill-muted">one per run; keep</text>
+  <!-- Arrows: inputs are read, outputs are written -->
+  <line x1="252" y1="120" x2="280" y2="120" class="stroke-muted" stroke-width="1.75" marker-end="url(#project-layout-arrow)"></line>
+  <line x1="460" y1="112" x2="492" y2="112" class="stroke-muted" stroke-width="1.75" marker-end="url(#project-layout-arrow)"></line>
+  <line x1="460" y1="136" x2="492" y2="200" class="stroke-muted" stroke-width="1.75" marker-end="url(#project-layout-arrow)"></line>
+  <!-- Records along the bottom -->
+  <rect x="20" y="372" width="680" height="58" rx="8" class="fill-surface stroke-line" stroke-dasharray="4 3"></rect>
+  <text x="34" y="396" font-size="13" class="mono">README.md   NOTEBOOK.md   data/README.md</text>
+  <text x="34" y="417" font-size="12" class="fill-muted">records: what the project is and how to rerun it, what you did and why, where every input came from</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-project-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.1: The book’s project at the end of this chapter. Inputs (left) are never changed by your work; code and software (middle) say how results are made; outputs (right) are written by the script. The records along the bottom explain all of it.
+</figcaption>
+</figure>
+</div>
+<p>The rules behind it, one sentence each:</p>
+<ul>
+<li><strong>One project, one folder.</strong> Everything an analysis needs, or points to, is inside it.</li>
+<li><strong>Inputs, code, and outputs apart.</strong> Raw data and metadata in <code>data/</code>, scripts in <code>src/</code>, results in <code>results/</code>, logs in <code>logs/</code>. You never write into <code>data/raw/</code>, and nothing in <code>results/</code> is edited by hand.</li>
+<li><strong>Results can be rebuilt.</strong> Everything in <code>results/</code> should come back if you rerun the code in <code>src/</code> on the inputs in <code>data/</code>, with the same software. Exercise 4 tests it.</li>
+<li><strong>Paths inside the project are relative to its top folder</strong> (<code>data/raw/SRR6357070_1.fastq.gz</code>, not <code>/home/you/bioinf-book/data/…</code>), so scripts keep working if the folder moves (more on moving in <a href="#sec-organizing-projects-shared" class="quarto-xref"><span>Section 3.5</span></a>).</li>
+</ul>
+<p><a href="#tbl-project-folders" class="quarto-xref">Table&nbsp;<span>3.1</span></a> lists the parts.</p>
+<div class="wide-table">
+<div id="tbl-project-folders" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-project-folders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.1: The folders and files of the book’s project. “Back it up?” is discussed in <a href="#sec-organizing-projects-backups" class="quarto-xref"><span>Section 3.6</span></a>; git arrives in <a href="21-git.html" class="quarto-xref"><span>Chapter 21</span></a>.
+</figcaption>
+<div aria-describedby="tbl-project-folders-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 21%">
+<col style="width: 22%">
+<col style="width: 19%">
+<col style="width: 17%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Folder or file</th>
+<th style="text-align: left;">What goes in it</th>
+<th style="text-align: left;">Who writes it</th>
+<th style="text-align: left;">Back it up?</th>
+<th style="text-align: left;">In git later?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>data/raw/</code></td>
+<td style="text-align: left;">reads as received, and their checksums</td>
+<td style="text-align: left;">you, once</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">no (too big; archived elsewhere)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data/meta/</code></td>
+<td style="text-align: left;">sample sheets and other metadata</td>
+<td style="text-align: left;">you</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data/ref</code></td>
+<td style="text-align: left;">link to a shared reference</td>
+<td style="text-align: left;">you, once</td>
+<td style="text-align: left;">the shared copy: someone must</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>src/</code></td>
+<td style="text-align: left;">numbered scripts</td>
+<td style="text-align: left;">you</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>results/</code></td>
+<td style="text-align: left;">tables and figures made by scripts</td>
+<td style="text-align: left;">scripts</td>
+<td style="text-align: left;">yes if costly to rebuild</td>
+<td style="text-align: left;">usually not</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>logs/</code></td>
+<td style="text-align: left;">one log per run</td>
+<td style="text-align: left;">scripts</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">small ones, often</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pixi.toml</code>, <code>pixi.lock</code></td>
+<td style="text-align: left;">the software (<a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>)</td>
+<td style="text-align: left;">pixi</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.pixi/</code></td>
+<td style="text-align: left;">the installed environment</td>
+<td style="text-align: left;">pixi</td>
+<td style="text-align: left;">no: reinstall it</td>
+<td style="text-align: left;">no</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>README.md</code>, <code>NOTEBOOK.md</code>, <code>data/README.md</code></td>
+<td style="text-align: left;">what, why, where from</td>
+<td style="text-align: left;">you</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Keep inputs, code, and outputs apart, so that every output can be rebuilt from preserved inputs, code, settings, and software records. That gives you the ingredients for reproducing an analysis; actually rebuilding it is the test.</p>
+</div>
+</div>
+<p>This is one sensible layout, not the only one. <span class="citation" data-cites="noble2009quick">Noble (<a href="../references.html#ref-noble2009quick" role="doc-biblioref">2009</a>)</span> and <span class="citation" data-cites="wilson2017good">Wilson et al. (<a href="../references.html#ref-wilson2017good" role="doc-biblioref">2017</a>)</span> describe close relatives; pipelines add a <code>work/</code> folder of their own (<a href="25-workflow-managers.html" class="quarto-xref"><span>Chapter 25</span></a>), and later books adapt the layout to their tools. What matters is that a stranger can find the raw data, the code, and the results, and tell them apart.</p>
+<div class="no-row-height column-margin column-container"></div><p><strong>On a cluster</strong> the same layout goes in project storage (<code>/project/&lt;your-project&gt;/</code> on SCINet, <code>/work/&lt;your-group&gt;/</code> on Nova), not in your small home folder or in scratch space that is purged (<a href="02-book-setup.html#sec-book-setup-pixi" class="quarto-xref"><span>Section 2.2</span></a>). Large intermediate files may live in scratch while a job runs, with only the final results kept in the project (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>). Making folders and moving files is light work, fine on a login node; checksumming many large files is not.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> You delete <code>results/read_counts.tsv</code> by mistake (you will make it later in this chapter). What do you need to get it back?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Nothing but the project itself: rerun the script on <code>data/raw/</code> with the same environment. A large published analysis is different: rebuilding it can take days of computing, or need a reference or a software version that is no longer available, which is why important final results are backed up too.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-names" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="sec-organizing-projects-names"><span class="header-section-number">3.3</span> Names that work</h2>
+<p>Start with a puzzle. In the scratch folder, make seven empty files with names like the ones on many lab drives, then list them:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-3" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/names <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/names</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-2" class="code-annotation-target"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> run1.sh run2.sh run10.sh final.txt <span class="st">"Final FINAL (2).txt"</span> <span class="st">"9-15-25 counts.csv"</span> <span class="st">"10-2-26 counts.csv"</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-3-3" class="code-annotation-target"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-1</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="2" data-code-annotation="1"><code>touch</code> makes empty files. The quotes keep each name with spaces in one piece.</span>
+</dd>
+<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-3" data-code-lines="3" data-code-annotation="2"><code>-1</code> (the digit one) lists one name per line.</span>
+</dd>
+</dl>
+<pre class="console"><code>'10-2-26 counts.csv'
+'9-15-25 counts.csv'
+'Final FINAL (2).txt'
+final.txt
+run1.sh
+run10.sh
+run2.sh</code></pre>
+<p>(Captured on a Mac. On Linux with English language settings, <code>run10.sh</code> comes before <code>run1.sh</code>; the order depends on the system’s language settings, but the two problems below appear everywhere.) <code>ls</code> sorts names character by character, so <code>run10.sh</code> lands before <code>run2.sh</code>, and October 2026 (<code>10-2-26</code>) before September 2025 (<code>9-15-25</code>). <code>ls</code> puts quotes around names with spaces to warn you, and spaces break commands that are not quoted:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span> <span class="at">-l</span> 10-2-26 counts.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>wc: 10-2-26: No such file or directory
+wc: counts.csv: No such file or directory
+0 total</code></pre>
+<p>The shell split the name at the space and looked for two files. Quoting fixes it (<code>wc -l "10-2-26 counts.csv"</code>), and you will still learn to quote paths (<a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a>), but names without spaces never need it. <a href="#tbl-file-names" class="quarto-xref">Table&nbsp;<span>3.2</span></a> gives the rules, each with a better name.</p>
+<div class="wide-table">
+<div id="tbl-file-names" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-file-names-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
+</figcaption>
+<div aria-describedby="tbl-file-names-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Rule</th>
+<th style="text-align: left;">Problem name</th>
+<th style="text-align: left;">Why it causes trouble</th>
+<th style="text-align: left;">Better name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Only letters, digits, <code>_</code>, <code>-</code>, <code>.</code></td>
+<td style="text-align: left;"><code>Final FINAL (2).txt</code></td>
+<td style="text-align: left;">spaces and brackets must be quoted in every command</td>
+<td style="text-align: left;"><code>2026-11-17_read_counts.tsv</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">One case, usually lowercase</td>
+<td style="text-align: left;"><code>Data.csv</code> and <code>data.csv</code></td>
+<td style="text-align: left;">usually the same file on a Mac or in Windows folders, but two files on Linux, including your WSL home folder and the cluster</td>
+<td style="text-align: left;"><code>data.csv</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Dates as <code>YYYY-MM-DD</code> (<a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a>)</td>
+<td style="text-align: left;"><code>10-2-26 counts.csv</code></td>
+<td style="text-align: left;">sorts by month, not by time; day and month order is ambiguous</td>
+<td style="text-align: left;"><code>2026-10-02_counts.csv</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Zero-padded numbers, scripts in run order</td>
+<td style="text-align: left;"><code>run2.sh</code>, <code>run10.sh</code></td>
+<td style="text-align: left;"><code>run10</code> sorts before <code>run2</code></td>
+<td style="text-align: left;"><code>02_trim.sh</code>, <code>10_report.sh</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Say what is inside; keep the extension true</td>
+<td style="text-align: left;"><code>results.txt</code> holding tabs</td>
+<td style="text-align: left;"><code>.txt</code> hides that it is a table</td>
+<td style="text-align: left;"><code>read_counts.tsv</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Versions say what changed</td>
+<td style="text-align: left;"><code>final_v2.txt</code></td>
+<td style="text-align: left;">no one knows what v2 changed, or which is newest</td>
+<td style="text-align: left;"><code>yeast_R64-1-1_test</code>, <code>report_2026-11-17.html</code>; later, git (<a href="21-git.html" class="quarto-xref"><span>Chapter 21</span></a>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Number scripts in the order they run: <code>00_</code> for one-time setup such as downloads, then <code>01_</code>, <code>02_</code>, …, so <code>ls src/</code> shows the analysis in order. Two exceptions to renaming. First, IDs that come from a facility or an archive (<code>SRR6357070</code>, <code>WT_REP1</code>) stay exactly as given, so they still match the records; rename only your own files. Second, a name whose meaning you do not know: is <code>11-3-25 counts.csv</code> 3 November or 11 March, 2025 or 2011? Renaming cannot recover what you do not know. Ask whoever made it, then rename.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> In what order does <code>ls</code> list <code>run1.sh</code>, <code>run2.sh</code>, and <code>run10.sh</code>, and how would you rename them?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>run1.sh</code>, <code>run10.sh</code>, <code>run2.sh</code> (on Linux, possibly <code>run10.sh</code> first; <code>run2.sh</code> always comes after <code>run10.sh</code>). Pad the numbers and say what each step does: <code>01_download.sh</code>, <code>02_trim.sh</code>, <code>10_report.sh</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-raw" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="sec-organizing-projects-raw"><span class="header-section-number">3.4</span> Raw data: move it in, check it, protect it</h2>
+<p><strong>Move it in.</strong> The two FASTQ files from <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a> are still in the scratch folder <code>~/bioinf-ch01</code>. Move them into the project:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-7" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-7-1"><a href="#annotated-cell-7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-7-2" class="code-annotation-target"><a href="#annotated-cell-7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/</span>
+<span id="annotated-cell-7-3"><a href="#annotated-cell-7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-7" data-code-lines="2" data-code-annotation="1"><code>mv</code> moves files; the last name is where they go. Moving within one disk only changes where the file is listed, so it is instant.</span>
+</dd>
+</dl>
+<pre class="console"><code>total 4368
+-rw-r--r-- 1 you you 2239317 Nov 17 11:22 SRR6357070_1.fastq.gz
+-rw-r--r-- 1 you you 2232117 Nov 17 11:22 SRR6357070_2.fastq.gz</code></pre>
+<p>From now on the files live here: if you go back to a command in Chapters 1–2, use <code>~/bioinf-book/data/raw/</code> instead of <code>~/bioinf-ch01/</code>. <code>~/bioinf-ch01</code> keeps <code>fastq_summary.txt</code>; you can delete it later.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Missing a file?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If <code>mv</code> says <code>cannot stat … No such file or directory</code> for a file (you skipped the read-2 exercise, or deleted <code>~/bioinf-ch01</code>), the other file still moved. Download each missing one straight into <code>data/raw/</code>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_1.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_1.fastq.gz</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Run only the line for the file you are missing. If a file is already in <code>data/raw/</code> from an earlier visit to this chapter, leave it: the check below tells you whether it is intact.</p>
+</div>
+</div>
+<p><strong>Check it.</strong> A sequencing facility, or an archive such as ENA, gives you a checksum for every file: a short value computed from every byte of it. Here are the MD5 checksums of the two files, as the book recorded them. Make a file <code>data/raw/checksums.md5</code> (<code>code data/raw/checksums.md5</code> opens it in VS Code; nano works too), paste the two lines, and save:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>data/raw/checksums.md5</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="data/raw/checksums.md5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d19f3c7a8b4016fa641458257b99a1a1  SRR6357070_1.fastq.gz</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d126cc66ed169f69af2c07da0dd73e02  SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Each line is a checksum, two spaces, and a file name. Now check the files against it:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-10" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-10-2" class="code-annotation-target"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
+<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-10" data-code-lines="2" data-code-annotation="1"><code>md5sum</code> computes MD5 checksums; <code>-c</code> (check) reads a list of them, recomputes each file’s, and compares.</span>
+</dd>
+</dl>
+<pre class="console"><code>SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK</code></pre>
+<p>The names in <code>checksums.md5</code> have no folder, so the check runs inside the folder that holds the files. Facilities ship their lists the same way. Run it from the wrong folder and every file “fails”:</p>
+<pre class="console"><code>md5sum: SRR6357070_1.fastq.gz: No such file or directory
+SRR6357070_1.fastq.gz: FAILED open or read
+md5sum: SRR6357070_2.fastq.gz: No such file or directory
+SRR6357070_2.fastq.gz: FAILED open or read
+md5sum: WARNING: 2 listed files could not be read</code></pre>
+<p><strong>Now name the idea</strong> (<a href="#fig-checksum" class="quarto-xref">Figure&nbsp;<span>3.2</span></a>). A checksum is a fingerprint of a file: the same bytes always give the same value, and changing a single byte gives a completely different one. A matching checksum means your copy is byte-for-byte the file the checksum was made from.</p>
+<div id="fig-checksum" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-checksum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 290" role="img" aria-labelledby="checksum-title">
+  <title id="checksum-title">A checksum is a fingerprint of every byte. Three files go through md5sum. The original SRR6357070_1.fastq.gz gives d19f3c7a followed by more digits. An exact copy gives the same value, so it matches. A copy with one byte changed, out of more than two million, gives a completely different value, 78027ba8, so it does not match.</title>
+  <defs>
+    <marker id="checksum-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Column headings -->
+  <text x="20" y="24" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">FILE (2,239,317 BYTES)</text>
+  <text x="440" y="24" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">MD5 CHECKSUM</text>
+  <!-- md5sum box in the middle -->
+  <rect x="306" y="40" width="96" height="232" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="354" y="152" font-size="14" font-weight="700" text-anchor="middle" class="mono">md5sum</text>
+  <text x="354" y="172" font-size="12" text-anchor="middle" class="fill-muted">reads every</text>
+  <text x="354" y="188" font-size="12" text-anchor="middle" class="fill-muted">byte</text>
+  <!-- Row 1: original -->
+  <rect x="20" y="40" width="250" height="64" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="34" y="62" font-size="13" font-weight="700">original</text>
+  <text x="34" y="88" font-size="12" class="mono">1f 8b 08 00 …</text>
+  <text x="142" y="88" font-size="12" text-anchor="middle" class="mono">6a</text>
+  <text x="166" y="88" font-size="12" text-anchor="middle" class="mono">1c</text>
+  <text x="180" y="88" font-size="12" class="mono">…</text>
+  <line x1="272" y1="72" x2="304" y2="72" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"></line>
+  <line x1="404" y1="72" x2="436" y2="72" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"></line>
+  <text x="440" y="70" font-size="13" class="mono">d19f3c7a…a1a1</text>
+  <text x="440" y="90" font-size="12" class="fill-muted">the expected value</text>
+  <!-- Row 2: exact copy -->
+  <rect x="20" y="124" width="250" height="64" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="34" y="146" font-size="13" font-weight="700">exact copy</text>
+  <text x="34" y="172" font-size="12" class="mono">1f 8b 08 00 …</text>
+  <text x="142" y="172" font-size="12" text-anchor="middle" class="mono">6a</text>
+  <text x="166" y="172" font-size="12" text-anchor="middle" class="mono">1c</text>
+  <text x="180" y="172" font-size="12" class="mono">…</text>
+  <line x1="272" y1="156" x2="304" y2="156" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"></line>
+  <line x1="404" y1="156" x2="436" y2="156" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"></line>
+  <text x="440" y="154" font-size="13" class="mono">d19f3c7a…a1a1</text>
+  <text x="440" y="174" font-size="13" class="fill-good">✓ same: OK</text>
+  <!-- Row 3: one byte changed -->
+  <rect x="20" y="208" width="250" height="64" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="34" y="230" font-size="13" font-weight="700">copy, one byte changed</text>
+  <text x="34" y="256" font-size="12" class="mono">1f 8b 08 00 …</text>
+  <text x="166" y="256" font-size="12" text-anchor="middle" class="mono">1c</text>
+  <text x="180" y="256" font-size="12" class="mono">…</text>
+  <rect x="132" y="243" width="20" height="18" rx="3" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+  <text x="142" y="256" font-size="12" text-anchor="middle" class="mono">6b</text>
+  <line x1="272" y1="240" x2="304" y2="240" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"></line>
+  <line x1="404" y1="240" x2="436" y2="240" class="stroke-muted" stroke-width="1.75" marker-end="url(#checksum-arrow)"></line>
+  <text x="440" y="238" font-size="13" class="mono">78027ba8…ca55</text>
+  <text x="440" y="258" font-size="13">✗ different: FAILED</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-checksum-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.2: Checksums of the real read-1 file. An exact copy gives the same MD5 value; changing one byte out of 2,239,317 (<code>6a</code> to <code>6b</code>, halfway through) gives a completely different value.
+</figcaption>
+</figure>
+</div>
+<p>Run <code>md5sum -c</code> after every download or transfer, before any analysis (<a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> reuses it after copying to a cluster). Two kinds of failure mean different things:</p>
+<ul>
+<li><strong><code>FAILED</code></strong>: the bytes differ, usually an incomplete or damaged copy. Download or copy the file again and recheck. Never “fix” the list by computing a new checksum from the damaged copy.</li>
+<li><strong><code>FAILED open or read</code></strong> with <code>No such file or directory</code>: the file is missing, misnamed, or you are in the wrong folder. Check that before assuming damage.</li>
+</ul>
+<p><code>sha256sum</code> works the same way (<code>sha256sum -c</code>) with a longer, stronger value (both are documented in the <a href="https://www.gnu.org/software/coreutils/manual/html_node/md5sum-invocation.html">GNU coreutils manual</a>); the book’s own <code>data/README.md</code> records both. MD5 is still what most facilities and ENA supply, and it is fine for catching damaged copies.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “If the checksums match, my data are correct”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> A match proves your copy is identical to the file the checksum was made from. It says nothing about whether that file was the right sample, or good data: if a facility mislabels a file before computing its checksum, <code>md5sum -c</code> happily prints <code>OK</code>.</p>
+</div>
+</div>
+<p><strong>Protect it, first on a toy.</strong> Raw data is never edited, so make it read-only. Try it first on a practice folder with one small file:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-13-1"><a href="#annotated-cell-13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/practice/locked <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/practice</span>
+<span id="annotated-cell-13-2"><a href="#annotated-cell-13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"first line"</span> <span class="op">&gt;</span> locked/notes.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-13-3" class="code-annotation-target"><a href="#annotated-cell-13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w locked/notes.txt locked</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-13-4" class="code-annotation-target"><a href="#annotated-cell-13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"second line"</span> <span class="op">&gt;&gt;</span> locked/notes.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-13-5" class="code-annotation-target"><a href="#annotated-cell-13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> locked/notes.txt</span>
+<span id="annotated-cell-13-6"><a href="#annotated-cell-13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> locked/notes.txt notes_moved.txt</span>
+<span id="annotated-cell-13-7"><a href="#annotated-cell-13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> locked/new.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-13" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-13" data-code-lines="3" data-code-annotation="1"><code>chmod</code> changes a file’s permissions; <code>a-w</code> removes (<code>-</code>) write permission (<code>w</code>) for all users (<code>a</code>). Here it locks both the file and the folder that holds it.</span>
+</dd>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="2">2</dt>
+<dd>
+<span data-code-cell="annotated-cell-13" data-code-lines="4" data-code-annotation="2">Try to add a line, then (next lines) to delete the file, move it out, and add a new file.</span>
+</dd>
+<dt data-target-cell="annotated-cell-13" data-target-annotation="3">3</dt>
+<dd>
+<span data-code-cell="annotated-cell-13" data-code-lines="5" data-code-annotation="3"><code>-f</code> deletes without asking. Without it, <code>rm</code> may stop to ask about a read-only file; a job running unattended cannot answer.</span>
+</dd>
+</dl>
+<pre class="console"><code>bash: locked/notes.txt: Permission denied
+rm: cannot remove 'locked/notes.txt': Permission denied
+mv: cannot move 'locked/notes.txt' to 'notes_moved.txt': Permission denied
+touch: cannot touch 'locked/new.txt': Permission denied</code></pre>
+<p>All four were refused. Why lock the folder too? Deleting, moving, and adding files change the folder’s list of names, so the folder’s permission controls them, not the file’s. A read-only file in a writable folder can still be deleted:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> open <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"first line"</span> <span class="op">&gt;</span> open/notes.txt</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w open/notes.txt</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> open/notes.txt</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> open</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>rm -f</code> printed nothing and <code>ls</code> shows an empty folder: the read-only file is gone. (Without <code>-f</code>, <code>rm</code> asks before deleting a read-only file when its input is a terminal, even from a script you started there. With <code>-f</code>, or in a job running unattended, nothing asks.)</p>
+<p><strong>Now protect the real raw data</strong>, files and folder:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-16-1"><a href="#annotated-cell-16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="annotated-cell-16-2"><a href="#annotated-cell-16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-16" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-16-3" class="code-annotation-target"><a href="#annotated-cell-16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> data/raw</span>
+<span id="annotated-cell-16-4"><a href="#annotated-cell-16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-16" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-16" data-code-lines="3" data-code-annotation="1"><code>-d</code> lists the folder itself instead of its contents.</span>
+</dd>
+</dl>
+<pre class="console"><code>dr-xr-xr-x 2 you you 4096 Nov 17 11:22 data/raw
+total 4372
+-r--r--r-- 1 you you     112 Nov 17 11:22 checksums.md5
+-r--r--r-- 1 you you 2239317 Nov 17 11:22 SRR6357070_1.fastq.gz
+-r--r--r-- 1 you you 2232117 Nov 17 11:22 SRR6357070_2.fastq.gz</code></pre>
+<p>The <code>w</code> letters are gone. This guards against accidents (a script that writes to the wrong path, a slip of <code>rm</code>), not against you: as the owner you can always give write permission back. To add a file later, unlock the folder and the checksum list (the existing reads can stay locked), add the file and its line from the source’s checksum list, check, and lock everything again:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+w data/raw data/raw/checksums.md5</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># add the new file and its line in checksums.md5, then:</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> explains permissions properly. Keep raw reads compressed, and never unzip them in place: every tool in this book reads <code>.gz</code> directly.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Raw data is read-only: check it once with checksums, protect it, and never edit it. Every change happens in a script that writes somewhere else.</p>
+</div>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> <code>md5sum -c</code> prints <code>FAILED</code> for a file you just copied from the cluster. What happened, and what do you do? What if it says <code>FAILED open or read</code>?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>FAILED</code>: your copy’s bytes differ from the original, usually an incomplete transfer. Copy it again and recheck; do not analyse it. <code>FAILED open or read</code>: the file is missing or misnamed, or you ran the check from the wrong folder.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-shared" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="sec-organizing-projects-shared"><span class="header-section-number">3.5</span> Shared data: link, don’t copy</h2>
+<p>On a cluster, a lab keeps one copy of each reference genome and big shared dataset in a shared folder, something like <code>/project/&lt;lab&gt;/references/</code>, and every project points to it. No one copies a 3 GB genome into each project, and no one’s quota pays twice. You will make a <strong>stand-in</strong> for such a folder in your home folder and link it into the project.</p>
+<p><strong>Make the shared folder.</strong> Download the test genome (yeast chromosome I only, 71 kB) and its annotation into it:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/genome.fa.gz</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/genes.gtf.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Give it a checksum list, as the person who set up the folder would:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/bioinf-shared/references/yeast_R64-1-1_test/checksums.md5</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-filename="~/bioinf-shared/references/yeast_R64-1-1_test/checksums.md5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>4222a07bf01b12782245e0ff774459fe  genome.fa.gz</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>504334f6741ee771c665ae845429087f  genes.gtf.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>genome.fa.gz: OK
+genes.gtf.gz: OK</code></pre>
+<p>And a README, so anyone who finds the folder knows what it is:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/bioinf-shared/references/yeast_R64-1-1_test/README.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="~/bioinf-shared/references/yeast_R64-1-1_test/README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Yeast test reference (stand-in for a lab's shared references)</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>genome.fa.gz: S. cerevisiae R64-1-1, chromosome I only (one sequence, &gt;I)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>genes.gtf.gz: matching gene annotation (test subset)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: nf-core/test-datasets, rnaseq branch, folder reference/,</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  commit 9dd6d014f560e182047992834a8d267214fbccd1</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Downloaded: 2026-11-17 (write your date)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums: checksums.md5 (MD5)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>License: MIT (nf-core/test-datasets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Then protect the folder, as a lab would protect its shared references:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w ~/bioinf-shared/references/yeast_R64-1-1_test/<span class="pp">*</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Link it into the project:</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-25-1"><a href="#annotated-cell-25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-25" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-25-2" class="code-annotation-target"><a href="#annotated-cell-25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/bioinf-shared/references/yeast_R64-1-1_test data/ref</span>
+<span id="annotated-cell-25-3"><a href="#annotated-cell-25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/ref</span>
+<span id="annotated-cell-25-4"><a href="#annotated-cell-25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/ref/</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-25" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-25" data-code-lines="2" data-code-annotation="1"><code>ln -s target name</code> makes a symbolic link called <code>name</code> that points to <code>target</code>.</span>
+</dd>
+</dl>
+<pre class="console"><code>lrwxrwxrwx 1 you you 53 Nov 17 11:22 data/ref -&gt; /home/you/bioinf-shared/references/yeast_R64-1-1_test
+checksums.md5  genes.gtf.gz  genome.fa.gz  README.md</code></pre>
+<p><code>ls -l</code> shows the link itself: an <code>l</code> at the start, and an arrow to the path it holds (on a Mac the path starts with <code>/Users/</code>). <code>ls data/ref/</code>, with the slash, looks through the link and lists the shared folder’s files.</p>
+<p><strong>Now name the idea</strong> (<a href="#fig-symlink" class="quarto-xref">Figure&nbsp;<span>3.3</span></a>). A <strong>symbolic link</strong> (symlink) is another route to the same data, not a copy: a tiny entry that holds only a path. Programs that open <code>data/ref/genome.fa.gz</code> read the file in the shared folder.</p>
+<div id="fig-symlink" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-symlink-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 330" role="img" aria-labelledby="symlink-title" data-step-labels="Link|Read|Write|Unlink">
+  <title id="symlink-title">A symbolic link, in four steps. The project folder ~/bioinf-book/data holds raw, meta, and ref; ref is a link that points to the shared folder ~/bioinf-shared/references/yeast_R64-1-1_test, which holds README.md, checksums.md5, genes.gtf.gz, and genome.fa.gz. Listing data/ref/ shows the shared folder's files, read through the link. Writing through the link would change the shared files themselves; because the shared folder is protected, the write is refused. unlink data/ref removes only the link; the shared folder and its files are untouched.</title>
+  <desc data-caption="1">data/ref is a link: a small entry that holds only the path of the shared folder. ls -l shows it with an arrow.</desc>
+  <desc data-caption="2">Reading through the link reads the shared folder itself: ls data/ref/ lists the shared files. Nothing was copied.</desc>
+  <desc data-caption="3">Writing through the link would change the one shared copy, which every project uses. You protected it, so the write is refused.</desc>
+  <desc data-caption="4">unlink data/ref removes only the link. The shared folder and its files are untouched.</desc>
+  <defs>
+    <marker id="symlink-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ref"></path>
+    </marker>
+    <marker id="symlink-arrow-muted" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- The project -->
+  <rect x="10" y="20" width="240" height="196" rx="12" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"></rect>
+  <text x="26" y="44" font-size="14" font-weight="700" class="mono">~/bioinf-book/data/</text>
+  <rect x="30" y="62" width="200" height="34" rx="6" class="fill-given-soft stroke-given"></rect>
+  <text x="44" y="84" font-size="13" class="mono">raw/</text>
+  <rect x="30" y="106" width="200" height="34" rx="6" class="fill-given-soft stroke-given"></rect>
+  <text x="44" y="128" font-size="13" class="mono">meta/</text>
+  <!-- The link: present until step 4 -->
+  <g data-hide="4">
+    <rect x="30" y="150" width="200" height="40" rx="6" class="fill-surface stroke-ref" stroke-width="1.5" stroke-dasharray="5 3"></rect>
+    <text x="44" y="175" font-size="13" font-weight="700" class="mono">ref →</text>
+    <text x="96" y="175" font-size="12" class="fill-muted">holds only a path</text>
+    <path d="M232,170 C 300,170 300,96 368,96" fill="none" class="stroke-ref" stroke-width="2" marker-end="url(#symlink-arrow)"></path>
+  </g>
+  <g data-show="4">
+    <rect x="30" y="150" width="200" height="40" rx="6" fill="none" class="stroke-line" stroke-dasharray="3 4"></rect>
+    <text x="44" y="175" font-size="12" class="fill-muted">(link removed)</text>
+  </g>
+  <!-- The shared folder -->
+  <rect x="370" y="20" width="340" height="196" rx="12" class="fill-ref-soft stroke-ref" stroke-width="1.25"></rect>
+  <text x="386" y="44" font-size="13" font-weight="700" class="mono">~/bioinf-shared/references/</text>
+  <text x="402" y="62" font-size="13" font-weight="700" class="mono">yeast_R64-1-1_test/</text>
+  <text x="694" y="44" font-size="12" text-anchor="end" class="fill-muted">protected</text>
+  <text x="394" y="92" font-size="13" class="mono">README.md</text>
+  <text x="394" y="116" font-size="13" class="mono">checksums.md5</text>
+  <text x="394" y="140" font-size="13" class="mono">genes.gtf.gz</text>
+  <text x="394" y="164" font-size="13" class="mono">genome.fa.gz</text>
+  <text x="394" y="198" font-size="12" class="fill-muted">one copy, used by every project</text>
+  <!-- Step 2: reading goes through the link -->
+  <g data-show="2" data-hide="3">
+    <path d="M650,242 C 650,150 610,128 512,128" fill="none" class="stroke-muted" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#symlink-arrow-muted)"></path>
+  </g>
+  <!-- Step 3: a write is refused -->
+  <g data-show="3" data-hide="4">
+    <path d="M650,242 L 650,104" fill="none" class="stroke-muted" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#symlink-arrow-muted)"></path>
+    <rect x="480" y="76" width="200" height="24" rx="4" class="fill-surface stroke-ink"></rect>
+    <text x="490" y="93" font-size="12">✗ Permission denied</text>
+  </g>
+  <!-- Terminal strip: one line per step -->
+  <rect x="10" y="244" width="700" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="26" y="266" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-book</text>
+  <g data-hide="2" font-size="13">
+    <text x="26" y="290" class="mono">ls -l data/ref</text>
+    <text x="26" y="310" class="mono fill-muted">data/ref -&gt; /home/you/bioinf-shared/references/yeast_R64-1-1_test</text>
+  </g>
+  <g data-show="2" data-hide="3" font-size="13">
+    <text x="26" y="290" class="mono">ls data/ref/</text>
+    <text x="26" y="310" class="mono fill-muted">checksums.md5  genes.gtf.gz  genome.fa.gz  README.md</text>
+  </g>
+  <g data-show="3" data-hide="4" font-size="13">
+    <text x="26" y="290" class="mono">echo "my note" &gt;&gt; data/ref/README.md</text>
+    <text x="26" y="310" class="mono fill-muted">bash: data/ref/README.md: Permission denied</text>
+  </g>
+  <g data-show="4" font-size="13">
+    <text x="26" y="290" class="mono">unlink data/ref</text>
+    <text x="26" y="310" class="fill-muted">no output; ls ~/bioinf-shared/references/yeast_R64-1-1_test still lists all four files</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-symlink-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.3: What a symbolic link is, and what each action does to it. Use <em>Next</em> to step through.
+</figcaption>
+</figure>
+</div>
+<p>See both halves of that on a toy link in the practice folder (never on the real reference). Writing through a link writes to the original, and removing the link leaves the original alone:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-27-1"><a href="#annotated-cell-27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
+<span id="annotated-cell-27-2"><a href="#annotated-cell-27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> target <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"original line"</span> <span class="op">&gt;</span> target/note.txt</span>
+<span id="annotated-cell-27-3"><a href="#annotated-cell-27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> target toylink</span>
+<span id="annotated-cell-27-4"><a href="#annotated-cell-27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"added through the link"</span> <span class="op">&gt;&gt;</span> toylink/note.txt</span>
+<span id="annotated-cell-27-5"><a href="#annotated-cell-27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> target/note.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-27-6" class="code-annotation-target"><a href="#annotated-cell-27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span> toylink</span>
+<span id="annotated-cell-27-7"><a href="#annotated-cell-27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span>
+<span id="annotated-cell-27-8"><a href="#annotated-cell-27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> target/note.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-27" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-27" data-code-lines="6" data-code-annotation="1"><code>unlink</code> removes one link (or file) and nothing else.</span>
+</dd>
+</dl>
+<pre class="console"><code>original line
+added through the link
+locked  open  target
+original line
+added through the link</code></pre>
+<p>The line written through <code>toylink</code> landed in <code>target/note.txt</code>; after <code>unlink</code>, the link is gone and the target still holds both lines. (Try the same write on <code>data/ref/README.md</code> and you get <code>Permission denied</code>: the protection you added to the shared folder stops it, as step 3 of <a href="#fig-symlink" class="quarto-xref">Figure&nbsp;<span>3.3</span></a> shows.) A link whose target is moved or renamed is <strong>broken</strong>: <code>ls -l</code> still shows the arrow (in red in many terminals), and opening a file through it says <code>No such file or directory</code>.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: <code>rm -r data/ref/</code> deletes the shared data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Remove a link with <code>unlink data/ref</code> or <code>rm data/ref</code>: no slash at the end, no <code>-r</code>. With a trailing slash, which <kbd title="Tab" aria-hidden="true">Tab</kbd><span class="visually-hidden">Tab</span> completion adds for you, <code>rm -r</code> follows the link. On a Mac with GNU coreutils 9.11 (and with macOS’s own <code>rm</code>), this deleted the entire shared folder without a word, and left the link behind, now broken:</p>
+<pre class="console"><code>$ rm -r proj/ref/
+$ echo $?
+0
+$ ls -l proj
+total 0
+lrwxr-xr-x 1 you staff 20 Nov 17 11:34 ref -&gt; /home/you/shared/ref
+$ ls -A shared/ref
+ls: cannot access 'shared/ref': No such file or directory</code></pre>
+<p>(Captured in a test folder, with <code>$</code> before each command: <code>echo $?</code> prints <code>0</code>, the code for success, and the shared folder <code>shared/ref</code> is gone.) On Linux (Ubuntu 24.04, GNU coreutils 9.4) the result differs but is no better: <code>rm</code> deleted every file inside the shared folder, then stopped with <code>rm: cannot remove 'proj/ref/': Not a directory</code>, leaving the folder empty.</p>
+<p>Do not run this. The shared folder you made survives it only because you protected it: <code>rm</code> then stops with <code>Permission denied</code>. A lab’s real shared folder may not be protected from you.</p>
+</div>
+</div>
+<p><strong>Moving the project.</strong> Relative paths in scripts let the project move, but a link is only a pointer: copy the project to another machine (say, laptop to cluster) and <code>data/ref</code> points at a path that does not exist there. Moving a project means three steps: copy the project’s files; reinstall the environment from <code>pixi.toml</code> and <code>pixi.lock</code> (<a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>); and recreate <code>data/ref</code> to point at that machine’s copy of the same reference, which <code>data/README.md</code> identifies by source, release, and checksums (<a href="#sec-organizing-projects-provenance" class="quarto-xref"><span>Section 3.8</span></a>). Transfer commands come in <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>. And a link is not a backup of its target: someone (you, the lab, or the site) must look after the shared copy (<a href="#sec-organizing-projects-backups" class="quarto-xref"><span>Section 3.6</span></a>). Which genome release to use, and why chromosome names differ between sources, is <a href="20-reference-data.html" class="quarto-xref"><span>Chapter 20</span></a>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> You run <code>unlink data/ref</code>. Is the reference genome gone? What must you do to use the project on a second machine?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>No, only the link is gone; the shared folder is untouched. On the second machine, recreate the link to that machine’s copy of the same reference, identified by its source, release, and checksums in <code>data/README.md</code>, and reinstall the environment from the lockfile.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-backups" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="sec-organizing-projects-backups"><span class="header-section-number">3.6</span> Backups: where do your files really live?</h2>
+<p>Start with a question for each place you keep files: if you deleted a file there by mistake today, could you get it back? <a href="#tbl-storage-backup" class="quarto-xref">Table&nbsp;<span>3.3</span></a> answers it for a laptop and the two clusters this book uses as examples. Copy its rows for your own storage into your notebook (you will start it in <a href="#sec-organizing-projects-records" class="quarto-xref"><span>Section 3.9</span></a>) and fill them in from your site’s documentation.</p>
+<div class="wide-table">
+<div id="tbl-storage-backup" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-storage-backup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.3: Is it backed up? Site facts from SCINet’s <a href="https://scinet.usda.gov/guides/data/storage">storage guide</a> and ISU’s <a href="https://research.it.iastate.edu/file-storage">HPC file storage guide</a>, checked 2026-11-17, and Nova’s login banner (<a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a>); your site’s own pages are the authority, and policies change (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>). “Not stated”: the site’s guide does not say.
+</figcaption>
+<div aria-describedby="tbl-storage-backup-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 19%">
+<col style="width: 16%">
+<col style="width: 12%">
+<col style="width: 39%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Storage</th>
+<th style="text-align: left;">Example path</th>
+<th style="text-align: left;">Backed up?</th>
+<th style="text-align: left;">Purged?</th>
+<th style="text-align: left;">Who restores a deleted file</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Laptop disk</td>
+<td style="text-align: left;"><code>~/bioinf-book</code></td>
+<td style="text-align: left;">only if you set up a backup</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">you, from your backup</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sync folder (OneDrive, Dropbox, Google Drive)</td>
+<td style="text-align: left;"><code>~/OneDrive/…</code></td>
+<td style="text-align: left;">no: a copy that follows your changes</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">you, from version history, for as long as it is kept</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SCINet home</td>
+<td style="text-align: left;"><code>/home/&lt;user&gt;</code> (30 GB)</td>
+<td style="text-align: left;">no: “Cluster storage is not backed up”</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">no one</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SCINet project</td>
+<td style="text-align: left;"><code>/project/&lt;project&gt;</code></td>
+<td style="text-align: left;">no (same rule)</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">no one</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SCINet 90-day scratch</td>
+<td style="text-align: left;"><code>/90daydata/&lt;project&gt;</code></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">files older than 90 days, permanently</td>
+<td style="text-align: left;">no one</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SCINet Juno</td>
+<td style="text-align: left;">(long-term storage)</td>
+<td style="text-align: left;">the place to back up data that “cannot be easily reproduced”</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">not stated</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nova home</td>
+<td style="text-align: left;"><code>/home/&lt;netid&gt;</code> (10 GB)</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">not stated</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nova group work</td>
+<td style="text-align: left;"><code>/work/&lt;group&gt;</code></td>
+<td style="text-align: left;">daily snapshots, 7 kept</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">the file-system admins: ask ISU support</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Nova scratch</td>
+<td style="text-align: left;"><code>/ptmp/&lt;you&gt;</code></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">files not used for 60 days</td>
+<td style="text-align: left;">no one</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Nova Large Scale Storage</td>
+<td style="text-align: left;"><code>/lss/research/&lt;group&gt;</code></td>
+<td style="text-align: left;">yes, per Nova’s login banner (“a backed-up system like /lss”)</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">ask ISU support</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">A compute node’s local disk</td>
+<td style="text-align: left;"><code>$TMPDIR</code></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">at the end of each job</td>
+<td style="text-align: left;">no one</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: scratch is purged and not backed up
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Files in scratch space (<code>/90daydata</code>, <code>/ptmp</code>) are deleted automatically; on SCINet the deletion “is permanent and the files cannot be recovered”. Use scratch for files a job can make again, copy results you need into project storage, and find out which other areas are backed up, and for how long, before you trust them.</p>
+</div>
+</div>
+<p><strong>Then name the rule: 3-2-1.</strong> Keep three copies of anything you cannot recreate, on two kinds of storage, with one somewhere else (off site). For raw sequence data, the facility’s copy or the public archive (SRA or ENA, once you have submitted) can be one of the three, but only if you know it is kept and for how long. An archive of the original reads does not preserve a subset or a fix you made yourself.</p>
+<p>A few points the table makes:</p>
+<ul>
+<li><strong>Cluster storage is often not a backup at all.</strong> SCINet says so for all of its cluster storage, and scratch is purged everywhere. Even storage with snapshots (Nova’s <code>/work</code>) should not be your only copy: Nova’s login banner says so.</li>
+<li><strong>A sync folder copies your mistakes too.</strong> Delete or overwrite a file and the change syncs everywhere. It is one copy in two places, unless version history is kept and you know for how long.</li>
+<li><strong>Git keeps the history of code</strong> (<a href="21-git.html" class="quarto-xref"><span>Chapter 21</span></a>), but only a copy stored somewhere else, such as a remote repository (<a href="22-github.html" class="quarto-xref"><span>Chapter 22</span></a>), protects it if your machine is lost.</li>
+</ul>
+<p>What to back up: raw data, metadata, code, the notebook, logs, and the records that explain results; important final results too. A result you can rebuild in seconds, such as this chapter’s read counts, needs no backup of its own. A large or published analysis may need days of computing, a reference that is no longer online, or an old software version to rebuild, so keep it. Intermediate files that a pipeline can make again can follow a lighter rule. And test a restore once: a backup you have never restored from is a hope, not a backup.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “My Dropbox (or OneDrive) folder is my backup”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> Sync copies deletions and overwrites to every device. It protects you only through version history, for as long as the service keeps it, which you need to check.</p>
+</div>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> Your raw FASTQ files are in cluster scratch and in a OneDrive folder on your laptop. Is that a backup you can rely on? What would you check?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Not as it stands: scratch is purged and not backed up, and OneDrive copies deletions. Check how long OneDrive keeps old versions, whether the facility or SRA keeps the original reads (and for how long), and put a copy in storage that is backed up.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-metadata" class="level2" data-number="3.7">
+<h2 data-number="3.7" class="anchored" data-anchor-id="sec-organizing-projects-metadata"><span class="header-section-number">3.7</span> Sample sheets and metadata</h2>
+<p>Reads mean nothing without knowing which sample each file came from. That knowledge is <strong>metadata</strong>, and it lives in tables. Start with the sample sheet nf-core uses to test its RNA-seq pipeline, kept with the book’s reads in <a href="https://github.com/nf-core/test-datasets/tree/rnaseq">nf-core/test-datasets</a>. Download it into <code>data/meta/</code> and keep it exactly as it came, under a name that says so:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/meta/samplesheet_upstream.csv https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> data/meta/samplesheet_upstream.csv</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> data/meta/samplesheet_upstream.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>fb28ab0a8cda268b2befd974804b2925  data/meta/samplesheet_upstream.csv</code></pre>
+<p>The checksum matches the one in the book’s <code>data/README.md</code>, so you have the same file. Its contents, with the long download addresses shortened to <code>…/</code> (the real file has the full URL of each FASTQ file):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>data/meta/samplesheet_upstream.csv (shortened)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="data/meta/samplesheet_upstream.csv (shortened)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sample,fastq_1,fastq_2,strandedness</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>WT_REP1,…/SRR6357070_1.fastq.gz,…/SRR6357070_2.fastq.gz,auto</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>WT_REP1,…/SRR6357071_1.fastq.gz,…/SRR6357071_2.fastq.gz,auto</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>WT_REP2,…/SRR6357072_1.fastq.gz,…/SRR6357072_2.fastq.gz,reverse</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP1,…/SRR6357073_1.fastq.gz,,reverse</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP2,…/SRR6357074_1.fastq.gz,,reverse</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP2,…/SRR6357075_1.fastq.gz,,reverse</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>RAP1_IAA_30M_REP1,…/SRR6357076_1.fastq.gz,…/SRR6357076_2.fastq.gz,reverse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Look before reading on. There are 7 rows but only 5 sample labels: <code>WT_REP1</code> and <code>RAP1_UNINDUCED_REP2</code> each have two rows. Three rows have an empty <code>fastq_2</code>, so those runs are given as single-end. And a <code>strandedness</code> column says how each library was made. In this sheet each row is one sequencing run, with its mate files; rows that share a label are merged into one sample by the pipeline (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>).</p>
+<p><strong>Now check the labels against the source.</strong> The runs are public, so the archive has a record for each. The European Nucleotide Archive’s records (<a href="https://www.ebi.ac.uk/ena/browser/view/SRR6357070">ENA</a>, for the first run) (checked 2026-11-17) tell a different story: the seven runs are <strong>seven different biological samples</strong> (GSM2879618 to GSM2879624), and all seven were sequenced paired-end (<a href="#fig-sample-sheet" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>). The two <code>WT_REP1</code> runs are wild-type replicates 1 and 2; the sheet’s <code>WT_REP2</code> is replicate 3.</p>
+<div id="fig-sample-sheet" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-sample-sheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 360" role="img" aria-labelledby="sample-sheet-title">
+  <title id="sample-sheet-title">nf-core's test sample sheet compared with the archive record. The sheet has 5 sample labels over 7 runs: WT_REP1 has runs SRR6357070 and SRR6357071; WT_REP2 has SRR6357072; RAP1_UNINDUCED_REP1 has SRR6357073; RAP1_UNINDUCED_REP2 has SRR6357074 and SRR6357075; RAP1_IAA_30M_REP1 has SRR6357076. The sheet lists read 1 and read 2 for four runs and read 1 only for three. Only SRR6357070's two files are in this project. ENA lists each of the 7 runs as its own biological sample, GSM2879618 to GSM2879624, all paired-end: wild type replicates 1 to 3, Rap1 degron without induction replicates 1 to 3, and Rap1 degron induced for 30 minutes replicate 1.</title>
+  <!-- Headings -->
+  <text x="20" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">SAMPLE LABEL</text>
+  <text x="232" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">RUN</text>
+  <text x="352" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">FILES IN THE SHEET</text>
+  <text x="510" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">ENA: BIOLOGICAL SAMPLE</text>
+  <text x="20" y="38" font-size="12" class="fill-muted">(nf-core test sheet)</text>
+  <text x="510" y="38" font-size="12" class="fill-muted">(the archive record)</text>
+  <!-- Sample labels, each spanning its runs (rows 36 units apart, first row centre y=66) -->
+  <g font-size="12" class="mono">
+    <rect x="20" y="50" width="190" height="68" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="32" y="89">WT_REP1</text>
+    <rect x="20" y="122" width="190" height="32" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="32" y="143">WT_REP2</text>
+    <rect x="20" y="158" width="190" height="32" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="32" y="179">RAP1_UNINDUCED_REP1</text>
+    <rect x="20" y="194" width="190" height="68" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="32" y="233">RAP1_UNINDUCED_REP2</text>
+    <rect x="20" y="266" width="190" height="32" rx="6" class="fill-given-soft stroke-given"></rect>
+    <text x="32" y="287">RAP1_IAA_30M_REP1</text>
+  </g>
+  <!-- Runs -->
+  <g font-size="12" class="mono">
+    <text x="232" y="71" font-weight="700">SRR6357070</text>
+    <text x="232" y="107">SRR6357071</text>
+    <text x="232" y="143">SRR6357072</text>
+    <text x="232" y="179">SRR6357073</text>
+    <text x="232" y="215">SRR6357074</text>
+    <text x="232" y="251">SRR6357075</text>
+    <text x="232" y="287">SRR6357076</text>
+  </g>
+  <!-- Files listed in the sheet -->
+  <g font-size="12">
+    <rect x="348" y="54" width="138" height="24" rx="4" class="fill-given-soft stroke-given" stroke-width="1.5"></rect>
+    <text x="356" y="71" class="mono" font-weight="700">_1 + _2</text>
+    <text x="420" y="71" class="fill-muted">in data/raw</text>
+    <text x="356" y="107" class="mono">_1 + _2</text>
+    <text x="356" y="143" class="mono">_1 + _2</text>
+    <text x="356" y="179" class="mono">_1 only</text>
+    <text x="356" y="215" class="mono">_1 only</text>
+    <text x="356" y="251" class="mono">_1 only</text>
+    <text x="356" y="287" class="mono">_1 + _2</text>
+  </g>
+  <!-- ENA: every run is its own biological sample, all paired -->
+  <line x1="498" y1="50" x2="498" y2="298" class="stroke-line" stroke-width="1.5"></line>
+  <g font-size="12">
+    <text x="510" y="71"><tspan class="mono">GSM2879618</tspan> WT rep 1</text>
+    <text x="510" y="107"><tspan class="mono">GSM2879619</tspan> WT rep 2</text>
+    <text x="510" y="143"><tspan class="mono">GSM2879620</tspan> WT rep 3</text>
+    <text x="510" y="179"><tspan class="mono">GSM2879621</tspan> Rap1 no ind. 1</text>
+    <text x="510" y="215"><tspan class="mono">GSM2879622</tspan> Rap1 no ind. 2</text>
+    <text x="510" y="251"><tspan class="mono">GSM2879623</tspan> Rap1 no ind. 3</text>
+    <text x="510" y="287"><tspan class="mono">GSM2879624</tspan> Rap1 30 min 1</text>
+  </g>
+  <!-- Footnote -->
+  <text x="20" y="326" font-size="13">Sheet: 5 labels, 7 runs, 3 used single-end. Archive: 7 biological samples, all paired.</text>
+  <text x="20" y="346" font-size="12" class="fill-muted">The labels group runs to test the pipeline; they do not describe the experiment.</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-sample-sheet-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.4: The test sample sheet beside the archive record. The sheet groups 7 runs under 5 labels and gives three as single-end; ENA lists 7 biological samples, all paired-end. Only SRR6357070’s two files are in this project.
+</figcaption>
+</figure>
+</div>
+<p>Nothing is wrong with the sheet: it is a pipeline <strong>test fixture</strong>. Its labels group runs so the test exercises merging and single-end input; they were never meant to describe the experiment. The lesson is general. A sample label is a claim: check it against the source record, and never infer the biology from names alone. (How to design an experiment with replicates is the Transcriptomics book’s subject.)</p>
+<p><strong>Now the project’s own metadata</strong>, for the files actually in <code>data/raw/</code>. Two small tables, one per question. <code>reads.tsv</code> says which files belong to which run and sample; <code>samples.tsv</code> says what each sample is, from its archive record. These commands write them, one line at a time (<code>printf</code> prints its text, <code>\t</code> is a tab, <code>\n</code> ends the line; <code>&gt;</code> starts the file and <code>&gt;&gt;</code> adds to it, as in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tfastq_1\tfastq_2\n'</span> <span class="op">&gt;</span> data/meta/reads.tsv</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tdata/raw/SRR6357070_1.fastq.gz\tdata/raw/SRR6357070_2.fastq.gz\n'</span> <span class="op">&gt;&gt;</span> data/meta/reads.tsv</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tgeo_sample\tcondition\treplicate\n'</span> <span class="op">&gt;</span> data/meta/samples.tsv</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tGSM2879618\twild_type\t1\n'</span> <span class="op">&gt;&gt;</span> data/meta/samples.tsv</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/meta/reads.tsv data/meta/samples.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>sample  run     fastq_1 fastq_2
+WT_REP1 SRR6357070      data/raw/SRR6357070_1.fastq.gz  data/raw/SRR6357070_2.fastq.gz
+sample  run     geo_sample      condition       replicate
+WT_REP1 SRR6357070      GSM2879618      wild_type       1</code></pre>
+<p>(The columns are separated by tabs, which the terminal shows as jumps to the next multiple of 8 characters, so they do not line up. Open the files in VS Code to see them as columns.) A real project has one row per run in <code>reads.tsv</code> and one per sample in <code>samples.tsv</code>; the <code>sample</code> column is how the two tables join (<a href="14-tabular-data.html" class="quarto-xref"><span>Chapter 14</span></a>).</p>
+<p><strong>Now name the idea.</strong> Metadata is data, not a note on the side: kept beside the reads, checked, and changed only on purpose. The rules:</p>
+<ul>
+<li>One row per run (or per sample), one column per property.</li>
+<li>Plain CSV or TSV files, not spreadsheets with merged cells, colour coding, or notes in the margins (spreadsheet pitfalls: <a href="14-tabular-data.html" class="quarto-xref"><span>Chapter 14</span></a>).</li>
+<li>Sample IDs are spelled the same in every table: <code>WT_REP1</code> in one and <code>WT_rep1</code> or <code>WT_REP1</code> (with a trailing space) in another are different IDs.</li>
+<li>File-path columns point at the right files. Sample IDs and file names need not match (<code>WT_REP1</code> and <code>SRR6357070_1.fastq.gz</code>): the table is what connects them.</li>
+<li>Values come from the source record, with the record’s ID (<code>GSM2879618</code>) kept so anyone can check them.</li>
+</ul>
+<p>nf-core’s own sample-sheet format, and how it merges runs, are covered in <a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> The upstream sheet has two rows labelled <code>WT_REP1</code>. Are they two runs of one biological sample? How would you find out?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Not here: ENA lists them as different biological samples, wild-type replicates 1 and 2. The test sheet groups them to test merging. Check the archive record, not the label.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-provenance" class="level2" data-number="3.8">
+<h2 data-number="3.8" class="anchored" data-anchor-id="sec-organizing-projects-provenance"><span class="header-section-number">3.8</span> Provenance: where did this number come from?</h2>
+<p>In <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a> you typed a read count into <code>fastq_summary.txt</code> by hand. Nothing in that file says which file was counted, with what, or when. Now make a result that records how it was made.</p>
+<p><strong>Add the script.</strong> Open a new file in VS Code (<code>code src/01_count_reads.sh</code>), paste the script below, and save. You run it in this chapter; <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a> explains every line.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>src/01_count_reads.sh</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="src/01_count_reads.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 01_count_reads.sh: check the raw FASTQ files, then count their reads.</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run from the project folder:  pixi run bash src/01_count_reads.sh</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-euo</span> pipefail</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> results logs</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="va">log</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span> <span class="st">"logs/01_count_reads_</span><span class="va">$(</span><span class="fu">date</span> +%Y-%m-%dT%H%M%S<span class="va">)</span><span class="st">_XXXX.log"</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"started:  </span><span class="va">$(</span><span class="fu">date</span> <span class="st">"+%Y-%m-%d %H:%M:%S %z"</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"host:     </span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"script:   </span><span class="va">$(</span><span class="fu">md5sum</span> src/01_count_reads.sh<span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"seqkit:   </span><span class="va">$(</span><span class="ex">seqkit</span> version<span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"checking inputs against data/raw/checksums.md5:"</span></span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">(</span><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5<span class="kw">)</span></span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"command:  seqkit stats -T data/raw/*.fastq.gz"</span></span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">seqkit</span> stats <span class="at">--quiet</span> <span class="at">-T</span> data/raw/<span class="pp">*</span>.fastq.gz <span class="op">&gt;</span> results/read_counts.tsv.tmp</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mv</span> results/read_counts.tsv.tmp results/read_counts.tsv</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"output:   </span><span class="va">$(</span><span class="fu">md5sum</span> results/read_counts.tsv<span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"finished: </span><span class="va">$(</span><span class="fu">date</span> <span class="st">"+%Y-%m-%d %H:%M:%S %z"</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="st">"</span><span class="va">$log</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Run it</strong> from the project folder, through pixi, so it finds seqkit:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>started:  2026-11-17 12:24:53 -0600
+host:     your-laptop
+script:   76fa8eb6a7b90f212042cfbe6d95cfcc  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-17 12:24:53 -0600</code></pre>
+<p>Your date, time, host, and log name will differ. Then look at what it made:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> results/read_counts.tsv</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> logs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>file    format  type    num_seqs        sum_len min_len avg_len max_len
+data/raw/SRR6357070_1.fastq.gz  FASTQ   DNA     50000   5050000 101     101.0   101
+data/raw/SRR6357070_2.fastq.gz  FASTQ   DNA     50000   5050000 101     101.0   101
+01_count_reads_2026-11-17T122453_7WFs.log</code></pre>
+<p>(Tab-separated again: <code>-T</code> asks seqkit for a plain table that other programs can read, without the commas and aligned columns of <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>. <code>num_seqs</code> is 50,000 in each file.) What the script did, in plain words:</p>
+<ol type="1">
+<li>Checked the inputs against <code>checksums.md5</code>, and would have stopped there if any failed.</li>
+<li>Recorded the date, the machine, the script’s own checksum, the seqkit version, and the command.</li>
+<li>Counted the reads into a temporary file, and only then moved it into <code>results/</code>. A run that fails half-way cannot replace a good result with an empty one.</li>
+<li>Recorded the output’s checksum.</li>
+<li>Saved everything it printed, including any messages from seqkit, in a new log in <code>logs/</code>, named by date and time plus four random characters (<code>_7WFs</code>; <code>mktemp</code> picks a name no other file has), so every run keeps its own log, even two runs in the same second.</li>
+</ol>
+<p>The log is the run’s record. A log with no <code>finished:</code> line means the run failed, and its last lines say where (<a href="04-getting-help.html" class="quarto-xref"><span>Chapter 4</span></a> starts from exactly that). When one input was corrupted on purpose, the run stopped at <code>FAILED</code>, kept the old result, and left the failure in its log.</p>
+<p><strong>Record where the inputs came from.</strong> The log says what the script read; <code>data/README.md</code> says where those files came from. Make it from this template (the book keeps the same record for its own data):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>data/README.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="data/README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data in this project</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Raw reads: data/raw/</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Files: SRR6357070_1.fastq.gz, SRR6357070_2.fastq.gz (paired-end, read 1 and read 2)</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What: S. cerevisiae RNA-seq, run SRR6357070 (GEO sample GSM2879618,</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  wild type, biological replicate 1), sub-sampled to 50,000 read pairs</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  by nf-core for testing</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Accessions: GEO GSE110004; SRA run SRR6357070</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Downloaded: 2026-11-13 (Chapter 1; write your own date)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums: data/raw/checksums.md5 (MD5). SHA-256:</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  3f50541fa9cf2bedc87e7b682ada0fccfdfcd6d27b9bb81f17be230ff140ebe7  SRR6357070_1.fastq.gz</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  8590e1e01e568fba256aa7dced40519604cbb111ee44ab106a3dcb869660aaf4  SRR6357070_2.fastq.gz</span>
+<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>License: MIT (nf-core/test-datasets); original reads public in SRA</span>
+<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cite: Wu et al. (2018), Molecular Cell 72(6), 942-954.e7,</span>
+<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  doi:10.1016/j.molcel.2018.10.018</span>
+<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reference: data/ref (a link)</span></span>
+<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Points to: ~/bioinf-shared/references/yeast_R64-1-1_test (see its README.md)</span>
+<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What: S. cerevisiae R64-1-1, chromosome I only, with gene annotation (test subset)</span>
+<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/</span>
+<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums (MD5):</span>
+<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  4222a07bf01b12782245e0ff774459fe  genome.fa.gz</span>
+<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>  504334f6741ee771c665ae845429087f  genes.gtf.gz</span>
+<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>On another machine: link data/ref to a copy with these checksums</span>
+<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Metadata: data/meta/</span></span>
+<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>samplesheet_upstream.csv: nf-core's test sheet, unchanged.</span>
+<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>  Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
+<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>  MD5 fb28ab0a8cda268b2befd974804b2925</span>
+<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reads.tsv: which local files belong to which run and sample (written by hand)</span>
+<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>samples.tsv: what each sample is, from its ENA record (checked 2026-11-17)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1</code> is the full download address, pinned to one commit of nf-core/test-datasets, so the files at that address can never change.</p>
+<p><strong>Now name the idea</strong> (<a href="#fig-provenance-chain" class="quarto-xref">Figure&nbsp;<span>3.5</span></a>). <strong>Provenance</strong> is the record of where something came from. For <code>read_counts.tsv</code>, every link in the chain is now in the project.</p>
+<div id="fig-provenance-chain" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-provenance-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 400" role="img" aria-labelledby="provenance-chain-title">
+  <title id="provenance-chain-title">Where results/read_counts.tsv came from. Four records point to it: the code (src/01_count_reads.sh, its checksum, and the command it ran); the software (pixi.lock, and the seqkit version in the log); the inputs it read (the two FASTQ files in data/raw and checksums.md5), which in turn point back to data/README.md with each file's source address, commit, accession, and date; and the log of the run (what happened, when, on which machine). The reference in data/ref and the upstream sample sheet are greyed out: they are project records, not inputs to this result.</title>
+  <defs>
+    <marker id="provenance-chain-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- The result -->
+  <rect x="530" y="150" width="180" height="70" rx="10" class="fill-given-soft stroke-given" stroke-width="1.5"></rect>
+  <text x="544" y="176" font-size="13" font-weight="700" class="mono">results/</text>
+  <text x="544" y="198" font-size="13" font-weight="700" class="mono">read_counts.tsv</text>
+  <!-- Code -->
+  <rect x="210" y="20" width="250" height="70" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="224" y="42" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">CODE</text>
+  <text x="224" y="62" font-size="12" class="mono">src/01_count_reads.sh</text>
+  <text x="224" y="80" font-size="12" class="fill-muted">+ its checksum, the command</text>
+  <!-- Software -->
+  <rect x="210" y="100" width="250" height="70" rx="8" class="fill-surface stroke-line" stroke-width="1.25"></rect>
+  <text x="224" y="122" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">SOFTWARE</text>
+  <text x="224" y="142" font-size="12" class="mono">pixi.lock</text>
+  <text x="224" y="160" font-size="12" class="fill-muted">+ seqkit version, in the log</text>
+  <!-- Inputs -->
+  <rect x="210" y="180" width="250" height="72" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="224" y="202" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">INPUTS IT READ</text>
+  <text x="224" y="222" font-size="12" class="mono">data/raw/SRR6357070_*.fastq.gz</text>
+  <text x="224" y="241" font-size="12" class="mono fill-good">data/raw/checksums.md5</text>
+  <!-- Log -->
+  <rect x="210" y="270" width="250" height="70" rx="8" class="fill-good-soft stroke-good" stroke-width="1.25"></rect>
+  <text x="224" y="292" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">WHAT HAPPENED</text>
+  <text x="224" y="312" font-size="12" class="mono">logs/01_count_reads_…log</text>
+  <text x="224" y="330" font-size="12" class="fill-muted">when, where, checks, output</text>
+  <!-- Where the inputs came from -->
+  <rect x="10" y="180" width="170" height="72" rx="8" class="fill-surface stroke-line" stroke-width="1.25"></rect>
+  <text x="22" y="202" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">SOURCES</text>
+  <text x="22" y="222" font-size="12" class="mono">data/README.md</text>
+  <text x="22" y="241" font-size="12" class="fill-muted">URL, commit, accession</text>
+  <!-- Arrows: everything points to the result; sources point to inputs -->
+  <g class="stroke-muted" stroke-width="1.75" fill="none" marker-end="url(#provenance-chain-arrow)">
+    <path d="M462,55 C 500,51 500,165 528,170"></path>
+    <path d="M462,135 C 495,131 500,175 528,180"></path>
+    <path d="M462,216 C 495,216 505,195 528,192"></path>
+    <path d="M462,305 C 500,301 500,215 528,208"></path>
+    <path d="M182,216 L 208,216"></path>
+  </g>
+  <!-- Project records that are not inputs to this result -->
+  <rect x="10" y="352" width="450" height="42" rx="8" fill="none" class="stroke-line" stroke-dasharray="4 3"></rect>
+  <text x="22" y="370" font-size="12" class="mono fill-muted">data/ref/   data/meta/samplesheet_upstream.csv</text>
+  <text x="22" y="387" font-size="12" class="fill-muted">project records, not inputs to this result</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-provenance-chain-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;3.5: The provenance of <code>results/read_counts.tsv</code>. The code, the software, the inputs it read, and the log of the run point to the result; the inputs point back to their sources. The reference and the upstream sample sheet are project records, but this result did not read them.
+</figcaption>
+</figure>
+</div>
+<p><a href="#tbl-provenance-record" class="quarto-xref">Table&nbsp;<span>3.4</span></a> lists what to record and where it lives.</p>
+<div id="tbl-provenance-record" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-provenance-record-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.4: What to record for each result, and where it lives in the book’s project.
+</figcaption>
+<div aria-describedby="tbl-provenance-record-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 32%">
+<col style="width: 34%">
+<col style="width: 32%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">What to record</th>
+<th style="text-align: left;">In this project</th>
+<th style="text-align: left;">Where it lives</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Source of each input</td>
+<td style="text-align: left;">download address, commit, accession, date</td>
+<td style="text-align: left;"><code>data/README.md</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Exact input files</td>
+<td style="text-align: left;">MD5 of each file</td>
+<td style="text-align: left;"><code>data/raw/checksums.md5</code>, checked in the log</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Code</td>
+<td style="text-align: left;"><code>src/01_count_reads.sh</code> and its MD5</td>
+<td style="text-align: left;"><code>src/</code>, the log</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Command and options</td>
+<td style="text-align: left;"><code>seqkit stats -T data/raw/*.fastq.gz</code></td>
+<td style="text-align: left;">the log</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Software versions</td>
+<td style="text-align: left;">seqkit v2.14.0; every package</td>
+<td style="text-align: left;">the log; <code>pixi.lock</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">When, where, what happened</td>
+<td style="text-align: left;">start and end times, host, check results</td>
+<td style="text-align: left;">the log</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">The output</td>
+<td style="text-align: left;"><code>read_counts.tsv</code> and its MD5</td>
+<td style="text-align: left;"><code>results/</code>, the log</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Why, and what went wrong</td>
+<td style="text-align: left;">decisions and dead ends</td>
+<td style="text-align: left;"><code>NOTEBOOK.md</code> (next section)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Most of this costs nothing if you record it when the file is made, and is impossible to rebuild later. Later chapters add to the chain: git commits for the script (<a href="21-git.html" class="quarto-xref"><span>Chapter 21</span></a>), parameters and random seeds (<a href="23-environments.html" class="quarto-xref"><span>Chapter 23</span></a>), and pipeline versions and reports (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Record provenance when the file is made: source, version, checksum, script, command, software, log. It costs a minute now and cannot be rebuilt later.</p>
+</div>
+</div>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “I’ll remember where this file came from”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> Weeks later no one does, including you. A file whose source, version, and making are not written down cannot be trusted, and often cannot be used in a paper.</p>
+</div>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> A reviewer asks which version of seqkit made <code>read_counts.tsv</code>. Where in the project is the answer?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the run’s log in <code>logs/</code> (the <code>seqkit:</code> line), and in <code>pixi.lock</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-records" class="level2 page-columns page-full" data-number="3.9">
+<h2 data-number="3.9" class="anchored" data-anchor-id="sec-organizing-projects-records"><span class="header-section-number">3.9</span> Writing it down: README, notebook, FAIR</h2>
+<p><strong>The README.</strong> Open <code>README.md</code> from <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a> and replace its two lines with an outline like this one. It answers the first questions a stranger (or you, in a year) will ask:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>README.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Computing for Bioinformatics: book project</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>Worked project for the book *Computing for Bioinformatics*. Counts the</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>reads in one yeast RNA-seq run; later chapters add to it.</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Layout</span></span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/raw/   reads as received, read-only; checksums in checksums.md5</span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/meta/  sample sheets and metadata</span>
+<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/ref    link to the shared reference (see data/README.md)</span>
+<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>src/        scripts, numbered in run order</span>
+<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>results/    made by the scripts; can be rebuilt</span>
+<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>logs/       one log per run</span>
+<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
+<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>Where every input came from: data/README.md.</span>
+<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to rerun</span></span>
+<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="in">    pixi install --locked</span></span>
+<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="in">    pixi run bash src/01_count_reads.sh</span></span>
+<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Software</span></span>
+<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>pixi.toml and pixi.lock (installed with pixi 0.84.2).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>The notebook.</strong> A script shows what was done; it does not show why, what you tried first, or what went wrong. That goes in a notebook. Make <code>NOTEBOOK.md</code> in the project and give it a first dated entry:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>NOTEBOOK.md</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="NOTEBOOK.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Notebook</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2026-11-17</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Organized the project (Chapter 3): moved the reads from ~/bioinf-ch01</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  into data/raw/, checked them with md5sum -c (both OK), made them read-only.</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Linked the test reference from ~/bioinf-shared/ instead of copying it.</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The nf-core test sheet groups 7 runs under 5 labels, but ENA lists</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  7 biological samples, all paired-end: the labels are a test grouping.</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  Used the ENA record for samples.tsv.</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ran src/01_count_reads.sh: 50,000 reads in each file.</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Next: ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Newest entries go at the bottom (or the top: pick one and keep to it). Write a few lines each day you work: what you did, why, what went wrong, and what is next. A plain Markdown file in the project is the book’s default; if your lab already uses an electronic lab notebook, use that. The habit matters, not the tool.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Markdown in one box
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>README.md</code> and <code>NOTEBOOK.md</code> are <strong>Markdown</strong>: plain text with a few marks. <code>#</code> starts a heading (<code>##</code> a smaller one), <code>-</code> starts a list item, and backticks mark code (<code>`md5sum -c`</code>). VS Code shows a preview with <kbd title="Cmd-Shift-V" aria-hidden="true">Cmd-Shift-V</kbd><span class="visually-hidden">Cmd-Shift-V</span> (<kbd title="Ctrl-Shift-V" aria-hidden="true">Ctrl-Shift-V</kbd><span class="visually-hidden">Ctrl-Shift-V</span> on Windows and Linux). Quarto (<a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a>) uses the same marks; see its <a href="https://quarto.org/docs/authoring/markdown-basics.html">Markdown basics</a>.</p>
+</div>
+</div>
+<p><strong>FAIR, briefly.</strong> Funders and journals increasingly ask for data that is <strong>FAIR</strong>: Findable, Accessible, Interoperable, and Reusable <span class="citation" data-cites="wilkinson2016fair">(<a href="../references.html#ref-wilkinson2016fair" role="doc-biblioref"><span class="nocase">Wilkinson et al.</span> 2016</a>)</span>. <a href="#tbl-fair" class="quarto-xref">Table&nbsp;<span>3.5</span></a> shows which habits from this chapter support each principle.</p>
+<div class="no-row-height column-margin column-container"></div><div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Background: the FAIR principles
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div id="tbl-fair" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-fair-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;3.5: The FAIR principles <span class="citation" data-cites="wilkinson2016fair">(<a href="../references.html#ref-wilkinson2016fair" role="doc-biblioref"><span class="nocase">Wilkinson et al.</span> 2016</a>)</span>, and habits from this chapter that support them.
+</figcaption>
+<div aria-describedby="tbl-fair-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 22%">
+<col style="width: 61%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Principle</th>
+<th style="text-align: left;">What it means</th>
+<th style="text-align: left;">Habits from this chapter that support it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Findable</td>
+<td style="text-align: left;">Data have persistent identifiers and rich metadata, so they can be found</td>
+<td style="text-align: left;">citing accessions (<code>SRR6357070</code>, <code>GSM2879618</code>, <code>GSE110004</code>) in <code>data/README.md</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Accessible</td>
+<td style="text-align: left;">Anyone can learn how to get the data, by a standard method; access may need a login</td>
+<td style="text-align: left;">download addresses pinned to a commit; where each input came from</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Interoperable</td>
+<td style="text-align: left;">Data use standard formats and shared vocabularies</td>
+<td style="text-align: left;">FASTQ, FASTA, and GTF files; plain CSV/TSV metadata with clear columns</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Reusable</td>
+<td style="text-align: left;">Data come with a license, provenance, and enough description to be used again</td>
+<td style="text-align: left;">the license and citation for each input; checksums, logs, and the README</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</div>
+<div class="no-row-height column-margin column-container"></div><p>A README and a tidy CSV do not by themselves make a project FAIR; that takes depositing data, with good metadata, in an archive that gives it identifiers (<a href="20-reference-data.html" class="quarto-xref"><span>Chapter 20</span></a>, <a href="22-github.html" class="quarto-xref"><span>Chapter 22</span></a>). They make it much easier. And Accessible does not have to mean open to everyone: data behind a login are fine, as long as how to get access is clear. More on FAIR at <a href="https://www.go-fair.org/fair-principles/">GO FAIR</a>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> Which FAIR principle does citing <code>SRR6357070</code> and <code>GSE110004</code> in your README support?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Findable, through persistent identifiers (and Reusable, since others can trace and credit the data).</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-summary" class="level2" data-number="3.10">
+<h2 data-number="3.10" class="anchored" data-anchor-id="sec-organizing-projects-summary"><span class="header-section-number">3.10</span> Summary</h2>
+<ul>
+<li>One project, one folder, with inputs (<code>data/</code>), code (<code>src/</code>), and outputs (<code>results/</code>, <code>logs/</code>) apart, so results can be rebuilt. Names without spaces, ISO dates, zero-padded numbers, scripts numbered in run order.</li>
+<li>Raw data is checked with <code>md5sum -c</code> (in the folder that holds the files) after every download or transfer, then protected with <code>chmod a-w</code> on the files <strong>and</strong> the folder. <code>FAILED</code> means damaged; <code>FAILED open or read</code> means missing or the wrong folder.</li>
+<li>Shared data is linked, not copied: <code>ln -s target data/ref</code>. Remove a link with <code>unlink data/ref</code>, never <code>rm -r data/ref/</code>. A link does not travel with the project; <code>data/README.md</code> says what to link on another machine.</li>
+<li>Each result has a record of its provenance: the inputs’ sources and checksums (<code>data/README.md</code>, <code>checksums.md5</code>), the script, the software (<code>pixi.lock</code>), and a log of every run. <code>README.md</code> and <code>NOTEBOOK.md</code> say what the project is and why you did what you did.</li>
+<li>Know which of your storage is backed up, for how long, and who restores it. Scratch is purged; a sync folder copies mistakes; 3-2-1 for anything you cannot recreate.</li>
+</ul>
+<p>The project now looks like this:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>~/bioinf-book/</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>├── NOTEBOOK.md</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>├── pixi.toml  pixi.lock  .pixi/</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>├── data/</span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>│   ├── README.md</span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>│   ├── raw/        SRR6357070_1.fastq.gz  SRR6357070_2.fastq.gz  checksums.md5</span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>│   ├── meta/       reads.tsv  samples.tsv  samplesheet_upstream.csv</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>│   └── ref -&gt; ~/bioinf-shared/references/yeast_R64-1-1_test</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>├── src/            01_count_reads.sh</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>├── results/        read_counts.tsv</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>└── logs/           01_count_reads_2026-11-17T122453_7WFs.log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="sec-organizing-projects-exercises" class="level2" data-number="3.11">
+<h2 data-number="3.11" class="anchored" data-anchor-id="sec-organizing-projects-exercises"><span class="header-section-number">3.11</span> Exercises</h2>
+<p>Practice files go in <code>~/bioinf-ch03/</code>, not in the project.</p>
+<div class="check">
+<p><strong>Exercise 1. Rename a messy folder.</strong> Make a folder of badly named files:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/messy <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/messy</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> <span class="st">"SRR6357070 R1.fastq.gz"</span> <span class="st">"Analysis.R"</span> <span class="st">"plot 1.png"</span> <span class="st">"plot 2.png"</span> <span class="st">"plot 10.png"</span> <span class="st">"counts final.txt"</span> <span class="st">"counts final_v2.txt"</span> <span class="st">"11-3-25 notes.txt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>counts final.txt</code> and <code>counts final_v2.txt</code> are really tab-separated tables, and <code>_v2</code> added one sample. Write down a new name for each file, then rename them with <code>mv</code>, quoting the old names, for example:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="st">"plot 1.png"</span> plot_01.png</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>What would you ask before renaming <code>11-3-25 notes.txt</code>?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>One good set:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 40%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Old name</th>
+<th style="text-align: left;">New name</th>
+<th style="text-align: left;">Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>SRR6357070 R1.fastq.gz</code></td>
+<td style="text-align: left;"><code>SRR6357070_1.fastq.gz</code></td>
+<td style="text-align: left;">no space; keep the archive’s ID and its <code>_1</code> convention</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Analysis.R</code></td>
+<td style="text-align: left;"><code>01_analysis.R</code></td>
+<td style="text-align: left;">lowercase; numbered in run order (better: say what it analyses)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>plot 1.png</code>, <code>plot 2.png</code>, <code>plot 10.png</code></td>
+<td style="text-align: left;"><code>plot_01.png</code>, <code>plot_02.png</code>, <code>plot_10.png</code></td>
+<td style="text-align: left;">zero-padded, so they sort 1, 2, 10</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>counts final.txt</code></td>
+<td style="text-align: left;"><code>counts_7samples.tsv</code></td>
+<td style="text-align: left;">true extension; says what it holds</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>counts final_v2.txt</code></td>
+<td style="text-align: left;"><code>counts_8samples.tsv</code></td>
+<td style="text-align: left;">says what changed, instead of <code>v2</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>11-3-25 notes.txt</code></td>
+<td style="text-align: left;">ask first</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>Now <code>ls -1</code> lists the plots in order. For the date, ask whoever wrote it: is it 3 November or 11 March, and which year? Then rename to <code>2025-11-03_notes.txt</code> or <code>2025-03-11_notes.txt</code> (or the right year).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 2. Catch a broken transfer.</strong> Make a truncated copy of read 1 in the practice folder, as an interrupted transfer would, copy the checksum list beside it, and check:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 ~/bioinf-book/data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> SRR6357070_1.fastq.gz</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-book/data/raw/checksums.md5 .</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>(<code>head -c 1000000</code> keeps the first million bytes. Read 2 is missing on purpose.) Which kind of failure does each file give? Both checks catch this copy; which one would catch a file that is complete, but the wrong sample?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<pre class="console"><code>SRR6357070_1.fastq.gz: FAILED
+md5sum: SRR6357070_2.fastq.gz: No such file or directory
+SRR6357070_2.fastq.gz: FAILED open or read
+md5sum: WARNING: 1 listed file could not be read
+md5sum: WARNING: 1 computed checksum did NOT match
+gzip: SRR6357070_1.fastq.gz: unexpected end of file
+gzip: SRR6357070_1.fastq.gz: uncompress failed</code></pre>
+<p>Read 1 is <code>FAILED</code> (bytes differ); read 2 is <code>FAILED open or read</code> (missing). <code>gzip -t</code> catches truncation too. Only the checksum, compared against the facility’s list, catches a wrong file that is still valid gzip. Neither tells you whether the facility’s own file was right (the misconception in <a href="#sec-organizing-projects-raw" class="quarto-xref"><span>Section 3.4</span></a>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 3. Labels against records.</strong> Here are the ENA records for all seven runs in the upstream sheet (captured 2026-11-17 from ENA’s <a href="https://www.ebi.ac.uk/ena/portal/api/">file report</a> for each run):</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 12%">
+<col style="width: 30%">
+<col style="width: 35%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Run</th>
+<th style="text-align: left;">GEO sample</th>
+<th style="text-align: left;">Sample title</th>
+<th style="text-align: left;">Layout</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SRR6357070</td>
+<td style="text-align: left;">GSM2879618</td>
+<td style="text-align: left;">Wild-type total RNA-Seq biological replicate 1</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SRR6357071</td>
+<td style="text-align: left;">GSM2879619</td>
+<td style="text-align: left;">Wild-type total RNA-Seq biological replicate 2</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SRR6357072</td>
+<td style="text-align: left;">GSM2879620</td>
+<td style="text-align: left;">Wild-type total RNA-Seq biological replicate 3</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SRR6357073</td>
+<td style="text-align: left;">GSM2879621</td>
+<td style="text-align: left;">Rap1-AID degron no induction total RNA-Seq biological replicate 1</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SRR6357074</td>
+<td style="text-align: left;">GSM2879622</td>
+<td style="text-align: left;">Rap1-AID degron no induction total RNA-Seq biological replicate 2</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">SRR6357075</td>
+<td style="text-align: left;">GSM2879623</td>
+<td style="text-align: left;">Rap1-AID degron no induction total RNA-Seq biological replicate 3</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">SRR6357076</td>
+<td style="text-align: left;">GSM2879624</td>
+<td style="text-align: left;">Rap1-AID degron induction 30 minutes total RNA-Seq biological replicate 1</td>
+<td style="text-align: left;">PAIRED</td>
+</tr>
+</tbody>
+</table>
+<p>Copy the upstream sheet into the practice folder (<code>cp ~/bioinf-book/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/</code>), open the copy in VS Code, and add <code>geo_sample</code> and <code>condition</code> columns from this table. How many biological samples are there? How many runs are really paired-end? Why might a test fixture group them differently? And what goes wrong if a sample ID in one table has a trailing space?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Seven biological samples, all paired-end. The fixture’s labels exist to test the pipeline: two labels with two runs each test merging, and three runs given as read 1 only test single-end input. A trailing space makes a different ID (<code>WT_REP1</code> is not <code>WT_REP1</code>), so the two tables fail to match when joined; <a href="14-tabular-data.html" class="quarto-xref"><span>Chapter 14</span></a> shows how to detect it.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 4. Rebuild and compare.</strong> Save a copy of the result outside <code>results/</code>, delete <code>results/</code>, rerun the script, and compare:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-71" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-71-1"><a href="#annotated-cell-71-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="annotated-cell-71-2"><a href="#annotated-cell-71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv</span>
+<span id="annotated-cell-71-3"><a href="#annotated-cell-71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-r</span> results</span>
+<span id="annotated-cell-71-4"><a href="#annotated-cell-71-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-71" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-71-5" class="code-annotation-target"><a href="#annotated-cell-71-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cmp</span> ~/bioinf-ch03/read_counts_before.tsv results/read_counts.tsv</span>
+<span id="annotated-cell-71-6"><a href="#annotated-cell-71-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> logs</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-71" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-71" data-code-lines="5" data-code-annotation="1"><code>cmp</code> compares two files byte by byte and prints nothing if they are identical.</span>
+</dd>
+</dl>
+<p>Then add a <code>NOTEBOOK.md</code> entry for today.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>cmp</code> prints nothing: the rebuilt result is identical. <code>logs/</code> now has two logs, one per run, with different names, which is why outputs and logs are kept apart. The result could be deleted safely because the inputs, code, and software records were all kept.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 5. Your own storage.</strong> (Cluster readers.) Make the same layout in your project storage, link a reference your site or lab already provides (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>) or the test reference, and fill in the rows of <a href="#tbl-storage-backup" class="quarto-xref">Table&nbsp;<span>3.3</span></a> for your site from its documentation, including who restores a deleted file. No cluster yet? Fill in the rows for your laptop and any sync folder you use.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-25-contents" aria-controls="callout-25" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-25" class="callout-25-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Answers depend on the site. A complete row names the path, whether it is backed up or snapshotted and for how long, whether it is purged and after how long, and whom to ask (with the link to the page you used). If the documentation does not say, write “not stated” and ask your site’s support rather than assume.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-organizing-projects-reading" class="level2 page-columns page-full" data-number="3.12">
+<h2 data-number="3.12" class="anchored" data-anchor-id="sec-organizing-projects-reading"><span class="header-section-number">3.12</span> Further reading</h2>
+<ul>
+<li><span class="citation" data-cites="wilson2017good">Wilson et al. (<a href="../references.html#ref-wilson2017good" role="doc-biblioref">2017</a>)</span>, “Good enough practices in scientific computing” — the closest match to this chapter: data management, project organization, and keeping track of changes, as a short checklist.</li>
+<li><span class="citation" data-cites="noble2009quick">Noble (<a href="../references.html#ref-noble2009quick" role="doc-biblioref">2009</a>)</span>, “A quick guide to organizing computational biology projects” — the classic project layout and lab-notebook advice; compare its folders with ours.</li>
+<li><span class="citation" data-cites="wilkinson2016fair"><span class="nocase">Wilkinson et al.</span> (<a href="../references.html#ref-wilkinson2016fair" role="doc-biblioref">2016</a>)</span> — the paper that defined the FAIR principles; read the box of principles, not the whole paper.</li>
+<li><span class="citation" data-cites="shotts2025linux">Shotts (<a href="../references.html#ref-shotts2025linux" role="doc-biblioref">2025</a>)</span>, <em>The Linux Command Line</em>, the chapters on links and on permissions — for readers who want <code>ln</code> and <code>chmod</code> explained before <a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a> and <a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a>.</li>
 </ul>
 
 
+<div class="no-row-height column-margin column-container"><div id="ref-wilson2017good" class="csl-entry" role="listitem">
+Wilson, Greg, Jennifer Bryan, Karen Cranston, Justin Kitzes, Lex Nederbragt, and Tracy K. Teal. 2017. <span>“Good Enough Practices in Scientific Computing.”</span> <em>PLOS Computational Biology</em> 13 (6): e1005510. <a href="https://doi.org/10.1371/journal.pcbi.1005510">https://doi.org/10.1371/journal.pcbi.1005510</a>.
+</div><div id="ref-noble2009quick" class="csl-entry" role="listitem">
+Noble, William Stafford. 2009. <span>“A Quick Guide to Organizing Computational Biology Projects.”</span> <em>PLoS Computational Biology</em> 5 (7): e1000424. <a href="https://doi.org/10.1371/journal.pcbi.1000424">https://doi.org/10.1371/journal.pcbi.1000424</a>.
+</div><div id="ref-wilkinson2016fair" class="csl-entry" role="listitem">
+<span class="nocase">Wilkinson, Mark D., Michel Dumontier, IJsbrand Jan Aalbersberg, et al.</span> 2016. <span>“The <span>FAIR</span> Guiding Principles for Scientific Data Management and Stewardship.”</span> <em>Scientific Data</em> 3 (1): 160018. <a href="https://doi.org/10.1038/sdata.2016.18">https://doi.org/10.1038/sdata.2016.18</a>.
+</div><div id="ref-shotts2025linux" class="csl-entry" role="listitem">
+Shotts, William. 2025. <em>The Linux Command Line</em>. Seventh Internet, Rev. A (25.12). <a href="https://linuxcommand.org/tlcl.php">https://linuxcommand.org/tlcl.php</a>.
+</div></div>
 </section>
 
 </main> <!-- /main -->

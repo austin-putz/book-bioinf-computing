@@ -128,6 +128,19 @@
     cluster too.)
   chapters: [02-book-setup, 09-working-remotely]
 
+- id: closing-tab-ends-session
+  claim: "Closing the browser tab ends my Open OnDemand session."
+  reality: >
+    The session is a cluster job that keeps its compute node until you
+    click Cancel on its card in My Interactive Sessions or it reaches its
+    time limit. Closing the tab only closes your view of it (checked on
+    Nova, 2026-11-16).
+  probe: >
+    You close the VS Code tab and reopen My Interactive Sessions. What does
+    the card say, and how do you free the node? (Correct: still Running
+    with time remaining; click Cancel.)
+  chapters: [02-book-setup, 10-hpc-slurm]
+
 - id: ide-required
   claim: "I need RStudio for R and Jupyter for Python."
   reality: >

@@ -969,6 +969,24 @@ group's `/work`: 143 TB), not a personal limit, so it can't answer
 "how much may I use". Nova's home and `/work` limits must come from ISU's
 docs (to look up for Appendix A). For the book: `df -h` is a useful
 command but a common misreading ("I have 6 TB free in home").
+
+**From ISU's docs** (<https://research.it.iastate.edu/file-storage>,
+read 2026-11-16, no update date shown):
+
+| Storage | Limit / rule (ISU's words) | Purpose |
+|:--|:--|:--|
+| `/home/<netid>` | "maximum size of **10GB**" | small settings files |
+| `/work/<group>` | bought by the group; "Group quota … based on the shares for the group and can be seen at login"; usage in `/work/<group>/group_storage_usage`, "updated once every hour" | analysis, environments |
+| `/ptmp` | free; "only intended to be kept for short periods of 6 to 8 weeks" (login banner: deleted after 60 days unused) | short-term scratch |
+| `/lss/research` | bought per TB per year; snapshots and an off-site mirror; **not** visible on compute nodes | long-term storage |
+| `$TMPDIR` | node-local, deleted when the job ends | temporary job files |
+
+No file-count limit stated. `/lustre` (named in the banner) is not
+described on the pages read.
+
+Meanings: Nova's home is **10 GB** (SCINet: 30 GB), so one book
+environment (1.3 GB) would be 13% of it: on Nova, `/work` is a must.
+Optional check for Austin: `cat /work/<group>/group_storage_usage`.
 :::
 
 ---
@@ -1053,8 +1071,7 @@ If you can borrow an M-series Mac (Apple menu → About This Mac says
 
 1. ~~SCINet first SSH login (2.1)~~ done 2026-11-16 (no `yes` prompt).
 2. ~~Ceres Working Directory test (2.3)~~ done 2026-11-16: works.
-3. ~~Nova (Part 3)~~ done 2026-11-16, except Nova's quota limits
-   (look up in ISU docs).
+3. ~~Nova (Part 3)~~ done 2026-11-16 (limits from ISU docs).
 4. **Optional:** Atlas OnDemand app list (is there a VS Code app?);
    Apple Silicon run (Part 5).
 
@@ -1076,7 +1093,7 @@ table or send them as text files.
 | nano / vim present, `$SHELL` | SCINet login node | **Done 2026-11-14 (Atlas):** `/bin/bash`; `/usr/bin/nano` (GNU nano 5.6.1), `/usr/bin/vim`; Rocky 9. See 2.2. |
 | nano / vim present, `$SHELL` | Nova login node | **Done 2026-11-16:** `nova-login-2`; `/bin/bash`; `/usr/bin/nano` (GNU nano 5.6.1), `/usr/bin/vim`; lands in `/home/<netid>`. See Part 3. |
 | Home and project quota (bytes, files) | SCINet | **Done 2026-11-14 (Atlas):** home 30 GB (fixed); project quota per project (1000 GB); `/90daydata` no quota, 90-day purge; `my_quotas` shows no file counts. **Ceres too:** home 29.8 GB; the same projects have separate, different quotas per cluster (5–10 TB on Ceres); Juno LTS listed on Ceres only. See 2.2. |
-| Home and work quota (bytes, files) | Nova | **Partly done 2026-11-16:** `quota -s` empty; `df -h` shows shared filesystems (home 14 TB total, group `/work` 143 TB), not personal limits. Limits to look up in ISU docs. See Part 3. |
+| Home and work quota (bytes, files) | Nova | **Done 2026-11-16 (from ISU docs):** home 10 GB; `/work` group quota, usage in `/work/<group>/group_storage_usage`; no file-count limit stated. On the node: `quota -s` empty; `df -h` shows shared filesystems (home 14 TB total, group `/work` 143 TB), not personal limits. Limits to look up in ISU docs. See Part 3. |
 | VS Code route used, `hostname`, how ended | SCINet | **Done 2026-11-14 (Ceres):** OnDemand VS Code Server; `hostname` = `ceres20-compute-2` (compute node); terminal starts in the session's ID-named folder. Form: account, queue/QOS `ceres`, 2 cores, 8G, 2 h, Working Directory set to the project opens there (tested). Cancel stopped VS Code; tab closed by hand. See 2.3. |
 | VS Code route used, `hostname`, how ended | Nova | **Done 2026-11-16:** OnDemand VS Code on compute node `nova18-69`, in `/work/<group>/<netid>`. VS Code Server app; form recorded (partition `nova`, tasks per node, memory, modules, Working Directory defaults to last used; code-server 4.97). Cancel on the card → Completed (Delete clears the card, kept 7 days otherwise); tab closed by hand. See Part 3. |
 | pixi trial: time, sizes, file counts | WSL | **Done 2026-11-14:** 9.8 s; `.pixi` 1.3 GB / 15,524 files; cache 132 MB / 19,858 files (hard links); check and stats as expected. See 1.7. |

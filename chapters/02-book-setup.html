@@ -104,9 +104,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-8ae63f4a318a0b70a79ac44741e73219.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e9dba73806d5ab9f4a7f8d7211e9373f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-8ae63f4a318a0b70a79ac44741e73219.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-a67ad02c8eadafdc7aff2effa4974bc2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
 <script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
 <link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
@@ -670,6 +670,12 @@ div.csl-indent {
  <span class="menu-text">References</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reporting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Report an issue!</strong></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-controls="quarto-sidebar-section-9" aria-expanded="false">
@@ -680,12 +686,6 @@ div.csl-indent {
   <div class="sidebar-item-container"> 
   <a href="../appendices/a-cluster-sites.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Cluster sites: SCINet and Nova</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reporting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Report an Issue</span></a>
   </div>
 </li>
       </ul>
@@ -1356,6 +1356,84 @@ Table&nbsp;2.2: VS Code extensions this book uses. “Runs where” matters when
 <h2 data-number="2.4" class="anchored" data-anchor-id="sec-book-setup-ssh"><span class="header-section-number">2.4</span> Just enough SSH</h2>
 <p>This section and the next are for readers with a cluster account. No account yet? Read the captured sessions, then go on to <a href="#sec-book-setup-terminal-editors" class="quarto-xref"><span>Section 2.6</span></a>. <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> covers SSH properly; here you need only enough to log in and look around.</p>
 <p><strong>SSH</strong> (secure shell) logs you in to another computer: you type commands on your laptop, and they run on the other machine. On SCINet you can skip this section for now: SCINet recommends its browser portal, Open OnDemand, for most work, so you can go straight to <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>.</p>
+<p><a href="#fig-ssh-basics" class="quarto-xref">Figure&nbsp;<span>2.3</span></a> shows the idea before you try it. Your laptop keeps the keyboard and the screen; every command you type is sent through an encrypted connection, runs on the cluster, and only its output comes back.</p>
+<div id="fig-ssh-basics" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ssh-basics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 320" role="img" aria-labelledby="ssh-basics-title" data-step-labels="Connect|Sign in|Command|Reply">
+  <title id="ssh-basics-title">How SSH works, in four steps. Your laptop runs ssh, which opens an encrypted connection over the internet to the cluster's login node. Both sides prove who they are: the server with its host key, you with a code and your password. Each command you type, such as hostname, travels through the connection and runs on the login node, using its CPUs and its files. The output, here nova-login-2, travels back and appears in your laptop's terminal. Typing exit closes the connection.</title>
+  <desc data-caption="1">You type ssh with your user name and the cluster's address. It opens an encrypted connection from your laptop to the login node.</desc>
+  <desc data-caption="2">Both sides prove who they are: the server shows its host key (the yes question), and you give your code and password.</desc>
+  <desc data-caption="3">Now each command you type, such as hostname, travels through the connection and runs on the login node, not on your laptop.</desc>
+  <desc data-caption="4">The output travels back and appears on your screen. Typing exit closes the connection, and you are back on your laptop.</desc>
+  <defs>
+    <marker id="ssh-basics-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Laptop: screen with a terminal, and a base -->
+  <rect x="20" y="40" width="190" height="130" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+  <rect x="30" y="50" width="170" height="110" rx="3" class="fill-muted-soft"></rect>
+  <path d="M8,170 L222,170 L232,184 L-2,184 Z" class="fill-surface stroke-ink" stroke-width="1.5" transform="translate(4,0)"></path>
+  <g font-size="12" class="mono">
+    <text x="38" y="70">ssh you@nova…</text>
+    <text x="38" y="92" data-show="3">hostname</text>
+    <text x="38" y="112" data-show="4" class="fill-given">nova-login-2</text>
+    <text x="38" y="134" data-show="4">exit</text>
+  </g>
+  <text x="115" y="212" font-size="15" font-weight="700" text-anchor="middle">Your laptop</text>
+  <text x="115" y="232" font-size="13" text-anchor="middle" class="fill-muted">you type, you see</text>
+  <!-- Login node: a server -->
+  <rect x="530" y="40" width="170" height="144" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+  <g class="stroke-line" stroke-width="1.5">
+    <line x1="548" y1="64" x2="682" y2="64"></line>
+    <line x1="548" y1="80" x2="682" y2="80"></line>
+    <line x1="548" y1="96" x2="682" y2="96"></line>
+  </g>
+  <g class="fill-muted">
+    <circle cx="672" cy="168" r="3.5"></circle>
+    <circle cx="658" cy="168" r="3.5"></circle>
+  </g>
+  <text x="615" y="212" font-size="15" font-weight="700" text-anchor="middle">Cluster login node</text>
+  <text x="615" y="232" font-size="13" text-anchor="middle" class="fill-muted">commands run here:</text>
+  <text x="615" y="250" font-size="13" text-anchor="middle" class="fill-muted">its CPUs, its files</text>
+  <g data-show="3">
+    <rect x="548" y="120" width="134" height="30" rx="4" class="fill-surface stroke-ink" stroke-width="1"></rect>
+    <text x="615" y="140" font-size="13" text-anchor="middle">runs <tspan class="mono">hostname</tspan></text>
+  </g>
+  <!-- The SSH connection: an encrypted pipe over the internet -->
+  <rect x="210" y="96" width="320" height="58" rx="6" class="fill-muted-soft stroke-line" stroke-width="1.5"></rect>
+  <text x="370" y="176" font-size="13" text-anchor="middle" class="fill-muted">encrypted SSH connection, over the internet</text>
+  <!-- Lock -->
+  <path d="M362,72 v-8 a8,8 0 0 1 16,0 v8" fill="none" class="stroke-ink" stroke-width="2"></path>
+  <rect x="356" y="72" width="28" height="20" rx="3" class="fill-ink"></rect>
+  <!-- Step 2: who are you? -->
+  <g data-show="2" font-size="13">
+    <text x="232" y="212" class="fill-good">✓ the server proves it is Nova (host key)</text>
+    <text x="232" y="232" class="fill-good">✓ you prove it is you (code, password)</text>
+  </g>
+  <!-- Step 3: the command travels to the login node -->
+  <g data-show="3" data-move="3" style="--dx:-210px">
+    <rect x="430" y="104" width="88" height="20" rx="10" class="fill-surface stroke-ink" stroke-width="1"></rect>
+    <text x="474" y="118" font-size="12" text-anchor="middle" class="mono">hostname</text>
+  </g>
+  <line x1="300" y1="114" x2="424" y2="114" class="stroke-muted" stroke-width="1.5" marker-end="url(#ssh-basics-arrow)" data-show="3"></line>
+  <!-- Step 4: the output travels back -->
+  <g data-show="4" data-move="4" style="--dx:200px">
+    <rect x="222" y="127" width="100" height="20" rx="10" class="fill-given-soft stroke-given" stroke-width="1"></rect>
+    <text x="272" y="141" font-size="12" text-anchor="middle" class="mono fill-given">nova-login-2</text>
+  </g>
+  <line x1="440" y1="137" x2="328" y2="137" class="stroke-muted" stroke-width="1.5" marker-end="url(#ssh-basics-arrow)" data-show="4"></line>
+  <!-- Bottom line -->
+  <text x="360" y="300" font-size="13" text-anchor="middle">One keyboard and screen (yours); the work happens on the other computer.</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ssh-basics-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: What SSH does. <code>ssh</code> opens an encrypted connection from your laptop to the cluster’s login node; both sides prove who they are; then each command travels to the login node, runs there, and sends its output back to your screen. <code>exit</code> closes the connection.
+</figcaption>
+</figure>
+</div>
 <p><strong>Log in, look, log out.</strong> From your laptop’s terminal, with your cluster user name and its login host (Nova’s is shown, with <code>&lt;netid&gt;</code> to replace by your own; others are in <a href="#tbl-ssh-sites" class="quarto-xref">Table&nbsp;<span>2.3</span></a>):</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -1383,7 +1461,7 @@ Warning: Permanently added 'nova.its.iastate.edu' (ED25519) to the list of known
 Last login: Mon Nov 16 17:55:22 2026 from &lt;address&gt;</code></pre>
 <p>What happened, line by line:</p>
 <ol type="1">
-<li><strong>The host-key question.</strong> The first time you connect to a machine, SSH cannot yet tell whether it is the real one, so it shows the machine’s key fingerprint and asks. If your site publishes its fingerprints, compare them first; if they differ, or something looks wrong (a typo in the host name, say), answer <code>no</code> and ask your site’s support (<a href="https://man.openbsd.org/ssh.1#VERIFYING_HOST_KEYS">OpenSSH: verifying host keys</a>). Otherwise type the whole word <code>yes</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>; <code>y</code> is not accepted. SSH saves the machine’s key in <code>~/.ssh/known_hosts</code> on your laptop and does not ask again.</li>
+<li><strong>The host-key question.</strong> The first time you connect to a machine, SSH cannot yet tell whether it is the real one, so it shows the machine’s key fingerprint and asks. If your site publishes its fingerprints, compare them first. Nova does (<a href="https://research.it.iastate.edu/nova-ssh-host-key-fingerprints">Nova SSH host key fingerprints</a>), and the <code>ED25519</code> line above matches it. If a fingerprint differs, or something looks wrong (a typo in the host name, say), answer <code>no</code> and ask your site’s support (<a href="https://man.openbsd.org/ssh.1#VERIFYING_HOST_KEYS">OpenSSH: verifying host keys</a>). Otherwise type the whole word <code>yes</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>; <code>y</code> is not accepted. SSH saves the machine’s key in <code>~/.ssh/known_hosts</code> on your laptop and does not ask again.</li>
 <li><strong>The sign-in.</strong> Nova asks for a code from an authenticator app (such as Google Authenticator) first, then your password. Neither shows anything as you type; that is normal.</li>
 <li><strong>The banner</strong>: the site’s notices, worth reading once. This one already says which storage is not backed up.</li>
 </ol>
@@ -1447,12 +1525,31 @@ Table&nbsp;2.3: Logging in with SSH at the two sites used as examples in this bo
 <td style="text-align: left;">yes, on first login</td>
 <td style="text-align: left;">no: <code>step</code> supplies the host keys</td>
 </tr>
+<tr class="odd">
+<td style="text-align: left;">Data transfer node (for moving files)</td>
+<td style="text-align: left;"><code>novadtn.its.iastate.edu</code></td>
+<td style="text-align: left;"><code>ceres-dtn.scinet.usda.gov</code>, <code>atlas-dtn.hpc.msstate.edu</code></td>
+</tr>
 </tbody>
 </table>
 </div>
 </figure>
 </div>
 <p>On SCINet, <code>step</code> also supplies your user name, so <code>ssh ceres.scinet.usda.gov</code> is enough; the first time, it opens your browser to sign in. New SCINet accounts start in a <code>sandbox</code> project (jobs up to 2 hours) until a PI adds them to a real one.</p>
+<p><strong>Login node or transfer node?</strong> The login node is for logging in, editing, and submitting jobs. Clusters also have a <strong>data transfer node (DTN)</strong>: a machine set aside for moving files in and out, with the same storage as the login node, so files you copy to it appear in your <code>/work</code> or <code>/project</code> folder. <a href="#tbl-ssh-sites" class="quarto-xref">Table&nbsp;<span>2.3</span></a> lists the DTN names; <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> teaches the transfer commands.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: copying files through the login node
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Send every file transfer (<code>scp</code>, <code>rsync</code>, FileZilla, Cyberduck) to your site’s data transfer node, not the login node. Both Nova and SCINet ask for this: large copies through the shared login node slow it for everyone, and SCINet notes that some transfer tools give errors there (<a href="https://research.it.iastate.edu/transferring-files">ISU: transferring files</a>, <a href="https://scinet.usda.gov/guides/data/transfer">SCINet: data transfer</a>). Your first connection to a DTN asks the host-key question again: it is a different machine with its own key.</p>
+</div>
+</div>
 <p><strong>A short name for the host.</strong> Typing the full host name gets old. A <strong>config file</strong> on your laptop, <code>~/.ssh/config</code>, can give it a short name. A fresh Ubuntu has no <code>~/.ssh</code> folder until your first <code>ssh</code> connection creates it, so make it if needed, then open the file in VS Code:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
@@ -1475,7 +1572,7 @@ Table&nbsp;2.3: Logging in with SSH at the two sites used as examples in this bo
 <div class="check">
 <p><strong>Check yourself.</strong> After <code>ssh</code> you type <code>hostname</code> and see a login-node name. Which computer runs your next command?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-10-contents" aria-controls="callout-10" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1484,7 +1581,7 @@ Table&nbsp;2.3: Logging in with SSH at the two sites used as examples in this bo
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div id="callout-10" class="callout-10-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The cluster’s login node, until you type <code>exit</code>.</p>
 </div>
@@ -1594,7 +1691,7 @@ Table&nbsp;2.4: Ways to edit files on a cluster. Most sites support only some of
 </div>
 </div>
 <p><strong>Other routes.</strong> On sites that allow Remote-SSH, the steps are similar in desktop VS Code: click the remote button at the left end of the status bar, choose <em>Connect to Host…</em>, pick your host, open a folder, open a terminal, and run <code>hostname</code>. On Windows, add hosts with <em>Remote-SSH: Add New SSH Host…</em> and choose the first file it offers, <code>C:\Users\&lt;you&gt;\.ssh\config</code>; Remote-SSH reads only Windows’ config files, even from a WSL window. For the VS Code tunnel route and Nova’s Remote-SSH to a compute node, follow <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU’s</a> or <a href="https://scinet.usda.gov/guides/ide/vscode">SCINet’s</a> VS Code guide; <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> will collect these recipes.</p>
-<p><strong>Now the idea</strong> (<a href="#fig-remote-ssh" class="quarto-xref">Figure&nbsp;<span>2.3</span></a>). Whichever route you use, the window you look at is on your laptop. The files, the terminal, and the programs you run are on the cluster, run by the VS Code server.</p>
+<p><strong>Now the idea</strong> (<a href="#fig-remote-ssh" class="quarto-xref">Figure&nbsp;<span>2.4</span></a>). Whichever route you use, the window you look at is on your laptop. The files, the terminal, and the programs you run are on the cluster, run by the VS Code server.</p>
 <div id="fig-remote-ssh" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-remote-ssh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1657,7 +1754,7 @@ Table&nbsp;2.4: Ways to edit files on a cluster. Most sites support only some of
 
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-remote-ssh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop VS Code connects over SSH or a tunnel. Bottom: a browser connects to Open OnDemand, which starts VS Code as a job. Either way the window is on your laptop, and the VS Code server, your files, and the terminal are on a compute node. Many sites, including Nova and SCINet, do not allow the server on login nodes.
+Figure&nbsp;2.4: Where things run when VS Code edits on a cluster. Top: desktop VS Code connects over SSH or a tunnel. Bottom: a browser connects to Open OnDemand, which starts VS Code as a job. Either way the window is on your laptop, and the VS Code server, your files, and the terminal are on a compute node. Many sites, including Nova and SCINet, do not allow the server on login nodes.
 </figcaption>
 </figure>
 </div>
@@ -1679,7 +1776,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 <div class="check">
 <p><strong>Check yourself.</strong> In a VS Code window connected to a cluster you open a terminal and run <code>ls</code>. Whose files do you see, and is your laptop’s <code>~/bioinf-book</code> there?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1688,7 +1785,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>The cluster’s files. Your laptop’s <code>~/bioinf-book</code> is not there: nothing is copied over, so you make the folder (and install the environment) on the cluster if you need it.</p>
 </div>
@@ -1722,7 +1819,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 </div>
 <pre class="console"><code>First note.</code></pre>
 <p>The cluster’s nano may be older (5.6 on Nova and Atlas), but these keys are the same.</p>
-<p><strong>vim.</strong> vim has <strong>modes</strong> (<a href="#fig-vim-modes" class="quarto-xref">Figure&nbsp;<span>2.4</span></a>). It starts in <em>Normal</em> mode, where keys are commands, not text; that is why typing into a fresh vim seems to do strange things. Open the same file:</p>
+<p><strong>vim.</strong> vim has <strong>modes</strong> (<a href="#fig-vim-modes" class="quarto-xref">Figure&nbsp;<span>2.5</span></a>). It starts in <em>Normal</em> mode, where keys are commands, not text; that is why typing into a fresh vim seems to do strange things. Open the same file:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
@@ -1778,7 +1875,7 @@ Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop 
 
 </div>
 <figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vim-modes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Figure&nbsp;2.4: vim’s two modes for beginners. <code>i</code> (type at the cursor) or <code>o</code> (type on a new line below) enters Insert mode, where keys type text; <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> returns to Normal mode, where <code>:</code> commands save and quit. <code>:cq</code> quits with an error, which tells the program that opened vim to stop.
+Figure&nbsp;2.5: vim’s two modes for beginners. <code>i</code> (type at the cursor) or <code>o</code> (type on a new line below) enters Insert mode, where keys type text; <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> returns to Normal mode, where <code>:</code> commands save and quit. <code>:cq</code> quits with an error, which tells the program that opened vim to stop.
 </figcaption>
 </figure>
 </div>
@@ -1877,7 +1974,7 @@ Table&nbsp;2.5: nano and vim side by side. In nano, <code>^O</code> means <kbd t
 <div class="check">
 <p><strong>Check yourself.</strong> A command opened vim and your terminal fills with <code>~</code> lines. How do you leave without saving?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1886,7 +1983,7 @@ Table&nbsp;2.5: nano and vim side by side. In nano, <code>^O</code> means <kbd t
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>Press <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span>, type <code>:q!</code>, press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>. (<code>:cq</code> if you want the tool that opened vim to stop.)</p>
 </div>
@@ -1969,7 +2066,7 @@ Table&nbsp;2.6: Other editors and tools you may meet. For reference only.
 <li>pixi installs the book environment into <code>~/bioinf-book/.pixi/</code> from two files: <code>pixi.toml</code> (what the project needs) and <code>pixi.lock</code> (the exact packages). <code>pixi install --locked</code> installs it; on a cluster, install in project storage, with the cache there too, from a compute session.</li>
 <li>Tools in the environment run with <code>pixi run</code> (or inside <code>pixi shell</code>), not on their own. <code>pixi run seqkit stats</code> counted 50,000 reads, as you did by hand in Chapter 1.</li>
 <li>VS Code is the book’s editor: explorer, editor, terminal, status bar. <code>hostname</code> in its terminal tells you which machine you are on.</li>
-<li><code>ssh</code> logs you in to a cluster’s login node; the first time, check the fingerprint where your site publishes it and type <code>yes</code>; <code>exit</code> leaves. VS Code reaches a cluster by your site’s route (on SCINet and Nova, Open OnDemand, on a compute node): the window is local, the files and terminal are on the cluster, and <strong>Cancel</strong> ends the session.</li>
+<li><code>ssh</code> logs you in to a cluster’s login node; the first time, check the fingerprint where your site publishes it and type <code>yes</code>; <code>exit</code> leaves. File transfers go to the site’s data transfer node, not the login node. VS Code reaches a cluster by your site’s route (on SCINet and Nova, Open OnDemand, on a compute node): the window is local, the files and terminal are on the cluster, and <strong>Cancel</strong> ends the session.</li>
 <li>nano edits a file (<kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span> saves, <kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span> quits); in vim, <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> then <code>:q!</code> gets you out.</li>
 </ul>
 </section>
@@ -1978,7 +2075,7 @@ Table&nbsp;2.6: Other editors and tools you may meet. For reference only.
 <div class="check">
 <p><strong>Exercise 1. What did you install?</strong> Run <code>pixi list</code> in <code>~/bioinf-book</code> and find the versions of Python, R, and seqkit. Do they match what <code>pixi run check</code> printed? Then open <code>pixi.lock</code> in VS Code, search for <code>seqkit</code> (<kbd title="Ctrl-F" aria-hidden="true">Ctrl-F</kbd><span class="visually-hidden">Ctrl-F</span>, or <kbd title="Cmd-F" aria-hidden="true">Cmd-F</kbd><span class="visually-hidden">Cmd-F</span> on a Mac), and find where the same version is recorded.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -1987,7 +2084,7 @@ Table&nbsp;2.6: Other editors and tools you may meet. For reference only.
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <pre class="console"><code>Name     Version  Build                 Size       Kind   Source
 ...
@@ -2012,25 +2109,6 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 </div>
 <p>Do the two files have the same <code>num_seqs</code>?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>Answer
-</div>
-<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
-</div>
-<div id="callout-16" class="callout-16-contents callout-collapse collapse">
-<div class="callout-body-container callout-body">
-<p>Yes: 50,000 reads in each, as Chapter 1’s exercise found by counting lines. seqkit can take both files at once: <code>pixi run seqkit stats ~/bioinf-ch01/SRR6357070_*.fastq.gz</code>.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="check">
-<p><strong>Exercise 3. Two editors, one file.</strong> In nano, create <code>README.md</code> in <code>~/bioinf-book</code> with one line saying what the folder is for. Then open it in vim, add a second line (<code>G</code>, then <code>o</code>), and save with <code>:wq</code>. Run <code>cat README.md</code> in VS Code’s terminal to check both lines are there.</p>
-<div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
@@ -2041,6 +2119,25 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
 <div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Yes: 50,000 reads in each, as Chapter 1’s exercise found by counting lines. seqkit can take both files at once: <code>pixi run seqkit stats ~/bioinf-ch01/SRR6357070_*.fastq.gz</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 3. Two editors, one file.</strong> In nano, create <code>README.md</code> in <code>~/bioinf-book</code> with one line saying what the folder is for. Then open it in vim, add a second line (<code>G</code>, then <code>o</code>), and save with <code>:wq</code>. Run <code>cat README.md</code> in VS Code’s terminal to check both lines are there.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p>For example:</p>
 <pre class="console"><code>Project folder for Computing for Bioinformatics.
@@ -2053,7 +2150,7 @@ Book environment installed with pixi (Chapter 2).</code></pre>
 <div class="check">
 <p><strong>Exercise 4. Where did you land?</strong> (Cluster readers.) Open a folder on your cluster by your site’s supported route (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>), open a terminal there, and run <code>hostname</code> and <code>pwd</code>. Write down where you landed, then end the session with <strong>Cancel</strong> on its card (closing the tab is not enough). No cluster yet? Answer from the captured session in <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
-<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
@@ -2062,7 +2159,7 @@ Book environment installed with pixi (Chapter 2).</code></pre>
 </div>
 <div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
 </div>
-<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <p><code>hostname</code> names a compute node (such as <code>nova18-69</code> or <code>ceres20-compute-2</code>), not a login node and not your laptop; <code>pwd</code> is the working directory you set on the form, in project storage. After <strong>Cancel</strong>, the card says <em>Completed</em>.</p>
 </div>

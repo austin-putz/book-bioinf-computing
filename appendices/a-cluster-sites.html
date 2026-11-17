@@ -36,8 +36,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../">
-<link href="../reporting.html" rel="next">
-<link href="../references.html" rel="prev">
+<link href="../reporting.html" rel="prev">
 <script src="../site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="../site_libs/quarto-html/scrollable-regions/scrollable-regions.js" type="module"></script>
@@ -50,9 +49,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-8ae63f4a318a0b70a79ac44741e73219.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e9dba73806d5ab9f4a7f8d7211e9373f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-8ae63f4a318a0b70a79ac44741e73219.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-a67ad02c8eadafdc7aff2effa4974bc2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -613,6 +612,12 @@ ul.task-list li input[type="checkbox"] {
  <span class="menu-text">References</span></a>
   </div>
 </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../reporting.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><strong>Report an issue!</strong></span></a>
+  </div>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <button type="button" class="sidebar-item-text sidebar-item-toggle sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" aria-controls="quarto-sidebar-section-9" aria-expanded="true">
@@ -623,12 +628,6 @@ ul.task-list li input[type="checkbox"] {
   <div class="sidebar-item-container"> 
   <a href="../appendices/a-cluster-sites.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Cluster sites: SCINet and Nova</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="../reporting.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">Report an Issue</span></a>
   </div>
 </li>
       </ul>
@@ -688,8 +687,10 @@ ul.task-list li input[type="checkbox"] {
 <h2 data-number="A.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">A.1</span> Planned topics</h2>
 <ul>
 <li>Who can get an account, and how to apply (SCINet for USDA-affiliated users; ISU Nova for Iowa State users); how long approval takes</li>
-<li>Logging in: host names, multi-factor authentication, first login</li>
+<li>Logging in: host names, multi-factor authentication, first login, published host-key fingerprints</li>
+<li>Data transfer nodes: Nova <code>novadtn.its.iastate.edu</code>; SCINet <code>ceres-dtn.scinet.usda.gov</code>, <code>atlas-dtn.hpc.msstate.edu</code>; Globus</li>
 <li>Storage areas, quotas, and what is backed up (home, project, scratch)</li>
+<li>Ceres vs Atlas: one comparison table (login, DTN, and OnDemand hosts; separate storage and quotas for the same projects; OnDemand apps; hardware and partitions; location), checked against SCINet’s pages</li>
 <li>Software on the site: modules, containers, and where pixi fits</li>
 <li>VS Code on each site: the supported route (Nova: VS Code Tunnel app or VS Code Server in Open OnDemand, Remote-SSH only to compute nodes; SCINet: VS Code Server in Open OnDemand or a registered tunnel to Ceres compute nodes), what each needs (VPN; Microsoft or GitHub account), ending a session to release its resources, and moving the code-server folder from <code>$HOME</code> to project storage</li>
 <li>Sources: <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU: Using VS Code on the cluster</a>, <a href="https://scinet.usda.gov/guides/ide/vscode">SCINet: VS Code guide</a></li>
@@ -1252,14 +1253,11 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation" aria-label="Page">
   <div class="nav-page nav-page-previous">
-      <a href="../references.html" class="pagination-link" aria-label="References">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">References</span>
+      <a href="../reporting.html" class="pagination-link" aria-label="**Report an issue!**">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><strong>Report an issue!</strong></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../reporting.html" class="pagination-link" aria-label="Report an Issue">
-        <span class="nav-page-text">Report an Issue</span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

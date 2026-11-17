@@ -26,7 +26,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -50,9 +104,12 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-a67ad02c8eadafdc7aff2effa4974bc2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-8ae63f4a318a0b70a79ac44741e73219.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-e9dba73806d5ab9f4a7f8d7211e9373f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-8ae63f4a318a0b70a79ac44741e73219.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
+<script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
+<link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -86,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating slimcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -643,12 +700,29 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#planned-topics" id="toc-planned-topics" class="nav-link active" data-scroll-target="#planned-topics"><span class="header-section-number">2.1</span> Planned topics</a></li>
+  <li><a href="#sec-book-setup-intro" id="toc-sec-book-setup-intro" class="nav-link active" data-scroll-target="#sec-book-setup-intro"><span class="header-section-number">2.1</span> What this chapter does</a></li>
+  <li><a href="#sec-book-setup-pixi" id="toc-sec-book-setup-pixi" class="nav-link" data-scroll-target="#sec-book-setup-pixi"><span class="header-section-number">2.2</span> Installing pixi and the book environment</a>
+  <ul class="collapse">
+  <li><a href="#what-you-just-installed" id="toc-what-you-just-installed" class="nav-link" data-scroll-target="#what-you-just-installed"><span class="header-section-number">2.2.1</span> What you just installed</a></li>
+  <li><a href="#on-a-cluster" id="toc-on-a-cluster" class="nav-link" data-scroll-target="#on-a-cluster"><span class="header-section-number">2.2.2</span> On a cluster</a></li>
+  </ul></li>
+  <li><a href="#sec-book-setup-vscode" id="toc-sec-book-setup-vscode" class="nav-link" data-scroll-target="#sec-book-setup-vscode"><span class="header-section-number">2.3</span> VS Code: a home for your work</a>
+  <ul class="collapse">
+  <li><a href="#the-parts-of-the-window" id="toc-the-parts-of-the-window" class="nav-link" data-scroll-target="#the-parts-of-the-window"><span class="header-section-number">2.3.1</span> The parts of the window</a></li>
+  <li><a href="#extensions" id="toc-extensions" class="nav-link" data-scroll-target="#extensions"><span class="header-section-number">2.3.2</span> Extensions</a></li>
+  </ul></li>
+  <li><a href="#sec-book-setup-ssh" id="toc-sec-book-setup-ssh" class="nav-link" data-scroll-target="#sec-book-setup-ssh"><span class="header-section-number">2.4</span> Just enough SSH</a></li>
+  <li><a href="#sec-book-setup-remote" id="toc-sec-book-setup-remote" class="nav-link" data-scroll-target="#sec-book-setup-remote"><span class="header-section-number">2.5</span> Editing on a cluster</a></li>
+  <li><a href="#sec-book-setup-terminal-editors" id="toc-sec-book-setup-terminal-editors" class="nav-link" data-scroll-target="#sec-book-setup-terminal-editors"><span class="header-section-number">2.6</span> Editing in the terminal: nano and vim</a></li>
+  <li><a href="#sec-book-setup-other" id="toc-sec-book-setup-other" class="nav-link" data-scroll-target="#sec-book-setup-other"><span class="header-section-number">2.7</span> Other editors and tools</a></li>
+  <li><a href="#sec-book-setup-summary" id="toc-sec-book-setup-summary" class="nav-link" data-scroll-target="#sec-book-setup-summary"><span class="header-section-number">2.8</span> Summary</a></li>
+  <li><a href="#sec-book-setup-exercises" id="toc-sec-book-setup-exercises" class="nav-link" data-scroll-target="#sec-book-setup-exercises"><span class="header-section-number">2.9</span> Exercises</a></li>
+  <li><a href="#sec-book-setup-reading" id="toc-sec-book-setup-reading" class="nav-link" data-scroll-target="#sec-book-setup-reading"><span class="header-section-number">2.10</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content" tabindex="-1">
+<main class="content page-columns page-full" id="quarto-document-content" tabindex="-1">
 
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/01-orientation.html">Getting set up</a></li><li class="breadcrumb-item"><a href="../chapters/02-book-setup.html"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Book setup and editors</span></a></li></ol></nav>
@@ -670,32 +744,1348 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-important no-icon callout-titled">
+<p><strong>Core.</strong> Work through it, with the exercises.</p>
+<div class="goals callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Under construction
+<span class="screen-reader-only">Note</span>Learning goals
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This chapter is a placeholder. The topics below are the current plan and will change as the chapter is written.</p>
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Install pixi and the book environment from its manifest and lockfile.</li>
+<li>Run a tool with <code>pixi run</code>, and explain why the same command typed on its own is not found.</li>
+<li>Open a project folder in VS Code, use its built-in terminal, and tell which computer it is running on.</li>
+<li>Open a folder on a remote machine with your site’s supported method, and say where your files and commands live once connected.</li>
+<li>Edit and save a file in nano, and leave vim without saving.</li>
+</ol>
 </div>
 </div>
-<p><strong>Core.</strong> Work through it, with the exercises.</p>
-<section id="planned-topics" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">2.1</span> Planned topics</h2>
+<section id="sec-book-setup-intro" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="sec-book-setup-intro"><span class="header-section-number">2.1</span> What this chapter does</h2>
+<p>In <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a> you ran commands that came with every system: <code>curl</code>, <code>gzip</code>, <code>wc</code>. Most bioinformatics tools do not come with any system. This chapter installs the ones the book uses, all at once, into one folder, so the core chapters that follow never stop for installs. Then it sets up where you type: an editor on your laptop, a way into a cluster, and two small editors that work on any server.</p>
+<p>You will finish with:</p>
 <ul>
-<li>Install pixi and the book environment; run a first example</li>
-<li>VS Code as the primary editor; reaching a cluster by the site’s route (Remote-SSH, tunnel, or Open OnDemand)</li>
-<li>Just enough SSH to connect to a cluster (full treatment in Chapter 9)</li>
-<li>Pitfall: some clusters restrict the VS Code server on login nodes; fall back to Open OnDemand or a compute-node session</li>
-<li>nano and vim basics for editing on a server</li>
-<li>Reference table: RStudio / Positron, Jupyter, Quarto, Open OnDemand</li>
+<li>the <strong>book environment</strong>, installed with <strong>pixi</strong>, in a folder called <code>~/bioinf-book</code>;</li>
+<li><strong>VS Code</strong>, the book’s editor, with its built-in terminal;</li>
+<li>a first login to a cluster with <code>ssh</code>, and VS Code running there by your site’s supported route (if you have an account);</li>
+<li>enough <strong>nano</strong> and <strong>vim</strong> to edit a file on a bare server.</li>
+</ul>
+<p>Container and pipeline tools, and the software your cluster provides, come later with their own setup (<a href="24-containers.html" class="quarto-xref"><span>Chapter 24</span></a>, <a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>). Other ways to manage software and other editors appear only in comparisons (<a href="#sec-book-setup-other" class="quarto-xref"><span>Section 2.7</span></a>, <a href="23-environments.html" class="quarto-xref"><span>Chapter 23</span></a>).</p>
+</section>
+<section id="sec-book-setup-pixi" class="level2 page-columns page-full" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="sec-book-setup-pixi"><span class="header-section-number">2.2</span> Installing pixi and the book environment</h2>
+<p><strong>pixi</strong> is a program that installs software for a project into that project’s own folder. You need no administrator rights, and it works the same on macOS, Linux, and a cluster. Do this section on your laptop; on Windows, “laptop” means your Ubuntu (WSL2) terminal.</p>
+<p><strong>Step 1. Install pixi.</strong></p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://pixi.sh/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The installer adds <code>~/.pixi/bin</code> to your <code>PATH</code> (the list of folders the shell searches for commands) in <code>~/.bashrc</code>. That works on a Mac because the <code>~/.bash_profile</code> you wrote in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a> reads <code>~/.bashrc</code>. If the installer mentions <code>~/.zshrc</code> instead, your login shell is still zsh: go back to the macOS setup in <a href="01-orientation.html#sec-orientation-terminal" class="quarto-xref"><span>Section 1.2</span></a>, then run the installer again.</p>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<p>In the <strong>Ubuntu</strong> terminal, not PowerShell:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://pixi.sh/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The installer adds <code>~/.pixi/bin</code> to your <code>PATH</code> (the list of folders the shell searches for commands) in <code>~/.bashrc</code>.</p>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://pixi.sh/install.sh <span class="kw">|</span> <span class="fu">sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The installer adds <code>~/.pixi/bin</code> to your <code>PATH</code> (the list of folders the shell searches for commands) in <code>~/.bashrc</code>.</p>
+</div>
+</div>
+</div>
+<p>Close the terminal, open a new one (so it reads <code>~/.bashrc</code> again), and check:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>pixi 0.84.2</code></pre>
+<p>This book was tested with pixi 0.84.2; a newer version is fine. If you see <code>pixi: command not found</code>, you did not open a new terminal. The installer also sends the pixi developers an anonymous note of the version and operating system; set <code>PIXI_NO_TELEMETRY=1</code> before installing if you prefer not to (<a href="https://pixi.prefix.dev/latest/installation/">pixi installation docs</a>).</p>
+<p><strong>Step 2. Make the book folder and download its two setup files.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-book <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/main/setup/pixi.toml</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/main/setup/pixi.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>~/bioinf-book</code> is the book’s project folder from now on. Unlike <code>~/bioinf-ch01</code>, you keep it; <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> organizes it.</p>
+<p><strong>Step 3. Install the environment.</strong></p>
+<div class="compute-note">
+<p>About 10 seconds on a laptop with a fast connection; from under a minute to several minutes on cluster storage. The environment takes about 1.3 GB on disk in about 15,500 files (measured on Linux, 2026-11-14; <code>scripts/ch02_env_size.sh</code> repeats the measurement).</p>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> install <span class="at">--locked</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>✔ The default environment has been installed.</code></pre>
+<p><code>--locked</code> means “install exactly what <code>pixi.lock</code> lists, and stop with an error if it does not match <code>pixi.toml</code>”, instead of quietly choosing new versions.</p>
+<p><strong>Step 4. Check it.</strong> The book’s setup file defines a small task, <code>check</code>, that prints the version of each main tool:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run check</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>✨ Pixi task (check): python --version &amp;&amp; R --version | head -n 1 &amp;&amp; seqkit version
+Python 3.12.16
+R version 4.4.3 (2025-02-28) -- "Trophy Case"
+seqkit v2.14.0</code></pre>
+<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>:</p>
+<div class="no-row-height column-margin column-container"></div><div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>file                                         format  type  num_seqs    sum_len  min_len  avg_len  max_len
+/home/you/bioinf-ch01/SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      101</code></pre>
+<p><code>num_seqs</code> is 50,000, the read count you worked out by hand in Chapter 1; <code>sum_len</code> is the total number of bases, 50,000 reads × 101 bases. (On a Mac the path starts with <code>/Users/</code> instead of <code>/home/</code>.)</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: stop at the first error
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>As in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, stop if a step fails. A <code>curl: (22)</code> or <code>curl: (56)</code> error means a setup file did not download; <code>pixi install</code> then fails with a missing or broken <code>pixi.toml</code>. Check the command and your connection, and download again before going on.</p>
+</div>
+</div>
+<section id="what-you-just-installed" class="level3 page-columns page-full" data-number="2.2.1">
+<h3 data-number="2.2.1" class="anchored" data-anchor-id="what-you-just-installed"><span class="header-section-number">2.2.1</span> What you just installed</h3>
+<p><a href="#fig-pixi-parts" class="quarto-xref">Figure&nbsp;<span>2.1</span></a> goes through what happened, one step at a time.</p>
+<div id="fig-pixi-parts" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-pixi-parts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 350" role="img" aria-labelledby="pixi-parts-title" data-step-labels="Files|Download|Install|Run">
+  <title id="pixi-parts-title">How pixi sets up the book folder, in four steps. The folder ~/bioinf-book starts with two files, pixi.toml (what the project needs) and pixi.lock (the exact packages). pixi install --locked downloads those packages from the online channels conda-forge and bioconda into a cache in your home folder, then installs them into .pixi/envs/default inside the book folder: Python, R, and seqkit. Finally, pixi run seqkit stats runs with that environment, while seqkit stats typed on its own is not found.</title>
+  <desc data-caption="1">The book folder starts with two files: pixi.toml says what the project needs, and pixi.lock lists the exact packages for each system.</desc>
+  <desc data-caption="2">pixi install --locked downloads the packages in pixi.lock for your system from the channels into a cache in your home folder.</desc>
+  <desc data-caption="3">It then installs them into .pixi/envs/default/ inside the book folder: Python, R, seqkit, and everything they need.</desc>
+  <desc data-caption="4">pixi run starts a command with that environment. The same command typed on its own is not found.</desc>
+  <defs>
+    <marker id="pixi-parts-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- The book folder -->
+  <rect x="10" y="20" width="410" height="220" rx="12" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"></rect>
+  <text x="26" y="44" font-size="14" font-weight="700" class="mono">~/bioinf-book/</text>
+  <!-- Step 1: the two setup files -->
+  <rect x="30" y="64" width="160" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="44" y="90" font-size="14" font-weight="700" class="mono">pixi.toml</text>
+  <text x="44" y="112" font-size="13" class="fill-muted">what it needs</text>
+  <rect x="30" y="148" width="160" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="44" y="174" font-size="14" font-weight="700" class="mono">pixi.lock</text>
+  <text x="44" y="196" font-size="13" class="fill-muted">exact packages</text>
+  <!-- Step 3: the environment inside the folder -->
+  <g data-show="3" font-size="13" class="mono">
+    <rect x="220" y="64" width="180" height="146" rx="8" class="fill-surface stroke-line" stroke-width="1.25"></rect>
+    <text x="232" y="88" font-weight="700">.pixi/envs/default/</text>
+    <rect x="232" y="102" width="156" height="28" rx="4" class="fill-muted-soft stroke-muted" stroke-width="1"></rect>
+    <rect x="232" y="136" width="156" height="28" rx="4" class="fill-muted-soft stroke-muted" stroke-width="1"></rect>
+    <rect x="232" y="170" width="156" height="28" rx="4" class="fill-muted-soft stroke-muted" stroke-width="1"></rect>
+    <text x="244" y="121">python 3.12</text>
+    <text x="244" y="155">R 4.4</text>
+    <text x="244" y="189">seqkit 2.14</text>
+  </g>
+  <!-- Channels (online) -->
+  <rect x="460" y="20" width="250" height="70" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="476" y="46" font-size="14" font-weight="700">Channels (online)</text>
+  <text x="476" y="70" font-size="13" class="fill-muted">conda-forge, bioconda</text>
+  <!-- Step 2: download into the cache -->
+  <g data-show="2">
+    <line x1="585" y1="90" x2="585" y2="138" class="stroke-muted" stroke-width="1.75" marker-end="url(#pixi-parts-arrow)"></line>
+    <text x="596" y="119" font-size="12" class="fill-muted">download</text>
+    <rect x="460" y="140" width="250" height="70" rx="10" class="fill-surface stroke-line"></rect>
+    <text x="476" y="166" font-size="14" font-weight="700">pixi cache</text>
+    <text x="476" y="190" font-size="13" class="fill-muted">in your home folder</text>
+  </g>
+  <!-- Step 3: install from the cache into the folder -->
+  <g data-show="3">
+    <line x1="460" y1="175" x2="402" y2="175" class="stroke-muted" stroke-width="1.75" marker-end="url(#pixi-parts-arrow)"></line>
+    <text x="431" y="164" font-size="12" text-anchor="middle" class="fill-muted">install</text>
+  </g>
+  <!-- Step 4: run with and without the environment -->
+  <g data-show="4">
+    <rect x="10" y="262" width="700" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+    <text x="26" y="284" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-book</text>
+    <text x="26" y="308" font-size="13" class="mono">pixi run seqkit stats …</text>
+    <text x="300" y="308" font-size="13" class="fill-good">✓ runs with the environment</text>
+    <text x="26" y="330" font-size="13" class="mono">seqkit stats …</text>
+    <text x="300" y="330" font-size="13" class="fill-warn">✗ command not found</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-pixi-parts-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.1: What <code>pixi install --locked</code> and <code>pixi run</code> do in the book folder. The setup files say what to install; pixi downloads it once into a cache, installs it into <code>.pixi/</code>, and uses it only for commands you start with <code>pixi run</code>.
+</figcaption>
+</figure>
+</div>
+<p>The parts have names you will meet in every later chapter:</p>
+<ul>
+<li><strong>Manifest</strong> (<code>pixi.toml</code>): what the project needs. Open it and you see lines such as <code>seqkit = "*"</code> (any version) and <code>python = "3.12.*"</code> (any 3.12 release).</li>
+<li><strong>Lockfile</strong> (<code>pixi.lock</code>): the exact package pixi chose for each of those, for each supported system (Linux, Intel Mac, Apple silicon Mac). You do not edit it.</li>
+<li><strong>Channels</strong>: the online collections pixi downloads packages from. The book uses <a href="https://conda-forge.org">conda-forge</a> for general software (Python, R) and <a href="https://bioconda.github.io">Bioconda</a> <span class="citation" data-cites="gruning2018bioconda">(<a href="../references.html#ref-gruning2018bioconda" role="doc-biblioref">Grüning et al. 2018</a>)</span> for bioinformatics tools. Bioconda does not build for Windows, which is one more reason Windows readers work in WSL2.</li>
+<li><strong>Environment</strong> (<code>.pixi/envs/default/</code>): the installed files, inside your project folder. Delete <code>.pixi/</code> and <code>pixi install --locked</code> puts it back.</li>
+</ul>
+<div class="no-row-height column-margin column-container"></div><div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The manifest says what the project needs; the lockfile records the exact packages chosen for each system. Installing from both gives you the versions this book was tested with.</p>
+</div>
+</div>
+<p>Now try the tool on its own, in the same terminal and folder:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> version</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>bash: seqkit: command not found</code></pre>
+<p>Installing the environment did not add its tools to your terminal. <code>pixi run</code> starts one command with the environment switched on. To work with it for a while, <code>pixi shell</code> starts a new shell with the environment on, until you type <code>exit</code>; changing folders inside it does not switch it off. <a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> explains how the shell finds commands, and <a href="23-environments.html" class="quarto-xref"><span>Chapter 23</span></a> how pixi chooses packages.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “Once I install a tool, it works in every terminal”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> The book environment lives in <code>~/bioinf-book/.pixi/</code>. Its tools run when you start them with <code>pixi run</code>, or inside <code>pixi shell</code>, from that folder. A plain terminal does not see them, and you did not need administrator rights (<code>sudo</code>) to install them.</p>
+</div>
+</div>
+<p><a href="#tbl-pixi-commands" class="quarto-xref">Table&nbsp;<span>2.1</span></a> lists the pixi commands this book uses.</p>
+<div id="tbl-pixi-commands" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-pixi-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.1: The pixi commands used in this book. Run them from <code>~/bioinf-book</code>.
+</figcaption>
+<div aria-describedby="tbl-pixi-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 22%">
+<col style="width: 35%">
+<col style="width: 42%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Command</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">When you use it</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>pixi install --locked</code></td>
+<td style="text-align: left;">Installs exactly what <code>pixi.lock</code> lists into <code>.pixi/</code></td>
+<td style="text-align: left;">once, and after <code>.pixi/</code> is deleted</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pixi run &lt;command&gt;</code></td>
+<td style="text-align: left;">Runs one command with the environment</td>
+<td style="text-align: left;">most of the time</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pixi run check</code></td>
+<td style="text-align: left;">Runs the book’s <code>check</code> task</td>
+<td style="text-align: left;">to confirm the setup works</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pixi shell</code>, then <code>exit</code></td>
+<td style="text-align: left;">Starts, then ends, a shell with the environment</td>
+<td style="text-align: left;">several commands in a row</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pixi list</code></td>
+<td style="text-align: left;">Lists the installed packages and versions</td>
+<td style="text-align: left;">to see what you have</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>pixi task list</code></td>
+<td style="text-align: left;">Lists the tasks in <code>pixi.toml</code></td>
+<td style="text-align: left;">to see what <code>pixi run &lt;task&gt;</code> can run</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>pixi add &lt;package&gt;</code></td>
+<td style="text-align: left;">Adds a package; <strong>changes <code>pixi.toml</code> and <code>pixi.lock</code></strong></td>
+<td style="text-align: left;">not needed yet (<a href="23-environments.html" class="quarto-xref"><span>Chapter 23</span></a>)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="on-a-cluster" class="level3" data-number="2.2.2">
+<h3 data-number="2.2.2" class="anchored" data-anchor-id="on-a-cluster"><span class="header-section-number">2.2.2</span> On a cluster</h3>
+<p>Each cluster has its own storage, so install the environment on the cluster where you will use it; your laptop’s copy is not shared. (SCINet’s Ceres and Atlas do not share project storage either.) Three rules:</p>
+<ul>
+<li><strong>Install in project storage</strong>: <code>/project/&lt;your-project&gt;/</code> on SCINet, <code>/work/&lt;your-group&gt;/</code> on Nova. Not in your home folder, which is small (30 GB on SCINet, 10 GB on Nova), and not in scratch space that is purged (<code>/90daydata</code> on SCINet, <code>/ptmp</code> on Nova).</li>
+<li><strong>Install from a compute session</strong> (an Open OnDemand terminal, see <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>, or <code>srun</code> as in <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>), not on the login node.</li>
+<li><strong>Let it finish.</strong> Shared storage is slow with many small files: a reinstall that took 2 seconds on one cluster took a minute on another (measured 2026-11-16). A first install can take several minutes and is not stuck. It happens once; later <code>pixi run</code> commands start at once.</li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: pixi’s cache fills your home folder
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>pixi keeps every download in a cache in your home folder, and on Linux it links the installed files to the cached copies so they are stored once. That only works when the cache and the project are on the same storage. With the cache in a small home folder and the project in <code>/project</code> or <code>/work</code>, every file is copied: twice the space, with the copy counted against your home quota. Put the cache in the same project storage, for example with <code>export PIXI_CACHE_DIR=/project/&lt;your-project&gt;/pixi-cache</code> before installing (<a href="https://pixi.prefix.dev/latest/reference/environment_variables/">pixi environment variables</a>; site paths in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>).</p>
+</div>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> (a) In a fresh terminal in <code>~/bioinf-book</code>, <code>seqkit stats …</code> says <code>command not found</code>, but <code>pixi run seqkit stats …</code> works. You have not installed seqkit any other way. Why? (b) Which file says exactly which version of each package you have: <code>pixi.toml</code> or <code>pixi.lock</code>?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-6-contents" aria-controls="callout-6" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-6" class="callout-6-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="a">
+<li>Installing the environment does not put its tools in every terminal. <code>pixi run</code> runs one command with the environment; <code>pixi shell</code> starts a shell with it. (b) <code>pixi.lock</code>. <code>pixi.toml</code> says what the project needs, often as a range such as <code>3.12.*</code>.</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-book-setup-vscode" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="sec-book-setup-vscode"><span class="header-section-number">2.3</span> VS Code: a home for your work</h2>
+<p><a href="https://code.visualstudio.com">VS Code</a> is a free editor from Microsoft with a terminal built in. It edits scripts in any language, and it can work on files on another computer, such as a cluster, while its window stays on your laptop. It is the editor this book uses.</p>
+<p><strong>Step 1. Install VS Code and the <code>code</code> command.</strong> The <code>code</code> command opens VS Code from a terminal.</p>
+<div class="tabset-margin-container"></div><div class="panel-tabset" data-group="os">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">macOS</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Windows (WSL2)</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-3" role="tab" aria-controls="tabset-2-3" aria-selected="false" href="">Linux</a></li></ul>
+<div class="tab-content" data-group="os">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install <span class="at">--cask</span> visual-studio-code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>(or download it from <a href="https://code.visualstudio.com/download">code.visualstudio.com</a>). Open VS Code once, open the Command Palette (<kbd title="Cmd-Shift-P" aria-hidden="true">Cmd-Shift-P</kbd><span class="visually-hidden">Cmd-Shift-P</span>), type <code>shell command</code>, and run <strong>Shell Command: Install ‘code’ command in PATH</strong> (newer releases call it <em>Install ‘code’ and optionally ‘copilot’ commands in PATH</em>). Close and reopen the terminal, then check:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>/usr/local/bin/code</code></pre>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<p>Install the normal <strong>Windows</strong> application from <a href="https://code.visualstudio.com/download">code.visualstudio.com</a>, leaving <strong>Add to PATH</strong> ticked (the default). Do not install a second, Linux copy inside Ubuntu. Then, in VS Code, open the Extensions view (<kbd title="Ctrl-Shift-X" aria-hidden="true">Ctrl-Shift-X</kbd><span class="visually-hidden">Ctrl-Shift-X</span>), search for <strong>WSL</strong>, and install Microsoft’s WSL extension (<a href="https://code.visualstudio.com/docs/remote/wsl">VS Code and WSL</a>).</p>
+<p>Close every Ubuntu window, open a new one, and check:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>/mnt/c/Users/&lt;your-windows-name&gt;/AppData/Local/Programs/Microsoft VS Code/bin/code</code></pre>
+<p>Ubuntu finds the Windows program because WSL adds the Windows <code>PATH</code> to its own. If <code>which code</code> prints nothing, close every terminal, run <code>wsl --shutdown</code> in PowerShell, and open Ubuntu again; if it is still missing, rerun the VS Code installer with <em>Add to PATH</em> ticked. Windows user names can contain spaces, so <code>/mnt/c/Users/…</code> paths can too: one more reason to keep your work in the Linux home folder.</p>
+</div>
+<div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
+<p>Install the <code>.deb</code> or <code>.rpm</code> package from <a href="https://code.visualstudio.com/download">code.visualstudio.com</a>. The <code>code</code> command works as soon as it is installed:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span> code</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>/usr/bin/code</code></pre>
+</div>
+</div>
+</div>
+<p><strong>Step 2. Open the book folder.</strong></p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> .</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>.</code> means “this folder”. (<em>File → Open Folder…</em> does the same from inside VS Code.) On Windows the window opens connected to Ubuntu. If VS Code asks whether you trust the authors of the files in this folder, say yes: you made it.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span><code>code .</code> opens where you are
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>From any terminal, <code>code .</code> opens the current folder in VS Code, and <code>code notes.txt</code> opens one file. On Windows, run it from the Ubuntu terminal; on a Mac, after the one-time <em>Install ‘code’ command</em> step.</p>
+</div>
+</div>
+<p><strong>Step 3. Open the built-in terminal and check its shell.</strong> Open it with <em>Terminal → New Terminal</em>. It should run the same bash as your system’s terminal:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$BASH_VERSION</span><span class="st">"</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>5.3.15(1)-release
+sed (GNU sed) 4.10</code></pre>
+<p>A version starting with 5 and GNU <code>sed</code> mean all is well. Then run <code>pixi run check</code> here too; it prints the same versions as before.</p>
+<p>On a Mac, VS Code’s terminal starts your login shell, so after the setup in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a> it is Homebrew’s bash. If it shows zsh or bash <code>3.2</code>, open the Command Palette, run <strong>Preferences: Open User Settings (JSON)</strong>, and add these lines inside the outer <code>{ }</code> (on an Intel Mac, change <code>/opt/homebrew</code> to <code>/usr/local</code>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>settings.json (VS Code, laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="settings.json (VS Code, laptop)"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="st">"terminal.integrated.profiles.osx"</span><span class="er">:</span> <span class="fu">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"bash (Homebrew)"</span><span class="fu">:</span> <span class="fu">{</span> <span class="dt">"path"</span><span class="fu">:</span> <span class="st">"/opt/homebrew/bin/bash"</span><span class="fu">,</span> <span class="dt">"args"</span><span class="fu">:</span> <span class="ot">[</span><span class="st">"-l"</span><span class="ot">]</span> <span class="fu">}</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span><span class="er">,</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="st">"terminal.integrated.defaultProfile.osx"</span><span class="er">:</span> <span class="st">"bash (Homebrew)"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="the-parts-of-the-window" class="level3" data-number="2.3.1">
+<h3 data-number="2.3.1" class="anchored" data-anchor-id="the-parts-of-the-window"><span class="header-section-number">2.3.1</span> The parts of the window</h3>
+<p><a href="#fig-vscode-window" class="quarto-xref">Figure&nbsp;<span>2.2</span></a> names the four areas you will use.</p>
+<div id="fig-vscode-window" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vscode-window-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 400" role="img" aria-labelledby="vscode-window-title">
+  <title id="vscode-window-title">A simplified VS Code window with four labelled areas. On the left, the explorer lists the files of the open folder, bioinf-book: pixi.lock, pixi.toml, and notes.txt. On the right, the editor shows pixi.toml. Below the editor, the terminal panel runs bash and shows pixi run check printing Python 3.12.16. Along the bottom, the status bar; its left end reads WSL: Ubuntu, which shows where VS Code is connected.</title>
+  <defs>
+    <marker id="vscode-window-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Window frame and title bar -->
+  <rect x="10" y="10" width="700" height="336" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <line x1="10" y1="38" x2="710" y2="38" class="stroke-line"></line>
+  <g class="fill-line">
+    <circle cx="30" cy="24" r="5"></circle>
+    <circle cx="48" cy="24" r="5"></circle>
+    <circle cx="66" cy="24" r="5"></circle>
+  </g>
+  <text x="360" y="29" font-size="12" text-anchor="middle" class="fill-muted">pixi.toml — bioinf-book</text>
+  <!-- Explorer -->
+  <rect x="10" y="38" width="190" height="270" class="fill-muted-soft"></rect>
+  <line x1="200" y1="38" x2="200" y2="308" class="stroke-line"></line>
+  <text x="24" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">EXPLORER</text>
+  <text x="24" y="88" font-size="13" font-weight="700">BIOINF-BOOK</text>
+  <g font-size="13" class="mono">
+    <text x="38" y="112">.pixi</text>
+    <text x="38" y="134">notes.txt</text>
+    <text x="38" y="156">pixi.lock</text>
+    <text x="38" y="178">pixi.toml</text>
+  </g>
+  <text x="24" y="290" font-size="12" class="fill-muted">files in the folder</text>
+  <!-- Editor -->
+  <rect x="200" y="38" width="130" height="28" class="fill-surface stroke-line"></rect>
+  <text x="214" y="57" font-size="13" class="mono">pixi.toml</text>
+  <line x1="330" y1="66" x2="710" y2="66" class="stroke-line"></line>
+  <g font-size="13" class="mono">
+    <text x="218" y="92">[workspace]</text>
+    <text x="218" y="112">name = "bioinf-book"</text>
+    <text x="218" y="132">channels = ["conda-forge", "bioconda"]</text>
+    <text x="218" y="152">…</text>
+  </g>
+  <text x="694" y="92" font-size="12" font-weight="700" letter-spacing="1" text-anchor="end" class="fill-muted">EDITOR</text>
+  <text x="694" y="110" font-size="12" text-anchor="end" class="fill-muted">the open file</text>
+  <!-- Terminal panel -->
+  <line x1="200" y1="182" x2="710" y2="182" class="stroke-line"></line>
+  <text x="218" y="204" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <g font-size="13" class="mono">
+    <text x="218" y="230">pixi run check</text>
+    <text x="218" y="250" class="fill-muted">Python 3.12.16</text>
+    <text x="218" y="270" class="fill-muted">…</text>
+  </g>
+  <text x="694" y="204" font-size="12" font-weight="700" letter-spacing="1" text-anchor="end" class="fill-muted">TERMINAL PANEL</text>
+  <text x="694" y="222" font-size="12" text-anchor="end" class="fill-muted">bash, in the open folder</text>
+  <!-- Status bar -->
+  <line x1="10" y1="308" x2="710" y2="308" class="stroke-line"></line>
+  <rect x="11" y="309" width="118" height="36" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="70" y="332" font-size="13" text-anchor="middle" class="mono fill-given">WSL: Ubuntu</text>
+  <text x="694" y="332" font-size="12" font-weight="700" letter-spacing="1" text-anchor="end" class="fill-muted">STATUS BAR</text>
+  <!-- Annotation: where you are connected -->
+  <line x1="70" y1="376" x2="70" y2="349" class="stroke-muted" stroke-width="1.5" marker-end="url(#vscode-window-arrow)"></line>
+  <text x="84" y="378" font-size="13">where VS Code is connected (desktop app): <tspan class="mono">WSL: Ubuntu</tspan>, <tspan class="mono">SSH: &lt;host&gt;</tspan>, or nothing</text>
+  <text x="84" y="395" font-size="12" class="fill-muted">in a browser only an icon shows here: run <tspan class="mono">hostname</tspan> in the terminal instead</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vscode-window-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.2: The VS Code window, simplified. The explorer lists the folder’s files, the editor shows the open file, the terminal panel runs bash, and the left end of the status bar shows where VS Code is connected. In the desktop app it reads <code>WSL: Ubuntu</code> or <code>SSH: &lt;host&gt;</code>; VS Code in a browser shows only an icon there, so the check that always works is <code>hostname</code> in the terminal.
+</figcaption>
+</figure>
+</div>
+<p><code>hostname</code> prints the name of the computer the terminal runs on. Run it now: it prints your laptop’s name. You will run it again on a cluster.</p>
+</section>
+<section id="extensions" class="level3" data-number="2.3.2">
+<h3 data-number="2.3.2" class="anchored" data-anchor-id="extensions"><span class="header-section-number">2.3.2</span> Extensions</h3>
+<p><strong>Extensions</strong> add features to VS Code. Install the ones in <a href="#tbl-vscode-extensions" class="quarto-xref">Table&nbsp;<span>2.2</span></a> from the Extensions view (<kbd title="Ctrl-Shift-X" aria-hidden="true">Ctrl-Shift-X</kbd><span class="visually-hidden">Ctrl-Shift-X</span>, or <kbd title="Cmd-Shift-X" aria-hidden="true">Cmd-Shift-X</kbd><span class="visually-hidden">Cmd-Shift-X</span> on a Mac) by searching for their names. Only the first two matter in this chapter; setting up Python and R inside VS Code waits for <a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a> and <a href="13-python-essentials.html" class="quarto-xref"><span>Chapter 13</span></a>, where you first write code in them.</p>
+<div id="tbl-vscode-extensions" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-vscode-extensions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.2: VS Code extensions this book uses. “Runs where” matters when VS Code is connected to another machine (<a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>).
+</figcaption>
+<div aria-describedby="tbl-vscode-extensions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 18%">
+<col style="width: 22%">
+<col style="width: 19%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Extension</th>
+<th style="text-align: left;">Publisher</th>
+<th style="text-align: left;">What it adds</th>
+<th style="text-align: left;">Runs where</th>
+<th style="text-align: left;">Needed from</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Remote - SSH</td>
+<td style="text-align: left;">Microsoft</td>
+<td style="text-align: left;">Opens folders on another machine over SSH</td>
+<td style="text-align: left;">laptop</td>
+<td style="text-align: left;">this chapter, where your site allows it</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">WSL</td>
+<td style="text-align: left;">Microsoft</td>
+<td style="text-align: left;">Opens folders inside Ubuntu (WSL2)</td>
+<td style="text-align: left;">laptop (Windows)</td>
+<td style="text-align: left;">this chapter (Windows only)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Python</td>
+<td style="text-align: left;">Microsoft</td>
+<td style="text-align: left;">Running and checking Python code</td>
+<td style="text-align: left;">remote side</td>
+<td style="text-align: left;"><a href="13-python-essentials.html" class="quarto-xref"><span>Chapter 13</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">R</td>
+<td style="text-align: left;">REditorSupport</td>
+<td style="text-align: left;">Running R code; needs the <code>languageserver</code> R package</td>
+<td style="text-align: left;">remote side</td>
+<td style="text-align: left;"><a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Quarto</td>
+<td style="text-align: left;">Quarto</td>
+<td style="text-align: left;">Editing and previewing Quarto documents</td>
+<td style="text-align: left;">remote side</td>
+<td style="text-align: left;">when you write reports</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> Where in VS Code can you see whether you are working on your own computer, in WSL, or on a remote machine?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-8-contents" aria-controls="callout-8" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-8" class="callout-8-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In the desktop app, the left end of the status bar (<code>WSL: Ubuntu</code>, <code>SSH: &lt;host&gt;</code>, or nothing for your own computer). In any terminal, including VS Code in a browser, <code>hostname</code> answers it.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-book-setup-ssh" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="sec-book-setup-ssh"><span class="header-section-number">2.4</span> Just enough SSH</h2>
+<p>This section and the next are for readers with a cluster account. No account yet? Read the captured sessions, then go on to <a href="#sec-book-setup-terminal-editors" class="quarto-xref"><span>Section 2.6</span></a>. <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> covers SSH properly; here you need only enough to log in and look around.</p>
+<p><strong>SSH</strong> (secure shell) logs you in to another computer: you type commands on your laptop, and they run on the other machine. On SCINet you can skip this section for now: SCINet recommends its browser portal, Open OnDemand, for most work, so you can go straight to <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>.</p>
+<p><strong>Log in, look, log out.</strong> From your laptop’s terminal, with your cluster user name and its login host (Nova’s is shown, with <code>&lt;netid&gt;</code> to replace by your own; others are in <a href="#tbl-ssh-sites" class="quarto-xref">Table&nbsp;<span>2.3</span></a>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="op">&lt;</span>netid<span class="op">&gt;</span>@nova.its.iastate.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Here is a real first login to Nova (password and code removed; the banner is shortened):</p>
+<pre class="console"><code>The authenticity of host 'nova.its.iastate.edu (129.186.90.9)' can't be established.
+ED25519 key fingerprint is SHA256:DRxKEui9nnf4BSBeLSN4mZ5Il3eHjsoiN74EvzSlmxE.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'nova.its.iastate.edu' (ED25519) to the list of known hosts.
+(&lt;netid&gt;@nova.its.iastate.edu) Verification code:
+(&lt;netid&gt;@nova.its.iastate.edu) Password:
+############################################################################
+#                                                                          #
+# User guides are available at https://research.it.iastate.edu/            #
+#                                                                          #
+# Do not rely on /work, /lustre, or /ptmp as your only copy of important   #
+# files. Files on /ptmp not accessed for 60 days will be deleted.          #
+# Always copy important data to a backed-up system like /lss.              #
+#                                                                          #
+############################################################################
+Last login: Mon Nov 16 17:55:22 2026 from &lt;address&gt;</code></pre>
+<p>What happened, line by line:</p>
+<ol type="1">
+<li><strong>The host-key question.</strong> The first time you connect to a machine, SSH cannot yet tell whether it is the real one, so it asks. Type the whole word <code>yes</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>; <code>y</code> is not accepted. SSH saves the machine’s key in <code>~/.ssh/known_hosts</code> on your laptop and does not ask again.</li>
+<li><strong>The sign-in.</strong> Nova asks for a code from an authenticator app (such as Google Authenticator) first, then your password. Neither shows anything as you type; that is normal.</li>
+<li><strong>The banner</strong>: the site’s notices, worth reading once. This one already says which storage is not backed up.</li>
+</ol>
+<p>Now you are on the cluster’s login node. Look around, then leave:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hostname</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$SHELL</span><span class="st">"</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>nova-login-2
+/bin/bash
+logout
+Connection to nova.its.iastate.edu closed.</code></pre>
+<p><code>hostname</code> names the login node, not your laptop: the commands ran on the cluster. <code>exit</code> brings you back to your laptop. The prompt on many clusters looks like <code>[you@nova-login-2 ~]$</code> rather than Ubuntu’s <code>you@laptop:~$</code>; both mean “ready for a command”.</p>
+<p>Sites differ in what happens before the prompt (<a href="#tbl-ssh-sites" class="quarto-xref">Table&nbsp;<span>2.3</span></a>).</p>
+<div id="tbl-ssh-sites" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ssh-sites-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.3: Logging in with SSH at the two sites used as examples in this book. Steps checked 2026-11-16; your site’s own pages are the authority (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>).
+</figcaption>
+<div aria-describedby="tbl-ssh-sites-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Nova (Iowa State)</th>
+<th style="text-align: left;">SCINet (Ceres, Atlas)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Login host</td>
+<td style="text-align: left;"><code>nova.its.iastate.edu</code></td>
+<td style="text-align: left;"><code>ceres.scinet.usda.gov</code>, <code>atlas-login.hpc.msstate.edu</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">User name</td>
+<td style="text-align: left;">your ISU NetID</td>
+<td style="text-align: left;">your SCINet user name (<code>first.last</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Off campus</td>
+<td style="text-align: left;">connect the ISU VPN first (Cisco Secure Client)</td>
+<td style="text-align: left;">no VPN</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sign-in</td>
+<td style="text-align: left;">authenticator code, then password</td>
+<td style="text-align: left;">a browser sign-in (eAuthentication; Login.gov for non-USDA users), about once a day</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">One-time setup</td>
+<td style="text-align: left;">none</td>
+<td style="text-align: left;">install SmallStep’s <code>step</code> program and run the two setup commands from <a href="https://scinet.usda.gov/guides/access/ssh-login">SCINet’s SSH page</a> (on a Mac, <code>brew install step</code> first)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Host-key question</td>
+<td style="text-align: left;">yes, on first login</td>
+<td style="text-align: left;">no: <code>step</code> supplies the host keys</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>On SCINet, <code>step</code> also supplies your user name, so <code>ssh ceres.scinet.usda.gov</code> is enough; the first time, it opens your browser to sign in. New SCINet accounts start in a <code>sandbox</code> project (jobs up to 2 hours) until a PI adds them to a real one.</p>
+<p><strong>A short name for the host.</strong> Typing the full host name gets old. A <strong>config file</strong> on your laptop, <code>~/.ssh/config</code>, can give it a short name. A fresh Ubuntu has no <code>~/.ssh</code> folder until your first <code>ssh</code> connection creates it, so make it if needed, then open the file in VS Code:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/.ssh <span class="kw">&amp;&amp;</span> <span class="fu">chmod</span> 700 ~/.ssh</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> ~/.ssh/config</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Add an entry like this (Nova shown; use your site’s host and your user name), then save:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" data-filename="~/.ssh/config (laptop)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>Host nova</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    HostName nova.its.iastate.edu</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    User &lt;netid&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Now <code>ssh nova</code> does the same as the long command. SCINet’s <code>step</code> setup has already written its own entries, so SCINet readers can skip this. SSH keys, which let you log in without typing a password, wait for <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>.</p>
+<p>On Windows, this file lives in Ubuntu and is used by the Ubuntu terminal’s <code>ssh</code>. VS Code’s Remote-SSH uses Windows’ own SSH and its own config file, <code>C:\Users\&lt;you&gt;\.ssh\config</code> (<a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>).</p>
+<div class="check">
+<p><strong>Check yourself.</strong> After <code>ssh</code> you type <code>hostname</code> and see a login-node name. Which computer runs your next command?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The cluster’s login node, until you type <code>exit</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-book-setup-remote" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="sec-book-setup-remote"><span class="header-section-number">2.5</span> Editing on a cluster</h2>
+<p>Editing over SSH in a terminal works (<a href="#sec-book-setup-terminal-editors" class="quarto-xref"><span>Section 2.6</span></a>), but you can do better: VS Code can edit files on the cluster while its window stays on your laptop or in your browser. How you connect depends on your site.</p>
+<p><strong>First, check your site’s route.</strong> Connecting VS Code to a machine starts a program there, the <strong>VS Code server</strong>, and it is heavy enough that many sites ban it from login nodes. Both sites in this book do: Nova moved VS Code off its login nodes in May 2026 because “VSCode processes often rend login nodes unusable” (<a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU</a>), and SCINet runs it on compute nodes only (<a href="https://scinet.usda.gov/guides/ide/vscode">SCINet</a>). Look up your site’s route in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> before you connect. <a href="#tbl-where-to-edit" class="quarto-xref">Table&nbsp;<span>2.4</span></a> compares the routes.</p>
+<div class="wide-table">
+<div id="tbl-where-to-edit" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-where-to-edit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.4: Ways to edit files on a cluster. Most sites support only some of them; your site’s documentation says which (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>).
+</figcaption>
+<div aria-describedby="tbl-where-to-edit-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 37%">
+<col style="width: 25%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Route</th>
+<th style="text-align: left;">What you need</th>
+<th style="text-align: left;">Good for</th>
+<th style="text-align: left;">Limits</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">VS Code in Open OnDemand</td>
+<td style="text-align: left;">a browser (Nova: campus network or VPN)</td>
+<td style="text-align: left;">everyday editing on SCINet and Nova; nothing to install</td>
+<td style="text-align: left;">runs as a job: end it with <strong>Cancel</strong> when done</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">VS Code tunnel to a compute node</td>
+<td style="text-align: left;">desktop VS Code; a Microsoft or GitHub account</td>
+<td style="text-align: left;">desktop VS Code on a compute node (Nova’s recommended route)</td>
+<td style="text-align: left;">runs as a job: end it when done</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remote-SSH to a compute node</td>
+<td style="text-align: left;">desktop VS Code, SSH keys (<a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>), a held compute node</td>
+<td style="text-align: left;">sites that document it (Nova)</td>
+<td style="text-align: left;">more setup each time; release the node when done</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remote-SSH to a login node</td>
+<td style="text-align: left;">desktop VS Code</td>
+<td style="text-align: left;">sites that allow it</td>
+<td style="text-align: left;">not allowed on Nova or SCINet</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">nano or vim over SSH</td>
+<td style="text-align: left;">only <code>ssh</code></td>
+<td style="text-align: left;">quick edits anywhere</td>
+<td style="text-align: left;">plain terminal editing</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Then, hands-on: VS Code in Open OnDemand.</strong> <strong>Open OnDemand</strong> is a web portal to a cluster: you sign in with a browser and start programs, including VS Code, as jobs on compute nodes. It works the same way on both sites in this book.</p>
+<ol type="1">
+<li><p>Sign in to your site’s Open OnDemand (<a href="https://ceres-ondemand.scinet.usda.gov">SCINet Ceres</a>; Nova’s is linked from <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU’s VS Code page</a>).</p></li>
+<li><p>Choose <strong>Interactive Apps → Servers → VS Code</strong> (<em>VS Code Server</em> on Nova).</p></li>
+<li><p>Fill in the form. The fields differ a little between sites; what they ask for is the same:</p>
+<ul>
+<li><strong>Account</strong>: your project or group (on SCINet, not <code>sandbox</code> once you have a real project).</li>
+<li><strong>Queue/partition</strong>: the default (<code>ceres</code> on Ceres, <code>nova</code> on Nova).</li>
+<li><strong>Cores, memory, hours</strong>: small is fine for editing, for example 2 cores, 8 GB, 2 hours.</li>
+<li><strong>Working Directory</strong>: your project folder, such as <code>/project/&lt;your-project&gt;/&lt;you&gt;</code> or <code>/work/&lt;your-group&gt;/&lt;netid&gt;</code>. Set it every time. Left blank, Ceres opened a session folder inside <code>~/ondemand/</code>, and Nova reused the last folder.</li>
+</ul></li>
+<li><p>Click <strong>Launch</strong>. The card in <em>My Interactive Sessions</em> says <em>Queued</em>, then <em>Running</em>. Click <strong>Connect to VS Code</strong>; VS Code opens in a new browser tab, in your working directory.</p></li>
+<li><p>Open a terminal (<em>☰ menu → Terminal → New Terminal</em>) and check where you are:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (compute node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-filename="Terminal (compute node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hostname</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">pwd</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>nova18-69
+/work/&lt;your-group&gt;/&lt;netid&gt;</code></pre>
+<p>The name is a compute node’s, not a login node’s or your laptop’s, and <code>pwd</code> shows the cluster folder you chose. (On Ceres it was <code>ceres20-compute-2</code>.)</p></li>
+<li><p><strong>End the session when you finish.</strong> Go back to <em>My Interactive Sessions</em> and click <strong>Cancel</strong> on the card. The card turns <em>Completed</em>, and the node is free for someone else. Then close the VS Code tab yourself. (<em>Delete</em> only clears an old card away.)</p></li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: closing the tab does not end the session
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The session is a job that keeps its compute node until you click <strong>Cancel</strong> or its hours run out. Closing the browser tab only closes your view of it: the card still says <em>Running</em>. Two more habits: set the Working Directory on the form, because opening a different folder later reloads the window and stops anything running in its terminal; and paste short blocks into the browser terminal, since a long pasted block can break.</p>
+</div>
+</div>
+<p><strong>Other routes.</strong> On sites that allow Remote-SSH, the steps are similar in desktop VS Code: click the remote button at the left end of the status bar, choose <em>Connect to Host…</em>, pick your host, open a folder, open a terminal, and run <code>hostname</code>. On Windows, add hosts with <em>Remote-SSH: Add New SSH Host…</em> and choose the first file it offers, <code>C:\Users\&lt;you&gt;\.ssh\config</code>; Remote-SSH reads only Windows’ config files, even from a WSL window. The VS Code tunnel route and Nova’s Remote-SSH to a compute node are recipes in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
+<p><strong>Now the idea</strong> (<a href="#fig-remote-ssh" class="quarto-xref">Figure&nbsp;<span>2.3</span></a>). Whichever route you use, the window you look at is on your laptop. The files, the terminal, and the programs you run are on the cluster, run by the VS Code server.</p>
+<div id="fig-remote-ssh" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-remote-ssh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 330" role="img" aria-labelledby="remote-ssh-title">
+  <title id="remote-ssh-title">Two ways VS Code edits on a cluster. Top: desktop VS Code on your laptop connects over SSH or a tunnel to a compute node. Bottom: a browser tab on your laptop connects to Open OnDemand, which starts VS Code as a job on a compute node. On the compute node run the VS Code server, the terminal, the Python and R extensions, and your files on shared storage. The laptop holds only the window and its own files, which are not copied over. The login node, in between, does not run the VS Code server at Nova or SCINet.</title>
+  <defs>
+    <marker id="remote-ssh-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Laptop -->
+  <rect x="10" y="20" width="200" height="290" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="26" y="46" font-size="16" font-weight="700">Your laptop</text>
+  <rect x="26" y="62" width="168" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="40" y="88" font-size="14" font-weight="700">Desktop VS Code</text>
+  <text x="40" y="108" font-size="13" class="fill-muted">window, themes</text>
+  <rect x="26" y="192" width="168" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="40" y="218" font-size="14" font-weight="700">Browser tab</text>
+  <text x="40" y="238" font-size="13" class="fill-muted">VS Code window</text>
+  <text x="26" y="282" font-size="12" class="fill-muted">laptop files stay here;</text>
+  <text x="26" y="298" font-size="12" class="fill-muted">nothing is copied over</text>
+  <!-- The cluster boundary -->
+  <rect x="246" y="10" width="464" height="310" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"></rect>
+  <text x="262" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+  <!-- Route 1: desktop VS Code over SSH or a tunnel -->
+  <line x1="194" y1="80" x2="466" y2="80" class="stroke-muted" stroke-width="1.75" marker-end="url(#remote-ssh-arrow)"></line>
+  <text x="340" y="70" font-size="13" text-anchor="middle">SSH or tunnel</text>
+  <!-- Login node: no VS Code server -->
+  <rect x="270" y="100" width="150" height="80" rx="8" class="fill-surface stroke-line" stroke-dasharray="4 3"></rect>
+  <text x="284" y="124" font-size="14" font-weight="700" class="fill-muted">Login node</text>
+  <text x="284" y="146" font-size="12" class="fill-muted">no VS Code server</text>
+  <text x="284" y="164" font-size="12" class="fill-muted">at Nova or SCINet</text>
+  <!-- Route 2: browser to Open OnDemand, which starts a job -->
+  <line x1="194" y1="230" x2="268" y2="230" class="stroke-muted" stroke-width="1.75" marker-end="url(#remote-ssh-arrow)"></line>
+  <text x="231" y="220" font-size="12" text-anchor="middle" class="fill-muted">https</text>
+  <rect x="270" y="204" width="150" height="62" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="284" y="230" font-size="14" font-weight="700">Open OnDemand</text>
+  <text x="284" y="250" font-size="12" class="fill-muted">web portal</text>
+  <line x1="420" y1="235" x2="466" y2="235" class="stroke-muted" stroke-width="1.75" marker-end="url(#remote-ssh-arrow)"></line>
+  <text x="284" y="288" font-size="12" class="fill-muted">starts VS Code as a job</text>
+  <text x="284" y="304" font-size="12" class="fill-muted">on a compute node</text>
+  <!-- Compute node: where the work happens -->
+  <rect x="468" y="48" width="226" height="256" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="482" y="74" font-size="16" font-weight="700">Compute node</text>
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="482" y="88" width="198" height="32" rx="4"></rect>
+    <rect x="482" y="128" width="198" height="32" rx="4"></rect>
+    <rect x="482" y="168" width="198" height="32" rx="4"></rect>
+  </g>
+  <g font-size="13">
+    <text x="494" y="109">VS Code server</text>
+    <text x="494" y="149">terminal (bash)</text>
+    <text x="494" y="189">Python, R extensions</text>
+  </g>
+  <rect x="482" y="216" width="198" height="72" rx="4" class="fill-given-soft stroke-given"></rect>
+  <text x="494" y="242" font-size="13" font-weight="700" class="fill-given">your files</text>
+  <text x="494" y="262" font-size="12" class="fill-given">on shared storage</text>
+  <text x="494" y="278" font-size="12" class="fill-given">(project, home)</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-remote-ssh-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.3: Where things run when VS Code edits on a cluster. Top: desktop VS Code connects over SSH or a tunnel. Bottom: a browser connects to Open OnDemand, which starts VS Code as a job. Either way the window is on your laptop, and the VS Code server, your files, and the terminal are on a compute node. Many sites, including Nova and SCINet, do not allow the server on login nodes.
+</figcaption>
+</figure>
+</div>
+<p>So your laptop’s files, and the book environment you installed on your laptop, are not on the cluster; install the environment there as in <a href="#sec-book-setup-pixi" class="quarto-xref"><span>Section 2.2</span></a> if you need it. Extensions split the same way: those that change the look stay on your laptop, and most others (Python, R) install on the cluster side. In browser VS Code the extension list may come from a different catalogue (<a href="https://open-vsx.org">Open VSX</a>) than desktop VS Code’s.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “With Remote-SSH, my code runs on my laptop”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> The window is local, but the files, the terminal, and the language tools run on the remote machine. Your laptop’s files are not copied over. Run <code>hostname</code> in the terminal to see which machine it is.</p>
+</div>
+</div>
+<p>The VS Code server and its extensions are stored in your home folder on the cluster (<code>~/.vscode-server</code> for Remote-SSH, <code>~/.local/share/code-server</code> for Open OnDemand). Without extensions it is small (under 1 MB on Ceres), but extensions can fill a small home quota; both sites recommend moving it to project storage, and <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> shows how.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> In a VS Code window connected to a cluster you open a terminal and run <code>ls</code>. Whose files do you see, and is your laptop’s <code>~/bioinf-book</code> there?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-12-contents" aria-controls="callout-12" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-12" class="callout-12-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The cluster’s files. Your laptop’s <code>~/bioinf-book</code> is not there: nothing is copied over, so you make the folder (and install the environment) on the cluster if you need it.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-book-setup-terminal-editors" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="sec-book-setup-terminal-editors"><span class="header-section-number">2.6</span> Editing in the terminal: nano and vim</h2>
+<p>Sometimes all you have is a terminal: an SSH session, a compute node, a server without a desktop. Two editors that run inside the terminal are on almost every Linux machine: <strong>nano</strong>, which is simple, and <strong>vim</strong>, which is powerful and confusing at first. Learn nano to edit, and vim only to escape, because some tools open vim for you.</p>
+<p>On a Mac, the <code>nano</code> that comes with macOS is really a different editor (pico). Install GNU nano, the same editor as on Linux and clusters: <code>brew install nano</code>, then check that <code>nano --version</code> says <code>GNU nano</code>. On any system, <code>pixi run nano</code> also works from <code>~/bioinf-book</code>, since the book environment includes nano.</p>
+<p><strong>nano.</strong> Open a new file in the book folder:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">nano</span> notes.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The file opens with a help bar at the bottom, where <code>^</code> means <kbd title="Ctrl" aria-hidden="true">Ctrl</kbd><span class="visually-hidden">Ctrl</span>. Type a line, such as <code>First note.</code> Then:</p>
+<ol type="1">
+<li>Save with <kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span>; nano shows the file name; press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span> to confirm.</li>
+<li>Quit with <kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span>.</li>
+</ol>
+<p>Check that the line was saved:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> notes.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>First note.</code></pre>
+<p>The cluster’s nano may be older (5.6 on Nova and Atlas), but these keys are the same.</p>
+<p><strong>vim.</strong> vim has <strong>modes</strong> (<a href="#fig-vim-modes" class="quarto-xref">Figure&nbsp;<span>2.4</span></a>). It starts in <em>Normal</em> mode, where keys are commands, not text; that is why typing into a fresh vim seems to do strange things. Open the same file:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">vim</span> notes.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol type="1">
+<li>Press <code>i</code> to enter <em>Insert</em> mode (<code>-- INSERT --</code> appears at the bottom), and type a second line.</li>
+<li>Press <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> to go back to Normal mode.</li>
+<li>Type <code>:wq</code> and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>: write (save) and quit.</li>
+</ol>
+<p>Open it once more, type anything, then leave <strong>without</strong> saving: press <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span>, type <code>:q!</code>, press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>.</p>
+<div id="fig-vim-modes" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-vim-modes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 300" role="img" aria-labelledby="vim-modes-title">
+  <title id="vim-modes-title">vim's two modes for beginners. vim starts in Normal mode, where keys are commands. Pressing i enters Insert mode, where keys type text; pressing Esc returns to Normal mode. From Normal mode, :wq saves and quits, :q! quits without saving, and :cq quits with an error, which tells the program that opened vim, such as git commit, to stop.</title>
+  <defs>
+    <marker id="vim-modes-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Start -->
+  <text x="20" y="96" font-size="13" class="mono">vim notes.txt</text>
+  <text x="20" y="116" font-size="12" class="fill-muted">starts here</text>
+  <line x1="130" y1="100" x2="196" y2="100" class="stroke-muted" stroke-width="1.75" marker-end="url(#vim-modes-arrow)"></line>
+  <!-- Normal mode -->
+  <rect x="198" y="56" width="190" height="88" rx="12" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+  <text x="293" y="92" font-size="16" font-weight="700" text-anchor="middle">Normal mode</text>
+  <text x="293" y="114" font-size="13" text-anchor="middle" class="fill-muted">keys are commands</text>
+  <!-- Insert mode -->
+  <rect x="510" y="56" width="190" height="88" rx="12" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+  <text x="605" y="92" font-size="16" font-weight="700" text-anchor="middle">Insert mode</text>
+  <text x="605" y="114" font-size="13" text-anchor="middle" class="fill-muted">keys type text</text>
+  <!-- i: Normal to Insert; Esc: Insert to Normal -->
+  <path d="M388,78 C430,50 468,50 508,78" fill="none" class="stroke-muted" stroke-width="1.75" marker-end="url(#vim-modes-arrow)"></path>
+  <text x="449" y="46" font-size="14" font-weight="700" text-anchor="middle" class="mono">i</text>
+  <path d="M510,122 C468,150 430,150 390,122" fill="none" class="stroke-muted" stroke-width="1.75" marker-end="url(#vim-modes-arrow)"></path>
+  <text x="449" y="166" font-size="14" font-weight="700" text-anchor="middle" class="mono">Esc</text>
+  <!-- Exits from Normal mode -->
+  <line x1="293" y1="144" x2="293" y2="192" class="stroke-muted" stroke-width="1.75" marker-end="url(#vim-modes-arrow)"></line>
+  <rect x="120" y="194" width="580" height="96" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="136" y="216" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TO QUIT, FROM NORMAL MODE (then Enter)</text>
+  <g font-size="13">
+    <text x="136" y="240" font-weight="700" class="mono">:wq</text>
+    <text x="196" y="240">save and quit</text>
+    <text x="136" y="260" font-weight="700" class="mono">:q!</text>
+    <text x="196" y="260">quit without saving</text>
+    <text x="136" y="280" font-weight="700" class="mono">:cq</text>
+    <text x="196" y="280">quit with an error: the tool that opened vim (e.g., <tspan class="mono">git commit</tspan>) stops</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-vim-modes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;2.4: vim’s two modes for beginners. <code>i</code> enters Insert mode, where keys type text; <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> returns to Normal mode, where <code>:</code> commands save and quit. <code>:cq</code> quits with an error, which tells the program that opened vim to stop.
+</figcaption>
+</figure>
+</div>
+<p>Why this matters: some tools open an editor for you. The best-known is <code>git commit</code> without a message (<a href="21-git.html" class="quarto-xref"><span>Chapter 21</span></a>), which often opens vim. When you quit, the tool reads whatever the file holds and usually carries on (<code>git merge</code>, for example, goes ahead with its prepared message, even after <code>:q!</code>). To make the tool stop, quit with <code>:cq</code> (“quit with an error”). To get nano in those places, set</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">EDITOR</span><span class="op">=</span>nano</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This lasts only for the current terminal; <a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> shows how to make it permanent (and git has its own setting, which can override it).</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Stuck in vim?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Press <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span>, type <code>:q!</code>, and press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>. If a tool such as <code>git commit</code> opened vim and you want it to stop, type <code>:cq</code> instead.</p>
+</div>
+</div>
+<p><a href="#tbl-nano-vim" class="quarto-xref">Table&nbsp;<span>2.5</span></a> collects the keys.</p>
+<div id="tbl-nano-vim" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-nano-vim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.5: nano and vim side by side. In nano, <code>^O</code> means <kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span>.
+</figcaption>
+<div aria-describedby="tbl-nano-vim-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 42%">
+<col style="width: 31%">
+<col style="width: 26%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Action</th>
+<th style="text-align: left;">nano</th>
+<th style="text-align: left;">vim</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Open a file</td>
+<td style="text-align: left;"><code>nano file.txt</code></td>
+<td style="text-align: left;"><code>vim file.txt</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Start typing</td>
+<td style="text-align: left;">just type</td>
+<td style="text-align: left;"><code>i</code> (Insert mode)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Stop typing</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> (Normal mode)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Save</td>
+<td style="text-align: left;"><kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span>, then <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span></td>
+<td style="text-align: left;"><code>:w</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Save and quit</td>
+<td style="text-align: left;"><kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span>, <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>, <kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span></td>
+<td style="text-align: left;"><code>:wq</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Quit without saving</td>
+<td style="text-align: left;"><kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span>, then <code>N</code></td>
+<td style="text-align: left;"><code>:q!</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Quit and stop the tool that opened the editor</td>
+<td style="text-align: left;">—</td>
+<td style="text-align: left;"><code>:cq</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Search</td>
+<td style="text-align: left;"><p><kbd title="Ctrl-W" aria-hidden="true">Ctrl-W</kbd><span class="visually-hidden">Ctrl-W</span></p></td>
+<td style="text-align: left;"><code>/text</code>, then <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> A command opened vim and your terminal fills with <code>~</code> lines. How do you leave without saving?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-14-contents" aria-controls="callout-14" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-14" class="callout-14-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Press <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span>, type <code>:q!</code>, press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span>. (<code>:cq</code> if you want the tool that opened vim to stop.)</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-book-setup-other" class="level2" data-number="2.7">
+<h2 data-number="2.7" class="anchored" data-anchor-id="sec-book-setup-other"><span class="header-section-number">2.7</span> Other editors and tools</h2>
+<p>You will hear about other editors and tools (<a href="#tbl-editors" class="quarto-xref">Table&nbsp;<span>2.6</span></a>). None is needed for this book: VS Code also edits Quarto documents and runs Jupyter notebooks, and any editor plus a terminal runs R and Python. You do not need RStudio for R or Jupyter for Python.</p>
+<div class="wide-table">
+<div id="tbl-editors" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-editors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;2.6: Other editors and tools you may meet. For reference only.
+</figcaption>
+<div aria-describedby="tbl-editors-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">What it is</th>
+<th style="text-align: left;">When you might meet it</th>
+<th style="text-align: left;">In this book</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://posit.co/products/open-source/rstudio/">RStudio</a></td>
+<td style="text-align: left;">An editor built for R</td>
+<td style="text-align: left;">R courses; many labs; an Open OnDemand app on many clusters</td>
+<td style="text-align: left;">this table only</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://positron.posit.co">Positron</a></td>
+<td style="text-align: left;">Posit’s newer editor for R and Python, built on the same base as VS Code</td>
+<td style="text-align: left;">labs that use both languages</td>
+<td style="text-align: left;">this table only</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://jupyter.org">Jupyter</a> (Lab, notebooks)</td>
+<td style="text-align: left;">Notebooks: code, output, and text in one document, in a browser</td>
+<td style="text-align: left;">Python courses; tutorials; Open OnDemand</td>
+<td style="text-align: left;"><a href="13-python-essentials.html" class="quarto-xref"><span>Chapter 13</span></a> (interactive work)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://quarto.org">Quarto</a></td>
+<td style="text-align: left;">Turns text with code into reports, slides, and books (this book is one)</td>
+<td style="text-align: left;">writing reports from analyses</td>
+<td style="text-align: left;"><a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a> (one small report)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://openondemand.org">Open OnDemand</a></td>
+<td style="text-align: left;">A web portal to a cluster</td>
+<td style="text-align: left;">SCINet, Nova, many universities</td>
+<td style="text-align: left;"><a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>, <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><a href="https://code.visualstudio.com/docs/remote/tunnels">VS Code tunnels</a></td>
+<td style="text-align: left;">Desktop VS Code connected to a machine through Microsoft’s relay</td>
+<td style="text-align: left;">sites that recommend it (Nova)</td>
+<td style="text-align: left;"><a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><a href="https://www.nano-editor.org">nano</a>, <a href="https://www.vim.org">vim</a></td>
+<td style="text-align: left;">Editors inside the terminal</td>
+<td style="text-align: left;">any server</td>
+<td style="text-align: left;"><a href="#sec-book-setup-terminal-editors" class="quarto-xref"><span>Section 2.6</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="sec-book-setup-summary" class="level2" data-number="2.8">
+<h2 data-number="2.8" class="anchored" data-anchor-id="sec-book-setup-summary"><span class="header-section-number">2.8</span> Summary</h2>
+<ul>
+<li>pixi installs the book environment into <code>~/bioinf-book/.pixi/</code> from two files: <code>pixi.toml</code> (what the project needs) and <code>pixi.lock</code> (the exact packages). <code>pixi install --locked</code> installs it; on a cluster, install in project storage, with the cache there too, from a compute session.</li>
+<li>Tools in the environment run with <code>pixi run</code> (or inside <code>pixi shell</code>), not on their own. <code>pixi run seqkit stats</code> counted 50,000 reads, as you did by hand in Chapter 1.</li>
+<li>VS Code is the book’s editor: explorer, editor, terminal, status bar. <code>hostname</code> in its terminal tells you which machine you are on.</li>
+<li><code>ssh</code> logs you in to a cluster’s login node; type <code>yes</code> the first time and <code>exit</code> to leave. VS Code reaches a cluster by your site’s route (on SCINet and Nova, Open OnDemand, on a compute node): the window is local, the files and terminal are on the cluster, and <strong>Cancel</strong> ends the session.</li>
+<li>nano edits a file (<kbd title="Ctrl-O" aria-hidden="true">Ctrl-O</kbd><span class="visually-hidden">Ctrl-O</span> saves, <kbd title="Ctrl-X" aria-hidden="true">Ctrl-X</kbd><span class="visually-hidden">Ctrl-X</span> quits); in vim, <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span> then <code>:q!</code> gets you out.</li>
+</ul>
+</section>
+<section id="sec-book-setup-exercises" class="level2" data-number="2.9">
+<h2 data-number="2.9" class="anchored" data-anchor-id="sec-book-setup-exercises"><span class="header-section-number">2.9</span> Exercises</h2>
+<div class="check">
+<p><strong>Exercise 1. What did you install?</strong> Run <code>pixi list</code> in <code>~/bioinf-book</code> and find the versions of Python, R, and seqkit. Do they match what <code>pixi run check</code> printed? Then open <code>pixi.lock</code> in VS Code, search for <code>seqkit</code> (<kbd title="Ctrl-F" aria-hidden="true">Ctrl-F</kbd><span class="visually-hidden">Ctrl-F</span>, or <kbd title="Cmd-F" aria-hidden="true">Cmd-F</kbd><span class="visually-hidden">Cmd-F</span> on a Mac), and find where the same version is recorded.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-15-contents" aria-controls="callout-15" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-15" class="callout-15-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<pre class="console"><code>Name     Version  Build                 Size       Kind   Source
+...
+python   3.12.16  h6907cb8_0_cpython    11.42 MiB  conda  https://conda.anaconda.org/conda-forge
+r-base   4.4.3    hfad4568_12           25.52 MiB  conda  https://conda.anaconda.org/conda-forge
+seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda.org/bioconda</code></pre>
+<p>(Builds and sizes differ between systems.) The versions match the check. In <code>pixi.lock</code>, seqkit appears once for each system; the Linux line is</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>- conda: https://conda.anaconda.org/bioconda/linux-64/seqkit-2.14.0-hb192632_0.conda</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>The version is part of the package’s address.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 2. Read 2.</strong> Run <code>pixi run seqkit stats</code> on the read-2 file from Chapter 1’s exercise (change <code>_1</code> to <code>_2</code>). If you skipped that exercise, download the file first:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> ~/bioinf-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Do the two files have the same <code>num_seqs</code>?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Yes: 50,000 reads in each, as Chapter 1’s exercise found by counting lines. seqkit can take both files at once: <code>pixi run seqkit stats ~/bioinf-ch01/SRR6357070_*.fastq.gz</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 3. Two editors, one file.</strong> In nano, create <code>README.md</code> in <code>~/bioinf-book</code> with one line saying what the folder is for. Then open it in vim, add a second line, and save with <code>:wq</code>. Run <code>cat README.md</code> in VS Code’s terminal to check both lines are there.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-17-contents" aria-controls="callout-17" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-17" class="callout-17-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>For example:</p>
+<pre class="console"><code>Project folder for Computing for Bioinformatics.
+Book environment installed with pixi (Chapter 2).</code></pre>
+<p>If the second line is missing, you probably left vim with <code>:q!</code> or typed it in Normal mode (forgot <code>i</code>).</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 4. Where did you land?</strong> (Cluster readers.) Open a folder on your cluster by your site’s supported route (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>), open a terminal there, and run <code>hostname</code> and <code>pwd</code>. Write down where you landed, then end the session with <strong>Cancel</strong> on its card (closing the tab is not enough). No cluster yet? Answer from the captured session in <a href="#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>hostname</code> names a compute node (such as <code>nova18-69</code> or <code>ceres20-compute-2</code>), not a login node and not your laptop; <code>pwd</code> is the working directory you set on the form, in project storage. After <strong>Cancel</strong>, the card says <em>Completed</em>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-book-setup-reading" class="level2 page-columns page-full" data-number="2.10">
+<h2 data-number="2.10" class="anchored" data-anchor-id="sec-book-setup-reading"><span class="header-section-number">2.10</span> Further reading</h2>
+<ul>
+<li><span class="citation" data-cites="prefix2026pixi"><span class="nocase">prefix.dev</span> (<a href="../references.html#ref-prefix2026pixi" role="doc-biblioref">2026</a>)</span>, the <a href="https://pixi.prefix.dev/latest/">pixi documentation</a> — current install steps, every <code>pixi.toml</code> field, and the environment variables (such as <code>PIXI_CACHE_DIR</code>) used on clusters.</li>
+<li><span class="citation" data-cites="microsoft2026remotessh">Microsoft (<a href="../references.html#ref-microsoft2026remotessh" role="doc-biblioref">2026</a>)</span>, <a href="https://code.visualstudio.com/docs/remote/ssh"><em>Remote Development using SSH</em></a> — how the VS Code server works, and its known limits, if your site allows Remote-SSH.</li>
+<li><span class="citation" data-cites="gruning2018bioconda">Grüning et al. (<a href="../references.html#ref-gruning2018bioconda" role="doc-biblioref">2018</a>)</span> — a short paper on why Bioconda exists and how thousands of bioinformatics tools became one-command installs.</li>
+<li><span class="citation" data-cites="shen2016seqkit">Shen et al. (<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">2016</a>)</span> — the SeqKit paper: what the tool you just ran can do besides <code>stats</code>.</li>
+<li><span class="citation" data-cites="shotts2025linux">Shotts (<a href="../references.html#ref-shotts2025linux" role="doc-biblioref">2025</a>)</span>, <em>The Linux Command Line</em>, the chapter on the vi editor — for when you want more than escaping vim.</li>
 </ul>
 
 
+<div class="no-row-height column-margin column-container"><div id="ref-prefix2026pixi" class="csl-entry" role="listitem">
+<span class="nocase">prefix.dev</span>. 2026. <em>Pixi Documentation</em>. <a href="https://pixi.prefix.dev/latest/">https://pixi.prefix.dev/latest/</a>.
+</div><div id="ref-microsoft2026remotessh" class="csl-entry" role="listitem">
+Microsoft. 2026. <em>Remote Development Using <span>SSH</span></em>. Visual Studio Code documentation. <a href="https://code.visualstudio.com/docs/remote/ssh">https://code.visualstudio.com/docs/remote/ssh</a>.
+</div><div id="ref-gruning2018bioconda" class="csl-entry" role="listitem">
+Grüning, Björn, Ryan Dale, Andreas Sjödin, et al. 2018. <span>“Bioconda: Sustainable and Comprehensive Software Distribution for the Life Sciences.”</span> <em>Nature Methods</em> 15 (7): 475–76. <a href="https://doi.org/10.1038/s41592-018-0046-7">https://doi.org/10.1038/s41592-018-0046-7</a>.
+</div><div id="ref-shen2016seqkit" class="csl-entry" role="listitem">
+Shen, Wei, Shuai Le, Yan Li, and Fuquan Hu. 2016. <span>“<span>SeqKit</span>: A Cross-Platform and Ultrafast Toolkit for <span>FASTA/Q</span> File Manipulation.”</span> <em>PLOS ONE</em> 11 (10): e0163962. <a href="https://doi.org/10.1371/journal.pone.0163962">https://doi.org/10.1371/journal.pone.0163962</a>.
+</div><div id="ref-shotts2025linux" class="csl-entry" role="listitem">
+Shotts, William. 2025. <em>The Linux Command Line</em>. Seventh Internet, Rev. A (25.12). <a href="https://linuxcommand.org/tlcl.php">https://linuxcommand.org/tlcl.php</a>.
+</div></div>
 </section>
 
 </main> <!-- /main -->

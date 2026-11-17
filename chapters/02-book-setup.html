@@ -104,9 +104,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-a67ad02c8eadafdc7aff2effa4974bc2.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-d08b36e50e366ce28d07f407df305662.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-d4a656369b10048819d5ba4205b32a06.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
 <script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
 <link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
@@ -856,7 +856,7 @@ div.csl-indent {
 Python 3.12.16
 Rscript (R) version 4.4.3 (2025-02-28)
 seqkit v2.14.0</code></pre>
-<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>. (If you deleted <code>~/bioinf-ch01</code>, which Chapter 1 said you could, download the file again first: <code>mkdir -p ~/bioinf-ch01</code>, then the <code>curl</code> command from <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>, step 2, run inside that folder.)</p>
+<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit shen2024seqkit2">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>, <a href="../references.html#ref-shen2024seqkit2" role="doc-biblioref">2024</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>. (If you deleted <code>~/bioinf-ch01</code>, which Chapter 1 said you could, download the file again first: <code>mkdir -p ~/bioinf-ch01</code>, then the <code>curl</code> command from <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>, step 2, run inside that folder.)</p>
 <div class="no-row-height column-margin column-container"></div><div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
@@ -2173,7 +2173,7 @@ Book environment installed with pixi (Chapter 2).</code></pre>
 <li><span class="citation" data-cites="prefix2026pixi"><span class="nocase">prefix.dev</span> (<a href="../references.html#ref-prefix2026pixi" role="doc-biblioref">2026</a>)</span>, the <a href="https://pixi.prefix.dev/latest/">pixi documentation</a> — current install steps, every <code>pixi.toml</code> field, and the environment variables (such as <code>PIXI_CACHE_DIR</code>) used on clusters.</li>
 <li><span class="citation" data-cites="microsoft2026remotessh">Microsoft (<a href="../references.html#ref-microsoft2026remotessh" role="doc-biblioref">2026</a>)</span>, <a href="https://code.visualstudio.com/docs/remote/ssh"><em>Remote Development using SSH</em></a> — how the VS Code server works, and its known limits, if your site allows Remote-SSH.</li>
 <li><span class="citation" data-cites="gruning2018bioconda">Grüning et al. (<a href="../references.html#ref-gruning2018bioconda" role="doc-biblioref">2018</a>)</span> — a short paper on why Bioconda exists and how thousands of bioinformatics tools became one-command installs.</li>
-<li><span class="citation" data-cites="shen2016seqkit">Shen et al. (<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">2016</a>)</span> — the SeqKit paper: what the tool you just ran can do besides <code>stats</code>.</li>
+<li><span class="citation" data-cites="shen2016seqkit">Shen et al. (<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">2016</a>)</span> and <span class="citation" data-cites="shen2024seqkit2">Shen et al. (<a href="../references.html#ref-shen2024seqkit2" role="doc-biblioref">2024</a>)</span> — the two SeqKit papers (the second is the one <code>seqkit --help</code> asks you to cite): what the tool you just ran can do besides <code>stats</code>.</li>
 <li><span class="citation" data-cites="shotts2025linux">Shotts (<a href="../references.html#ref-shotts2025linux" role="doc-biblioref">2025</a>)</span>, <em>The Linux Command Line</em>, the chapter on the vi editor — for when you want more than escaping vim.</li>
 </ul>
 
@@ -2186,6 +2186,8 @@ Microsoft. 2026. <em>Remote Development Using <span>SSH</span></em>. Visual Stud
 Grüning, Björn, Ryan Dale, Andreas Sjödin, et al. 2018. <span>“Bioconda: Sustainable and Comprehensive Software Distribution for the Life Sciences.”</span> <em>Nature Methods</em> 15 (7): 475–76. <a href="https://doi.org/10.1038/s41592-018-0046-7">https://doi.org/10.1038/s41592-018-0046-7</a>.
 </div><div id="ref-shen2016seqkit" class="csl-entry" role="listitem">
 Shen, Wei, Shuai Le, Yan Li, and Fuquan Hu. 2016. <span>“<span>SeqKit</span>: A Cross-Platform and Ultrafast Toolkit for <span>FASTA/Q</span> File Manipulation.”</span> <em>PLOS ONE</em> 11 (10): e0163962. <a href="https://doi.org/10.1371/journal.pone.0163962">https://doi.org/10.1371/journal.pone.0163962</a>.
+</div><div id="ref-shen2024seqkit2" class="csl-entry" role="listitem">
+Shen, Wei, Botond Sipos, and Liuyang Zhao. 2024. <span>“<span>SeqKit2</span>: A <span>Swiss</span> Army Knife for Sequence and Alignment Processing.”</span> <em>iMeta</em> 3 (3). <a href="https://doi.org/10.1002/imt2.191">https://doi.org/10.1002/imt2.191</a>.
 </div><div id="ref-shotts2025linux" class="csl-entry" role="listitem">
 Shotts, William. 2025. <em>The Linux Command Line</em>. Seventh Internet, Rev. A (25.12). <a href="https://linuxcommand.org/tlcl.php">https://linuxcommand.org/tlcl.php</a>.
 </div></div>

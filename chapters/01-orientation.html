@@ -970,7 +970,7 @@ Table&nbsp;1.1: What you type commands into, by operating system.
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> <span class="at">--cpus-per-task</span><span class="op">=</span>1 <span class="at">--mem</span><span class="op">=</span>4G <span class="at">--time</span><span class="op">=</span>01:00:00 <span class="at">--pty</span> bash <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>This asks for 1 core, 4 GB of RAM, and 1 hour, and opens a shell on a compute node once they are free; it may take a moment. Run <code>hostname</code>: it should now print a different machine’s name than before. Do steps 1–6 there, then type <code>exit</code> to give the compute node back and return to the login node.</p>
-<p>Many sites need more options, such as an account (<code>-A</code>) or a partition (<code>-p</code>); SCINet, for example, requires <code>-A</code>. Your site’s are in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>. If <code>curl</code> cannot connect from a compute node, your site may block the internet there; ask your research computing office where to download. <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> explains all of this properly.</p>
+<p>Many sites need more options, such as an account (<code>-A</code>) or a partition (<code>-p</code>); SCINet, for example, requires <code>-A</code>. Your site’s documentation lists them, and <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> will collect them for Nova and SCINet; until then, ask your PI or your site’s support which to use. If <code>curl</code> cannot connect from a compute node, your site may block the internet there; ask your research computing office where to download. <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> explains all of this properly.</p>
 </div>
 </div>
 <p><strong>Step 1. Make a scratch folder and move into it.</strong></p>
@@ -1005,12 +1005,12 @@ Table&nbsp;1.1: What you type commands into, by operating system.
 </div>
 </div>
 <div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
-<p>Replace <code>&lt;your-windows-name&gt;</code> with your Windows user name.</p>
+<p>Replace <code>&lt;your-windows-name&gt;</code> with the name of your folder under <code>C:\Users</code> (check in File Explorer; it can differ from the name you sign in with). Keep the quotes: they keep a folder name with a space, such as <code>First Last</code>, in one piece.</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> /mnt/c/Users/<span class="op">&lt;</span>your-windows-name<span class="op">&gt;</span>/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="st">"/mnt/c/Users/&lt;your-windows-name&gt;/Downloads/SRR6357070_1.fastq.gz"</span> ~/bioinf-ch01/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-2-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-3-tab">
@@ -1240,7 +1240,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">free</span> <span class="at">-h</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span> ~</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>For RAM, read the <code>total</code> column of the <code>Mem:</code> row of <code>free -h</code>; for disk, the <code>Avail</code> column of <code>df -h ~</code>. WSL sees only the memory Windows gives its virtual machine, by default about half the laptop’s RAM, not the full amount (<a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config">WSL settings</a>).</p>
+<p>For RAM, read the <code>total</code> column of the <code>Mem:</code> row of <code>free -h</code>; for disk, the <code>Avail</code> column of <code>df -h ~</code>. WSL sees only the memory Windows gives its virtual machine, by default about half the laptop’s RAM, not the full amount (<a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config">WSL settings</a>). Disk is similar: <code>df</code> describes WSL’s virtual disk, which can report more space than the Windows drive holding it has (<a href="https://learn.microsoft.com/en-us/windows/wsl/disk-space">WSL disk space</a>). Also check that drive’s free space in File Explorer, under <em>This PC</em>; the smaller of the two is what you really have.</p>
 </div>
 <div id="tabset-3-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-3-tab">
 <div class="code-with-filename">
@@ -1258,7 +1258,7 @@ Filesystem      Size  Used Avail Use% Mounted on
 <p>These three numbers describe the parts in <a href="#fig-computer-parts" class="quarto-xref">Figure&nbsp;<span>1.2</span></a>:</p>
 <ul>
 <li><strong>CPU</strong> (central processing unit): the part that computes. It has several <strong>physical cores</strong>, each able to work on its own. On many Intel and AMD processors, each core appears to the system as two <strong>logical CPUs</strong>; the commands above count logical CPUs. (The example laptop has 8 physical cores and 16 logical CPUs.) A running program splits its work into <strong>threads</strong>, pieces of work that the system places onto CPUs. Many tools take an option that sets how many threads to use: <code>--threads</code>, <code>-t</code>, or <code>-p</code>, depending on the tool. More threads help only if the tool is written to use them.</li>
-<li><strong>RAM</strong> (memory): the fast working space a program uses while it runs. It is emptied when the program stops.</li>
+<li><strong>RAM</strong> (memory): the fast working space a program uses while it runs. When a program stops, the system takes its share back for other programs; anything you want to keep must be saved to disk.</li>
 <li><strong>Disk</strong> (storage): slow, large, and permanent; it keeps your files. A file’s size on disk is not the RAM a program needs to read it. The count in step 6 <em>streams</em> through the file a few lines at a time and needs almost no memory, whatever the file’s size. Other tools, such as those that build a genome index (<a href="31-indexing-genomes.html" class="quarto-xref"><span>Chapter 31</span></a>), hold a lot in memory at once.</li>
 <li><strong>I/O</strong> (input/output): reading and writing files, over the disk or the network. Simple steps over big files, such as copying them or counting their lines, often spend most of their time waiting for I/O. Heavier steps, such as aligning reads, are often limited by the CPU, and some by RAM.</li>
 <li><strong>GPU</strong> (graphics processing unit): a separate processor with thousands of small cores, built to do the same arithmetic on lots of data at once. Most tools in this book do not use one. Where you will meet GPUs: nanopore basecalling (<a href="https://github.com/nanoporetech/dorado">Dorado</a>), deep-learning models, and GPU versions of standard tools such as BWA-MEM, STAR, and DeepVariant (<a href="https://docs.nvidia.com/clara/parabricks/latest/index.html">NVIDIA Parabricks</a>). Clusters usually have a few GPU nodes, which you must ask the scheduler for. <a href="37-gpu.html" class="quarto-xref"><span>Chapter 37</span></a> covers them.</li>
@@ -1307,7 +1307,7 @@ Filesystem      Size  Used Avail Use% Mounted on
   <g font-size="13" class="fill-muted">
     <text x="24" y="86">cores do the work</text>
     <text x="214" y="86">working space,</text>
-    <text x="214" y="102">emptied at the end</text>
+    <text x="214" y="102">reused between jobs</text>
     <text x="454" y="86">keeps files</text>
     <text x="630" y="86">other</text>
     <text x="630" y="102">machines,</text>
@@ -1466,7 +1466,7 @@ Table&nbsp;1.3: Using more than one core, by language. Brief; <a href="12-r-esse
 <tr class="even">
 <td style="text-align: left;">Python</td>
 <td style="text-align: left;">One thread runs Python code at a time, because of the global interpreter lock (GIL)</td>
-<td style="text-align: left;"><code>multiprocessing</code> and <code>concurrent.futures</code> (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate <em>free-threaded</em> build without the GIL (e.g., <code>python3.14t</code>) was experimental in 3.13 and is officially supported since 3.14, but it is not the default</td>
+<td style="text-align: left;"><code>multiprocessing</code> and <code>concurrent.futures.ProcessPoolExecutor</code> (processes); NumPy matrix maths (a multi-threaded BLAS); Polars (threads on all cores). A separate <em>free-threaded</em> build without the GIL (e.g., <code>python3.14t</code>) was experimental in 3.13 and is officially supported since 3.14, but it is not the default</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Julia</td>
@@ -2012,7 +2012,7 @@ Figure&nbsp;1.5: The parts of an HPC cluster. You reach the login node from your
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>ARS scientists and their collaborators can <a href="https://scinet.usda.gov/about/signup">sign up for SCINet</a>, USDA’s clusters. Universities run their own, such as <a href="https://www.hpc.iastate.edu/">Iowa State’s HPC clusters</a> (Nova). Step-by-step details are in <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>.</p>
+<p>ARS scientists and their collaborators can <a href="https://scinet.usda.gov/about/signup">sign up for SCINet</a>, USDA’s clusters. Universities run their own, such as <a href="https://www.hpc.iastate.edu/">Iowa State’s HPC clusters</a> (Nova). <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a> will add step-by-step details for both.</p>
 </div>
 </div>
 <p>No cluster yet? Keep going: everything before <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a> runs on your laptop.</p>
@@ -2029,16 +2029,22 @@ Figure&nbsp;1.5: The parts of an HPC cluster. You reach the login node from your
 </section>
 <section id="sec-orientation-exercises" class="level2" data-number="1.10">
 <h2 data-number="1.10" class="anchored" data-anchor-id="sec-orientation-exercises"><span class="header-section-number">1.10</span> Exercises</h2>
-<p>Do these where you did the guided session: on your laptop, or, on a cluster, inside an <code>srun</code> session on a compute node (see the pitfall box in <a href="#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>), never on the login node.</p>
+<p>Do these where you did the guided session: on your laptop, or, on a cluster, inside an <code>srun</code> session on a compute node (see the pitfall box in <a href="#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>), never on the login node. The exercises use the files from the guided session, so first move back into its folder. A new terminal or a new <code>srun</code> session starts in your home folder, so repeat this each time:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch01</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 <div class="check">
 <p><strong>Exercise 1. Read 2.</strong> Download the matching read-2 file and add its count as a second line of <code>fastq_summary.txt</code>:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"SRR6357070_2 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_2.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">"</span> <span class="op">&gt;&gt;</span> fastq_summary.txt</span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> fastq_summary.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_2.fastq.gz</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"SRR6357070_2 reads: </span><span class="va">$((</span> <span class="va">$(</span><span class="fu">gunzip</span> <span class="at">-c</span> SRR6357070_2.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span><span class="va">)</span> <span class="op">/</span> <span class="dv">4</span> <span class="va">))</span><span class="st">"</span> <span class="op">&gt;&gt;</span> fastq_summary.txt</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> fastq_summary.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The only change from step 6 is <code>&gt;&gt;</code> instead of <code>&gt;</code>: <code>&gt;</code> replaces a file’s contents, <code>&gt;&gt;</code> adds to the end (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>). Do both files have the same count? Why should they?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -2085,7 +2091,7 @@ SRR6357070_2 reads: 50000</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> gunzip <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">time</span> gunzip <span class="at">-c</span> SRR6357070_1.fastq.gz <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Find the elapsed time: the <code>real</code> line of the output. Estimate the time for a 30-million-read mate file (600 times larger), then name two reasons the real time could differ from your estimate.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">

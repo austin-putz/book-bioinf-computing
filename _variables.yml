@@ -1,0 +1,6 @@
+# Values used in chapter text with {{< var name >}}.
+# setup-url: where readers download pixi.toml and pixi.lock (Chapter 2).
+# Points at main while the environment is a draft; change "main" to the
+# release tag once the core package list is settled and tagged.
+setup-url: "https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/main/setup"
+pixi-version: "0.84.2"

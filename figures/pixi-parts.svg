@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 350" role="img" aria-labelledby="pixi-parts-title"
+     data-step-labels="Files|Download|Install|Run">
+  <title id="pixi-parts-title">How pixi sets up the book folder, in four steps. The folder ~/bioinf-book starts with two files, pixi.toml (what the project needs) and pixi.lock (the exact packages). pixi install --locked downloads those packages from the online channels conda-forge and bioconda into a cache in your home folder, then installs them into .pixi/envs/default inside the book folder: Python, R, and seqkit. Finally, pixi run seqkit stats runs with that environment, while seqkit stats typed on its own is not found.</title>
+  <desc data-caption="1">The book folder starts with two files: pixi.toml says what the project needs, and pixi.lock lists the exact packages for each system.</desc>
+  <desc data-caption="2">pixi install --locked downloads the packages in pixi.lock for your system from the channels into a cache in your home folder.</desc>
+  <desc data-caption="3">It then installs them into .pixi/envs/default/ inside the book folder: Python, R, seqkit, and everything they need.</desc>
+  <desc data-caption="4">pixi run starts a command with that environment. The same command typed on its own is not found.</desc>
+  <defs>
+    <marker id="pixi-parts-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- The book folder -->
+  <rect x="10" y="20" width="410" height="220" rx="12" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="26" y="44" font-size="14" font-weight="700" class="mono">~/bioinf-book/</text>
+
+  <!-- Step 1: the two setup files -->
+  <rect x="30" y="64" width="160" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="44" y="90" font-size="14" font-weight="700" class="mono">pixi.toml</text>
+  <text x="44" y="112" font-size="13" class="fill-muted">what it needs</text>
+  <rect x="30" y="148" width="160" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="44" y="174" font-size="14" font-weight="700" class="mono">pixi.lock</text>
+  <text x="44" y="196" font-size="13" class="fill-muted">exact packages</text>
+
+  <!-- Step 3: the environment inside the folder -->
+  <g data-show="3" font-size="13" class="mono">
+    <rect x="220" y="64" width="180" height="146" rx="8" class="fill-surface stroke-line" stroke-width="1.25"/>
+    <text x="232" y="88" font-weight="700">.pixi/envs/default/</text>
+    <rect x="232" y="102" width="156" height="28" rx="4" class="fill-muted-soft stroke-muted" stroke-width="1"/>
+    <rect x="232" y="136" width="156" height="28" rx="4" class="fill-muted-soft stroke-muted" stroke-width="1"/>
+    <rect x="232" y="170" width="156" height="28" rx="4" class="fill-muted-soft stroke-muted" stroke-width="1"/>
+    <text x="244" y="121">python 3.12</text>
+    <text x="244" y="155">R 4.4</text>
+    <text x="244" y="189">seqkit 2.14</text>
+  </g>
+
+  <!-- Channels (online) -->
+  <rect x="460" y="20" width="250" height="70" rx="10" class="fill-surface stroke-line"/>
+  <text x="476" y="46" font-size="14" font-weight="700">Channels (online)</text>
+  <text x="476" y="70" font-size="13" class="fill-muted">conda-forge, bioconda</text>
+
+  <!-- Step 2: download into the cache -->
+  <g data-show="2">
+    <line x1="585" y1="90" x2="585" y2="138" class="stroke-muted" stroke-width="1.75" marker-end="url(#pixi-parts-arrow)"/>
+    <text x="596" y="119" font-size="12" class="fill-muted">download</text>
+    <rect x="460" y="140" width="250" height="70" rx="10" class="fill-surface stroke-line"/>
+    <text x="476" y="166" font-size="14" font-weight="700">pixi cache</text>
+    <text x="476" y="190" font-size="13" class="fill-muted">in your home folder</text>
+  </g>
+
+  <!-- Step 3: install from the cache into the folder -->
+  <g data-show="3">
+    <line x1="460" y1="175" x2="402" y2="175" class="stroke-muted" stroke-width="1.75" marker-end="url(#pixi-parts-arrow)"/>
+    <text x="431" y="164" font-size="12" text-anchor="middle" class="fill-muted">install</text>
+  </g>
+
+  <!-- Step 4: run with and without the environment -->
+  <g data-show="4">
+    <rect x="10" y="262" width="700" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="26" y="284" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-book</text>
+    <text x="26" y="308" font-size="13" class="mono">pixi run seqkit stats …</text>
+    <text x="300" y="308" font-size="13" class="fill-good">✓ runs with the environment</text>
+    <text x="26" y="330" font-size="13" class="mono">seqkit stats …</text>
+    <text x="300" y="330" font-size="13" class="fill-warn">✗ command not found</text>
+  </g>
+</svg>

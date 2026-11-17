@@ -8,3 +8,6 @@
 
 # Private: Austin's SCINet account email (local only)
 /plans/scinet_welcome_email.md
+
+# pixi environments (e.g., from testing setup/)
+.pixi/

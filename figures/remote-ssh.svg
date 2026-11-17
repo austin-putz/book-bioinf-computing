@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 330" role="img" aria-labelledby="remote-ssh-title">
+  <title id="remote-ssh-title">Two ways VS Code edits on a cluster. Top: desktop VS Code on your laptop connects over SSH or a tunnel to a compute node. Bottom: a browser tab on your laptop connects to Open OnDemand, which starts VS Code as a job on a compute node. On the compute node run the VS Code server, the terminal, the Python and R extensions, and your files on shared storage. The laptop holds only the window and its own files, which are not copied over. The login node, in between, does not run the VS Code server at Nova or SCINet.</title>
+  <defs>
+    <marker id="remote-ssh-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Laptop -->
+  <rect x="10" y="20" width="200" height="290" rx="12" class="fill-surface stroke-line"/>
+  <text x="26" y="46" font-size="16" font-weight="700">Your laptop</text>
+  <rect x="26" y="62" width="168" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="40" y="88" font-size="14" font-weight="700">Desktop VS Code</text>
+  <text x="40" y="108" font-size="13" class="fill-muted">window, themes</text>
+  <rect x="26" y="192" width="168" height="62" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="40" y="218" font-size="14" font-weight="700">Browser tab</text>
+  <text x="40" y="238" font-size="13" class="fill-muted">VS Code window</text>
+  <text x="26" y="282" font-size="12" class="fill-muted">laptop files stay here;</text>
+  <text x="26" y="298" font-size="12" class="fill-muted">nothing is copied over</text>
+
+  <!-- The cluster boundary -->
+  <rect x="246" y="10" width="464" height="310" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="262" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+
+  <!-- Route 1: desktop VS Code over SSH or a tunnel -->
+  <line x1="194" y1="80" x2="466" y2="80" class="stroke-muted" stroke-width="1.75" marker-end="url(#remote-ssh-arrow)"/>
+  <text x="340" y="70" font-size="13" text-anchor="middle">SSH or tunnel</text>
+
+  <!-- Login node: no VS Code server -->
+  <rect x="270" y="100" width="150" height="80" rx="8" class="fill-surface stroke-line" stroke-dasharray="4 3"/>
+  <text x="284" y="124" font-size="14" font-weight="700" class="fill-muted">Login node</text>
+  <text x="284" y="146" font-size="12" class="fill-muted">no VS Code server</text>
+  <text x="284" y="164" font-size="12" class="fill-muted">at Nova or SCINet</text>
+
+  <!-- Route 2: browser to Open OnDemand, which starts a job -->
+  <line x1="194" y1="230" x2="268" y2="230" class="stroke-muted" stroke-width="1.75" marker-end="url(#remote-ssh-arrow)"/>
+  <text x="231" y="220" font-size="12" text-anchor="middle" class="fill-muted">https</text>
+  <rect x="270" y="204" width="150" height="62" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="284" y="230" font-size="14" font-weight="700">Open OnDemand</text>
+  <text x="284" y="250" font-size="12" class="fill-muted">web portal</text>
+  <line x1="420" y1="235" x2="466" y2="235" class="stroke-muted" stroke-width="1.75" marker-end="url(#remote-ssh-arrow)"/>
+  <text x="284" y="288" font-size="12" class="fill-muted">starts VS Code as a job</text>
+  <text x="284" y="304" font-size="12" class="fill-muted">on a compute node</text>
+
+  <!-- Compute node: where the work happens -->
+  <rect x="468" y="48" width="226" height="256" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="482" y="74" font-size="16" font-weight="700">Compute node</text>
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="482" y="88" width="198" height="32" rx="4"/>
+    <rect x="482" y="128" width="198" height="32" rx="4"/>
+    <rect x="482" y="168" width="198" height="32" rx="4"/>
+  </g>
+  <g font-size="13">
+    <text x="494" y="109">VS Code server</text>
+    <text x="494" y="149">terminal (bash)</text>
+    <text x="494" y="189">Python, R extensions</text>
+  </g>
+  <rect x="482" y="216" width="198" height="72" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="494" y="242" font-size="13" font-weight="700" class="fill-given">your files</text>
+  <text x="494" y="262" font-size="12" class="fill-given">on shared storage</text>
+  <text x="494" y="278" font-size="12" class="fill-given">(project, home)</text>
+</svg>

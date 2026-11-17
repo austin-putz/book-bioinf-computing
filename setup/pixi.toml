@@ -1,0 +1,19 @@
+# The book environment for "Computing for Bioinformatics" (Chapter 2).
+# Readers download this file and pixi.lock, then run `pixi install --locked`.
+# Draft contents: the full core package list is settled before the first
+# tagged release (plans/chapter_02.md, Decisions 2026-11-16).
+
+[workspace]
+name = "bioinf-book"
+channels = ["conda-forge", "bioconda"]
+# No win-64: bioconda does not build for Windows; Windows readers use WSL2.
+platforms = ["linux-64", "osx-arm64", "osx-64"]
+
+[dependencies]
+python = "3.12.*"
+r-base = "4.4.*"
+seqkit = "*"
+nano = "*"                 # fallback editor: pixi run nano
+
+[tasks]
+check = "python --version && R --version | head -n 1 && seqkit version"

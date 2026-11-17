@@ -108,6 +108,10 @@ tools.
 - `data/README.md`: every third-party dataset (source, version/commit,
   accession, license, citation, checksums), per series rule. Add a row
   whenever a chapter starts using a new file.
+- `setup/`: `pixi.toml` + `pixi.lock`, the book environment readers
+  download in Chapter 2. Its download URL is `setup-url` in
+  `_variables.yml` (used in chapters as `{{< var setup-url >}}`); point
+  it at a release tag, not `main`, once the environment is tagged.
 - `scripts/`: code that produces numbers or files shown in the book, named
   by chapter (e.g., `ch01_file_sizes.R` measures Chapter 1's file sizes).
   Code, so MIT. The chapter names the script beside the result.

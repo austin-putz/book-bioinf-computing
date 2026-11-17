@@ -9,19 +9,21 @@ CC BY-NC-SA or MIT licenses.
 
 | Field | Value |
 |:------|:------|
-| What | *Saccharomyces cerevisiae* paired-end RNA-seq, wild type vs Rap1 degron, 3 replicates each, sub-sampled to 50,000 read pairs per sample |
+| What | *Saccharomyces cerevisiae* RNA-seq test data of nf-core/rnaseq: 5 samples (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`, `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) from 7 runs in `samplesheet/v3.10/samplesheet_test.csv`, each run sub-sampled to 50,000 reads (pairs, for paired runs; 4 runs paired-end, 3 used single-end). The book's own files so far: run SRR6357070 (`WT_REP1`), paired. Counts checked 2026-11-17 |
 | Source | [nf-core/test-datasets](https://github.com/nf-core/test-datasets), branch `rnaseq`, folder `testdata/GSE110004/` |
 | Version | Last commit touching `SRR6357070_1.fastq.gz`: `58ec9dc30549f0f28a01fae5971bdb2f1386f185` (2021-04-12); checked 2026-11-13 |
 | Accession | GEO [GSE110004](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE110004) (reads in SRA, e.g. SRR6357070) |
 | License | Sub-sampled files: MIT (license of nf-core/test-datasets). Original reads: public GEO/SRA data under NCBI's data-use policy, which places no restrictions on use; credit the study below |
 | Citation | Wu, A. C. K., Patel, H., Chia, M., Moretto, F., Frith, D., Snijders, A. P., & van Werven, F. J. (2018). Repression of divergent noncoding transcription by a sequence-specific transcription factor. *Molecular Cell*, 72(6), 942–954.e7. <https://doi.org/10.1016/j.molcel.2018.10.018> (verified with scite 2026-11-13; no editorial notices) |
 
-Checksums (SHA-256) of the files the book downloads:
+Checksums of the files the book downloads. SHA-256 is the book's record;
+MD5 is what Chapter 3 teaches readers to check with `md5sum -c`
+(MD5 values computed 2026-11-17):
 
-| File | Size (bytes) | Reads | SHA-256 |
-|:-----|-------------:|------:|:--------|
-| `SRR6357070_1.fastq.gz` | 2,239,317 | 50,000 | `3f50541fa9cf2bedc87e7b682ada0fccfdfcd6d27b9bb81f17be230ff140ebe7` |
-| `SRR6357070_2.fastq.gz` | 2,232,117 | 50,000 | `8590e1e01e568fba256aa7dced40519604cbb111ee44ab106a3dcb869660aaf4` |
+| File | Size (bytes) | Reads | MD5 | SHA-256 |
+|:-----|-------------:|------:|:----|:--------|
+| `SRR6357070_1.fastq.gz` | 2,239,317 | 50,000 | `d19f3c7a8b4016fa641458257b99a1a1` | `3f50541fa9cf2bedc87e7b682ada0fccfdfcd6d27b9bb81f17be230ff140ebe7` |
+| `SRR6357070_2.fastq.gz` | 2,232,117 | 50,000 | `d126cc66ed169f69af2c07da0dd73e02` | `8590e1e01e568fba256aa7dced40519604cbb111ee44ab106a3dcb869660aaf4` |
 
 `SRR6357070_2.fastq.gz`: same last commit as R1 (`58ec9dc`, 2021-04-12);
 used in Chapter 1, exercise 1. Checked 2026-11-13.

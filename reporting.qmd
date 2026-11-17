@@ -68,6 +68,15 @@ hardest to fix without details. The [*Something doesn't run*](https://github.com
 - **Your environment:** the output of `pixi info` run in the book's folder.
   On a cluster, also any `module load` lines you ran first.
 
+Three more fields are optional but often save a round of questions:
+
+- **What you expected**, for example the output the book shows.
+- **What you have tried**: anything you checked or changed, and what
+  happened.
+- **The version of the failing tool**, for example the output of
+  `pixi run seqkit version`. `pixi info` describes the environment but
+  does not list the versions of the tools in it.
+
 ::: {.callout-warning}
 ## Pitfall
 Never paste passwords, SSH private keys, access tokens, or private data into

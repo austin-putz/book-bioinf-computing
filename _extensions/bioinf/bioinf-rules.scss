@@ -324,3 +324,29 @@ video.animation {
   border-radius: 6px;
   background: #1b1f24;
 }
+
+// --- Inline code chip -----------------------------------------------------
+// Inline code in the page body (commands, file names, flags) sits in a
+// bordered chip so it stands out from prose in light and dark. Neutral by
+// design: green and the book accent keep their reserved meanings.
+// Scoped to main, so the sidebar and table of contents stay plain.
+
+main p code:not(.sourceCode),
+main li code:not(.sourceCode),
+main td code:not(.sourceCode),
+main dd code:not(.sourceCode),
+main figcaption code:not(.sourceCode) {
+  background-color: $bioinf-code-chip-bg;
+  border: 1px solid $bioinf-code-chip-border;
+  color: $bioinf-code-chip-fg;
+  border-radius: 0.25rem;
+  padding: 0.1em 0.3em;
+  // A chip that wraps keeps its border on both lines.
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+// Code that is a link keeps the link colour.
+main a > code:not(.sourceCode) {
+  color: inherit;
+}

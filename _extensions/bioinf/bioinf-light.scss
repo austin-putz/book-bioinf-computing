@@ -25,3 +25,9 @@ $mermaid-fg-color:       #212529;
 $mermaid-edge-color:     #6c757d;
 $mermaid-label-bg-color: #ffffff;
 $mermaid-label-fg-color: #212529;
+
+// Inline code chip (bioinf-rules.scss): keep Quarto's purple text, add an
+// edge so the chip reads on any monitor.
+$bioinf-code-chip-bg:     #f1f3f5;
+$bioinf-code-chip-border: #dee2e6;
+$bioinf-code-chip-fg:     var(--bs-code-color);

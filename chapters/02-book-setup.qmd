@@ -150,7 +150,7 @@ seqkit v2.14.0
 ```
 
 Then use a real tool on real data. [SeqKit](https://bioinf.shenwei.me/seqkit/)
-[@shen2016seqkit] summarizes FASTA and FASTQ files; run it on the file you
+[@shen2016seqkit; @shen2024seqkit2] summarizes FASTA and FASTQ files; run it on the file you
 downloaded in @sec-orientation. (If you deleted `~/bioinf-ch01`, which
 Chapter 1 said you could, download the file again first:
 `mkdir -p ~/bioinf-ch01`, then the `curl` command from
@@ -1059,7 +1059,8 @@ working directory you set on the form, in project storage. After
   server works, and its known limits, if your site allows Remote-SSH.
 - @gruning2018bioconda --- a short paper on why Bioconda exists and how
   thousands of bioinformatics tools became one-command installs.
-- @shen2016seqkit --- the SeqKit paper: what the tool you just ran can do
-  besides `stats`.
+- @shen2016seqkit and @shen2024seqkit2 --- the two SeqKit papers (the
+  second is the one `seqkit --help` asks you to cite): what the tool you
+  just ran can do besides `stats`.
 - @shotts2025linux, *The Linux Command Line*, the chapter on the vi
   editor --- for when you want more than escaping vim.

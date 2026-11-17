@@ -61,8 +61,24 @@ body:
     validations:
       required: true
   - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+      description: Optional. What should have happened, e.g. the output the book shows.
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Optional. Anything you checked or changed, and what happened.
+  - type: textarea
     id: environment
     attributes:
       label: Your environment
       description: The output of `pixi info`, run in `~/bioinf-book`. On a cluster, also any `module load` lines you ran first.
       render: text
+  - type: input
+    id: tool-version
+    attributes:
+      label: Version of the failing tool
+      description: Optional. For example, the output of `pixi run seqkit version`, run in `~/bioinf-book`.
+      placeholder: "seqkit v2.14.0"

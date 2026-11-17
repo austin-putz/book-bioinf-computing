@@ -29,3 +29,10 @@ $mermaid-fg-color:       #f8f9fa;
 $mermaid-edge-color:     #adb5bd;
 $mermaid-label-bg-color: #222222;
 $mermaid-label-fg-color: #f8f9fa;
+
+// Inline code chip (bioinf-rules.scss): darkly's chip (#343a40, body-coloured
+// text) blends into the page on many monitors. Lighter box, visible edge,
+// brighter text; neutral, so no semantic colour or book accent is used.
+$bioinf-code-chip-bg:     #3a4048;
+$bioinf-code-chip-border: #5a6270;
+$bioinf-code-chip-fg:     #f1f3f5;

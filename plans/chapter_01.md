@@ -544,6 +544,13 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   the CPU); FASTQ and BAM sizes in `tbl-data-sizes` marked as `WT_REP2`;
   "everything before Chapter 9" (not "up to").
 
+## Decisions (2026-11-17, from the Chapter 4 plan)
+
+- **GNU manual pages on macOS:** step 4's `~/.bash_profile` loop now
+  also prepends each tool's `libexec/gnuman` to `MANPATH`, so `man sed`
+  matches the `sed` readers run (found while planning Chapter 4).
+  Tested in an empty home folder on Intel; Apple silicon still to test.
+
 ## Open questions
 
 - Austin to read the draft. The example outputs in the macOS tabs

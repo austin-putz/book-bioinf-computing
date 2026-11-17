@@ -18,6 +18,9 @@ provenance added inside existing chapters. Revised 2026-11-13 after
 chapter, scope notes for Parts IV and VII, HPC quota and cache pitfalls.
 Revised 2026-11-13: number types made explicit in Chapters 12–15 and 36
 (integer vs float, booleans from conditions, `0.1 + 0.2 == 0.3`).
+Revised 2026-11-17: running-dataset description corrected (Chapter 3
+plan): original study, nf-core test fixture, and the book's own files
+kept apart.
 
 **Guiding idea:** most readers will work on a Linux HPC cluster (SCINet
 Ceres/Atlas, ISU Nova, and similar), with a laptop for editing, small
@@ -57,13 +60,24 @@ optional and lives in Part VIII.
   small local examples and read captured HPC output. SCINet/Nova details go
   in site-specific notes.
 - **Data:** toy examples small enough to check by hand, plus one running
-  dataset **[decided]**: the yeast (*S. cerevisiae*) paired-end RNA-seq
-  subset used by nf-core/rnaseq's test profile (GEO GSE110004; Wu et al.
-  2018, *Mol Cell*, doi:10.1016/j.molcel.2018.10.018): wild type vs Rap1
-  degron, 3 replicates each, 50,000 read pairs per sample, with sample
-  sheet and a sub-sampled R64-1-1 reference, from the `rnaseq` branch of
-  `nf-core/test-datasets`. Computing runs and checks it; biological
-  interpretation stays in Transcriptomics. Separate tiny files for formats
+  dataset **[decided]**: the yeast (*S. cerevisiae*) RNA-seq test data of
+  nf-core/rnaseq, from the `rnaseq` branch of `nf-core/test-datasets`.
+  Kept apart at three levels (corrected 2026-11-17):
+  - **Original study:** GEO GSE110004 (Wu et al. 2018, *Mol Cell*,
+    doi:10.1016/j.molcel.2018.10.018): total and poly(A) RNA-seq (about
+    45 million 101 bp stranded paired-end reads per library) and TSS-seq.
+  - **nf-core test fixture:** `samplesheet/v3.10/samplesheet_test.csv`:
+    5 samples (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`,
+    `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) from 7 runs, each
+    sub-sampled to 50,000 reads (pairs, for paired runs); 4 runs are used
+    paired-end and 3 single-end; `WT_REP1` and `RAP1_UNINDUCED_REP2` have
+    two runs each. Reference: yeast chromosome I only (R64-1-1).
+  - **The book's own files:** run SRR6357070 (`WT_REP1`, paired,
+    50,000 read pairs), from Chapter 1 on; more of the fixture when a
+    chapter needs it.
+
+  Computing runs and checks it; biological interpretation (the samples'
+  conditions) stays in Transcriptomics. Separate tiny files for formats
   and algorithms the running dataset does not illustrate (e.g., BAM, VCF).
 - **Recurring project:** a small reproducible project started in Chapter 3
   and improved as skills appear: input provenance, metadata, scripts or

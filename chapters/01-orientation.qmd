@@ -102,7 +102,9 @@ to install a current bash and the GNU tools, and make bash your shell. Allow
    Mac's own. This command writes a small settings file, `~/.bash_profile`,
    that bash reads each time Terminal opens. It makes `brew` available and
    puts each tool's plain-named GNU version (`sed`, `ls`) ahead of the
-   Mac's. Copy all of it, from `cat` to the final `EOF`:
+   Mac's, and does the same for their manual pages, so `man sed` describes
+   the `sed` you actually run (@sec-getting-help). Copy all of it, from
+   `cat` to the final `EOF`:
 
    ```{.bash filename="Terminal (laptop)"}
    cat >> ~/.bash_profile <<'EOF'
@@ -114,8 +116,9 @@ to install a current bash and the GNU tools, and make bash your shell. Allow
    fi
    for tool in coreutils findutils gnu-sed gnu-tar grep gawk; do
      PATH="$HOMEBREW_PREFIX/opt/$tool/libexec/gnubin:$PATH"
+     MANPATH="$HOMEBREW_PREFIX/opt/$tool/libexec/gnuman:$MANPATH"
    done
-   export PATH
+   export PATH MANPATH
    # Read ~/.bashrc too, as Linux terminals do
    if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
    EOF

@@ -878,6 +878,13 @@ Chapter written from this plan. Choices made while writing:
   with scite), `prefix2026pixi`, `microsoft2026remotessh` (url +
   urldate).
 
+## Decisions (2026-11-17, from the Chapter 4 plan)
+
+- **SeqKit citation:** cite both papers. `seqkit --help` asks users to
+  cite SeqKit2 (Shen, Sipos & Zhao 2024, *iMeta*, doi:10.1002/imt2.191,
+  verified with scite, BibTeX from the DOI as `shen2024seqkit2`). Added
+  beside `shen2016seqkit` at first use and in Further reading.
+
 ## Open questions
 
 - None blocking. Before tagging the release: measure the full core

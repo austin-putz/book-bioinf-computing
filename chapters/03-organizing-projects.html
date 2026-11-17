@@ -104,9 +104,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-62bf2bb0586c5a2c172f9f5f3e60a94e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-e4e9d88dc4bd4bc4f331ef4419ecfa8f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-62bf2bb0586c5a2c172f9f5f3e60a94e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-d4a656369b10048819d5ba4205b32a06.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
 <script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
 <link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
@@ -762,7 +762,7 @@ div.csl-indent {
 <section id="sec-organizing-projects-intro" class="level2" data-number="3.1">
 <h2 data-number="3.1" class="anchored" data-anchor-id="sec-organizing-projects-intro"><span class="header-section-number">3.1</span> What this chapter does</h2>
 <p>A month from now, someone (your PI, a reviewer, or you) will point at a number and ask: which file is this, where did it come from, and how was it made? If the answer lives only in your memory, it is already fading. This chapter sets up a folder, and a few habits, that answer those questions without memory.</p>
-<p>You will turn <code>~/bioinf-book</code>, the folder from <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>, into the book’s project. By the end it holds:</p>
+<p>You will turn <code>~/bioinf-computing</code>, the folder from <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>, into the book’s project. By the end it holds:</p>
 <ul>
 <li>the two FASTQ files from <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, moved in, checked, and protected from accidental changes;</li>
 <li>a reference genome kept in a shared folder and linked in, not copied;</li>
@@ -779,7 +779,7 @@ div.csl-indent {
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-1-1"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-2" class="code-annotation-target"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> data/raw data/meta src results logs</span>
 <span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -796,13 +796,13 @@ div.csl-indent {
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-project-layout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 440" role="img" aria-labelledby="project-layout-title">
-  <title id="project-layout-title">The book's project folder, ~/bioinf-book, in three groups. Inputs: data/raw holds the two FASTQ files and checksums.md5 and is read-only; data/meta holds reads.tsv, samples.tsv, and the upstream sample sheet; data/ref is a link to the shared reference. How: src holds the script 01_count_reads.sh, and pixi.toml, pixi.lock, and .pixi hold the software. Outputs: results holds read_counts.tsv, which can be rebuilt; logs holds one log per run, which you keep. The script reads the inputs and writes the outputs. Along the bottom, README.md, NOTEBOOK.md, and data/README.md record what the project is, what you did, and where every input came from.</title>
+  <title id="project-layout-title">The book's project folder, ~/bioinf-computing, in three groups. Inputs: data/raw holds the two FASTQ files and checksums.md5 and is read-only; data/meta holds reads.tsv, samples.tsv, and the upstream sample sheet; data/ref is a link to the shared reference. How: src holds the script 01_count_reads.sh, and pixi.toml, pixi.lock, and .pixi hold the software. Outputs: results holds read_counts.tsv, which can be rebuilt; logs holds one log per run, which you keep. The script reads the inputs and writes the outputs. Along the bottom, README.md, NOTEBOOK.md, and data/README.md record what the project is, what you did, and where every input came from.</title>
   <defs>
     <marker id="project-layout-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
     </marker>
   </defs>
-  <text x="20" y="28" font-size="15" font-weight="700" class="mono">~/bioinf-book/</text>
+  <text x="20" y="28" font-size="15" font-weight="700" class="mono">~/bioinf-computing/</text>
   <!-- Group headings -->
   <text x="20" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">INPUTS</text>
   <text x="282" y="62" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">HOW</text>
@@ -869,7 +869,7 @@ Figure&nbsp;3.1: The book’s project at the end of this chapter. Inputs (left) 
 <li><strong>One project, one folder.</strong> Everything an analysis needs, or points to, is inside it.</li>
 <li><strong>Inputs, code, and outputs apart.</strong> Raw data and metadata in <code>data/</code>, scripts in <code>src/</code>, results in <code>results/</code>, logs in <code>logs/</code>. You never write into <code>data/raw/</code>, and nothing in <code>results/</code> is edited by hand.</li>
 <li><strong>Results can be rebuilt.</strong> Everything in <code>results/</code> should come back if you rerun the code in <code>src/</code> on the inputs in <code>data/</code>, with the same software. Exercise 4 tests it.</li>
-<li><strong>Paths inside the project are relative to its top folder</strong> (<code>data/raw/SRR6357070_1.fastq.gz</code>, not <code>/home/you/bioinf-book/data/…</code>), so scripts keep working if the folder moves (more on moving in <a href="#sec-organizing-projects-shared" class="quarto-xref"><span>Section 3.5</span></a>).</li>
+<li><strong>Paths inside the project are relative to its top folder</strong> (<code>data/raw/SRR6357070_1.fastq.gz</code>, not <code>/home/you/bioinf-computing/data/…</code>), so scripts keep working if the folder moves (more on moving in <a href="#sec-organizing-projects-shared" class="quarto-xref"><span>Section 3.5</span></a>).</li>
 </ul>
 <p><a href="#tbl-project-folders" class="quarto-xref">Table&nbsp;<span>3.1</span></a> lists the parts.</p>
 <div class="wide-table">
@@ -1127,7 +1127,7 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-7" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-7-1"><a href="#annotated-cell-7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-7" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-7-1"><a href="#annotated-cell-7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-7-2" class="code-annotation-target"><a href="#annotated-cell-7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/</span>
 <span id="annotated-cell-7-3"><a href="#annotated-cell-7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1140,7 +1140,7 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 <pre class="console"><code>total 4368
 -rw-r--r-- 1 you you 2239317 Nov 17 11:22 SRR6357070_1.fastq.gz
 -rw-r--r-- 1 you you 2232117 Nov 17 11:22 SRR6357070_2.fastq.gz</code></pre>
-<p>From now on the files live here: if you go back to a command in Chapters 1–2, use <code>~/bioinf-book/data/raw/</code> instead of <code>~/bioinf-ch01/</code>. <code>~/bioinf-ch01</code> keeps <code>fastq_summary.txt</code>; you can delete it later.</p>
+<p>From now on the files live here: if you go back to a command in Chapters 1–2, use <code>~/bioinf-computing/data/raw/</code> instead of <code>~/bioinf-ch01/</code>. <code>~/bioinf-ch01</code> keeps <code>fastq_summary.txt</code>; you can delete it later.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -1156,7 +1156,7 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_1.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_1.fastq.gz</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1178,7 +1178,7 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-10" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw</span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-10-2" class="code-annotation-target"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
-<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
 <dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
@@ -1321,7 +1321,7 @@ touch: cannot touch 'locked/new.txt': Permission denied</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-16-1"><a href="#annotated-cell-16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-16-1"><a href="#annotated-cell-16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="annotated-cell-16-2"><a href="#annotated-cell-16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-16" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-16-3" class="code-annotation-target"><a href="#annotated-cell-16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> data/raw</span>
 <span id="annotated-cell-16-4"><a href="#annotated-cell-16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1344,7 +1344,7 @@ total 4372
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+w data/raw data/raw/checksums.md5</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># add the new file and its line in checksums.md5, then:</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-book</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> explains permissions properly. Keep raw reads compressed, and never unzip them in place: every tool in this book reads <code>.gz</code> directly.</p>
@@ -1437,7 +1437,7 @@ genes.gtf.gz: OK</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-25-1"><a href="#annotated-cell-25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-25-1"><a href="#annotated-cell-25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <a class="code-annotation-anchor" data-target-cell="annotated-cell-25" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-25-2" class="code-annotation-target"><a href="#annotated-cell-25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/bioinf-shared/references/yeast_R64-1-1_test data/ref</span>
 <span id="annotated-cell-25-3"><a href="#annotated-cell-25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/ref</span>
 <span id="annotated-cell-25-4"><a href="#annotated-cell-25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/ref/</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1456,7 +1456,7 @@ checksums.md5  genes.gtf.gz  genome.fa.gz  README.md</code></pre>
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-symlink-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 330" role="img" aria-labelledby="symlink-title" data-step-labels="Link|Read|Write|Unlink">
-  <title id="symlink-title">A symbolic link, in four steps. The project folder ~/bioinf-book/data holds raw, meta, and ref; ref is a link that points to the shared folder ~/bioinf-shared/references/yeast_R64-1-1_test, which holds README.md, checksums.md5, genes.gtf.gz, and genome.fa.gz. Listing data/ref/ shows the shared folder's files, read through the link. Writing through the link would change the shared files themselves; because the shared folder is protected, the write is refused. unlink data/ref removes only the link; the shared folder and its files are untouched.</title>
+  <title id="symlink-title">A symbolic link, in four steps. The project folder ~/bioinf-computing/data holds raw, meta, and ref; ref is a link that points to the shared folder ~/bioinf-shared/references/yeast_R64-1-1_test, which holds README.md, checksums.md5, genes.gtf.gz, and genome.fa.gz. Listing data/ref/ shows the shared folder's files, read through the link. Writing through the link would change the shared files themselves; because the shared folder is protected, the write is refused. unlink data/ref removes only the link; the shared folder and its files are untouched.</title>
   <desc data-caption="1">data/ref is a link: a small entry that holds only the path of the shared folder. ls -l shows it with an arrow.</desc>
   <desc data-caption="2">Reading through the link reads the shared folder itself: ls data/ref/ lists the shared files. Nothing was copied.</desc>
   <desc data-caption="3">Writing through the link would change the one shared copy, which every project uses. You protected it, so the write is refused.</desc>
@@ -1471,7 +1471,7 @@ checksums.md5  genes.gtf.gz  genome.fa.gz  README.md</code></pre>
   </defs>
   <!-- The project -->
   <rect x="10" y="20" width="240" height="196" rx="12" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"></rect>
-  <text x="26" y="44" font-size="14" font-weight="700" class="mono">~/bioinf-book/data/</text>
+  <text x="26" y="44" font-size="14" font-weight="700" class="mono">~/bioinf-computing/data/</text>
   <rect x="30" y="62" width="200" height="34" rx="6" class="fill-given-soft stroke-given"></rect>
   <text x="44" y="84" font-size="13" class="mono">raw/</text>
   <rect x="30" y="106" width="200" height="34" rx="6" class="fill-given-soft stroke-given"></rect>
@@ -1509,7 +1509,7 @@ checksums.md5  genes.gtf.gz  genome.fa.gz  README.md</code></pre>
   </g>
   <!-- Terminal strip: one line per step -->
   <rect x="10" y="244" width="700" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
-  <text x="26" y="266" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-book</text>
+  <text x="26" y="266" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-computing</text>
   <g data-hide="2" font-size="13">
     <text x="26" y="290" class="mono">ls -l data/ref</text>
     <text x="26" y="310" class="mono fill-muted">data/ref -&gt; /home/you/bioinf-shared/references/yeast_R64-1-1_test</text>
@@ -1634,7 +1634,7 @@ Table&nbsp;3.3: Is it backed up? Site facts from SCINet’s <a href="https://sci
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">Laptop disk</td>
-<td style="text-align: left;"><code>~/bioinf-book</code></td>
+<td style="text-align: left;"><code>~/bioinf-computing</code></td>
 <td style="text-align: left;">only if you set up a backup</td>
 <td style="text-align: left;">no</td>
 <td style="text-align: left;">you, from your backup</td>
@@ -1776,7 +1776,7 @@ Table&nbsp;3.3: Is it backed up? Site facts from SCINet’s <a href="https://sci
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/meta/samplesheet_upstream.csv https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> data/meta/samplesheet_upstream.csv</span>
 <span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> data/meta/samplesheet_upstream.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1873,7 +1873,7 @@ Figure&nbsp;3.4: The test sample sheet beside the archive record. The sheet grou
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tfastq_1\tfastq_2\n'</span> <span class="op">&gt;</span> data/meta/reads.tsv</span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tdata/raw/SRR6357070_1.fastq.gz\tdata/raw/SRR6357070_2.fastq.gz\n'</span> <span class="op">&gt;&gt;</span> data/meta/reads.tsv</span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tgeo_sample\tcondition\treplicate\n'</span> <span class="op">&gt;</span> data/meta/samples.tsv</span>
@@ -1949,7 +1949,7 @@ WT_REP1 SRR6357070      GSM2879618      wild_type       1</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>started:  2026-11-17 12:24:53 -0600
@@ -2353,7 +2353,7 @@ Table&nbsp;3.5: The FAIR principles <span class="citation" data-cites="wilkinson
 <li>Know which of your storage is backed up, for how long, and who restores it. Scratch is purged; a sync folder copies mistakes; 3-2-1 for anything you cannot recreate.</li>
 </ul>
 <p>The project now looks like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>~/bioinf-book/</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>~/bioinf-computing/</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
 <span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>├── NOTEBOOK.md</span>
 <span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>├── pixi.toml  pixi.lock  .pixi/</span>
@@ -2457,8 +2457,8 @@ Table&nbsp;3.5: The FAIR principles <span class="citation" data-cites="wilkinson
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 ~/bioinf-book/data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> SRR6357070_1.fastq.gz</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-book/data/raw/checksums.md5 .</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> SRR6357070_1.fastq.gz</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-computing/data/raw/checksums.md5 .</span>
 <span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
 <span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -2549,7 +2549,7 @@ gzip: SRR6357070_1.fastq.gz: uncompress failed</code></pre>
 </tr>
 </tbody>
 </table>
-<p>Copy the upstream sheet into the practice folder (<code>cp ~/bioinf-book/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/</code>), open the copy in VS Code, and add <code>geo_sample</code> and <code>condition</code> columns from this table. How many biological samples are there? How many runs are really paired-end? Why might a test fixture group them differently? And what goes wrong if a sample ID in one table has a trailing space?</p>
+<p>Copy the upstream sheet into the practice folder (<code>cp ~/bioinf-computing/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/</code>), open the copy in VS Code, and add <code>geo_sample</code> and <code>condition</code> columns from this table. How many biological samples are there? How many runs are really paired-end? Why might a test fixture group them differently? And what goes wrong if a sample ID in one table has a trailing space?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -2573,7 +2573,7 @@ gzip: SRR6357070_1.fastq.gz: uncompress failed</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-71" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-71-1"><a href="#annotated-cell-71-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-book</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-71" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-71-1"><a href="#annotated-cell-71-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
 <span id="annotated-cell-71-2"><a href="#annotated-cell-71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv</span>
 <span id="annotated-cell-71-3"><a href="#annotated-cell-71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-r</span> results</span>
 <span id="annotated-cell-71-4"><a href="#annotated-cell-71-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span>

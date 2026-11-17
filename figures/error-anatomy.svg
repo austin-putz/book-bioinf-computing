@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" role="img" aria-labelledby="error-anatomy-title">
+  <title id="error-anatomy-title">Reading two real error messages for who printed them, what failed, and on what. Top, from seqkit: [ERRO] stat data/raw/SRR6357070_l.fastq.gz: no such file or directory. Who: seqkit, the program you ran; [ERRO] is a severity label, not a name. What: stat, looking up the file, found no such file. On what: the file name, which has the letter l where the digit 1 belongs. Bottom, from R: Error in file(file, "rt") : cannot open the connection, followed by the call chain read.csv to read.table to file, and a warning: cannot open file 'data/meta/samples.csv': No such file or directory. Who: R's file() function, called by read.csv. What: cannot open the connection. On what: the file name, given only in the warning below the error, which holds the reason.</title>
+
+  <!-- Panel A: seqkit -->
+  <rect x="10" y="10" width="700" height="190" rx="10" class="fill-surface stroke-line"/>
+  <text x="26" y="34" font-size="13" class="fill-muted">you ran <tspan class="mono">pixi run seqkit stats data/raw/SRR6357070_l.fastq.gz</tspan></text>
+
+  <g font-size="15" class="mono">
+    <text x="30" y="78" font-weight="700">[ERRO]</text>
+    <text x="96" y="78">stat</text>
+    <text x="144" y="78" class="fill-given" font-weight="700">data/raw/SRR6357070_l.fastq.gz:</text>
+    <text x="432" y="78">no such file or directory</text>
+  </g>
+
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M30 88 v5 h54 v-5"/>
+    <path d="M96 88 v5 h36 v-5"/>
+    <path d="M432 88 v5 h226 v-5"/>
+  </g>
+  <path d="M144 88 v5 h276 v-5" class="stroke-given" stroke-width="2" fill="none"/>
+  <!-- the "what" bracket joins stat and its result -->
+  <path d="M114 93 v12 h430 v-12" class="stroke-muted" stroke-width="1" fill="none" stroke-dasharray="3 3"/>
+
+  <g font-size="13">
+    <text x="30" y="132" font-weight="700">who</text>
+    <text x="30" y="150">seqkit: the program</text>
+    <text x="30" y="166">you ran. <tspan class="mono">[ERRO]</tspan> is a</text>
+    <text x="30" y="182">severity label, not a name</text>
+
+    <text x="240" y="132" font-weight="700">on what</text>
+    <text x="240" y="150">the file name: <tspan class="mono">_l</tspan>, the letter,</text>
+    <text x="240" y="166">where the digit <tspan class="mono">_1</tspan> belongs</text>
+
+    <text x="470" y="132" font-weight="700">what</text>
+    <text x="470" y="150"><tspan class="mono">stat</tspan> (looking the file up)</text>
+    <text x="470" y="166">found no such file</text>
+  </g>
+
+  <!-- Panel B: R -->
+  <rect x="10" y="214" width="700" height="296" rx="10" class="fill-surface stroke-line"/>
+  <text x="26" y="238" font-size="13" class="fill-muted">you ran <tspan class="mono">pixi run Rscript -e 'read.csv("data/meta/samples.csv")'</tspan></text>
+
+  <!-- the line that holds the reason -->
+  <rect x="22" y="345" width="566" height="26" rx="4" class="fill-muted-soft stroke-line"/>
+
+  <g font-size="13" class="mono">
+    <text x="30" y="272" font-weight="700">Error in file(file, "rt")</text>
+    <text x="232" y="272">: cannot open the connection</text>
+    <text x="30" y="294" class="fill-muted">Calls: read.csv -&gt; read.table -&gt; file</text>
+    <text x="30" y="316">In addition: Warning message:</text>
+    <text x="30" y="338">In file(file, "rt") :</text>
+    <text x="46" y="362">cannot open file</text>
+    <text x="180" y="362" class="fill-given" font-weight="700">'data/meta/samples.csv'</text>
+    <text x="362" y="362">: No such file or directory</text>
+    <text x="30" y="384" class="fill-muted">Execution halted</text>
+  </g>
+  <text x="600" y="362" font-size="13">&#8592; the reason</text>
+
+  <g font-size="13">
+    <text x="30" y="420" font-weight="700">who</text>
+    <text x="30" y="438">R's <tspan class="mono">file()</tspan> function,</text>
+    <text x="30" y="454">called by <tspan class="mono">read.csv</tspan></text>
+
+    <text x="240" y="420" font-weight="700">on what</text>
+    <text x="240" y="438">the file name, only in the</text>
+    <text x="240" y="454">warning <tspan font-style="italic">after</tspan> the error</text>
+
+    <text x="470" y="420" font-weight="700">what</text>
+    <text x="470" y="438">cannot open the connection:</text>
+    <text x="470" y="454">no file by that name</text>
+  </g>
+  <text x="30" y="490" font-size="13" class="fill-muted">Not every message has all three; when one is missing, the log and the checklist carry the diagnosis.</text>
+</svg>

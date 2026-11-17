@@ -4,8 +4,9 @@ subtitle: "Chapter plan · core · draft"
 date: 2026-11-17
 ---
 
-**Part:** I — Getting set up · **Label:** core · **Status:** draft for
-review (2026-11-17), revised the same day after the Codex review
+**Part:** I — Getting set up · **Label:** core · **Status:** chapter
+drafted 2026-11-17 (`chapters/04-getting-help.qmd`; see *Drafting
+notes*), from this plan as revised after the Codex review
 (`chapter_04_codex_review.md`; see *Review responses*). Outputs marked
 *captured* were recorded on 2026-11-17 with the book environment
 (`setup/pixi.toml` + `pixi.lock`, pixi 0.84.2, seqkit 2.14.0, R 4.4.3)
@@ -766,14 +767,68 @@ Also resolved earlier: AI section stays one short final section;
 three faults in the broken script; help desks named by role, contacts
 in Appendix A.
 
+## Drafting notes (2026-11-17)
+
+Written from this plan; every output in the chapter was re-captured in
+a scratch copy of the project (pixi 0.84.2, seqkit 2.14.0, R 4.4.3,
+macOS 15 Intel), paths shown as `/home/you`. Changes from the plan:
+
+- **§4 "find the log" now uses Chapter 3's script.** Its current plan
+  version tees stdout and stderr into one timestamped log per run, so
+  the chapter shows the captured log of a run that failed with a moved
+  R2 file (`FAILED open or read`, no `finished:` line, old results left
+  in `results/`). Resolves open question 1, as long as Chapter 3 keeps
+  that script and log name.
+- **Captures differ slightly from the plan:** seqkit 2.14.0 prints a
+  second, empty `[ERRO]` line on the truncated file, and on a terminal
+  the `[ERRO]` lines come before the header line. `unknown flag`
+  prints the usage on stderr and repeats `unknown flag: --paired` on
+  stdout at the end. Both shown as captured.
+- **Setup step added:** `mkdir -p ~/bioinf-ch04` at the end of §1;
+  exercise 1's script is copied from the page (no download yet).
+- **Exercise 2** answer adds that R2 has lower quality and more `N`s
+  (`sum_n` 18,842 vs 280), from the `-a` capture.
+- **Further reading:** picked Auslander 2026 over Smith et al. 2024
+  (rule headings read; closer to the audience). Four entries added to
+  `references.bib`; six misconceptions added to `misconceptions.yml`.
+
+## Chapter review responses (2026-11-17)
+
+Codex review of the written chapter (`reviews/chapter_04_codex_review.md`).
+All three findings accepted; each rechecked first.
+
+- **Model help request (medium).** Confirmed that `pixi run seqkit stats
+  --paired` with no input fails the same way (exit 255). Exercise 3 now
+  ends with that last cut: the 100-read file still fails, then the file
+  is dropped altogether. The model request uses the input-free command,
+  labels the message as abbreviated with the full output attached, gives
+  the exit status, and says where the environment comes from (Chapter 2's
+  setup files) instead of a private manifest path. The answer explains
+  why the first draft failed its own test. `fig-good-request`'s *Small
+  example* field now says the error needs no input file.
+- **Methods "as printed" column (low).** Confirmed in the PMC HTML that
+  both parameter strings join two options with no space
+  (`–minimum-length=25–quality-cutoff=20`,
+  `–star-output-genome-bam–forward-prob 0`). The column now keeps the
+  paper's spacing, the caption says so, and the first discovery became
+  "the dashes and the spaces".
+- **Cluster help route (low, publication dependency).** `tbl-where-to-ask`
+  now links SCINet's VRSC contact page and ISU Research IT's contact page
+  directly, alongside Appendix A. Appendix A itself still needs its
+  support section before release (same item as the Chapter 1 and 2
+  reviews).
+
 ## Open questions
 
-1. **Chapter 3 log.** §4's "find the log" works on the book's own
-   project only once Chapter 3's script logs the tool's messages and
-   keeps one log per run. Fix in the Chapter 3 plan when its review is
-   handled.
-2. **To check while drafting:** WSL Ubuntu has `man` pages installed
-   (no "minimized system" message); en dash survives Quarto rendering
-   in code blocks; the R read error and the seqkit captures on Linux
-   match macOS; recheck the seqkit exit-0 capture whenever
-   `setup/pixi.lock` changes.
+1. **To check while drafting is reviewed:** WSL Ubuntu has `man` pages
+   installed (no "minimized system" message); `man gzip` on a Mac with
+   the full Chapter 1 setup opens GNU gzip's page (the test Mac had only
+   Apple's gzip; `gzip --help` in the chapter was captured from
+   conda-forge's GNU gzip 1.15); the R read error and the seqkit
+   captures on Linux match macOS; recheck the seqkit exit-0 capture
+   whenever `setup/pixi.lock` changes.
+2. **Chapter 3 dependency:** §4 quotes Chapter 3's script name, log
+   name pattern, and log lines. If Chapter 3's script changes, recapture
+   the failed-run log.
+3. **Homepage:** `index.qmd` still says only Chapters 1 and 2 are
+   drafts; update it together with Chapter 3.

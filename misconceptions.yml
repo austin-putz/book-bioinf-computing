@@ -162,6 +162,79 @@
     leave without saving? (Correct: Esc, `:q!`, Enter.)
   chapters: [02-book-setup, 08-shell-scripts]
 
+# Chapter 4 -----------------------------------------------------------------
+
+- id: no-error-means-correct
+  claim: "If no error appears, the result is right."
+  reality: >
+    Warnings let runs continue, and some tool versions report success
+    after printing an error (seqkit 2.14.0 on a truncated file exits 0).
+    Check outputs against something you know: a read count, a file size,
+    a number from the paper.
+  probe: >
+    `as.integer(c("12","7","n/a"))` finished without an error. Is the
+    result fine? (Correct: only if `n/a` means missing in that column.)
+  chapters: [04-getting-help, 08-shell-scripts]
+
+- id: last-line-is-the-error
+  claim: "The last line of the output is the error that matters."
+  reality: >
+    Look for the earliest relevant failure in this run; later lines are
+    often consequences, and the useful detail can sit in a warning after
+    the error (R's `cannot open file ...` warning).
+  probe: >
+    R prints `Error in file(file, "rt") : cannot open the connection`,
+    then a warning. Where is the name of the missing file? (Correct: in
+    the warning, after the error.)
+  chapters: [04-getting-help, 10-hpc-slurm, 26-nf-core]
+
+- id: asking-is-failure
+  claim: "Asking for help means I wasn't good enough to solve it."
+  reality: >
+    Everyone asks. A well-made request is a skill, and some problems
+    (broken nodes, quotas, accounts) only administrators can fix.
+  probe: >
+    A module that loaded yesterday will not load today, and you changed
+    nothing. Keep trying for a day, or report it? (Correct: report it
+    with what you saw and checked; you need not know the cause.)
+  chapters: [04-getting-help]
+
+- id: screenshot-is-fine
+  claim: "A screenshot of the error is the easiest way to ask."
+  reality: >
+    Text can be searched, copied, quoted, and read by screen readers;
+    screenshots crop the first error and hide the command. A screenshot
+    can add to text (a dialog, a panel), not replace it.
+  probe: >
+    Why paste the error as text? (Correct: searchable, quotable,
+    accessible, and it keeps the first line and the command.)
+  chapters: [04-getting-help, 22-github]
+
+- id: ai-code-is-tested
+  claim: "Code from an AI assistant works; I can assume it has been tested."
+  reality: >
+    It is generated text. Flags can be invented or belong to another
+    version, and even code described as tested may have been tested on
+    other inputs or another system. Check flags in `--help` and
+    reproduce a known result.
+  probe: >
+    An assistant suggests `seqkit stats --count-pairs`. What do you check
+    first? (Correct: that the flag is in `seqkit stats --help` for your
+    version; in 2.14.0 it is not.)
+  chapters: [04-getting-help]
+
+- id: docs-match-my-version
+  claim: "The online documentation describes the version I have installed."
+  reality: >
+    Websites usually show the latest release. Check your version
+    (`--version`, `pixi list`) and use `--help`, which comes from the
+    program you run.
+  probe: >
+    A flag from the tool's website gives `unknown flag`. What is the
+    likely reason? (Correct: your installed version is older than the
+    one the website describes.)
+  chapters: [04-getting-help, 23-environments]
+
 # Chapter 3 -----------------------------------------------------------------
 
 - id: checksum-proves-correct

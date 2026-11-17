@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" role="img" aria-labelledby="usage-line-title">
+  <title id="usage-line-title">How to read help text. Top: GNU gzip's usage line, Usage: gzip [OPTION]... [FILE]... Square brackets mark something optional, three dots mean it may repeat, and words in capitals stand for a value you supply; none of the brackets or dots are typed. Bottom: two flag lines from seqkit stats --help. The first, -T, --tabular, output in machine-friendly tabular format, shows a short form, a long form of the same flag, and its description. The second, -j, --threads int, number of CPUs, shows a flag that takes a value, typed as -j 4 or --threads 4.</title>
+
+  <!-- Panel 1: a usage line -->
+  <rect x="10" y="10" width="700" height="146" rx="10" class="fill-surface stroke-line"/>
+  <text x="26" y="34" font-size="13" class="fill-muted">from <tspan class="mono">gzip --help</tspan> (GNU)</text>
+
+  <g font-size="18" class="mono">
+    <text x="40" y="74">Usage:</text>
+    <text x="126" y="74" font-weight="700">gzip</text>
+    <text x="196" y="74">[OPTION]...</text>
+    <text x="356" y="74">[FILE]...</text>
+  </g>
+
+  <!-- Brackets under the tokens -->
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M126 86 v6 h46 v-6"/>
+    <path d="M196 86 v6 h88 v-6"/>
+    <path d="M288 86 v6 h32 v-6"/>
+    <path d="M356 86 v6 h66 v-6"/>
+    <path d="M425 86 v6 h32 v-6"/>
+  </g>
+  <g font-size="13" class="fill-muted" text-anchor="middle">
+    <text x="148" y="112">the program</text>
+    <text x="239" y="112">optional</text>
+    <text x="304" y="130">may repeat</text>
+    <text x="388" y="112">optional</text>
+    <text x="441" y="130">may repeat</text>
+  </g>
+  <g font-size="13">
+    <text x="486" y="70">Capitals (<tspan class="mono">OPTION</tspan>, <tspan class="mono">FILE</tspan>):</text>
+    <text x="486" y="88">something you supply.</text>
+    <text x="486" y="112" font-weight="700">Never type the brackets</text>
+    <text x="486" y="130" font-weight="700">or the dots.</text>
+  </g>
+
+  <!-- Panel 2: flag lines -->
+  <rect x="10" y="172" width="700" height="158" rx="10" class="fill-surface stroke-line"/>
+  <text x="26" y="196" font-size="13" class="fill-muted">from <tspan class="mono">pixi run seqkit stats --help</tspan> (seqkit 2.14.0)</text>
+
+  <g font-size="15" class="mono">
+    <text x="40" y="232" font-weight="700">-T,</text>
+    <text x="80" y="232" font-weight="700">--tabular</text>
+    <text x="300" y="232">output in machine-friendly tabular format</text>
+    <text x="40" y="286" font-weight="700">-j,</text>
+    <text x="80" y="286" font-weight="700">--threads</text>
+    <text x="176" y="286">int</text>
+    <text x="300" y="286">number of CPUs …</text>
+  </g>
+
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M40 240 v5 h20 v-5"/>
+    <path d="M80 240 v5 h84 v-5"/>
+    <path d="M300 240 v5 h370 v-5"/>
+    <path d="M176 294 v5 h28 v-5"/>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="50" y="262" text-anchor="middle">short</text>
+    <text x="142" y="262" text-anchor="middle">long form, same flag</text>
+    <text x="485" y="262" text-anchor="middle">what it does</text>
+    <text x="190" y="316" text-anchor="middle">takes a value</text>
+  </g>
+  <text x="440" y="316" font-size="13">typed as <tspan class="mono">-j 4</tspan> or <tspan class="mono">--threads 4</tspan></text>
+</svg>

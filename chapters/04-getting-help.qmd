@@ -1,20 +1,1265 @@
 # Getting help {#sec-getting-help}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- `--help`, `man` pages, tool documentation
-- Routine troubleshooting: read the error or warning; find the log; check paths, inputs, and requested resources; know when to ask
-- Reading a methods section to find tools, versions, parameters
-- Searching well; Biostars, Bioconductor support site
-- Asking for help: code, complete messages, session info; a minimal reproducible example
-- Using AI coding assistants responsibly (verify output; no data or credentials pasted in)
-- GitHub issues covered later (Part V)
+By the end of this chapter you should be able to:
+
+1. Look up how to use a tool with `--help`, `man`, and its official
+   documentation, and read a usage line.
+2. Read an error or warning: find which command printed it, what failed,
+   and on what.
+3. Work through a short checklist (message, log, location, environment,
+   inputs, resources, recent changes) before asking for help.
+4. Find the tools, versions, parameters, and reference reported in a
+   paper's methods section, and say what the passage does not report.
+5. Write a help request with the exact command, the complete message,
+   versions, and a minimal example that still fails, with no passwords
+   or private data, and check AI-suggested code before you run it.
+:::
+
+## What this chapter does {#sec-getting-help-intro}
+
+Things break, for everyone, every day: a typo in a file name, a flag
+that does not exist, a script run from the wrong folder, a download cut
+short. Experienced people do not avoid errors; they get from a message
+to a fix quickly, and they know when and how to ask. Most fixes take the
+steps in this chapter, not expertise.
+
+You will use the book's own files and environment throughout, so every
+error in the chapter is one you can reproduce yourself, or read in the
+captured output. You will finish able to:
+
+- ask a tool how to use it (`--help`, `man`, its website);
+- read an error message, and tell an error from a warning;
+- work through a short checklist that solves most problems on its own;
+- read a paper's methods section for tools, versions, and parameters;
+- search well, and write a help request someone can answer;
+- check a command an AI assistant suggests before you trust it.
+
+Asking for help is part of the job, not a sign that you are not good
+enough: some problems (a broken node, a full quota) only an
+administrator can fix, and a clear request is a skill in its own right.
+
+Commands run on your laptop, from the book's project folder,
+`~/bioinf-book` (@sec-organizing-projects). Practice files go in a
+scratch folder, `~/bioinf-ch04`, like Chapter 1's `~/bioinf-ch01`, so
+the project stays clean. Make it now:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-book
+mkdir -p ~/bioinf-ch04
+```
+
+Cluster readers can run the same commands on a login node: they are
+small and quick.
+
+## Asking the tool itself: `--help`, `man`, docs {#sec-getting-help-docs}
+
+Every tool you use can tell you how to use it. Start with seqkit, from
+the book environment:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit --help
+```
+
+```{.console}
+SeqKit -- a cross-platform and ultrafast toolkit for FASTA/Q file manipulation
+
+Version: 2.14.0
+
+Author: Wei Shen <shenwei356@gmail.com>
+
+Documents  : http://bioinf.shenwei.me/seqkit
+Source code: https://github.com/shenwei356/seqkit
+Please cite: https://doi.org/10.1002/imt2.191
+...
+Usage:
+  seqkit [command]
+
+Commands for Basic Operation:
+  faidx           create the FASTA index file and extract subsequences
+  ...
+  stats           simple statistics of FASTA/Q files
+  ...
+```
+
+(`...` marks lines left out here; the real output is longer.) The top
+already answers three questions you will have often: **which version**
+you have (2.14.0), **where the documentation is**, and **what to cite**.
+SeqKit's authors ask you to cite the SeqKit2 paper [@shen2024seqkit2].
+Below that comes the list of **subcommands**: seqkit is one program with
+many tools inside, and `stats`, which you ran in @sec-book-setup, is one
+of them. Each subcommand has its own help:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats --help
+```
+
+Scroll to the `Flags:` part. Find the flag that prints a table for
+other programs to read, and the one that sets how many CPUs seqkit uses:
+
+```{.console}
+  -T, --tabular              output in machine-friendly tabular format
+  ...
+  -j, --threads int                     number of CPUs. can also set with environment variable
+                                        SEQKIT_THREADS) (default 4)
+```
+
+Now a tool that came with the system. On Linux and WSL, `gzip` is GNU
+gzip; on a Mac it is the GNU gzip you installed in @sec-orientation:
+
+```{.bash filename="Terminal (laptop)"}
+gzip --help
+```
+
+```{.console}
+Usage: gzip [OPTION]... [FILE]...
+Compress or uncompress FILEs (by default, compress FILES in-place).
+
+Mandatory arguments to long options are mandatory for short options too.
+
+  -c, --stdout      write on standard output, keep original files unchanged
+  -d, --decompress  decompress
+  ...
+  -t, --test        test compressed file integrity
+  ...
+With no FILE, or when FILE is -, read standard input.
+```
+
+Most command-line programs also have a **manual page**, a longer
+description that opens in a pager:
+
+```{.bash filename="Terminal (laptop)"}
+man gzip
+```
+
+Move with {{< kbd Space >}} and the arrow keys, search with `/` followed
+by a word and {{< kbd Enter >}}, and quit with `q` (these are the keys of
+`less`, @sec-shell-basics). Now try seqkit:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run man seqkit
+```
+
+```{.console}
+No manual entry for seqkit
+```
+
+Many bioinformatics tools have no manual page, only `--help` and a
+website. That is normal.
+
+### Reading a usage line
+
+Help text uses a compact notation, shown in @fig-usage-line.
+
+::: {#fig-usage-line}
+{{< svg ../figures/usage-line.svg >}}
+
+How to read help text. In a usage line, square brackets mark something
+optional, `...` means it may repeat, and capitals stand for something you
+supply; you never type the brackets or dots. Flag lines give a short and
+a long form of the same flag, a description, and, for flags that take a
+value, the type of value.
+:::
+
+The conventions, from `Usage: gzip [OPTION]... [FILE]...`:
+
+- **Square brackets** mark something optional. `[FILE]` means you may
+  give a file; with none, gzip reads its input from elsewhere
+  (@sec-text-tools).
+- **`...`** means "may repeat": any number of options, any number of
+  files.
+- **Capitals**, or words in angle brackets such as `<file>`, commonly
+  stand for a value you supply.
+- **You never type the brackets or the dots.** `gzip -t reads.fastq.gz`,
+  not `gzip [-t] [reads.fastq.gz]...`.
+
+These are common conventions, not rules every tool follows, but most do.
+Flags come in a **short form** (`-T`, one dash, one letter) and a **long
+form** (`--tabular`, two dashes, a word); both mean the same, and the
+long one is easier to read later. Some flags take a **value**: `-j 4` and
+`--threads 4` both ask for four CPUs. Tools with subcommands, such as
+`seqkit stats`, `samtools sort`, or `git commit`, have help at each
+level. Not every tool answers `--help`: some use `-h`, some `help`, and
+some print their usage when run with no arguments at all.
+
+@tbl-help-sources lists where to look.
+
+::: {.wide-table}
+: Where to find out how a tool works. Only the ones that come from the
+program you run are sure to match your installed version.
+{#tbl-help-sources}
+
+| Source | What it gives | Matches your installed version? | Example |
+|:-------|:--------------|:--------------------------------|:--------|
+| `--help` or `-h` | Usage line, flags, short descriptions | yes: the program prints it | `pixi run seqkit --help` |
+| Subcommand help | The flags of one subcommand | yes | `pixi run seqkit stats --help` |
+| `man` page | A longer manual, in a pager | usually; on a Mac, check (below) | `man gzip` |
+| Official documentation site | Tutorials, examples, every option | the latest release, which may not be yours | [bioinf.shenwei.me/seqkit](https://bioinf.shenwei.me/seqkit/) |
+| `--version` | The version you have | yes | `gzip --version`, `pixi run seqkit version` |
+| R's `?` | The help page of an R function | yes | `?read.csv` (@sec-r-essentials) |
+| Python's `help()` | The help of a Python function or module | yes | `help(open)` (@sec-python-essentials) |
+:::
+
+**Why the version matters.** A website describes the latest release;
+your environment has the version in `pixi.lock`
+(`pixi list` shows it, @sec-book-setup). If a flag from the website is
+not in your `--help`, the website is probably ahead of your copy.
+
+::: {.callout-tip}
+## `--help` always matches what you run
+`--help` is printed by the program you actually run, so it matches your
+version. Online docs may describe a newer one, and on a Mac, `man` may
+show the page of a different program with the same name.
+:::
+
+That last point is a macOS detail. After @sec-orientation's setup, `ls`
+and `sed` run the GNU tools, and the `MANPATH` lines you added there make
+`man ls` open the GNU page too. If a `man` page ever describes options
+your command rejects, trust `--help`.
+
+::: {.check}
+**Check yourself.** In `Usage: gzip [OPTION]... [FILE]...`, must you give
+a file?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+No. `[FILE]` is in square brackets, so it is optional; with no file,
+gzip reads standard input, as the last line of its help says
+(@sec-text-tools).
+:::
+:::
+
+## Reading an error message {#sec-getting-help-errors}
+
+**A diagnosis round first.** Below are six commands that fail, each run
+on the book's files with its real output (captured with seqkit 2.14.0, R
+4.4.3, and pixi {{< var pixi-version >}}). For each one, say what went
+wrong before you open the answer. Two need a file you make first, a copy
+of the first read file cut short:
+
+```{.bash filename="Terminal (laptop)"}
+head -c 1000000 data/raw/SRR6357070_1.fastq.gz > ~/bioinf-ch04/broken.fastq.gz
+```
+
+(`head -c 1000000` keeps the first million bytes, under half the file.
+It writes to the scratch folder, never into `data/raw/`.)
+
+**1.**
+
+```{.bash filename="Terminal (laptop)"}
+seqkit stats data/raw/SRR6357070_1.fastq.gz
+```
+
+```{.console}
+bash: seqkit: command not found
+```
+
+**2.**
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats data/raw/SRR6357070_l.fastq.gz
+```
+
+```{.console}
+[ERRO] stat data/raw/SRR6357070_l.fastq.gz: no such file or directory
+```
+
+**3.**
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats –T data/raw/SRR6357070_1.fastq.gz
+```
+
+```{.console}
+[ERRO] stat –T: no such file or directory
+```
+
+**4.**
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats --paired data/raw/SRR6357070_1.fastq.gz
+```
+
+```{.console}
+Error: unknown flag: --paired
+Usage:
+  seqkit stats [flags]
+...
+unknown flag: --paired
+```
+
+**5.**
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats -T ~/bioinf-ch04/broken.fastq.gz
+```
+
+```{.console}
+[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+[ERRO]
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+```
+
+**6.**
+
+```{.bash filename="Terminal (laptop)"}
+pixi run Rscript -e 'read.csv("data/meta/samples.csv")'
+```
+
+```{.console}
+Error in file(file, "rt") : cannot open the connection
+Calls: read.csv -> read.table -> file
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'data/meta/samples.csv': No such file or directory
+Execution halted
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answers
+
+1. **`command not found`**, printed by the shell (`bash:`): no program
+   called `seqkit` is on this shell's `PATH`, so it never started. The
+   fix is `pixi run` (@sec-book-setup). If another copy of seqkit were
+   installed somewhere else, the bare command would have run *that*
+   copy instead, possibly a different version (@sec-linux-system).
+2. **A typo.** The file name has a lowercase letter `l` where the digit
+   `1` belongs: `_l.fastq.gz`. `ls data/raw/` shows the real names.
+3. **An en dash.** `–T` starts with an en dash (`–`), not a hyphen
+   (`-`). This happens when a command is copied from a PDF or a word
+   processor. seqkit does not recognise it as a flag, so it treats `–T`
+   as a file name and cannot find it. Retype the dash.
+4. **A flag that does not exist.** seqkit stats has no `--paired`; it
+   prints its usage to show what it does accept. (@sec-getting-help-ai
+   comes back to where this flag came from.)
+5. **A file cut short.** The `[ERRO]` line says `unexpected EOF`
+   (end of file): the gzip data stops in the middle. seqkit still
+   printed the table's header line, with no rows.
+6. **The wrong file name.** The error says only *cannot open the
+   connection*; the warning below it says which file and why: there is
+   no `data/meta/samples.csv`. The file in @sec-organizing-projects is
+   `samples.tsv`.
+:::
+
+### Who, what, and on what
+
+You may have noticed a pattern. @fig-error-anatomy shows it on two of
+the messages.
+
+::: {#fig-error-anatomy}
+{{< svg ../figures/error-anatomy.svg >}}
+
+A reading strategy for error messages: find **who** printed it, **what**
+failed, and **on what** (the file, flag, or object, often quoted). In
+seqkit's message, `[ERRO]` is a severity label; you know seqkit printed
+it because you ran seqkit. In R's, the function is named, and the file
+is only in the warning that follows the error.
+:::
+
+- **Who** printed it. A message starting `bash:` comes from the shell:
+  it could not even start the program. Otherwise it usually comes from
+  the program you ran, which you know from your command. `[ERRO]`,
+  `Error`, and `WARNING` are **severity labels**, not names. R's
+  `Error in file(...)` names the function that failed.
+- **What** failed: `stat` (looking a file up), `cannot open`, `unknown
+  flag`, `unexpected EOF`.
+- **On what**: the file, flag, or object, often in quotes. Read it
+  character by character; that is where `_l` and `–T` were hiding.
+
+Not every message has all three. A program that runs out of memory may
+print only `Killed`; a crash may print almost nothing. Then the log and
+the checklist (@sec-getting-help-checklist) carry the diagnosis.
+
+**Read all of it.** Long messages are common, and the last line is not
+always the one that matters. Look for the **earliest relevant failure
+in this run**: later lines are often consequences of the first one. But
+the useful detail can sit further down, as in R's message, where the
+reason is in the warning *after* the error. And a log you append to may
+still hold errors from earlier runs; check the times.
+
+::: {.callout-important}
+## Key idea
+Look for who printed the message, what failed, and on what. Read all of
+it, and find the earliest relevant failure in this run. An exit status
+of 0 means "reported success", not "right answer".
+:::
+
+### Errors and warnings
+
+An **error** reports that something failed. Whether the program or your
+script then stops depends on the program and the script
+(@sec-shell-scripts). A **warning** asks you to look: sometimes the
+result is still what you wanted, sometimes not. In R:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run Rscript -e 'as.integer(c("12","7","n/a"))'
+```
+
+```{.console}
+[1] 12  7 NA
+Warning message:
+NAs introduced by coercion
+```
+
+R turned `"n/a"` into `NA` (missing) and carried on. That is right if
+`n/a` really means "missing" in that column, and wrong if it was a typo
+for a number. Only you know which.
+
+### Exit status
+
+Every command, when it finishes, reports a number to the shell: its
+**exit status**. `0` means the program reports success; anything else
+means it reports a failure. `echo $?` prints the status of the command
+just before it, so run it **immediately** after: any other command in
+between replaces the number.
+
+```{.bash filename="Terminal (laptop)"}
+seqkit version
+echo $?
+```
+
+```{.console}
+bash: seqkit: command not found
+127
+```
+
+`127` is the shell's code for "command not found". Now the truncated
+file from round 5:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats -T ~/bioinf-ch04/broken.fastq.gz
+echo $?
+```
+
+```{.console}
+[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+[ERRO]
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+0
+```
+
+seqkit 2.14.0 printed an error **and** reported success. (SeqKit's
+current [documentation](https://bioinf.shenwei.me/seqkit/) says read
+errors give a nonzero status, so a later version may behave
+differently.) That is the lesson, whatever the version: the exit status
+says what the program *reported*. It does not prove the output answers
+your question. Read the messages, and check the result against
+something you know: here, a table with no rows instead of 50,000 reads.
+How scripts and pipelines use exit status is @sec-shell-scripts.
+
+::: {.callout-caution .misconception}
+## Misconception: "If no error appears, the result is right"
+**Reality.** Warnings let runs continue, and some tool versions report
+success after printing an error (seqkit 2.14.0 on a truncated file).
+Check outputs against something you know: a read count, a file size, a
+number from the paper.
+:::
+
+@tbl-common-errors collects the messages you are most likely to meet in
+the first part of this book.
+
+::: {.wide-table}
+: Common messages in Part I, and what to check first. {#tbl-common-errors}
+
+| Message | Who prints it | Usual cause | First thing to check |
+|:--------|:--------------|:------------|:---------------------|
+| `command not found` | the shell | program not installed, or not on `PATH` | `pixi run` in front? the right folder? (@sec-linux-system) |
+| `No such file or directory` | the shell or the program | wrong name or path, wrong folder | `pwd`, `ls`; spelling, `l` vs `1`, extension |
+| `Permission denied` | the shell or the program | writing where you may not, such as read-only `data/raw/` | write somewhere else (@sec-organizing-projects) |
+| `unknown flag`, `unrecognized option` | the program | flag does not exist in your version, or an en dash | `--help`; retype dashes |
+| `unexpected EOF` | the program | file cut short (failed download or copy) | `gzip -t`, checksums (@sec-organizing-projects) |
+| `No space left on device` | the program or the system | disk full | `df -h .` (@sec-orientation) |
+| `Disk quota exceeded` | the system | your share of shared storage is full | your site's quota command (@sec-cluster-sites) |
+| `Killed` | the shell | often, not always, out of memory | the scheduler's records (@sec-hpc-slurm) |
+:::
+
+Other languages have their own common messages (R's `could not find
+function`, Python's `ModuleNotFoundError`); they come with
+@sec-r-essentials and @sec-python-essentials.
+
+::: {.check}
+**Check yourself.** A message starts `bash: samtools: command not
+found`. Did samtools run?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+No. The message comes from the shell (`bash:`), which could not find a
+program called `samtools`, so it never started. Check whether you need
+`pixi run` (or, on a cluster, `module load`).
+:::
+:::
+
+## Before you ask: a troubleshooting checklist {#sec-getting-help-checklist}
+
+Two cases first.
+
+**Case 1: the wrong folder.** Go to your home folder and run Chapter
+3's script, the way you ran it there:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~
+pixi run bash src/01_count_reads.sh
+```
+
+```{.console}
+Error:   × could not find pixi.toml or pyproject.toml with tool.pixi at directory /home/you
+```
+
+pixi looks for `pixi.toml` in the folder you are in (and the folders
+above it) and finds none. (If some folder above yours held a
+`pixi.toml`, the message would differ: pixi would use that one, and the
+error would come later.) The fix is the folder, not the command:
+
+```{.bash filename="Terminal (laptop)"}
+pwd
+cd ~/bioinf-book
+```
+
+**Case 2: a pattern that matches nothing.**
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats -T data/raw/*.fq.gz
+```
+
+```{.console}
+[ERRO] stat data/raw/*.fq.gz: no such file or directory
+```
+
+The clue is the `*` inside the message. bash replaces a pattern such as
+`*.fq.gz` with the matching file names, but when nothing matches it
+passes the pattern on unchanged, and seqkit looks for a file literally
+called `*.fq.gz`. `ls data/raw/` shows the files end in `.fastq.gz`, not
+`.fq.gz`. Why bash does this is @sec-shell-basics.
+
+Both cases are solved by a question you can ask of almost any problem.
+@fig-troubleshooting-checklist puts those questions in order.
+
+::: {#fig-troubleshooting-checklist}
+{{< svg ../figures/troubleshooting-checklist.svg >}}
+
+A troubleshooting checklist. Each step has an exit: stop as soon as the
+problem is solved. The wrong-folder case stops at step 3, the `*.fq.gz`
+case at step 4. Still stuck after step 7? Leave the checklist and ask.
+:::
+
+1. **Read the message**, all of it (@sec-getting-help-errors).
+2. **Find the log.** The terminal may show only the last lines; a log
+   can hold the first error. More below.
+3. **Where am I, with what?** `pwd`, `hostname`, `ls`; did you use
+   `pixi run`? On a cluster, which modules are loaded?
+4. **Do the inputs exist and look right?** `ls -l`, `head`, `gzip -t`,
+   `md5sum -c` (@sec-organizing-projects); do the names in your sample
+   sheet match the file names?
+5. **Are resources short?** `No space left on device`, `Disk quota
+   exceeded`, a time limit, `Killed` (@tbl-resource-limits).
+6. **What changed** since it last worked? New data, a new version, a new
+   folder, a new machine?
+7. **Make it small.** Does it still fail on 100 reads, on one sample?
+   (@sec-getting-help-asking shows how.)
+
+Not every step is needed every time; stop when it is solved. If it is
+still not solved after step 7, the way out is to **ask**
+(@sec-getting-help-search, @sec-getting-help-asking), with what you
+checked.
+
+::: {.callout-important}
+## Key idea
+Most problems are found by the same few questions: where am I, with
+which software, on which inputs, with enough resources, and what
+changed. Stop when it is solved.
+:::
+
+**Finding the log.** Chapter 3's script writes a log in `logs/` every
+time it runs, one file per run, with everything it printed. Here is the
+log of a run that failed because a raw file had been moved out of
+`data/raw/` (captured; the host name is replaced):
+
+```{.default filename="logs/01_count_reads_2026-11-17T122821_jlSC.log"}
+started:  2026-11-17 12:28:21 -0600
+host:     <laptop>
+script:   76fa8eb6a7b90f212042cfbe6d95cfcc  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+md5sum: SRR6357070_2.fastq.gz: No such file or directory
+SRR6357070_2.fastq.gz: FAILED open or read
+md5sum: WARNING: 1 listed file could not be read
+```
+
+No `finished:` line, so the run stopped early. The earliest relevant
+failure is the line naming `SRR6357070_2.fastq.gz`: who (`md5sum`), what
+(could not open it), on what (the R2 file). The run never reached
+`seqkit stats`, so `results/` still holds the *previous* run's counts:
+another reason to check the log, not only whether a results file exists.
+The log keeps all this after the terminal is closed, with the date, the
+machine, and the versions.
+
+Not every program writes a log, and a log does not always name the
+cause. Later chapters add more places to look: a cluster job's output
+file, `slurm-<jobid>.out` (@sec-hpc-slurm), and a pipeline's
+`.nextflow.log` and each task's `.command.err` (@sec-nf-core). On a
+cluster, steps 3 and 5 matter more: which node you are on, which
+modules are loaded, and which quota is full.
+
+**When to ask.** If you have made no progress for about an hour, that
+is a good point to stop and ask; your lab's habits come first, and it is
+not a limit you must reach. Ask **at once** for anything about accounts,
+passwords, or keys; when a fix could damage data or affect other users;
+and when something that worked stops working in a way your own changes
+do not explain (a slow or missing filesystem, a module that will not
+load, a quota). You do not need to know whether the system is at fault:
+report what you saw and what you checked.
+
+::: {.callout-warning}
+## Pitfall: changing many things at once
+Change one thing, rerun, and look. Three changes at once leave you not
+knowing which one fixed the problem, or which one broke something else.
+:::
+
+@tbl-checklist is the same checklist as a table, with the chapter that
+goes deeper on each step.
+
+: The troubleshooting checklist. {#tbl-checklist}
+
+| Step | Question | Commands or places to look | Goes deeper |
+|:-----|:---------|:---------------------------|:------------|
+| 1 | What does the message say? | who, what, on what; the earliest relevant failure | this chapter |
+| 2 | Where is the log? | the terminal; `logs/`; `slurm-<jobid>.out`; `.nextflow.log` | @sec-organizing-projects, @sec-hpc-slurm, @sec-nf-core |
+| 3 | Where am I, with what? | `pwd`, `hostname`, `ls`, `pixi run`, `module list` | @sec-linux-system |
+| 4 | Do the inputs exist and look right? | `ls -l`, `head`, `gzip -t`, `md5sum -c` | @sec-organizing-projects, @sec-fasta-fastq |
+| 5 | Are resources short? | `df -h .`, quota commands, job records | @sec-orientation, @sec-hpc-slurm |
+| 6 | What changed? | `NOTEBOOK.md`, `pixi.lock`, dates in `logs/` | @sec-git |
+| 7 | Does it fail when small? | 100 reads, one sample | @sec-getting-help-asking |
+
+::: {.check}
+**Check yourself.** A script worked yesterday and fails today with `No
+such file or directory`. Name two checklist questions to ask first.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Where am I (`pwd`)? Do the inputs exist (`ls -l`)? And what changed: a
+moved folder, a renamed file?
+:::
+:::
+
+## Reading a methods section {#sec-getting-help-methods}
+
+When you want to repeat or build on an analysis, the paper's methods
+section is where you find out which tools, versions, and parameters
+were used. The book's running dataset comes from @wu2018repression,
+which is openly licensed (CC BY), so it can be quoted here. Open it in
+[PubMed Central](https://pmc.ncbi.nlm.nih.gov/articles/PMC6310685/) and
+find two places: the *Software and Algorithms* rows of the **Key
+Resources Table**, and the paragraph *Differential Expression Analysis*
+in the methods.
+
+Four words you will meet there, one line each (the Transcriptomics book
+explains them):
+
+- **Adapter trimming**: cutting the sequencing adapters off the ends of
+  reads.
+- **Alignment**: finding where in the genome each read comes from.
+- **Counting**: how many reads fall in each gene.
+- **Differential expression**: which genes change between conditions.
+
+**Your turn.** Fill in @tbl-methods-extract for the RNA-seq analysis
+from those two places, before you open the answer. The last two
+columns matter: what the paper *prints*, and what you would *type*.
+
+: What the methods of @wu2018repression report for the RNA-seq analysis.
+"As printed" keeps the paper's typography, spaces included; see the
+discoveries below.
+{#tbl-methods-extract}
+
+| Step | Tool | Version | Parameters as printed | As you would type them | Reference, data |
+|:-----|:-----|:--------|:----------------------|:-----------------------|:----------------|
+| Trim adapters | ? | ? | ? | ? | — |
+| Align and quantify | ? | ? | ? | ? | ? |
+| Differential expression | ? | ? | ? | ? | — |
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+| Step | Tool | Version | Parameters as printed | As you would type them | Reference, data |
+|:-----|:-----|:--------|:----------------------|:-----------------------|:----------------|
+| Trim adapters | cutadapt | 1.9.1 | `–minimum-length=25–quality-cutoff=20 -a AGATCGGAAGAGC -A AGATCGGAAGAGC` | `--minimum-length=25 --quality-cutoff=20 -a AGATCGGAAGAGC -A AGATCGGAAGAGC` | — |
+| Align and quantify | RSEM with STAR | 1.3.0; STAR 2.5.2a | `–star-output-genome-bam–forward-prob 0`, all else default | `--star-output-genome-bam --forward-prob 0` | *S. cerevisiae* genes from Ensembl, assembly R64-1-1, release 90 |
+| Differential expression | DESeq2 | 1.12.3, in R 3.3.1 | not reported in this excerpt | — | — |
+:::
+
+Three things to notice.
+
+**The dashes and the spaces.** The paper prints `–minimum-length` and
+`–forward-prob` with a single en dash: typesetting turned the two
+hyphens of `--` into one `–`. Copied as printed, they fail exactly like
+round 3 of @sec-getting-help-errors. Look again at the spacing, too:
+`–minimum-length=25–quality-cutoff=20` and
+`–star-output-genome-bam–forward-prob` have no space between the two
+options, so a program would read each pair as one long, unknown word.
+Both faults need repairing before the command can run.
+
+::: {.callout-warning}
+## Pitfall: commands copied from PDFs and web pages
+Typesetting turns `--` into `–` and straight quotes (`"`, `'`) into
+curly ones (`“`, `’`). The command looks right and fails, or worse, does
+something else. Retype dashes and quotes when you copy from a paper.
+:::
+
+**The strandedness setting.** `--forward-prob 0` says how the library
+was made: which strand of the gene each read comes from (@sec-nf-core and
+the Transcriptomics book explain strandedness). The nf-core test sheet
+the book uses (@sec-organizing-projects) says `auto` for our sample,
+`WT_REP1`. `auto` asks the pipeline to *work out* the strandedness from
+the reads; it does not state it, so it is not a second source for the
+paper's value.
+
+**What this excerpt does not report.** The STAR and RSEM index settings,
+DESeq2's design and thresholds, and any code. Before saying the paper
+*omits* them, check its supplements and any deposited code. A complete
+methods section names the tool, the version, the parameters, the
+reference release, and where the code and data are: the same chain you
+recorded for your own project in @sec-organizing-projects.
+
+Two cautions. First, the book later runs these reads through
+nf-core/rnaseq (@sec-nf-core). That is a different, newer analysis, not
+a reconstruction of the paper's. Second, a methods section can describe
+several kinds of library: this paper also has single-end TSS-seq reads
+of 76 bases. Which paragraph describes *our* reads? Exercise 4 checks it
+against the run's public record.
+
+::: {.check}
+**Check yourself.** The excerpt says "STAR (version 2.5.2a)" but not
+the index options. Can you reproduce the alignment exactly from the
+excerpt?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Not for certain: index settings can change the results. Check the
+supplements and any deposited code; then either assume the defaults
+(and say so) or ask the authors.
+:::
+:::
+
+## Searching, and choosing where to ask {#sec-getting-help-search}
+
+Most errors have been seen before. Searching well means turning *your*
+message into one that matches other people's. Take this one, from a
+truncated file on a cluster:
+
+```{.console}
+[ERRO] /home/<user>/proj/sample_17_R1.fq.gz: unexpected EOF
+```
+
+Remove what is yours (the path, the sample name), keep the distinctive
+part in quotes, and add the tool's name:
+
+```{.default}
+seqkit "unexpected EOF"
+```
+
+Search the tool's own GitHub issues too, for example
+[seqkit's](https://github.com/shenwei356/seqkit/issues), **including
+closed ones**: a closed issue often holds the answer. Reading issues is
+all you need here; filing one is @sec-github.
+
+::: {.callout-tip}
+## Search tip
+Search the distinctive part of the message in quotes, without your
+paths and sample names, plus the tool's name.
+:::
+
+**Where to ask** depends on the kind of problem (@tbl-where-to-ask).
+If your lab has local experts and asks them first, do that.
+
+::: {.wide-table}
+: Where to ask, by kind of problem. {#tbl-where-to-ask}
+
+| Kind of problem | Where to ask | Who answers | Before posting |
+|:----------------|:-------------|:------------|:---------------|
+| Account, password, quota, node, module, anything about one cluster | your cluster's help desk: [SCINet's VRSC](https://scinet.usda.gov/support/contact), [ISU Research IT](https://research.it.iastate.edu/contact-us) for Nova, or your own site's (@sec-cluster-sites) | the site's staff | say which cluster, node, and job |
+| How to use a Bioconductor package | [Bioconductor support site](https://support.bioconductor.org) | package authors and users | read its [posting guide](https://bioconductor.org/help/support/posting-guide/); include `sessionInfo()` |
+| An nf-core pipeline | [nf-core's channels](https://nf-co.re/join) (@sec-nf-core) | pipeline developers and users | the pipeline version and command |
+| Another tool | its documentation, then its GitHub issues or discussions | the tool's authors | search closed issues first |
+| A general bioinformatics question | [Biostars](https://www.biostars.org) | other bioinformaticians | search first |
+| General R, Python, or shell | [Stack Overflow](https://stackoverflow.com) | programmers | a [minimal reproducible example](https://stackoverflow.com/help/minimal-reproducible-example) |
+| A command from this book | the book's [**Report an issue!**](../reporting.qmd) page | the author | the *Something doesn't run* form |
+:::
+
+**Judging an answer.** How old is it, and which version does it assume?
+Is it from the tool's authors or documentation? Does it explain *why*?
+And does it work on your small example? A 2015 answer may name flags
+that no longer exist.
+
+::: {.check}
+**Check yourself.** Your job on the cluster cannot write to `/project`,
+and the quota command shows you at your limit. Where do you ask?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Your cluster's help desk, or your PI if the project's quota is theirs to
+raise. Not Biostars: nobody there can change your quota.
+:::
+:::
+
+## Asking for help {#sec-getting-help-asking}
+
+Here is a request that is hard to answer:
+
+> seqkit doesn't work on the cluster, help!!
+>
+> *[a screenshot of the last few lines of a terminal]*
+
+A helper cannot tell which command, which files, which version, or even
+which error: the screenshot cuts off the first line. They have to ask
+four questions before they can start. @fig-good-request shows the same
+problem written so that someone can answer at once.
+
+::: {#fig-good-request}
+{{< svg ../figures/good-request.svg >}}
+
+A help request someone can answer. It starts from the book's *Something
+doesn't run* form (where it ran, the exact command, the complete message
+as text, `pixi info`) and adds what a question about a tool needs: what
+you wanted and expected, what you tried, the tool's version, and a small
+example. Private details become placeholders that keep the fault
+visible.
+:::
+
+The book's own [*Something doesn't run*](../reporting.qmd) form is a
+good starting model: **where it ran** (laptop, login node, or compute
+node; operating system; cluster), the **exact command**, copied, the
+**complete message as text**, and `pixi info`. A question about a tool
+also needs:
+
+- **what you were trying to do**, and what you expected;
+- **what you tried** already;
+- **the failing tool's version**;
+- **a small example** that still fails.
+
+**Versions, each for its own question.**
+
+- `pixi info` describes where and how: the platform, pixi's version, the
+  environment, and its folders. It does **not** list package versions.
+- `pixi run seqkit version` gives the version of the tool that failed.
+  With `pixi run`, it reports the copy that actually ran.
+- `pixi list` shows every package's version, when several might matter.
+- In R, `pixi run Rscript -e 'sessionInfo()'` (@sec-r-essentials).
+
+Do not paste the whole `pixi.lock`; it is thousands of lines.
+
+### A minimal reproducible example
+
+A **minimal reproducible example** is the smallest input and the
+shortest command that still show the problem. Shrink until it still
+fails, and **rerun after every cut, to check that it still fails the
+same way**. Fewer files, one sample, the first 100 reads:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit head -n 100 data/raw/SRR6357070_1.fastq.gz \
+  -o ~/bioinf-ch04/small_R1.fastq.gz
+```
+
+That writes the first 100 reads (10,100 bases) to the scratch folder,
+never to `data/raw/`. Now the catch. Do the same with the truncated
+file, and check the small copy:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit head -n 100 ~/bioinf-ch04/broken.fastq.gz \
+  -o ~/bioinf-ch04/small_broken.fastq.gz
+pixi run seqkit stats -T ~/bioinf-ch04/small_broken.fastq.gz
+```
+
+```{.console}
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+/home/you/bioinf-ch04/small_broken.fastq.gz	FASTQ	DNA	100	10100	101	101.0	101
+```
+
+No error. The first 100 reads of the broken file are intact; the damage
+is at its end. Shrinking removed the bug: this example is too small.
+That is why you rerun after every cut. Some failures need no real data
+at all (a wrong file name fails on any file), and often the shrinking
+finds the bug for you. In R, the `reprex` package builds such examples
+([reprex.tidyverse.org](https://reprex.tidyverse.org), @sec-r-essentials).
+
+### Text, not screenshots
+
+Paste commands and messages as **text**. Text can be searched, copied,
+quoted, and read by screen readers; a screenshot can do none of these,
+and it usually cuts off the first error. Put it in a Markdown code block,
+between lines of three backticks (Markdown, @sec-organizing-projects):
+
+````{.default}
+```
+Error: unknown flag: --paired
+```
+````
+
+A screenshot can **add** to the text when the problem is something on
+screen, such as a VS Code panel or a dialog. For a long log, post the
+relevant part with a few lines around it, and keep the full log to
+share if the venue asks for it.
+
+### Privacy and etiquette
+
+Before you post, replace user names, paths, and host names you would
+rather not share with placeholders, and do it consistently (always
+`<home>`, always `<user>`). Keep the fault visible while you do: the
+relative layout, the extension, upper and lower case, the `l` vs `1`,
+the en dash. `pixi info`, for example, prints paths in your home folder.
+
+::: {.callout-warning}
+## Pitfall: secrets in public
+Never post passwords, SSH private keys, tokens, unpublished data, or
+data under a use agreement (ask your PI if unsure). Forums and issue
+trackers are public, and what you post is copied and indexed: deleting
+it later does not take it back.
+:::
+
+Two habits of good askers: if you post the same question in two
+places, say so in each; and when it is solved, post the answer and mark
+it solved, for the next person who searches.
+
+::: {.check}
+**Check yourself.** Why paste the error as text rather than a
+screenshot?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Text can be searched, copied into a search engine, quoted in a reply,
+and read by screen readers. Screenshots often cut off the first error,
+and they hide the command.
+:::
+:::
+
+@tbl-request-checklist sums up what goes into a request.
+
+::: {.wide-table}
+: What a help request includes, and what it never includes.
+{#tbl-request-checklist}
+
+| Include | Example | Why | Never include |
+|:--------|:--------|:----|:--------------|
+| Where it ran | laptop, macOS 15; or Nova, compute node | systems behave differently | host names you were asked not to share |
+| What you wanted and expected | "count read pairs; one number per sample" | helpers can spot a wrong approach | — |
+| The exact command | copied from the terminal | the fault may be one character | passwords typed on the command line |
+| The complete message, as text | from the first relevant line | searchable, quotable | — |
+| What you tried | "`--help` has no `--paired`" | saves repeating it | — |
+| Versions | `pixi run seqkit version`; `pixi info` | behaviour changes between versions | your home path (use `<home>`) |
+| A small example | 100 reads that still fail | others can reproduce it | unpublished or restricted data |
+:::
+
+## AI coding assistants {#sec-getting-help-ai}
+
+AI coding assistants can explain an error, suggest a command, or draft a
+help request. They can also be confidently wrong. Here is an answer to
+"count read pairs in my paired FASTQ files with seqkit". It was written
+for this book to show a typical mistake, not captured from a particular
+assistant:
+
+> Use seqkit's stats command with the `--paired` flag:
+>
+> ```
+> seqkit stats --paired data/raw/SRR6357070_1.fastq.gz data/raw/SRR6357070_2.fastq.gz
+> ```
+
+Check it, in three steps:
+
+1. **Is the flag real?** `pixi run seqkit stats --help` lists no
+   `--paired`.
+2. **Run it.** You did, in round 4 of @sec-getting-help-errors:
+   `Error: unknown flag: --paired`.
+3. **Fix it, then check what the answer means.** Without the invented
+   flag, the command runs:
+
+   ```{.bash filename="Terminal (laptop)"}
+   pixi run seqkit stats data/raw/SRR6357070_1.fastq.gz data/raw/SRR6357070_2.fastq.gz
+   ```
+
+   It prints one row per file, each with 50,000 reads. The two files are
+   the two mates of the same fragments (@sec-orientation), so the run
+   has **50,000 read pairs**, not 100,000. A command that runs is not
+   yet an answer to the question.
+
+**Rules for using an assistant:**
+
+- Treat its suggestions as coming from a fast, confident colleague who
+  is sometimes wrong.
+- Check every flag against `--help` for **your** version.
+- Test on small data with a known answer before real data.
+- Understand any command before you run it, above all ones that delete
+  or overwrite (`rm`, `>`, `mv`). Never run those unread on raw data or
+  on shared systems.
+- Paste error text and small toy examples. Never paste credentials,
+  private or unpublished data, or anything your institution's or your
+  data agreement's current policy restricts.
+- Follow your journal's and your university's rules on disclosing AI
+  use.
+
+Used this way, assistants are good at the two skills this chapter
+teaches: explaining an error message, and drafting a help request. As
+long as you check the result.
+
+::: {.callout-warning}
+## Pitfall: trusting an AI-suggested flag
+Check every flag against `--help`, and test on data with a known
+answer, before you run an AI-suggested command on real data.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "Code from an AI assistant works; I can assume it has been tested"
+**Reality.** It is generated text. Flags can be invented or belong to
+another version, and even code described as tested may have been tested
+on other inputs or another system. Check flags in `--help` and reproduce
+a known result.
+:::
+
+@tbl-ai-checks lists the checks.
+
+: Checks for an AI-suggested command. {#tbl-ai-checks}
+
+| Check | How | What it catches |
+|:------|:----|:----------------|
+| The flag exists | `--help` for your version | invented flags, flags from other tools |
+| The version matches | `pixi run <tool> version`, `pixi list` | flags from a newer or older release |
+| It works on toy data | 100 reads with a known answer | wrong output that looks plausible |
+| The output means what you asked | compare with what you know (reads vs pairs) | an answer to a different question |
+| Nothing is destroyed | read every `rm`, `>`, `mv` before running | lost or overwritten data |
+| Nothing private is sent | paste only the question and toy examples | leaked data and credentials |
+
+::: {.check}
+**Check yourself.** An assistant suggests `pixi run seqkit stats
+--count-pairs data/raw/*.fastq.gz`. What do you check before trusting
+it?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+That `--count-pairs` appears in `pixi run seqkit stats --help` for your
+version. It does not in seqkit 2.14.0: running it gives `Error: unknown
+flag: --count-pairs`.
+:::
+:::
+
+## Summary {#sec-getting-help-summary}
+
+- `--help` comes from the program you run, so it matches your version;
+  `man` pages and websites may not. In a usage line, brackets mean
+  optional, `...` means repeatable, and you type neither.
+- Read the whole message for who printed it, what failed, and on what,
+  and find the earliest relevant failure. An exit status of 0 means the
+  program reported success, not that the result is right.
+- Before asking, work through the checklist: message, log, where and
+  with what, inputs, resources, what changed, a small example. Stop as
+  soon as it is solved.
+- A methods section should give tool, version, parameters, and
+  reference; retype its dashes, and say "not reported in this excerpt"
+  until you have checked the supplements.
+- A good help request has the exact command, the complete message as
+  text, versions, and a small example that still fails, with nothing
+  private in it. Check every AI-suggested flag in `--help` and test on
+  data with a known answer.
+
+## Exercises {#sec-getting-help-exercises}
+
+::: {.check}
+**Exercise 1. Fix a broken script.** Make the script below in the
+scratch folder (in VS Code: `code ~/bioinf-ch04/count.sh`, paste, save).
+Copy it from this page exactly, faults and all:
+
+```{.bash filename="~/bioinf-ch04/count.sh"}
+# count.sh: count reads in both raw files (has three faults)
+# Run from ~/bioinf-book:  pixi run bash ~/bioinf-ch04/count.sh
+seqkit stats –T --paired data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz
+```
+
+From `~/bioinf-book`, run it with `pixi run bash ~/bioinf-ch04/count.sh`.
+It fails three times. Fix one fault at a time, using only the message
+and `--help`, and rerun after each fix. Note in `NOTEBOOK.md`
+(@sec-organizing-projects) what each message said and what you changed.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+seqkit checks its flags before it looks at files, so the faults appear
+in this order (exit status in brackets):
+
+1. `Error: unknown flag: --paired`, followed by the usage [255]. Delete
+   `--paired`.
+2. `[ERRO] stat –T: no such file or directory` [255]. The en dash made
+   `–T` a file name; retype it as `-T`.
+3. `[ERRO] stat data/raw/SRR6357070_l.fastq.gz: no such file or
+   directory` [255]. Change the letter `l` to the digit `1`.
+
+The fixed line is
+`seqkit stats -T data/raw/SRR6357070_1.fastq.gz data/raw/SRR6357070_2.fastq.gz`,
+and it prints [0]:
+
+```{.console}
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+data/raw/SRR6357070_1.fastq.gz	FASTQ	DNA	50000	5050000	101	101.0	101
+data/raw/SRR6357070_2.fastq.gz	FASTQ	DNA	50000	5050000	101	101.0	101
+```
+
+With several files, seqkit may also show a `processed files: 2 / 2`
+progress line; it is not an error.
+:::
+:::
+
+::: {.check}
+**Exercise 2. Read the help.** From `pixi run seqkit stats --help`, find
+the flag that adds quartiles and N50. Run `pixi run seqkit stats` with
+that flag and `-T` on both raw files. Which columns appear that were not
+there before? Do the two files differ in any of them?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`-a, --all`. The command is
+`pixi run seqkit stats -a -T data/raw/*.fastq.gz`. The new columns are
+`Q1`, `Q2`, `Q3` (quartiles of read length), `sum_gap`, `N50`,
+`N50_num`, `Q20(%)`, `Q30(%)`, `AvgQual`, `GC(%)`, and `sum_n`. With
+every read 101 bases long, the length columns are all 101. The quality
+columns differ: R1 has `Q30(%)` 92 and `AvgQual` 26.89, R2 90 and
+23.28; R2 also has far more `N` bases (`sum_n` 18,842 vs 280). Read 2
+being a little worse is common in Illumina data (@sec-fasta-fastq).
+:::
+:::
+
+::: {.check}
+**Exercise 3. Write a help request.** Pretend that exercise 1's first
+error is one you cannot solve. Write the request in
+`~/bioinf-ch04/help_request.md`, following @fig-good-request: the
+*Something doesn't run* fields (where it ran, the exact command, the
+complete message as text, `pixi info` with your home path replaced by
+`<home>`), plus what you expected, what you tried, the output of
+`pixi run seqkit version`, and a small example. For the example, make a
+100-read file with the `seqkit head` command from
+@sec-getting-help-asking, and **check that the same error still appears
+with it**. Then shrink once more: does the error need an input file at
+all? Do not submit the request. Then test it: could someone reproduce
+the failure from the request alone, without access to your home folder?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The 100-read file gives the same `unknown flag` error, so the example
+works. But one more cut shows it is not needed: the error appears with
+no input file at all, because seqkit rejects the flag before it looks
+for files:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats --paired
+echo $?
+```
+
+```{.console}
+Error: unknown flag: --paired
+Usage:
+  seqkit stats [flags]
+...
+unknown flag: --paired
+255
+```
+
+So the smallest example is the command alone. A model request:
+
+````{.default}
+**seqkit stats: `unknown flag: --paired` when counting read pairs**
+
+Where it ran: laptop, macOS 15 (Intel); no cluster.
+
+Trying to: count read pairs in two mate files; expected one number.
+
+Command (copied, run from the book's project folder):
+```
+pixi run seqkit stats --paired
+```
+No input file is needed: the same error appears with or without one.
+
+Message (abbreviated here; the full output, with the usage and
+flag list, is attached as error.txt):
+```
+Error: unknown flag: --paired
+Usage:
+  seqkit stats [flags]
+...
+unknown flag: --paired
+```
+Exit status: 255.
+
+Tried: `pixi run seqkit stats --help` lists no `--paired`.
+
+Versions: seqkit v2.14.0 (`pixi run seqkit version`), installed from
+the book environment (pixi.toml and pixi.lock from Chapter 2 of
+Computing for Bioinformatics). `pixi info`: Platform osx-64.
+````
+
+The test: yes, someone could reproduce it, because it needs only
+seqkit 2.14.0 and one command, with no data, and the request says where
+the environment comes from. Two things made the first draft fail the
+test: a message cut with `...` but called complete, and a file name
+(`small_R1.fastq.gz`) that a helper does not have. The fact most often
+left out is the **tool's version** (`pixi info` does not show it); a
+helper's first reply would be to ask for it.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Match the paper to the data.** Open the ENA record for
+the book's run,
+[SRR6357070](https://www.ebi.ac.uk/ena/browser/view/SRR6357070). Find
+the library layout, the instrument, and the read count, and say what
+unit the read count is in. Which methods paragraph of
+@wu2018repression describes this run: the RNA-seq one, or the TSS-seq
+one?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Recorded 2026-11-17, in case the page changes: sample GSM2879618,
+"Wild-type total RNA-Seq biological replicate 1"; layout `PAIRED`;
+Illumina HiSeq 2500; `read_count` 47,629,288; `base_count`
+9,621,116,176. For a paired run, ENA's read count is in **read pairs**:
+9,621,116,176 bases ÷ 47,629,288 = 202 bases per pair, which is
+101 + 101.
+
+It is the **RNA-seq** paragraph: about 45 million 101-base,
+strand-specific, paired-end reads on a HiSeq 2500 or 4000. The TSS-seq
+reads were 76 bases, single-end, on a HiSeq 4000. Our files are a
+50,000-pair subset made by nf-core, so ENA's checksums are for the full
+files, not ours (@sec-reference-data).
+:::
+:::
+
+::: {.check}
+**Exercise 5. Check an AI answer.** Take the assistant's answer from
+@sec-getting-help-ai, or, if you already use an AI assistant, ask it for
+a seqkit command that counts read pairs in `data/raw/`. Check every flag
+in `--help`, run the command, and say whether the output answers the
+question: pairs, not reads. Record in `NOTEBOOK.md` what you checked. If
+you use an assistant, paste only the question, no files.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The book's answer fails at the first check (`--paired` is not in
+`--help`) and at the second (`unknown flag`). Without the flag, seqkit
+prints one row per mate file, 50,000 reads each, so the run has 50,000
+pairs. An answer that adds the two `num_seqs` and reports 100,000 pairs
+has run correctly and still answered the wrong question. Another
+assistant may suggest something else; the checks are the same.
+:::
+:::
+
+## Further reading {#sec-getting-help-reading}
+
+- @dallolio2011ten --- written by people from Biostars and other
+  bioinformatics forums: how to ask so that strangers want to answer.
+- @haller2022ten --- what makes a bug report fixable, from a tool
+  developer's side; useful now, and again when you file issues in
+  @sec-github.
+- @auslander2026ten --- rules for using AI assistants in computational
+  biology, among them owning every line of generated code and using
+  chatbots to recall syntax, not scientific reasoning.
+- @stackoverflow2026minimal, [*How to create a Minimal, Reproducible
+  Example*](https://stackoverflow.com/help/minimal-reproducible-example)
+  --- one short page on shrinking a problem until someone else can run
+  it.

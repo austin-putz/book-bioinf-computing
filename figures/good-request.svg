@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 576" role="img" aria-labelledby="good-request-title">
+  <title id="good-request-title">A help request built from the book's Something doesn't run form plus four added fields, with why each field matters. Title: seqkit stats, unknown flag --paired when counting read pairs. Where it ran: laptop, macOS 15, no cluster. What I wanted and expected: count read pairs in the two mate files, one number for the sample. Exact command, copied. Complete message as text: Error: unknown flag: --paired. What I tried: seqkit stats --help shows no --paired flag. Versions: seqkit v2.14.0 from pixi run seqkit version, and pixi info with the home folder replaced by the placeholder &lt;home&gt;. Small example: the error appears with no input file at all, pixi run seqkit stats --paired, rerun to check. Before posting: replace home paths and user names with placeholders, never include passwords, keys, or tokens, and keep the fault itself visible.</title>
+  <rect x="10" y="10" width="430" height="484" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="34" font-size="14" font-weight="700">seqkit stats: <tspan class="mono">unknown flag: --paired</tspan></text>
+  <text x="472" y="34" font-size="13" font-weight="700">why it is there</text>
+  <text x="30" y="58" font-size="13" font-weight="700">Where it ran</text>
+  <text x="38" y="76" font-size="13">laptop · macOS 15 (Intel) · no cluster</text>
+  <text x="472" y="58" font-size="13" class="fill-muted">laptop, login node, and compute</text>
+  <text x="472" y="74" font-size="13" class="fill-muted">node can behave differently</text>
+  <line x1="452" y1="54" x2="464" y2="54" class="stroke-line" stroke-width="1.5"/>
+  <text x="30" y="106" font-size="13" font-weight="700">What I wanted, and expected</text>
+  <text x="38" y="124" font-size="13">count read pairs in the two mate files;</text>
+  <text x="38" y="140" font-size="13">expected one number for the sample</text>
+  <text x="472" y="106" font-size="13" class="fill-muted">helpers can spot a wrong</text>
+  <text x="472" y="122" font-size="13" class="fill-muted">approach, not just a wrong flag</text>
+  <line x1="452" y1="102" x2="464" y2="102" class="stroke-line" stroke-width="1.5"/>
+  <text x="30" y="170" font-size="13" font-weight="700">Exact command (copied)</text>
+  <text x="38" y="188" font-size="12" class="mono">pixi run seqkit stats --paired \</text>
+  <text x="38" y="204" font-size="12" class="mono">  data/raw/SRR6357070_1.fastq.gz \</text>
+  <text x="38" y="220" font-size="12" class="mono">  data/raw/SRR6357070_2.fastq.gz</text>
+  <text x="472" y="170" font-size="13" class="fill-muted">copied, not retyped: the fault</text>
+  <text x="472" y="186" font-size="13" class="fill-muted">may be a single character</text>
+  <line x1="452" y1="166" x2="464" y2="166" class="stroke-line" stroke-width="1.5"/>
+  <text x="30" y="250" font-size="13" font-weight="700">Complete message (as text)</text>
+  <text x="38" y="268" font-size="12" class="mono">Error: unknown flag: --paired</text>
+  <text x="38" y="284" font-size="12" class="mono">Usage: … (full output attached)</text>
+  <text x="472" y="250" font-size="13" class="fill-muted">text can be searched, quoted,</text>
+  <text x="472" y="266" font-size="13" class="fill-muted">and read by screen readers</text>
+  <line x1="452" y1="246" x2="464" y2="246" class="stroke-line" stroke-width="1.5"/>
+  <text x="30" y="314" font-size="13" font-weight="700">What I tried</text>
+  <text x="38" y="332" font-size="13">seqkit stats --help: no --paired flag</text>
+  <text x="472" y="314" font-size="13" class="fill-muted">saves helpers repeating it</text>
+  <line x1="452" y1="310" x2="464" y2="310" class="stroke-line" stroke-width="1.5"/>
+  <text x="30" y="362" font-size="13" font-weight="700">Versions</text>
+  <text x="38" y="380" font-size="12" class="mono">seqkit v2.14.0  (pixi run seqkit version)</text>
+  <text x="38" y="396" font-size="12" class="mono">pixi info: Platform osx-64,</text>
+  <text x="38" y="412" font-size="12" class="mono">  Manifest file: <tspan class="fill-warn" font-weight="700">&lt;home&gt;</tspan>/bioinf-book/pixi.toml</text>
+  <text x="472" y="362" font-size="13" class="fill-muted">the tool's own version, and</text>
+  <text x="472" y="378" font-size="13" class="fill-muted">where and how it was installed</text>
+  <line x1="452" y1="358" x2="464" y2="358" class="stroke-line" stroke-width="1.5"/>
+  <text x="30" y="442" font-size="13" font-weight="700">Small example</text>
+  <text x="38" y="460" font-size="13">fails with no input file at all:</text>
+  <text x="38" y="476" font-size="13"><tspan class="mono" font-size="12">pixi run seqkit stats --paired</tspan> (rerun: same error)</text>
+  <text x="472" y="442" font-size="13" class="fill-muted">someone else can reproduce it</text>
+  <text x="472" y="458" font-size="13" class="fill-muted">in seconds</text>
+  <line x1="452" y1="438" x2="464" y2="438" class="stroke-line" stroke-width="1.5"/>
+  <rect x="10" y="510" width="700" height="52" rx="8" class="fill-warn-soft stroke-warn"/>
+  <text x="26" y="531" font-size="13"><tspan font-weight="700">Before posting:</tspan> home paths and user names become placeholders (<tspan class="mono">&lt;home&gt;</tspan>); no passwords,</text>
+  <text x="26" y="549" font-size="13">keys, or tokens. Keep the fault visible: the <tspan class="mono">l</tspan> in <tspan class="mono">_l.fastq.gz</tspan>, an en dash, the wrong flag.</text>
+</svg>

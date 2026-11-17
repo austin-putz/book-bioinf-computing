@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 468" role="img" aria-labelledby="troubleshooting-checklist-title"
+     data-step-labels="Read|Log|Where|Inputs|Resources|Changes|Small">
+  <title id="troubleshooting-checklist-title">A troubleshooting checklist in seven steps, each with an exit when the problem is solved. 1, read the message, all of it. 2, find the log. 3, where am I, with what: pwd, hostname, ls, pixi run or not. 4, do the inputs exist and look right: ls -l, head, gzip -t, md5sum -c. 5, are resources short: disk space, quota, time limit, Killed. 6, what changed since it last worked. 7, make it small: 100 reads, one sample. The wrong-folder case stops at step 3 and the unmatched *.fq.gz case at step 4. If the problem is still not solved after step 7, leave the checklist and ask for help.</title>
+  <desc data-caption="1">Step 1. Read the whole message: who printed it, what failed, and on what. Often that is enough, and you stop.</desc>
+  <desc data-caption="2">Step 2. Not solved? Find the log. The terminal may show only the last lines; a log can hold the first error.</desc>
+  <desc data-caption="3">Step 3. Check where you are and with which software. The wrong-folder case stops here: pwd shows you are not in the project.</desc>
+  <desc data-caption="4">Step 4. Check that the inputs exist and look right. The *.fq.gz case stops here: ls shows the files end in .fastq.gz.</desc>
+  <desc data-caption="5">Step 5. Check resources: disk space, quota, time, memory.</desc>
+  <desc data-caption="6">Step 6. Ask what changed since it last worked: data, versions, folders, machines.</desc>
+  <desc data-caption="7">Step 7. Make it small. Still stuck after that? Leave the checklist and ask, with what you checked.</desc>
+  <defs>
+    <marker id="troubleshooting-checklist-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+    <marker id="troubleshooting-checklist-arrow-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-good"/>
+    </marker>
+  </defs>
+  <text x="650" y="20" font-size="13" text-anchor="middle" class="fill-good" font-weight="700">solved?</text>
+  <g data-show="1">
+    <rect x="56" y="34" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="54" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="59" font-size="14" font-weight="700" text-anchor="middle">1</text>
+    <text x="68" y="51" font-size="14" font-weight="700">Read the message, all of it</text>
+    <text x="68" y="68" font-size="12.5" class="mono fill-muted">who, what, on what; the earliest relevant failure</text>
+    <line x1="580" y1="54" x2="616" y2="54" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="42" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="59" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="2">
+    <line x1="32" y1="69" x2="32" y2="90" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="56" y="86" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="106" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="111" font-size="14" font-weight="700" text-anchor="middle">2</text>
+    <text x="68" y="103" font-size="14" font-weight="700">Find the log</text>
+    <text x="68" y="120" font-size="12.5" class="mono fill-muted">the terminal · logs/ · later: slurm-&lt;jobid&gt;.out</text>
+    <line x1="580" y1="106" x2="616" y2="106" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="94" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="111" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="3">
+    <line x1="32" y1="121" x2="32" y2="142" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="56" y="138" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="158" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="163" font-size="14" font-weight="700" text-anchor="middle">3</text>
+    <text x="68" y="155" font-size="14" font-weight="700">Where am I, with what?</text>
+    <text x="68" y="172" font-size="12.5" class="mono fill-muted">pwd · hostname · ls · pixi run or not?</text>
+    <line x1="580" y1="158" x2="616" y2="158" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="146" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="163" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="4">
+    <line x1="32" y1="173" x2="32" y2="194" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="56" y="190" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="210" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="215" font-size="14" font-weight="700" text-anchor="middle">4</text>
+    <text x="68" y="207" font-size="14" font-weight="700">Do the inputs exist and look right?</text>
+    <text x="68" y="224" font-size="12.5" class="mono fill-muted">ls -l · head · gzip -t · md5sum -c</text>
+    <line x1="580" y1="210" x2="616" y2="210" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="198" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="215" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="5">
+    <line x1="32" y1="225" x2="32" y2="246" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="56" y="242" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="262" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="267" font-size="14" font-weight="700" text-anchor="middle">5</text>
+    <text x="68" y="259" font-size="14" font-weight="700">Are resources short?</text>
+    <text x="68" y="276" font-size="12.5" class="mono fill-muted">disk space · quota · time limit · Killed</text>
+    <line x1="580" y1="262" x2="616" y2="262" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="250" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="267" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="6">
+    <line x1="32" y1="277" x2="32" y2="298" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="56" y="294" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="314" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="319" font-size="14" font-weight="700" text-anchor="middle">6</text>
+    <text x="68" y="311" font-size="14" font-weight="700">What changed since it last worked?</text>
+    <text x="68" y="328" font-size="12.5" class="mono fill-muted">new data · new version · new folder · new machine</text>
+    <line x1="580" y1="314" x2="616" y2="314" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="302" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="319" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="7">
+    <line x1="32" y1="329" x2="32" y2="350" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="56" y="346" width="520" height="42" rx="6" class="fill-surface stroke-line"/>
+    <circle cx="32" cy="366" r="14" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="32" y="371" font-size="14" font-weight="700" text-anchor="middle">7</text>
+    <text x="68" y="363" font-size="14" font-weight="700">Make it small</text>
+    <text x="68" y="380" font-size="12.5" class="mono fill-muted">100 reads · one sample · does it still fail?</text>
+    <line x1="580" y1="366" x2="616" y2="366" class="stroke-good" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow-good)"/>
+    <rect x="620" y="354" width="60" height="24" rx="12" class="fill-good-soft stroke-good"/>
+    <text x="650" y="371" font-size="13" text-anchor="middle">stop</text>
+  </g>
+  <g data-show="3">
+    <rect x="462" y="144" width="104" height="30" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="514" y="157" font-size="12" text-anchor="middle">case:</text>
+    <text x="514" y="170" font-size="12" text-anchor="middle" class="mono">wrong folder</text>
+  </g>
+  <g data-show="4">
+    <rect x="462" y="196" width="104" height="30" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="514" y="209" font-size="12" text-anchor="middle">case:</text>
+    <text x="514" y="222" font-size="12" text-anchor="middle" class="mono">*.fq.gz</text>
+  </g>
+  <g data-show="7">
+    <line x1="32" y1="381" x2="32" y2="408" class="stroke-muted" stroke-width="1.5" marker-end="url(#troubleshooting-checklist-arrow)"/>
+    <rect x="12" y="412" width="564" height="46" rx="8" class="fill-surface stroke-ink" stroke-width="1.5" stroke-dasharray="6 4"/>
+    <text x="28" y="432" font-size="14" font-weight="700">Still stuck? Leave the checklist and ask.</text>
+    <text x="28" y="450" font-size="13" class="fill-muted">Search first, then write a help request that says what you checked.</text>
+  </g>
+</svg>

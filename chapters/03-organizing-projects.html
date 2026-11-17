@@ -864,6 +864,38 @@ Figure&nbsp;3.1: The book’s project at the end of this chapter. Inputs (left) 
 </figcaption>
 </figure>
 </div>
+<p>The same project as text: this is what the <code>tree</code> command prints, run inside <code>~/bioinf-computing</code> at the end of the chapter. <code>tree</code> comes with the book environment, so start it with <code>pixi run</code>, as you did seqkit in <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>. Indentation shows what is inside what, <code>-&gt;</code> marks a link and where it points, and the last line counts what it found.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run tree</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>.
+├── data
+│   ├── meta
+│   │   ├── reads.tsv
+│   │   ├── samples.tsv
+│   │   └── samplesheet_upstream.csv
+│   ├── raw
+│   │   ├── checksums.md5
+│   │   ├── SRR6357070_1.fastq.gz
+│   │   └── SRR6357070_2.fastq.gz
+│   ├── README.md
+│   └── ref -&gt; /home/you/bioinf-shared/references/yeast_R64-1-1_test
+├── logs
+│   └── 01_count_reads_2026-11-17T122453_7WFs.log
+├── NOTEBOOK.md
+├── pixi.lock
+├── pixi.toml
+├── README.md
+├── results
+│   └── read_counts.tsv
+└── src
+    └── 01_count_reads.sh
+
+7 directories, 15 files</code></pre>
+<p><code>tree</code> sorts by name and, like <code>ls</code>, hides names that start with a dot, so <code>.pixi/</code> is missing; <code>tree -a</code> shows it (and its thousands of files). <code>tree -L 2</code> stops two levels down, which helps in big projects. Later chapters use <code>tree</code> to show a tool’s inputs and outputs; run it yourself to check your folder against the book.</p>
 <p>The rules behind it, one sentence each:</p>
 <ul>
 <li><strong>One project, one folder.</strong> Everything an analysis needs, or points to, is inside it.</li>
@@ -1008,18 +1040,18 @@ Table&nbsp;3.1: The folders and files of the book’s project. “Back it up?”
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-3" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-3-1"><a href="#annotated-cell-3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/names <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/names</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-3-2" class="code-annotation-target"><a href="#annotated-cell-3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> run1.sh run2.sh run10.sh final.txt <span class="st">"Final FINAL (2).txt"</span> <span class="st">"9-15-25 counts.csv"</span> <span class="st">"10-2-26 counts.csv"</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-3" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-3-3" class="code-annotation-target"><a href="#annotated-cell-3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-1</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-5" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-5-1"><a href="#annotated-cell-5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/names <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/names</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-5-2" class="code-annotation-target"><a href="#annotated-cell-5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> run1.sh run2.sh run10.sh final.txt <span class="st">"Final FINAL (2).txt"</span> <span class="st">"9-15-25 counts.csv"</span> <span class="st">"10-2-26 counts.csv"</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-5" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-5-3" class="code-annotation-target"><a href="#annotated-cell-5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-1</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-3" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="2" data-code-annotation="1"><code>touch</code> makes empty files. The quotes keep each name with spaces in one piece.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="2" data-code-annotation="1"><code>touch</code> makes empty files. The quotes keep each name with spaces in one piece.</span>
 </dd>
-<dt data-target-cell="annotated-cell-3" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-5" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-3" data-code-lines="3" data-code-annotation="2"><code>-1</code> (the digit one) lists one name per line.</span>
+<span data-code-cell="annotated-cell-5" data-code-lines="3" data-code-annotation="2"><code>-1</code> (the digit one) lists one name per line.</span>
 </dd>
 </dl>
 <pre class="console"><code>'10-2-26 counts.csv'
@@ -1034,7 +1066,7 @@ run2.sh</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span> <span class="at">-l</span> 10-2-26 counts.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">wc</span> <span class="at">-l</span> 10-2-26 counts.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>wc: 10-2-26: No such file or directory
 wc: counts.csv: No such file or directory
@@ -1127,14 +1159,14 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-7" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-7-1"><a href="#annotated-cell-7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-7" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-7-2" class="code-annotation-target"><a href="#annotated-cell-7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/</span>
-<span id="annotated-cell-7-3"><a href="#annotated-cell-7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-9" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-9-1"><a href="#annotated-cell-9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-9" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-9-2" class="code-annotation-target"><a href="#annotated-cell-9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/</span>
+<span id="annotated-cell-9-3"><a href="#annotated-cell-9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-7" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-9" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-7" data-code-lines="2" data-code-annotation="1"><code>mv</code> moves files; the last name is where they go. Moving within one disk only changes where the file is listed, so it is instant.</span>
+<span data-code-cell="annotated-cell-9" data-code-lines="2" data-code-annotation="1"><code>mv</code> moves files; the last name is where they go. Moving within one disk only changes where the file is listed, so it is instant.</span>
 </dd>
 </dl>
 <pre class="console"><code>total 4368
@@ -1156,9 +1188,9 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_1.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_1.fastq.gz</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_1.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_1.fastq.gz</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/raw/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Run only the line for the file you are missing. If a file is already in <code>data/raw/</code> from an earlier visit to this chapter, leave it: the check below tells you whether it is intact.</p>
 </div>
@@ -1168,22 +1200,22 @@ Table&nbsp;3.2: Rules for file names, with the problem each one avoids.
 <div class="code-with-filename-file">
 <pre><strong>data/raw/checksums.md5</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-filename="data/raw/checksums.md5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>d19f3c7a8b4016fa641458257b99a1a1  SRR6357070_1.fastq.gz</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>d126cc66ed169f69af2c07da0dd73e02  SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="data/raw/checksums.md5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>d19f3c7a8b4016fa641458257b99a1a1  SRR6357070_1.fastq.gz</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>d126cc66ed169f69af2c07da0dd73e02  SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Each line is a checksum, two spaces, and a file name. Now check the files against it:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-10" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-10-1"><a href="#annotated-cell-10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-10" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-10-2" class="code-annotation-target"><a href="#annotated-cell-10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
-<span id="annotated-cell-10-3"><a href="#annotated-cell-10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-12" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-12-1"><a href="#annotated-cell-12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-12" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-12-2" class="code-annotation-target"><a href="#annotated-cell-12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
+<span id="annotated-cell-12-3"><a href="#annotated-cell-12-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-10" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-12" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-10" data-code-lines="2" data-code-annotation="1"><code>md5sum</code> computes MD5 checksums; <code>-c</code> (check) reads a list of them, recomputes each file’s, and compares.</span>
+<span data-code-cell="annotated-cell-12" data-code-lines="2" data-code-annotation="1"><code>md5sum</code> computes MD5 checksums; <code>-c</code> (check) reads a list of them, recomputes each file’s, and compares.</span>
 </dd>
 </dl>
 <pre class="console"><code>SRR6357070_1.fastq.gz: OK
@@ -1279,26 +1311,26 @@ Figure&nbsp;3.2: Checksums of the real read-1 file. An exact copy gives the same
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-13-1"><a href="#annotated-cell-13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/practice/locked <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/practice</span>
-<span id="annotated-cell-13-2"><a href="#annotated-cell-13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"first line"</span> <span class="op">&gt;</span> locked/notes.txt</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-13-3" class="code-annotation-target"><a href="#annotated-cell-13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w locked/notes.txt locked</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-13-4" class="code-annotation-target"><a href="#annotated-cell-13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"second line"</span> <span class="op">&gt;&gt;</span> locked/notes.txt</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-13" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-13-5" class="code-annotation-target"><a href="#annotated-cell-13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> locked/notes.txt</span>
-<span id="annotated-cell-13-6"><a href="#annotated-cell-13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> locked/notes.txt notes_moved.txt</span>
-<span id="annotated-cell-13-7"><a href="#annotated-cell-13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> locked/new.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-15" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-15-1"><a href="#annotated-cell-15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/practice/locked <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/practice</span>
+<span id="annotated-cell-15-2"><a href="#annotated-cell-15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"first line"</span> <span class="op">&gt;</span> locked/notes.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-15-3" class="code-annotation-target"><a href="#annotated-cell-15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w locked/notes.txt locked</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-15-4" class="code-annotation-target"><a href="#annotated-cell-15-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"second line"</span> <span class="op">&gt;&gt;</span> locked/notes.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-15" data-target-annotation="3" onclick="event.preventDefault();">3</a><span id="annotated-cell-15-5" class="code-annotation-target"><a href="#annotated-cell-15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> locked/notes.txt</span>
+<span id="annotated-cell-15-6"><a href="#annotated-cell-15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> locked/notes.txt notes_moved.txt</span>
+<span id="annotated-cell-15-7"><a href="#annotated-cell-15-7" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> locked/new.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-13" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-15" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-13" data-code-lines="3" data-code-annotation="1"><code>chmod</code> changes a file’s permissions; <code>a-w</code> removes (<code>-</code>) write permission (<code>w</code>) for all users (<code>a</code>). Here it locks both the file and the folder that holds it.</span>
+<span data-code-cell="annotated-cell-15" data-code-lines="3" data-code-annotation="1"><code>chmod</code> changes a file’s permissions; <code>a-w</code> removes (<code>-</code>) write permission (<code>w</code>) for all users (<code>a</code>). Here it locks both the file and the folder that holds it.</span>
 </dd>
-<dt data-target-cell="annotated-cell-13" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-15" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-13" data-code-lines="4" data-code-annotation="2">Try to add a line, then (next lines) to delete the file, move it out, and add a new file.</span>
+<span data-code-cell="annotated-cell-15" data-code-lines="4" data-code-annotation="2">Try to add a line, then (next lines) to delete the file, move it out, and add a new file.</span>
 </dd>
-<dt data-target-cell="annotated-cell-13" data-target-annotation="3">3</dt>
+<dt data-target-cell="annotated-cell-15" data-target-annotation="3">3</dt>
 <dd>
-<span data-code-cell="annotated-cell-13" data-code-lines="5" data-code-annotation="3"><code>-f</code> deletes without asking. Without it, <code>rm</code> may stop to ask about a read-only file; a job running unattended cannot answer.</span>
+<span data-code-cell="annotated-cell-15" data-code-lines="5" data-code-annotation="3"><code>-f</code> deletes without asking. Without it, <code>rm</code> may stop to ask about a read-only file; a job running unattended cannot answer.</span>
 </dd>
 </dl>
 <pre class="console"><code>bash: locked/notes.txt: Permission denied
@@ -1310,10 +1342,10 @@ touch: cannot touch 'locked/new.txt': Permission denied</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> open <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"first line"</span> <span class="op">&gt;</span> open/notes.txt</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w open/notes.txt</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> open/notes.txt</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> open</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> open <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"first line"</span> <span class="op">&gt;</span> open/notes.txt</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w open/notes.txt</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-f</span> open/notes.txt</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> open</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>rm -f</code> printed nothing and <code>ls</code> shows an empty folder: the read-only file is gone. (Without <code>-f</code>, <code>rm</code> asks before deleting a read-only file when its input is a terminal, even from a script you started there. With <code>-f</code>, or in a job running unattended, nothing asks.)</p>
 <p><strong>Now protect the real raw data</strong>, files and folder:</p>
@@ -1321,15 +1353,15 @@ touch: cannot touch 'locked/new.txt': Permission denied</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-16-1"><a href="#annotated-cell-16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="annotated-cell-16-2"><a href="#annotated-cell-16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-16" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-16-3" class="code-annotation-target"><a href="#annotated-cell-16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> data/raw</span>
-<span id="annotated-cell-16-4"><a href="#annotated-cell-16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-18-1"><a href="#annotated-cell-18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="annotated-cell-18-2"><a href="#annotated-cell-18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-18" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-18-3" class="code-annotation-target"><a href="#annotated-cell-18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> data/raw</span>
+<span id="annotated-cell-18-4"><a href="#annotated-cell-18-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/raw</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-16" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-18" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-16" data-code-lines="3" data-code-annotation="1"><code>-d</code> lists the folder itself instead of its contents.</span>
+<span data-code-cell="annotated-cell-18" data-code-lines="3" data-code-annotation="1"><code>-d</code> lists the folder itself instead of its contents.</span>
 </dd>
 </dl>
 <pre class="console"><code>dr-xr-xr-x 2 you you 4096 Nov 17 11:22 data/raw
@@ -1342,10 +1374,10 @@ total 4372
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+w data/raw data/raw/checksums.md5</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># add the new file and its line in checksums.md5, then:</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+w data/raw data/raw/checksums.md5</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># add the new file and its line in checksums.md5, then:</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w data/raw/<span class="pp">*</span> data/raw</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> explains permissions properly. Keep raw reads compressed, and never unzip them in place: every tool in this book reads <code>.gz</code> directly.</p>
 <div class="callout callout-style-default callout-important callout-titled">
@@ -1389,24 +1421,24 @@ total 4372
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/genome.fa.gz</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/genes.gtf.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/genome.fa.gz</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/genes.gtf.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Give it a checksum list, as the person who set up the folder would:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>~/bioinf-shared/references/yeast_R64-1-1_test/checksums.md5</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15" data-filename="~/bioinf-shared/references/yeast_R64-1-1_test/checksums.md5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>4222a07bf01b12782245e0ff774459fe  genome.fa.gz</span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>504334f6741ee771c665ae845429087f  genes.gtf.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17" data-filename="~/bioinf-shared/references/yeast_R64-1-1_test/checksums.md5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>4222a07bf01b12782245e0ff774459fe  genome.fa.gz</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>504334f6741ee771c665ae845429087f  genes.gtf.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>genome.fa.gz: OK
 genes.gtf.gz: OK</code></pre>
@@ -1415,37 +1447,37 @@ genes.gtf.gz: OK</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>~/bioinf-shared/references/yeast_R64-1-1_test/README.md</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="~/bioinf-shared/references/yeast_R64-1-1_test/README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Yeast test reference (stand-in for a lab's shared references)</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>genome.fa.gz: S. cerevisiae R64-1-1, chromosome I only (one sequence, &gt;I)</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>genes.gtf.gz: matching gene annotation (test subset)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: nf-core/test-datasets, rnaseq branch, folder reference/,</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  commit 9dd6d014f560e182047992834a8d267214fbccd1</span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Downloaded: 2026-11-17 (write your date)</span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums: checksums.md5 (MD5)</span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>License: MIT (nf-core/test-datasets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-filename="~/bioinf-shared/references/yeast_R64-1-1_test/README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Yeast test reference (stand-in for a lab's shared references)</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>genome.fa.gz: S. cerevisiae R64-1-1, chromosome I only (one sequence, &gt;I)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>genes.gtf.gz: matching gene annotation (test subset)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: nf-core/test-datasets, rnaseq branch, folder reference/,</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  commit 9dd6d014f560e182047992834a8d267214fbccd1</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Downloaded: 2026-11-17 (write your date)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums: checksums.md5 (MD5)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>License: MIT (nf-core/test-datasets)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then protect the folder, as a lab would protect its shared references:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w ~/bioinf-shared/references/yeast_R64-1-1_test/<span class="pp">*</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> a-w ~/bioinf-shared/references/yeast_R64-1-1_test/<span class="pp">*</span> ~/bioinf-shared/references/yeast_R64-1-1_test</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Link it into the project:</strong></p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-25-1"><a href="#annotated-cell-25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-25" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-25-2" class="code-annotation-target"><a href="#annotated-cell-25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/bioinf-shared/references/yeast_R64-1-1_test data/ref</span>
-<span id="annotated-cell-25-3"><a href="#annotated-cell-25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/ref</span>
-<span id="annotated-cell-25-4"><a href="#annotated-cell-25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/ref/</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-27-1"><a href="#annotated-cell-27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-27-2" class="code-annotation-target"><a href="#annotated-cell-27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> ~/bioinf-shared/references/yeast_R64-1-1_test data/ref</span>
+<span id="annotated-cell-27-3"><a href="#annotated-cell-27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/ref</span>
+<span id="annotated-cell-27-4"><a href="#annotated-cell-27-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/ref/</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-25" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-27" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-25" data-code-lines="2" data-code-annotation="1"><code>ln -s target name</code> makes a symbolic link called <code>name</code> that points to <code>target</code>.</span>
+<span data-code-cell="annotated-cell-27" data-code-lines="2" data-code-annotation="1"><code>ln -s target name</code> makes a symbolic link called <code>name</code> that points to <code>target</code>.</span>
 </dd>
 </dl>
 <pre class="console"><code>lrwxrwxrwx 1 you you 53 Nov 17 11:22 data/ref -&gt; /home/you/bioinf-shared/references/yeast_R64-1-1_test
@@ -1539,19 +1571,19 @@ Figure&nbsp;3.3: What a symbolic link is, and what each action does to it. Use <
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-27-1"><a href="#annotated-cell-27-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
-<span id="annotated-cell-27-2"><a href="#annotated-cell-27-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> target <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"original line"</span> <span class="op">&gt;</span> target/note.txt</span>
-<span id="annotated-cell-27-3"><a href="#annotated-cell-27-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> target toylink</span>
-<span id="annotated-cell-27-4"><a href="#annotated-cell-27-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"added through the link"</span> <span class="op">&gt;&gt;</span> toylink/note.txt</span>
-<span id="annotated-cell-27-5"><a href="#annotated-cell-27-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> target/note.txt</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-27" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-27-6" class="code-annotation-target"><a href="#annotated-cell-27-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span> toylink</span>
-<span id="annotated-cell-27-7"><a href="#annotated-cell-27-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span>
-<span id="annotated-cell-27-8"><a href="#annotated-cell-27-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> target/note.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-29-1"><a href="#annotated-cell-29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
+<span id="annotated-cell-29-2"><a href="#annotated-cell-29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> target <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> <span class="st">"original line"</span> <span class="op">&gt;</span> target/note.txt</span>
+<span id="annotated-cell-29-3"><a href="#annotated-cell-29-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> target toylink</span>
+<span id="annotated-cell-29-4"><a href="#annotated-cell-29-4" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"added through the link"</span> <span class="op">&gt;&gt;</span> toylink/note.txt</span>
+<span id="annotated-cell-29-5"><a href="#annotated-cell-29-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> target/note.txt</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-29" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-29-6" class="code-annotation-target"><a href="#annotated-cell-29-6" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span> toylink</span>
+<span id="annotated-cell-29-7"><a href="#annotated-cell-29-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span></span>
+<span id="annotated-cell-29-8"><a href="#annotated-cell-29-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> target/note.txt</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-27" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-29" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-27" data-code-lines="6" data-code-annotation="1"><code>unlink</code> removes one link (or file) and nothing else.</span>
+<span data-code-cell="annotated-cell-29" data-code-lines="6" data-code-annotation="1"><code>unlink</code> removes one link (or file) and nothing else.</span>
 </dd>
 </dl>
 <pre class="console"><code>original line
@@ -1776,10 +1808,10 @@ Table&nbsp;3.3: Is it backed up? Site facts from SCINet’s <a href="https://sci
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/meta/samplesheet_upstream.csv https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> data/meta/samplesheet_upstream.csv</span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> data/meta/samplesheet_upstream.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> data/meta/samplesheet_upstream.csv https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> data/meta/samplesheet_upstream.csv</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="ex">code</span> data/meta/samplesheet_upstream.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>fb28ab0a8cda268b2befd974804b2925  data/meta/samplesheet_upstream.csv</code></pre>
 <p>The checksum matches the one in the book’s <code>data/README.md</code>, so you have the same file. Its contents, with the long download addresses shortened to <code>…/</code> (the real file has the full URL of each FASTQ file):</p>
@@ -1787,14 +1819,14 @@ Table&nbsp;3.3: Is it backed up? Site facts from SCINet’s <a href="https://sci
 <div class="code-with-filename-file">
 <pre><strong>data/meta/samplesheet_upstream.csv (shortened)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="data/meta/samplesheet_upstream.csv (shortened)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>sample,fastq_1,fastq_2,strandedness</span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>WT_REP1,…/SRR6357070_1.fastq.gz,…/SRR6357070_2.fastq.gz,auto</span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>WT_REP1,…/SRR6357071_1.fastq.gz,…/SRR6357071_2.fastq.gz,auto</span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>WT_REP2,…/SRR6357072_1.fastq.gz,…/SRR6357072_2.fastq.gz,reverse</span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP1,…/SRR6357073_1.fastq.gz,,reverse</span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP2,…/SRR6357074_1.fastq.gz,,reverse</span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP2,…/SRR6357075_1.fastq.gz,,reverse</span>
-<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>RAP1_IAA_30M_REP1,…/SRR6357076_1.fastq.gz,…/SRR6357076_2.fastq.gz,reverse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="data/meta/samplesheet_upstream.csv (shortened)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>sample,fastq_1,fastq_2,strandedness</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>WT_REP1,…/SRR6357070_1.fastq.gz,…/SRR6357070_2.fastq.gz,auto</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>WT_REP1,…/SRR6357071_1.fastq.gz,…/SRR6357071_2.fastq.gz,auto</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>WT_REP2,…/SRR6357072_1.fastq.gz,…/SRR6357072_2.fastq.gz,reverse</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP1,…/SRR6357073_1.fastq.gz,,reverse</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP2,…/SRR6357074_1.fastq.gz,,reverse</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>RAP1_UNINDUCED_REP2,…/SRR6357075_1.fastq.gz,,reverse</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>RAP1_IAA_30M_REP1,…/SRR6357076_1.fastq.gz,…/SRR6357076_2.fastq.gz,reverse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Look before reading on. There are 7 rows but only 5 sample labels: <code>WT_REP1</code> and <code>RAP1_UNINDUCED_REP2</code> each have two rows. Three rows have an empty <code>fastq_2</code>, so those runs are given as single-end. And a <code>strandedness</code> column says how each library was made. In this sheet each row is one sequencing run, with its mate files; rows that share a label are merged into one sample by the pipeline (<a href="26-nf-core.html" class="quarto-xref"><span>Chapter 26</span></a>).</p>
 <p><strong>Now check the labels against the source.</strong> The runs are public, so the archive has a record for each. The European Nucleotide Archive’s records (<a href="https://www.ebi.ac.uk/ena/browser/view/SRR6357070">ENA</a>, for the first run) (checked 2026-11-17) tell a different story: the seven runs are <strong>seven different biological samples</strong> (GSM2879618 to GSM2879624), and all seven were sequenced paired-end (<a href="#fig-sample-sheet" class="quarto-xref">Figure&nbsp;<span>3.4</span></a>). The two <code>WT_REP1</code> runs are wild-type replicates 1 and 2; the sheet’s <code>WT_REP2</code> is replicate 3.</p>
@@ -1873,12 +1905,12 @@ Figure&nbsp;3.4: The test sample sheet beside the archive record. The sheet grou
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tfastq_1\tfastq_2\n'</span> <span class="op">&gt;</span> data/meta/reads.tsv</span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tdata/raw/SRR6357070_1.fastq.gz\tdata/raw/SRR6357070_2.fastq.gz\n'</span> <span class="op">&gt;&gt;</span> data/meta/reads.tsv</span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tgeo_sample\tcondition\treplicate\n'</span> <span class="op">&gt;</span> data/meta/samples.tsv</span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tGSM2879618\twild_type\t1\n'</span> <span class="op">&gt;&gt;</span> data/meta/samples.tsv</span>
-<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/meta/reads.tsv data/meta/samples.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tfastq_1\tfastq_2\n'</span> <span class="op">&gt;</span> data/meta/reads.tsv</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tdata/raw/SRR6357070_1.fastq.gz\tdata/raw/SRR6357070_2.fastq.gz\n'</span> <span class="op">&gt;&gt;</span> data/meta/reads.tsv</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample\trun\tgeo_sample\tcondition\treplicate\n'</span> <span class="op">&gt;</span> data/meta/samples.tsv</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'WT_REP1\tSRR6357070\tGSM2879618\twild_type\t1\n'</span> <span class="op">&gt;&gt;</span> data/meta/samples.tsv</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> data/meta/reads.tsv data/meta/samples.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>sample  run     fastq_1 fastq_2
 WT_REP1 SRR6357070      data/raw/SRR6357070_1.fastq.gz  data/raw/SRR6357070_2.fastq.gz
@@ -1922,35 +1954,35 @@ WT_REP1 SRR6357070      GSM2879618      wild_type       1</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>src/01_count_reads.sh</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="src/01_count_reads.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 01_count_reads.sh: check the raw FASTQ files, then count their reads.</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run from the project folder:  pixi run bash src/01_count_reads.sh</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-euo</span> pipefail</span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> results logs</span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="va">log</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span> <span class="st">"logs/01_count_reads_</span><span class="va">$(</span><span class="fu">date</span> +%Y-%m-%dT%H%M%S<span class="va">)</span><span class="st">_XXXX.log"</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"started:  </span><span class="va">$(</span><span class="fu">date</span> <span class="st">"+%Y-%m-%d %H:%M:%S %z"</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"host:     </span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"script:   </span><span class="va">$(</span><span class="fu">md5sum</span> src/01_count_reads.sh<span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"seqkit:   </span><span class="va">$(</span><span class="ex">seqkit</span> version<span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"checking inputs against data/raw/checksums.md5:"</span></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">(</span><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5<span class="kw">)</span></span>
-<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"command:  seqkit stats -T data/raw/*.fastq.gz"</span></span>
-<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">seqkit</span> stats <span class="at">--quiet</span> <span class="at">-T</span> data/raw/<span class="pp">*</span>.fastq.gz <span class="op">&gt;</span> results/read_counts.tsv.tmp</span>
-<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mv</span> results/read_counts.tsv.tmp results/read_counts.tsv</span>
-<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"output:   </span><span class="va">$(</span><span class="fu">md5sum</span> results/read_counts.tsv<span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"finished: </span><span class="va">$(</span><span class="fu">date</span> <span class="st">"+%Y-%m-%d %H:%M:%S %z"</span><span class="va">)</span><span class="st">"</span></span>
-<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="st">"</span><span class="va">$log</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="src/01_count_reads.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 01_count_reads.sh: check the raw FASTQ files, then count their reads.</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Run from the project folder:  pixi run bash src/01_count_reads.sh</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="bu">set</span> <span class="at">-euo</span> pipefail</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> results logs</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="va">log</span><span class="op">=</span><span class="st">"</span><span class="va">$(</span><span class="fu">mktemp</span> <span class="st">"logs/01_count_reads_</span><span class="va">$(</span><span class="fu">date</span> +%Y-%m-%dT%H%M%S<span class="va">)</span><span class="st">_XXXX.log"</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="kw">{</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"started:  </span><span class="va">$(</span><span class="fu">date</span> <span class="st">"+%Y-%m-%d %H:%M:%S %z"</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"host:     </span><span class="va">$(</span><span class="fu">hostname</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"script:   </span><span class="va">$(</span><span class="fu">md5sum</span> src/01_count_reads.sh<span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"seqkit:   </span><span class="va">$(</span><span class="ex">seqkit</span> version<span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"checking inputs against data/raw/checksums.md5:"</span></span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>  <span class="kw">(</span><span class="bu">cd</span> data/raw <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5<span class="kw">)</span></span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"command:  seqkit stats -T data/raw/*.fastq.gz"</span></span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>  <span class="ex">seqkit</span> stats <span class="at">--quiet</span> <span class="at">-T</span> data/raw/<span class="pp">*</span>.fastq.gz <span class="op">&gt;</span> results/read_counts.tsv.tmp</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mv</span> results/read_counts.tsv.tmp results/read_counts.tsv</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"output:   </span><span class="va">$(</span><span class="fu">md5sum</span> results/read_counts.tsv<span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">"finished: </span><span class="va">$(</span><span class="fu">date</span> <span class="st">"+%Y-%m-%d %H:%M:%S %z"</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a><span class="kw">}</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> <span class="st">"</span><span class="va">$log</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>Run it</strong> from the project folder, through pixi, so it finds seqkit:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>started:  2026-11-17 12:24:53 -0600
 host:     your-laptop
@@ -1967,8 +1999,8 @@ finished: 2026-11-17 12:24:53 -0600</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> results/read_counts.tsv</span>
-<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> logs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> results/read_counts.tsv</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> logs</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>file    format  type    num_seqs        sum_len min_len avg_len max_len
 data/raw/SRR6357070_1.fastq.gz  FASTQ   DNA     50000   5050000 101     101.0   101
@@ -1988,41 +2020,41 @@ data/raw/SRR6357070_2.fastq.gz  FASTQ   DNA     50000   5050000 101     101.0   
 <div class="code-with-filename-file">
 <pre><strong>data/README.md</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="data/README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data in this project</span></span>
-<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Raw reads: data/raw/</span></span>
-<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Files: SRR6357070_1.fastq.gz, SRR6357070_2.fastq.gz (paired-end, read 1 and read 2)</span>
-<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What: S. cerevisiae RNA-seq, run SRR6357070 (GEO sample GSM2879618,</span>
-<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>  wild type, biological replicate 1), sub-sampled to 50,000 read pairs</span>
-<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>  by nf-core for testing</span>
-<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/</span>
-<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Accessions: GEO GSE110004; SRA run SRR6357070</span>
-<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Downloaded: 2026-11-13 (Chapter 1; write your own date)</span>
-<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums: data/raw/checksums.md5 (MD5). SHA-256:</span>
-<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>  3f50541fa9cf2bedc87e7b682ada0fccfdfcd6d27b9bb81f17be230ff140ebe7  SRR6357070_1.fastq.gz</span>
-<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>  8590e1e01e568fba256aa7dced40519604cbb111ee44ab106a3dcb869660aaf4  SRR6357070_2.fastq.gz</span>
-<span id="cb33-15"><a href="#cb33-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>License: MIT (nf-core/test-datasets); original reads public in SRA</span>
-<span id="cb33-16"><a href="#cb33-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cite: Wu et al. (2018), Molecular Cell 72(6), 942-954.e7,</span>
-<span id="cb33-17"><a href="#cb33-17" aria-hidden="true" tabindex="-1"></a>  doi:10.1016/j.molcel.2018.10.018</span>
-<span id="cb33-18"><a href="#cb33-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-19"><a href="#cb33-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reference: data/ref (a link)</span></span>
-<span id="cb33-20"><a href="#cb33-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-21"><a href="#cb33-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Points to: ~/bioinf-shared/references/yeast_R64-1-1_test (see its README.md)</span>
-<span id="cb33-22"><a href="#cb33-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What: S. cerevisiae R64-1-1, chromosome I only, with gene annotation (test subset)</span>
-<span id="cb33-23"><a href="#cb33-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/</span>
-<span id="cb33-24"><a href="#cb33-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums (MD5):</span>
-<span id="cb33-25"><a href="#cb33-25" aria-hidden="true" tabindex="-1"></a>  4222a07bf01b12782245e0ff774459fe  genome.fa.gz</span>
-<span id="cb33-26"><a href="#cb33-26" aria-hidden="true" tabindex="-1"></a>  504334f6741ee771c665ae845429087f  genes.gtf.gz</span>
-<span id="cb33-27"><a href="#cb33-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>On another machine: link data/ref to a copy with these checksums</span>
-<span id="cb33-28"><a href="#cb33-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-29"><a href="#cb33-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Metadata: data/meta/</span></span>
-<span id="cb33-30"><a href="#cb33-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb33-31"><a href="#cb33-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>samplesheet_upstream.csv: nf-core's test sheet, unchanged.</span>
-<span id="cb33-32"><a href="#cb33-32" aria-hidden="true" tabindex="-1"></a>  Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
-<span id="cb33-33"><a href="#cb33-33" aria-hidden="true" tabindex="-1"></a>  MD5 fb28ab0a8cda268b2befd974804b2925</span>
-<span id="cb33-34"><a href="#cb33-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reads.tsv: which local files belong to which run and sample (written by hand)</span>
-<span id="cb33-35"><a href="#cb33-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>samples.tsv: what each sample is, from its ENA record (checked 2026-11-17)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="data/README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Data in this project</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## Raw reads: data/raw/</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Files: SRR6357070_1.fastq.gz, SRR6357070_2.fastq.gz (paired-end, read 1 and read 2)</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What: S. cerevisiae RNA-seq, run SRR6357070 (GEO sample GSM2879618,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>  wild type, biological replicate 1), sub-sampled to 50,000 read pairs</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>  by nf-core for testing</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Accessions: GEO GSE110004; SRA run SRR6357070</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Downloaded: 2026-11-13 (Chapter 1; write your own date)</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums: data/raw/checksums.md5 (MD5). SHA-256:</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>  3f50541fa9cf2bedc87e7b682ada0fccfdfcd6d27b9bb81f17be230ff140ebe7  SRR6357070_1.fastq.gz</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>  8590e1e01e568fba256aa7dced40519604cbb111ee44ab106a3dcb869660aaf4  SRR6357070_2.fastq.gz</span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>License: MIT (nf-core/test-datasets); original reads public in SRA</span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Cite: Wu et al. (2018), Molecular Cell 72(6), 942-954.e7,</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>  doi:10.1016/j.molcel.2018.10.018</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## Reference: data/ref (a link)</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Points to: ~/bioinf-shared/references/yeast_R64-1-1_test (see its README.md)</span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>What: S. cerevisiae R64-1-1, chromosome I only, with gene annotation (test subset)</span>
+<span id="cb35-23"><a href="#cb35-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/reference/</span>
+<span id="cb35-24"><a href="#cb35-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Checksums (MD5):</span>
+<span id="cb35-25"><a href="#cb35-25" aria-hidden="true" tabindex="-1"></a>  4222a07bf01b12782245e0ff774459fe  genome.fa.gz</span>
+<span id="cb35-26"><a href="#cb35-26" aria-hidden="true" tabindex="-1"></a>  504334f6741ee771c665ae845429087f  genes.gtf.gz</span>
+<span id="cb35-27"><a href="#cb35-27" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>On another machine: link data/ref to a copy with these checksums</span>
+<span id="cb35-28"><a href="#cb35-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-29"><a href="#cb35-29" aria-hidden="true" tabindex="-1"></a><span class="fu">## Metadata: data/meta/</span></span>
+<span id="cb35-30"><a href="#cb35-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-31"><a href="#cb35-31" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>samplesheet_upstream.csv: nf-core's test sheet, unchanged.</span>
+<span id="cb35-32"><a href="#cb35-32" aria-hidden="true" tabindex="-1"></a>  Source: https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/samplesheet/v3.10/samplesheet_test.csv</span>
+<span id="cb35-33"><a href="#cb35-33" aria-hidden="true" tabindex="-1"></a>  MD5 fb28ab0a8cda268b2befd974804b2925</span>
+<span id="cb35-34"><a href="#cb35-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>reads.tsv: which local files belong to which run and sample (written by hand)</span>
+<span id="cb35-35"><a href="#cb35-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>samples.tsv: what each sample is, from its ENA record (checked 2026-11-17)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1</code> is the full download address, pinned to one commit of nf-core/test-datasets, so the files at that address can never change.</p>
 <p><strong>Now name the idea</strong> (<a href="#fig-provenance-chain" class="quarto-xref">Figure&nbsp;<span>3.5</span></a>). <strong>Provenance</strong> is the record of where something came from. For <code>read_counts.tsv</code>, every link in the chain is now in the project.</p>
@@ -2205,50 +2237,50 @@ Table&nbsp;3.4: What to record for each result, and where it lives in the book�
 <div class="code-with-filename-file">
 <pre><strong>README.md</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Computing for Bioinformatics: book project</span></span>
-<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>Worked project for the book *Computing for Bioinformatics*. Counts the</span>
-<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>reads in one yeast RNA-seq run; later chapters add to it.</span>
-<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Layout</span></span>
-<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/raw/   reads as received, read-only; checksums in checksums.md5</span>
-<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/meta/  sample sheets and metadata</span>
-<span id="cb34-10"><a href="#cb34-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/ref    link to the shared reference (see data/README.md)</span>
-<span id="cb34-11"><a href="#cb34-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>src/        scripts, numbered in run order</span>
-<span id="cb34-12"><a href="#cb34-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>results/    made by the scripts; can be rebuilt</span>
-<span id="cb34-13"><a href="#cb34-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>logs/       one log per run</span>
-<span id="cb34-14"><a href="#cb34-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-15"><a href="#cb34-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
-<span id="cb34-16"><a href="#cb34-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-17"><a href="#cb34-17" aria-hidden="true" tabindex="-1"></a>Where every input came from: data/README.md.</span>
-<span id="cb34-18"><a href="#cb34-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-19"><a href="#cb34-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to rerun</span></span>
-<span id="cb34-20"><a href="#cb34-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-21"><a href="#cb34-21" aria-hidden="true" tabindex="-1"></a><span class="in">    pixi install --locked</span></span>
-<span id="cb34-22"><a href="#cb34-22" aria-hidden="true" tabindex="-1"></a><span class="in">    pixi run bash src/01_count_reads.sh</span></span>
-<span id="cb34-23"><a href="#cb34-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-24"><a href="#cb34-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Software</span></span>
-<span id="cb34-25"><a href="#cb34-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb34-26"><a href="#cb34-26" aria-hidden="true" tabindex="-1"></a>pixi.toml and pixi.lock (installed with pixi 0.84.2).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" data-filename="README.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Computing for Bioinformatics: book project</span></span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>Worked project for the book *Computing for Bioinformatics*. Counts the</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>reads in one yeast RNA-seq run; later chapters add to it.</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## Layout</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/raw/   reads as received, read-only; checksums in checksums.md5</span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/meta/  sample sheets and metadata</span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>data/ref    link to the shared reference (see data/README.md)</span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>src/        scripts, numbered in run order</span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>results/    made by the scripts; can be rebuilt</span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>logs/       one log per run</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## Data</span></span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>Where every input came from: data/README.md.</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a><span class="fu">## How to rerun</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="in">    pixi install --locked</span></span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a><span class="in">    pixi run bash src/01_count_reads.sh</span></span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a><span class="fu">## Software</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>pixi.toml and pixi.lock (installed with pixi 0.84.2).</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><strong>The notebook.</strong> A script shows what was done; it does not show why, what you tried first, or what went wrong. That goes in a notebook. Make <code>NOTEBOOK.md</code> in the project and give it a first dated entry:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>NOTEBOOK.md</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35" data-filename="NOTEBOOK.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Notebook</span></span>
-<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2026-11-17</span></span>
-<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Organized the project (Chapter 3): moved the reads from ~/bioinf-ch01</span>
-<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>  into data/raw/, checked them with md5sum -c (both OK), made them read-only.</span>
-<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Linked the test reference from ~/bioinf-shared/ instead of copying it.</span>
-<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The nf-core test sheet groups 7 runs under 5 labels, but ENA lists</span>
-<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>  7 biological samples, all paired-end: the labels are a test grouping.</span>
-<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>  Used the ENA record for samples.tsv.</span>
-<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ran src/01_count_reads.sh: 50,000 reads in each file.</span>
-<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Next: ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-filename="NOTEBOOK.md"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Notebook</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2026-11-17</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Organized the project (Chapter 3): moved the reads from ~/bioinf-ch01</span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>  into data/raw/, checked them with md5sum -c (both OK), made them read-only.</span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Linked the test reference from ~/bioinf-shared/ instead of copying it.</span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>The nf-core test sheet groups 7 runs under 5 labels, but ENA lists</span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>  7 biological samples, all paired-end: the labels are a test grouping.</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>  Used the ENA record for samples.tsv.</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Ran src/01_count_reads.sh: 50,000 reads in each file.</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Next: ...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Newest entries go at the bottom (or the top: pick one and keep to it). Write a few lines each day you work: what you did, why, what went wrong, and what is next. A plain Markdown file in the project is the book’s default; if your lab already uses an electronic lab notebook, use that. The habit matters, not the tool.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
@@ -2353,18 +2385,18 @@ Table&nbsp;3.5: The FAIR principles <span class="citation" data-cites="wilkinson
 <li>Know which of your storage is backed up, for how long, and who restores it. Scratch is purged; a sync folder copies mistakes; 3-2-1 for anything you cannot recreate.</li>
 </ul>
 <p>The project now looks like this:</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>~/bioinf-computing/</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>├── NOTEBOOK.md</span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>├── pixi.toml  pixi.lock  .pixi/</span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>├── data/</span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a>│   ├── README.md</span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>│   ├── raw/        SRR6357070_1.fastq.gz  SRR6357070_2.fastq.gz  checksums.md5</span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a>│   ├── meta/       reads.tsv  samples.tsv  samplesheet_upstream.csv</span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>│   └── ref -&gt; ~/bioinf-shared/references/yeast_R64-1-1_test</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>├── src/            01_count_reads.sh</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>├── results/        read_counts.tsv</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a>└── logs/           01_count_reads_2026-11-17T122453_7WFs.log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>~/bioinf-computing/</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>├── README.md</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>├── NOTEBOOK.md</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>├── pixi.toml  pixi.lock  .pixi/</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>├── data/</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>│   ├── README.md</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>│   ├── raw/        SRR6357070_1.fastq.gz  SRR6357070_2.fastq.gz  checksums.md5</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>│   ├── meta/       reads.tsv  samples.tsv  samplesheet_upstream.csv</span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>│   └── ref -&gt; ~/bioinf-shared/references/yeast_R64-1-1_test</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a>├── src/            01_count_reads.sh</span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a>├── results/        read_counts.tsv</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>└── logs/           01_count_reads_2026-11-17T122453_7WFs.log</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="sec-organizing-projects-exercises" class="level2" data-number="3.11">
 <h2 data-number="3.11" class="anchored" data-anchor-id="sec-organizing-projects-exercises"><span class="header-section-number">3.11</span> Exercises</h2>
@@ -2375,15 +2407,15 @@ Table&nbsp;3.5: The FAIR principles <span class="citation" data-cites="wilkinson
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/messy <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/messy</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> <span class="st">"SRR6357070 R1.fastq.gz"</span> <span class="st">"Analysis.R"</span> <span class="st">"plot 1.png"</span> <span class="st">"plot 2.png"</span> <span class="st">"plot 10.png"</span> <span class="st">"counts final.txt"</span> <span class="st">"counts final_v2.txt"</span> <span class="st">"11-3-25 notes.txt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch03/messy <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-ch03/messy</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> <span class="st">"SRR6357070 R1.fastq.gz"</span> <span class="st">"Analysis.R"</span> <span class="st">"plot 1.png"</span> <span class="st">"plot 2.png"</span> <span class="st">"plot 10.png"</span> <span class="st">"counts final.txt"</span> <span class="st">"counts final_v2.txt"</span> <span class="st">"11-3-25 notes.txt"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>counts final.txt</code> and <code>counts final_v2.txt</code> are really tab-separated tables, and <code>_v2</code> added one sample. Write down a new name for each file, then rename them with <code>mv</code>, quoting the old names, for example:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="st">"plot 1.png"</span> plot_01.png</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> <span class="st">"plot 1.png"</span> plot_01.png</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>What would you ask before renaming <code>11-3-25 notes.txt</code>?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -2456,11 +2488,11 @@ Table&nbsp;3.5: The FAIR principles <span class="citation" data-cites="wilkinson
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> SRR6357070_1.fastq.gz</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-computing/data/raw/checksums.md5 .</span>
-<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
-<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-ch03/practice</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> SRR6357070_1.fastq.gz</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-computing/data/raw/checksums.md5 .</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a><span class="fu">gzip</span> <span class="at">-t</span> SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>(<code>head -c 1000000</code> keeps the first million bytes. Read 2 is missing on purpose.) Which kind of failure does each file give? Both checks catch this copy; which one would catch a file that is complete, but the wrong sample?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -2573,17 +2605,17 @@ gzip: SRR6357070_1.fastq.gz: uncompress failed</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-71" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-71-1"><a href="#annotated-cell-71-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="annotated-cell-71-2"><a href="#annotated-cell-71-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv</span>
-<span id="annotated-cell-71-3"><a href="#annotated-cell-71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-r</span> results</span>
-<span id="annotated-cell-71-4"><a href="#annotated-cell-71-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-71" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-71-5" class="code-annotation-target"><a href="#annotated-cell-71-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cmp</span> ~/bioinf-ch03/read_counts_before.tsv results/read_counts.tsv</span>
-<span id="annotated-cell-71-6"><a href="#annotated-cell-71-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> logs</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-74" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-74-1"><a href="#annotated-cell-74-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="annotated-cell-74-2"><a href="#annotated-cell-74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv</span>
+<span id="annotated-cell-74-3"><a href="#annotated-cell-74-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-r</span> results</span>
+<span id="annotated-cell-74-4"><a href="#annotated-cell-74-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/01_count_reads.sh</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-74" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-74-5" class="code-annotation-target"><a href="#annotated-cell-74-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cmp</span> ~/bioinf-ch03/read_counts_before.tsv results/read_counts.tsv</span>
+<span id="annotated-cell-74-6"><a href="#annotated-cell-74-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> logs</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-71" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-74" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-71" data-code-lines="5" data-code-annotation="1"><code>cmp</code> compares two files byte by byte and prints nothing if they are identical.</span>
+<span data-code-cell="annotated-cell-74" data-code-lines="5" data-code-annotation="1"><code>cmp</code> compares two files byte by byte and prints nothing if they are identical.</span>
 </dd>
 </dl>
 <p>Then add a <code>NOTEBOOK.md</code> entry for today.</p>

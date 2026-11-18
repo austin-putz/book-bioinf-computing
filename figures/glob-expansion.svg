@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 342" role="img" aria-labelledby="glob-expansion-title"
+     data-step-labels="Pattern|Match|No match|Quoted">
+  <title id="glob-expansion-title">How bash expands a file-name pattern, in ~/bioinf-computing, where data/raw/ holds checksums.md5, SRR6357070_1.fastq.gz, and SRR6357070_2.fastq.gz. Step 1: the line pixi run seqkit stats -T data/raw/*.fastq.gz contains an unquoted pattern, so before seqkit starts, bash looks for matching file names. Step 2: the two .fastq.gz files match and checksums.md5 does not; seqkit receives stats, -T, data/raw/SRR6357070_1.fastq.gz, and data/raw/SRR6357070_2.fastq.gz, and never sees the star. Step 3: with data/raw/*.fq.gz nothing matches, so bash passes the pattern on unchanged; seqkit receives the literal data/raw/*.fq.gz and prints the error [ERRO] stat data/raw/*.fq.gz: no such file or directory. Step 4: in find data/raw -name "*.fastq.gz" the quotes stop bash, so find receives the literal *.fastq.gz, does its own matching, and prints the two .fastq.gz paths.</title>
+  <desc data-caption="1">Pattern: before seqkit starts, bash looks for file names that match the unquoted pattern data/raw/*.fastq.gz.</desc>
+  <desc data-caption="2">Match: two names match, so seqkit gets two file names and never sees the *.</desc>
+  <desc data-caption="3">No match: nothing ends in .fq.gz, so bash passes the pattern on unchanged and seqkit looks for a file literally named *.fq.gz.</desc>
+  <desc data-caption="4">Quoted: the quotes stop bash, so find receives *.fastq.gz itself and does its own matching as it searches data/raw.</desc>
+
+  <!-- Typed line -->
+  <rect x="10" y="10" width="700" height="62" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="32" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-computing</text>
+  <g font-size="14" class="mono">
+    <text x="26" y="58" data-hide="3">pixi run seqkit stats -T data/raw/<tspan font-weight="700">*</tspan>.fastq.gz</text>
+    <text x="26" y="58" data-show="3" data-hide="4">pixi run seqkit stats -T data/raw/<tspan font-weight="700">*</tspan>.fq.gz</text>
+    <text x="26" y="58" data-show="4">find data/raw -name "<tspan font-weight="700">*</tspan>.fastq.gz"</text>
+  </g>
+
+  <!-- The folder, in every step -->
+  <rect x="10" y="86" width="246" height="164" rx="10" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="22" y="108" font-size="13" font-weight="700" class="mono">data/raw/</text>
+  <g class="fill-surface stroke-line">
+    <rect x="22" y="120" width="222" height="28" rx="5"/>
+    <rect x="22" y="156" width="222" height="28" rx="5"/>
+    <rect x="22" y="192" width="222" height="28" rx="5"/>
+  </g>
+  <!-- Matches: steps 2 and 4 -->
+  <g class="fill-given-soft stroke-given" stroke-width="2" data-show="2" data-hide="3">
+    <rect x="22" y="156" width="222" height="28" rx="5"/>
+    <rect x="22" y="192" width="222" height="28" rx="5"/>
+  </g>
+  <g class="fill-given-soft stroke-given" stroke-width="2" data-show="4">
+    <rect x="22" y="156" width="222" height="28" rx="5"/>
+    <rect x="22" y="192" width="222" height="28" rx="5"/>
+  </g>
+  <g font-size="13" class="mono">
+    <text x="32" y="139">checksums.md5</text>
+    <text x="32" y="175">SRR6357070_1.fastq.gz</text>
+    <text x="32" y="211">SRR6357070_2.fastq.gz</text>
+  </g>
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <g data-show="2" data-hide="3">
+      <text x="232" y="139" class="fill-muted">✗</text>
+      <text x="232" y="175">✓</text>
+      <text x="232" y="211">✓</text>
+    </g>
+    <g data-show="3" data-hide="4" class="fill-muted">
+      <text x="232" y="139">✗</text>
+      <text x="232" y="175">✗</text>
+      <text x="232" y="211">✗</text>
+    </g>
+    <g data-show="4">
+      <text x="232" y="139" class="fill-muted">✗</text>
+      <text x="232" y="175">✓</text>
+      <text x="232" y="211">✓</text>
+    </g>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="22" y="240" data-hide="2">which names match?</text>
+    <text x="22" y="240" data-show="2" data-hide="3">2 of 3 names match (✓)</text>
+    <text x="22" y="240" data-show="3" data-hide="4">no name ends in <tspan class="mono">.fq.gz</tspan></text>
+    <text x="22" y="240" data-show="4">find matches the same 2 (✓)</text>
+  </g>
+
+  <!-- Right panel: what the program receives -->
+  <rect x="270" y="86" width="440" height="164" rx="10" fill="none" class="stroke-line"/>
+  <defs>
+    <marker id="glob-expansion-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Step 1 -->
+  <g data-hide="2">
+    <text x="286" y="110" font-size="13" font-weight="700">Before seqkit starts, bash reads:</text>
+    <rect x="286" y="120" width="164" height="28" rx="5" class="fill-given-soft stroke-given" stroke-dasharray="5 3"/>
+    <text x="368" y="139" font-size="13" class="mono" text-anchor="middle">data/raw/<tspan font-weight="700">*</tspan>.fastq.gz</text>
+    <path d="M284 134 L262 134" fill="none" class="stroke-muted" stroke-width="1.5" marker-end="url(#glob-expansion-arrow)"/>
+    <g font-size="13" class="fill-muted">
+      <text x="286" y="176">An unquoted pattern, so bash looks in</text>
+      <text x="286" y="194"><tspan class="mono">data/raw/</tspan> for names that end in</text>
+      <text x="286" y="212"><tspan class="mono">.fastq.gz</tspan> (<tspan class="mono">*</tspan> matches any characters).</text>
+    </g>
+  </g>
+
+  <!-- Steps 2 and 3: seqkit's words -->
+  <g data-show="2" data-hide="4">
+    <text x="286" y="110" font-size="13" font-weight="700">seqkit receives:</text>
+    <g class="fill-surface stroke-ink">
+      <rect x="286" y="120" width="55" height="28" rx="5"/>
+      <rect x="349" y="120" width="32" height="28" rx="5"/>
+    </g>
+    <g font-size="13" class="mono" text-anchor="middle">
+      <text x="313.5" y="139">stats</text>
+      <text x="365" y="139">-T</text>
+    </g>
+  </g>
+  <g data-show="2" data-hide="3">
+    <g class="fill-given-soft stroke-given">
+      <rect x="286" y="156" width="250" height="28" rx="5"/>
+      <rect x="286" y="192" width="250" height="28" rx="5"/>
+    </g>
+    <g font-size="13" class="mono" text-anchor="middle">
+      <text x="411" y="175">data/raw/SRR6357070_1.fastq.gz</text>
+      <text x="411" y="211">data/raw/SRR6357070_2.fastq.gz</text>
+    </g>
+    <g font-size="13" class="fill-muted">
+      <text x="550" y="186">2 file names,</text>
+      <text x="550" y="204">no <tspan class="mono">*</tspan></text>
+    </g>
+  </g>
+  <g data-show="3" data-hide="4">
+    <rect x="286" y="156" width="141" height="28" rx="5" class="fill-surface stroke-ink" stroke-dasharray="5 3"/>
+    <text x="356.5" y="175" font-size="13" class="mono" text-anchor="middle">data/raw/<tspan font-weight="700">*</tspan>.fq.gz</text>
+    <g font-size="13" class="fill-muted">
+      <text x="441" y="175">the pattern itself</text>
+      <text x="286" y="212">Nothing matched, so bash passed the</text>
+      <text x="286" y="230">pattern on exactly as typed.</text>
+    </g>
+  </g>
+
+  <!-- Step 4: find's words -->
+  <g data-show="4">
+    <text x="286" y="110" font-size="13" font-weight="700">find receives:</text>
+    <g class="fill-surface stroke-ink">
+      <rect x="286" y="120" width="78" height="28" rx="5"/>
+      <rect x="374" y="120" width="55" height="28" rx="5"/>
+      <rect x="439" y="120" width="94" height="28" rx="5"/>
+    </g>
+    <g font-size="13" class="mono" text-anchor="middle">
+      <text x="325" y="139">data/raw</text>
+      <text x="401.5" y="139">-name</text>
+      <text x="486" y="139"><tspan font-weight="700">*</tspan>.fastq.gz</text>
+    </g>
+    <g font-size="13" class="fill-muted">
+      <text x="286" y="176">The quotes stopped bash and were removed,</text>
+      <text x="286" y="194">so the <tspan class="mono">*</tspan> reaches find, which compares</text>
+      <text x="286" y="212">it with each name as it searches.</text>
+    </g>
+  </g>
+
+  <!-- Output -->
+  <rect x="10" y="264" width="700" height="70" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="286" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">OUTPUT</text>
+  <g font-size="13">
+    <text x="26" y="310" class="fill-muted" data-hide="2">(nothing yet: seqkit has not started)</text>
+    <text x="26" y="310" class="fill-muted" data-show="2" data-hide="3">a table: a header line, then one row for each of the 2 files</text>
+    <g data-show="3" data-hide="4">
+      <rect x="20" y="294" width="452" height="24" rx="4" class="fill-warn-soft stroke-warn"/>
+      <text x="26" y="311" class="mono"><tspan class="fill-warn" font-weight="700">[ERRO]</tspan> stat data/raw/*.fq.gz: no such file or directory</text>
+    </g>
+    <g data-show="4" class="mono">
+      <text x="26" y="306">data/raw/SRR6357070_1.fastq.gz</text>
+      <text x="26" y="324">data/raw/SRR6357070_2.fastq.gz</text>
+    </g>
+  </g>
+</svg>

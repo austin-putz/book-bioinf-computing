@@ -268,7 +268,7 @@ where to download. @sec-hpc-slurm explains all of this properly.
 **Step 1. Make a scratch folder and move into it.**
 
 ```{.bash filename="Terminal (laptop)"}
-mkdir -p ~/bioinf-ch01 && cd ~/bioinf-ch01
+mkdir -p ~/bioinf-computing-ch01 && cd ~/bioinf-computing-ch01
 ```
 
 This prints nothing. In the shell, silence usually means success.
@@ -297,7 +297,7 @@ page]({{< var testdata-page >}}/testdata/GSE110004/SRR6357070_1.fastq.gz)
 ::: {.panel-tabset group="os"}
 ## macOS
 ```{.bash filename="Terminal (laptop)"}
-mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
+mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-computing-ch01/
 ```
 ## Windows (WSL2)
 Replace `<your-windows-name>` with the name of your folder under
@@ -306,11 +306,11 @@ in with). Keep the quotes: they keep a folder name with a space, such as
 `First Last`, in one piece.
 
 ```{.bash filename="Terminal (laptop)"}
-cp "/mnt/c/Users/<your-windows-name>/Downloads/SRR6357070_1.fastq.gz" ~/bioinf-ch01/
+cp "/mnt/c/Users/<your-windows-name>/Downloads/SRR6357070_1.fastq.gz" ~/bioinf-computing-ch01/
 ```
 ## Linux
 ```{.bash filename="Terminal (laptop)"}
-mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-ch01/
+mv ~/Downloads/SRR6357070_1.fastq.gz ~/bioinf-computing-ch01/
 ```
 :::
 
@@ -406,7 +406,7 @@ separator, and one quality character per base. The full format, including
 files that break the four-line pattern, is in @sec-fasta-fastq.
 :::
 
-`~/bioinf-ch01` is a scratch folder: you can delete it whenever you like.
+`~/bioinf-computing-ch01` is a scratch folder: you can delete it whenever you like.
 @sec-organizing-projects starts the book's real project and brings this file, and the
 address you downloaded it from, into it.
 
@@ -813,7 +813,7 @@ into its folder. A new terminal or a new `srun` session starts in your
 home folder, so repeat this each time:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-ch01
+cd ~/bioinf-computing-ch01
 ```
 
 ::: {.check}

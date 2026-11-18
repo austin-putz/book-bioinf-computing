@@ -22,7 +22,7 @@ The Linux command line, HPC and SLURM, R and Python, file formats,
 reproducibility, workflows, and a high-level tour of the algorithms behind
 common tools.
 
-**Status:** under construction. Chapters 1–4 are drafted; the rest are
+**Status:** under construction. Chapters 1–5 are drafted; the rest are
 placeholders.
 
 ## Build

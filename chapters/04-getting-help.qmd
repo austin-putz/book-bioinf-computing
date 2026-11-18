@@ -45,12 +45,12 @@ administrator can fix, and a clear request is a skill in its own right.
 
 Commands run on your laptop, from the book's project folder,
 `~/bioinf-computing` (@sec-organizing-projects). Practice files go in a
-scratch folder, `~/bioinf-ch04`, like Chapter 1's `~/bioinf-ch01`, so
+scratch folder, `~/bioinf-computing-ch04`, like Chapter 1's `~/bioinf-computing-ch01`, so
 the project stays clean. Make it now:
 
 ```{.bash filename="Terminal (laptop)"}
 cd ~/bioinf-computing
-mkdir -p ~/bioinf-ch04
+mkdir -p ~/bioinf-computing-ch04
 ```
 
 Cluster readers can run the same commands on a login node: they are
@@ -242,7 +242,7 @@ wrong before you open the answer. Two need a file you make first, a copy
 of the first read file cut short:
 
 ```{.bash filename="Terminal (laptop)"}
-head -c 1000000 data/raw/SRR6357070_1.fastq.gz > ~/bioinf-ch04/broken.fastq.gz
+head -c 1000000 data/raw/SRR6357070_1.fastq.gz > ~/bioinf-computing-ch04/broken.fastq.gz
 ```
 
 (`head -c 1000000` keeps the first million bytes, under half the file.
@@ -295,11 +295,11 @@ unknown flag: --paired
 **5.**
 
 ```{.bash filename="Terminal (laptop)"}
-pixi run seqkit stats -T ~/bioinf-ch04/broken.fastq.gz
+pixi run seqkit stats -T ~/bioinf-computing-ch04/broken.fastq.gz
 ```
 
 ```{.console}
-[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+[ERRO] /home/you/bioinf-computing-ch04/broken.fastq.gz: unexpected EOF
 [ERRO]
 file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
 ```
@@ -431,12 +431,12 @@ bash: seqkit: command not found
 file from round 5:
 
 ```{.bash filename="Terminal (laptop)"}
-pixi run seqkit stats -T ~/bioinf-ch04/broken.fastq.gz
+pixi run seqkit stats -T ~/bioinf-computing-ch04/broken.fastq.gz
 echo $?
 ```
 
 ```{.console}
-[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+[ERRO] /home/you/bioinf-computing-ch04/broken.fastq.gz: unexpected EOF
 [ERRO]
 file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
 0
@@ -860,7 +860,7 @@ same way**. Fewer files, one sample, the first 100 reads:
 
 ```{.bash filename="Terminal (laptop)"}
 pixi run seqkit head -n 100 data/raw/SRR6357070_1.fastq.gz \
-  -o ~/bioinf-ch04/small_R1.fastq.gz
+  -o ~/bioinf-computing-ch04/small_R1.fastq.gz
 ```
 
 That writes the first 100 reads (10,100 bases) to the scratch folder,
@@ -868,14 +868,14 @@ never to `data/raw/`. Now the catch. Do the same with the truncated
 file, and check the small copy:
 
 ```{.bash filename="Terminal (laptop)"}
-pixi run seqkit head -n 100 ~/bioinf-ch04/broken.fastq.gz \
-  -o ~/bioinf-ch04/small_broken.fastq.gz
-pixi run seqkit stats -T ~/bioinf-ch04/small_broken.fastq.gz
+pixi run seqkit head -n 100 ~/bioinf-computing-ch04/broken.fastq.gz \
+  -o ~/bioinf-computing-ch04/small_broken.fastq.gz
+pixi run seqkit stats -T ~/bioinf-computing-ch04/small_broken.fastq.gz
 ```
 
 ```{.console}
 file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
-/home/you/bioinf-ch04/small_broken.fastq.gz	FASTQ	DNA	100	10100	101	101.0	101
+/home/you/bioinf-computing-ch04/small_broken.fastq.gz	FASTQ	DNA	100	10100	101	101.0	101
 ```
 
 No error. The first 100 reads of the broken file are intact; the damage
@@ -1066,16 +1066,16 @@ flag: --count-pairs`.
 
 ::: {.check}
 **Exercise 1. Fix a broken script.** Make the script below in the
-scratch folder (in VS Code: `code ~/bioinf-ch04/count.sh`, paste, save).
+scratch folder (in VS Code: `code ~/bioinf-computing-ch04/count.sh`, paste, save).
 Copy it from this page exactly, faults and all:
 
-```{.bash filename="~/bioinf-ch04/count.sh"}
+```{.bash filename="~/bioinf-computing-ch04/count.sh"}
 # count.sh: count reads in both raw files (has three faults)
-# Run from ~/bioinf-computing:  pixi run bash ~/bioinf-ch04/count.sh
+# Run from ~/bioinf-computing:  pixi run bash ~/bioinf-computing-ch04/count.sh
 seqkit stats –T --paired data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz
 ```
 
-From `~/bioinf-computing`, run it with `pixi run bash ~/bioinf-ch04/count.sh`.
+From `~/bioinf-computing`, run it with `pixi run bash ~/bioinf-computing-ch04/count.sh`.
 It fails three times. Fix one fault at a time, using only the message
 and `--help`, and rerun after each fix. Note in `NOTEBOOK.md`
 (@sec-organizing-projects) what each message said and what you changed.
@@ -1129,7 +1129,7 @@ being a little worse is common in Illumina data (@sec-fasta-fastq).
 ::: {.check}
 **Exercise 3. Write a help request.** Pretend that exercise 1's first
 error is one you cannot solve. Write the request in
-`~/bioinf-ch04/help_request.md`, following @fig-good-request: the
+`~/bioinf-computing-ch04/help_request.md`, following @fig-good-request: the
 *Something doesn't run* fields (where it ran, the exact command, the
 complete message as text, `pixi info` with your home path replaced by
 `<home>`), plus what you expected, what you tried, the output of

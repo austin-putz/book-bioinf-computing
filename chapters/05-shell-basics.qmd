@@ -1,21 +1,1850 @@
 # Shell basics {#sec-shell-basics}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- What a shell is; bash
-- Filesystem tree, paths (absolute vs relative), home directory
-- Navigating, creating, copying, moving, deleting
-- Symbolic links (`ln -s`)
-- Wildcards and tab completion; quoting paths
-- Finding files (`find`)
-- Viewing files: `cat`, `less`, `head`, `tail`
-- Command history and shortcuts
+By the end of this chapter you should be able to:
+
+1. Say what the shell does with a command line before a program runs,
+   and tell a shell builtin from a program.
+2. Move around the filesystem with absolute and relative paths, `~`,
+   `.`, and `..`, and check where you are with `pwd`.
+3. Create, copy, move, rename, link, and delete files and folders, and
+   avoid the commands' silent overwrites and permanent deletes.
+4. Predict what a wildcard matches, quote names with spaces or special
+   characters, and use tab completion and history to type less.
+5. Find files with `find`, and look inside files with `less`, `head`,
+   `tail`, and `file`.
+:::
+
+## Why the command line {#sec-shell-basics-why}
+
+This chapter opens Part II, six chapters on the Linux command line.
+That is a large share of a bioinformatics book to spend on typing
+commands, so first, the reason.
+
+**Real work runs on Linux machines that you reach through a
+terminal.** A university cluster such as Nova or SCINet's Ceres runs
+Linux. You log in with `ssh`, and what you get is a prompt, not a
+desktop. Companies, and labs without a cluster, rent Linux servers in
+the cloud (@sec-cloud) and reach them the same way. Your laptop is for
+editing, small tests, and writing up. The data and the long jobs live
+on those machines (@sec-orientation-where). @sec-orientation-linux
+explained why they run Linux; this part teaches you to work on them.
+
+The command line also suits the work itself, not only the machines it
+runs on (@tbl-why-command-line).
+
+: Why bioinformatics is done at the command line. {#tbl-why-command-line}
+
+| Reason | What it means in practice |
+|:-------|:--------------------------|
+| The tools are command-line programs | aligners, `samtools`, `seqkit`, and nf-core pipelines all run from a prompt; most have no point-and-click version |
+| It scales | one wildcard runs the same command on 2 files or 2,000 (@sec-shell-basics-wildcards) |
+| It leaves a record | a command is text: paste it into `NOTEBOOK.md`, rerun it, save it in a script, or send it to a colleague. Clicks leave nothing to rerun. |
+| It runs while you are away | the cluster's scheduler runs your script after you log out (@sec-hpc-slurm); it cannot click buttons for you |
+| It works over any connection | a terminal sends only text, so it stays usable from home or over a slow link (@sec-working-remotely) |
+
+**Why bash.** The *shell* is the program that reads what you type
+(@sec-shell-basics-shell). There are several shells. Bash is the
+default on nearly every Linux system and cluster, cluster job scripts
+are usually bash scripts, and tools' install instructions assume it.
+So the book uses bash everywhere, including on a Mac, where you made
+it your shell in @sec-orientation. Learn it once, and the same
+commands work on your laptop, the cluster, and a cloud server.
+
+Part II builds up to running a real job on a cluster, one chapter at a
+time (@tbl-part2-roadmap).
+
+: What each chapter of Part II adds. {#tbl-part2-roadmap}
+
+| Chapter | What you can do afterwards |
+|:--------|:---------------------------|
+| @sec-shell-basics (this one) | move around, manage files safely, match names with wildcards, look inside files |
+| @sec-text-tools | filter, count, and summarise text files by joining small tools with pipes |
+| @sec-linux-system | read permissions, set `PATH`, watch and stop processes, check disk use |
+| @sec-shell-scripts | save commands as a script that reruns the same way every time |
+| @sec-working-remotely | log in with SSH keys, keep work running when the connection drops, move data safely |
+| @sec-hpc-slurm | submit scripts as jobs to a cluster's scheduler, with the resources they need |
+
+## What this chapter does {#sec-shell-basics-intro}
+
+You have already run about thirty shell commands in Part I, mostly by
+copying them: `mkdir -p … && cd …`, `ls -lh`, `cat`, `head`, `mv`,
+`cp`, `ln -s`, `chmod`, `touch`. Each time the book said "explained in
+Part II". This is that explanation. Once you know what each part of a
+command does, you can change it, predict what it will do, and spot the
+one character that is wrong.
+
+The chapter covers what the shell does with a line before any program
+runs; how to move around the filesystem; how to copy, move, link, and
+delete without losing files; wildcards and quoting; `find`; looking
+inside files of any size; and recalling earlier commands instead of
+retyping them. Pipes and redirection (`|`, `>`) are @sec-text-tools;
+permissions, `PATH`, and your shell's settings are @sec-linux-system;
+variables and scripts are @sec-shell-scripts. A few supplied commands
+here contain a `|`; copy those as they are.
+
+Commands run on your laptop. In the book's project, `~/bioinf-computing`,
+you only **look** at files in this chapter; the one thing you write
+there is your own notes in `NOTEBOOK.md`, as in @sec-organizing-projects
+and @sec-getting-help. Everything that creates, moves, or deletes
+happens in a scratch folder, `~/bioinf-computing-ch05`, so a mistake
+cannot touch the project.
+
+**Build the practice folder.** Paste the block below into your terminal
+in one go. It makes `~/bioinf-computing-ch05/share/`, a stand-in for
+the kind of folder a former lab member leaves behind: reads in three
+run folders, one with spaces in its name; plots and a counts file; two
+sample tables; a stray temporary file; and a link that points nowhere.
+@sec-text-tools, @sec-linux-system, and @sec-shell-scripts reuse this
+folder, so keep it.
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch05
+mkdir ~/bioinf-computing-ch05/share && cd ~/bioinf-computing-ch05/share && {
+mkdir run1 run2 "Run 3 final" analysis meta
+printf '@A.%s\nACGTACGTAC\n+\nIIIIIIIIII\n' 1 2 | gzip > run1/sample_A_R1.fastq.gz
+printf '@A.%s\nGTACGTACGT\n+\nIIIIIIIIII\n' 1 2 | gzip > run1/sample_A_R2.fastq.gz
+printf '@B.%s\nACGTACGTAC\n+\nIIIIIIIIII\n' 1 2 3 | gzip > run2/sample_B_R1.fastq.gz
+printf '@B.%s\nGTACGTACGT\n+\nIIIIIIIIII\n' 1 2 3 | gzip > run2/sample_B_R2.fastq.gz
+cp run2/sample_B_R1.fastq.gz run2/sample_B_R1.fastq.gz.tmp
+printf '@C.%s\nACGTACGTAC\n+\nIIIIIIIIII\n' 1 2 3 4 | gzip > "Run 3 final/sample_C_R1.fq.gz"
+printf '@C.%s\nGTACGTACGT\n+\nIIIIIIIIII\n' 1 2 3 4 | gzip > "Run 3 final/sample_C_R2.fq.gz"
+touch "analysis/plot 1.png" "analysis/plot 2.png"
+seq 1 1000 > "analysis/counts FINAL.txt"
+rows=(sample run_folder condition reads
+  sample_C "Run 3 final" treated 12
+  sample_A run1 control 9
+  sample_B run2 control 30
+  sample_E run5 treated 105
+  sample_B run2 control 30
+  sample_D run4 control 8)
+printf '%s\t%s\t%s\t%s\n' "${rows[@]}" > meta/samples.tsv
+printf '%s,%s,%s,%s\r\n' "${rows[@]}" > meta/samples_from_excel.csv
+printf 'Reads from runs 1-3. Ask Sam about run 3.\n' > notes.txt
+printf 'colour=on\n' > .old_settings
+touch -d 2025-03-01 notes.txt .old_settings
+ln -s /no/such/genome ref
+printf 'pwd\nls data/raw\n' > ../where.sh
+cd ~/bioinf-computing-ch05 && ls -A share
+}
+```
+
+```{.console}
+ .old_settings   analysis   meta   notes.txt   ref  'Run 3 final'   run1   run2
+```
+
+It is safe to paste without understanding it yet. This chapter explains
+`mkdir`, `cd`, `cp`, `touch`, and `ln -s`; `printf`, `gzip`, and the
+`|` come in @sec-text-tools, and the `rows=(…)` list in
+@sec-shell-scripts. The read files are real, tiny gzipped FASTQ files
+(2, 3, and 4 reads for samples A, B, and C), so the tools you use on
+them behave as on real data. On a Mac, `touch -d` needs the GNU tools
+from @sec-orientation's setup.
+
+Pasting the block a second time is safe: `mkdir` stops with `File
+exists` and nothing else runs, so it cannot undo changes you made. To
+rebuild the folder on purpose, rename the old one first and paste again:
+`mv ~/bioinf-computing-ch05/share ~/bioinf-computing-ch05/share_old`.
+The book never deletes a scratch folder for you.
+
+## What a shell is {#sec-shell-basics-shell}
+
+Type these, one at a time:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~
+ls
+lss
+type cd
+type mkdir
+```
+
+```{.console}
+bioinf-computing       bioinf-computing-ch03  bioinf-computing-ch05
+bioinf-computing-ch01  bioinf-computing-ch04  bioinf-shared
+bash: lss: command not found
+cd is a shell builtin
+mkdir is /usr/bin/mkdir
+```
+
+Your home folder will hold other things too. `lss` gives the message
+from @tbl-common-errors: no program has that name. (Ubuntu may add a
+suggestion: `Command 'lss' not found, did you mean …`.) `type` asks bash
+what a name is: `cd` is part of bash itself, while `mkdir` is a program
+stored in a file. On a Mac after @sec-orientation's setup, `type mkdir`
+shows the GNU copy, `/usr/local/opt/coreutils/libexec/gnubin/mkdir` or
+a path under `/opt/homebrew`. (Try `type ls` too: on many systems it
+says `ls is aliased to …`. Aliases are @sec-linux-system.)
+
+**Now name the parts.** The **terminal** is the window. The **shell**
+is the program inside it that reads what you type and starts other
+programs; this book's shell is **bash**. A **command** is either a
+program (`ls`, `mkdir`, `seqkit`) or a **builtin**, part of bash
+itself (`cd`, `pwd`, `echo`, `type`, `history`). `cd` has to be a
+builtin: a separate program runs as its own process, and changing *its*
+folder would leave your shell where it was.
+
+Every line follows the shape you met in @sec-getting-help's usage
+lines: the command first, then its **options** (`-l`, `--help`), then
+its **arguments**, usually names of files or folders. Whatever the
+command, bash first does the same work on the line (@fig-shell-steps):
+
+1. It **reads the line into words**, at spaces, but respecting quotes
+   and backslashes: `"Run 3 final"` stays one word.
+2. It **expands** `~`, wildcards such as `*`, and `$…` where quoting
+   allows.
+3. It **removes the quote characters** themselves.
+4. It **finds the command** and starts it with the resulting
+   **arguments**.
+
+::: {#fig-shell-steps}
+{{< svg ../figures/shell-steps.svg >}}
+
+What bash does with a line before `ls` starts. The quoted name stays
+one word, the unquoted pattern is replaced by the matching names, the
+quotes are removed, and `ls` receives four arguments. Use *Next* to
+step through.
+:::
+
+Quoting decides what happens in steps 1 and 2. A file name produced by
+a wildcard is one argument even if it contains spaces, as
+@sec-shell-basics-wildcards shows. (Bash calls something else "word
+splitting": splitting the result of a `$…` expansion, which is
+@sec-shell-scripts. Step 1 is just reading the line.) This is the frame
+for the whole chapter: quoting and wildcards are steps 1–3, and how
+bash finds a program in step 4 (`PATH`) is @sec-linux-system. The
+[Bash manual](https://www.gnu.org/software/bash/manual/html_node/Shell-Expansions.html)
+gives the full order of expansions, for later.
+
+::: {.callout-important}
+## Key idea
+Before any program starts, bash reads your line into words (respecting
+quotes), expands `~`, wildcards, and `$…` where quoting allows, and
+removes the quotes. The program gets only the resulting arguments.
+Most surprises in this chapter come from that step.
+:::
+
+**Bash, not zsh.** A new Mac's default shell is zsh, which is similar
+but not the same. @sec-orientation made bash your shell on every system,
+because clusters use it. Check:
+
+```{.bash filename="Terminal (laptop)"}
+echo "$BASH_VERSION"
+```
+
+```{.console}
+5.3.15(1)-release
+```
+
+Any version from 4 up is fine; Ubuntu 24.04 has 5.2, and a cluster may
+have an older one (Nova had 5.1 in November 2026). If nothing prints, you are not in bash: go back to
+@sec-orientation.
+
+**The prompt.** A prompt such as `you@laptop:~/bioinf-computing$` tells
+you who you are (`you`), which machine you are on (`laptop`), and which
+folder you are in (`~/bioinf-computing`), then `$`: ready. Clusters set
+theirs up for you; the host name tells you whether you are on a login
+node (@sec-hpc-slurm). Yours may look different; @sec-linux-system shows
+how to change it.
+
+::: {.check}
+**Check yourself.** Why can't `cd` be a separate program, like `mkdir`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+A program runs as its own process. If it changed folder, only its own
+folder would change, and your shell would stay where it was. `type cd`
+says `cd is a shell builtin`.
+:::
+:::
+
+## The filesystem tree and paths {#sec-shell-basics-paths}
+
+Predict what each `pwd` prints, then run the lines one at a time:
+
+```{.bash filename="Terminal (laptop)"}
+pwd
+cd ~/bioinf-computing
+pwd
+ls
+cd data/raw
+pwd
+cd ..
+pwd
+cd ../..
+pwd
+cd -
+cd
+pwd
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Output
+
+```{.console}
+/home/you
+/home/you/bioinf-computing
+data  NOTEBOOK.md  pixi.lock  README.md  src
+logs  notes.txt    pixi.toml  results
+/home/you/bioinf-computing/data/raw
+/home/you/bioinf-computing/data
+/home/you
+/home/you/bioinf-computing/data
+/home/you
+```
+
+`/home/you` is your own home folder: `/Users/you` on a Mac. `cd -`
+printed a folder because it goes back to the previous one and says
+where that is. `cd` alone went home.
+:::
+
+@fig-cd-steps shows the same moves on the folder tree.
+
+::: {#fig-cd-steps}
+{{< svg ../figures/cd-steps.svg >}}
+
+The `cd` sequence above, one step per command. The outlined folder is
+the current working directory; the terminal strip shows what `pwd`
+prints there.
+:::
+
+**Now name the parts** (@fig-filesystem-tree). Every file on the
+machine sits in **one tree** that starts at `/`, the **root**. Your
+**home folder** is one branch of it, `/home/you`, and `~` is short for
+it. A **path** names a place in the tree:
+
+- An **absolute path** starts at the root, with `/`:
+  `/home/you/bioinf-computing/data/meta`. It means the same thing from
+  anywhere. A path starting with `~` is absolute too, since bash turns
+  `~` into `/home/you` (step 2 above).
+- A **relative path** starts from where you are, the **current working
+  directory** that `pwd` prints. From `data/raw`, `../meta` means "up
+  one folder, then into `meta`".
+- `.` is the current folder and `..` the one above it.
+
+::: {#fig-filesystem-tree}
+{{< svg ../figures/filesystem-tree.svg >}}
+
+One tree from `/`. The book's project and the scratch folder are in your
+home folder; programs live under `/usr/bin`; a cluster adds project and
+scratch areas outside home. The absolute path to `meta` starts at the
+root; the relative path from `raw` goes up one folder (`..`) and down
+again. On a Mac, home is `/Users/you`.
+:::
+
+: Path shortcuts, from inside `~/bioinf-computing/data/raw`.
+{#tbl-path-shortcuts}
+
+| Symbol | Means | Example | `pwd` afterwards |
+|:-------|:------|:--------|:-----------------|
+| `/` (at the start) | the root: an absolute path | `cd /home/you/bioinf-computing` | `/home/you/bioinf-computing` |
+| `~` | your home folder | `cd ~/bioinf-computing-ch05` | `/home/you/bioinf-computing-ch05` |
+| `.` | the current folder | `ls .` (same as `ls`) | unchanged |
+| `..` | the folder above | `cd ../..` | `/home/you/bioinf-computing` |
+| `-` (with `cd`) | the previous folder | `cd -` | wherever you were before |
+| nothing (with `cd`) | home | `cd` | `/home/you` |
+
+Where your home folder is depends on the system (@tbl-home-by-system).
+
+: Home folders and other places you will work. {#tbl-home-by-system}
+
+| System | Home folder | Other places you will work | Note |
+|:-------|:------------|:---------------------------|:-----|
+| Linux | `/home/you` | — | |
+| Windows (WSL2) | `/home/you`, inside Linux | your Windows files at `/mnt/c/Users/…` | keep work in the Linux home (@sec-orientation) |
+| macOS | `/Users/you` | — | |
+| Cluster | `/home/<user>`, small | project and scratch areas: `/project/…` and `/90daydata/…` on SCINet, `/work/…` on Nova | @sec-cluster-sites, @sec-hpc-slurm |
+
+Names are case-sensitive, as @sec-organizing-projects said: `Data` and
+`data` are different folders on Linux and on clusters.
+
+**Relative to what?** A relative path always means "from where I am
+now", even inside a script. The setup block made a two-line script,
+`~/bioinf-computing-ch05/where.sh`, that prints the current folder and
+lists `data/raw`:
+
+```{.bash filename="Terminal (laptop)"}
+cat ~/bioinf-computing-ch05/where.sh
+cd ~/bioinf-computing
+bash ~/bioinf-computing-ch05/where.sh
+cd ~
+bash ~/bioinf-computing-ch05/where.sh
+```
+
+```{.console}
+pwd
+ls data/raw
+/home/you/bioinf-computing
+checksums.md5  SRR6357070_1.fastq.gz  SRR6357070_2.fastq.gz
+/home/you
+ls: cannot access 'data/raw': No such file or directory
+```
+
+The same script, run by the same absolute path, gives two results,
+because `data/raw` is looked up from the folder you ran it in. From `~`
+it looked for `~/data/raw`, which does not exist. @sec-getting-help's
+wrong-folder case was related but failed earlier: `pixi run` itself
+looks for `pixi.toml` in the current folder and the folders above it,
+and found none.
+
+::: {.callout-caution .misconception}
+## Misconception: "A relative path is relative to the script that contains it"
+**Reality.** It is relative to the current working directory of the
+shell that runs the command, wherever the script is stored. Run project
+scripts from the project folder, as the book does, or `cd` there first.
+:::
+
+**Errors you will meet:**
+
+```{.bash filename="Terminal (laptop)"}
+cd nowhere
+cd ~/bioinf-computing/README.md
+```
+
+```{.console}
+bash: cd: nowhere: No such file or directory
+bash: cd: /home/you/bioinf-computing/README.md: Not a directory
+```
+
+Note that the second message shows `~` already expanded: `cd` never saw
+the `~`.
+
+::: {.callout-tip}
+## Press Tab
+Type `cd ~/bioi` and press {{< kbd Tab >}}. Bash completes as far as
+the name is certain, here `~/bioinf-`, because several folders start
+that way (`bioinf-computing…`, `bioinf-shared`). Press {{< kbd Tab >}}
+twice to list the choices, type a few more letters, and press it again.
+Tab saves typing and catches typos: more in @sec-shell-basics-wildcards.
+:::
+
+**On a cluster.** The same commands work on a login node. Log in as in
+@sec-orientation and run:
+
+```{.bash filename="Terminal (login node)"}
+pwd
+echo "$HOME"
+type ls
+```
+
+On Nova (captured November 2026; `<user>` is your user name):
+
+```{.console}
+/home/<user>
+/home/<user>
+ls is aliased to `ls --color=auto'
+```
+
+`pwd` prints your **cluster** home: a different machine with a
+different home folder, which holds none of your laptop's files (`ls`
+there shows only what you have put on the cluster). `type ls` shows the
+alias from @sec-shell-basics-shell, which makes `ls` colour its output. `~` always means the home of the machine you are on. Project and
+scratch areas are @sec-hpc-slurm and @sec-cluster-sites; moving files
+between machines is @sec-working-remotely.
+
+::: {.check}
+**Check yourself.** You are in `~/bioinf-computing/data/raw`. Give a
+relative and an absolute path to `samples.tsv` in `data/meta`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Relative: `../meta/samples.tsv`. Absolute:
+`~/bioinf-computing/data/meta/samples.tsv`, or
+`/home/you/bioinf-computing/data/meta/samples.tsv` written out.
+:::
+:::
+
+## Looking around: `ls` and its options {#sec-shell-basics-ls}
+
+In the project folder, try each option:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+ls -a
+ls -F
+ls -lh data/raw
+ls -ld data/raw
+ls -lt logs
+```
+
+```{.console}
+.   .pixi  logs         notes.txt  pixi.toml  results
+..  data   NOTEBOOK.md  pixi.lock  README.md  src
+data/  NOTEBOOK.md  pixi.lock  README.md  src/
+logs/  notes.txt    pixi.toml  results/
+total 4.3M
+-r--r--r-- 1 you you  112 Nov 17 11:22 checksums.md5
+-r--r--r-- 1 you you 2.2M Nov 17 11:22 SRR6357070_1.fastq.gz
+-r--r--r-- 1 you you 2.2M Nov 17 11:22 SRR6357070_2.fastq.gz
+dr-xr-xr-x 2 you you 4096 Nov 17 11:22 data/raw
+-rw-r--r-- 1 you you 369 Nov 17 12:28 01_count_reads_2026-11-17T122821_jlSC.log
+-rw-r--r-- 1 you you 399 Nov 17 12:24 01_count_reads_2026-11-17T122453_7WFs.log
+```
+
+Your dates, sizes of logs, and log names will differ, and you may have
+more logs. What each option did:
+
+- **`-a`** (all) shows names starting with a dot. `.pixi` is the hidden
+  folder where @sec-book-setup's environment lives: do not edit it by
+  hand; `pixi install` rebuilds it. `.` and `..` are the current and the
+  parent folder. A leading dot **hides** a name by convention; it does
+  not protect it. (`-A` shows hidden names without `.` and `..`.)
+- **`-F`** adds `/` after folders (and `@` after links, `*` after
+  programs).
+- **`-l`** (long) gives one line per file, and **`-h`** prints sizes in
+  human units (`2.2M` instead of `2239317`). Options combine: `-lh` is
+  `-l -h`, as in @sec-getting-help.
+- **`-d`** lists a folder itself instead of its contents
+  (@sec-organizing-projects used it to check `data/raw` was locked).
+- **`-t`** sorts by time, newest first: the quickest way to find the
+  latest log.
+
+With names as arguments, `ls` lists only those. Most systems colour
+names by type in the terminal (folders blue, links cyan); the book shows
+output without colour. When a name contains a space, GNU `ls` puts it in
+quotes, as in `'Run 3 final'` in the setup block's output: the quotes
+show where the name starts and ends and are not part of it.
+
+**Read one long line** with @fig-ls-long.
+
+::: {#fig-ls-long}
+{{< svg ../figures/ls-long.svg >}}
+
+Two `ls -l` lines, field by field: a read-only FASTQ file and the
+`data/ref` link. The first character is the type; the permissions are
+@sec-linux-system. A link's size is the length of the path it holds.
+:::
+
+A folder's size in `ls -l` (`4096` above) is the size of its list of
+names, not of what is inside; `du` measures that (@sec-linux-system).
+
+::: {.check}
+**Check yourself.** `ls` shows nothing in a folder, but the disk-usage
+tool says the folder holds 2 GB. What do you try first?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`ls -a`: the space is probably in hidden files or folders, names that
+start with a dot, such as `.pixi`.
+:::
+:::
+
+## Creating, copying, moving, and deleting {#sec-shell-basics-files}
+
+Work in a new `practice` folder inside the scratch folder:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch05/practice
+cd ~/bioinf-computing-ch05/practice
+mkdir notes
+mkdir p/q
+mkdir -p p/q # <1>
+touch notes/todo.txt # <2>
+cp notes/todo.txt notes/todo_copy.txt
+cp notes backup
+cp -r notes backup # <3>
+mv backup/todo_copy.txt backup/done.txt # <4>
+mv backup old_notes
+ls
+```
+1. `-p` makes every missing folder on the way, and is quiet if the
+   folder exists.
+2. `touch` makes an empty file (or updates the time of an existing one).
+3. `-r` (recursive) copies a folder and everything inside it.
+4. `mv` renames a file here, and renames a folder on the next line: one
+   command, two jobs, moving and renaming.
+
+```{.console}
+mkdir: cannot create directory ‘p/q’: No such file or directory
+cp: -r not specified; omitting directory 'notes'
+notes  old_notes  p
+```
+
+`mkdir p/q` failed because `p` did not exist; `-p` makes both. `cp`
+without `-r` refuses a folder. `mv old new` moves a file or folder to a
+new name, or into a folder if `new` is an existing folder:
+`mv backup/done.txt notes/` would move the file into `notes`.
+
+Now the ways to delete:
+
+```{.bash filename="Terminal (laptop)"}
+rmdir p
+rm p
+rm -r p # <1>
+ls
+```
+1. `rm -r` removes a folder and everything in it.
+
+```{.console}
+rmdir: failed to remove 'p': Directory not empty
+rm: cannot remove 'p': Is a directory
+notes  old_notes
+```
+
+`rmdir` removes only empty folders, which makes it the safe choice when
+you think a folder is empty. `rm` removes files, and with `-r`, folders
+and everything in them.
+
+### Three surprises
+
+**`cp` and `mv` overwrite without asking.** Make two small files and
+copy one over the other (`>` writes a command's output into a file, as
+in @sec-orientation; @sec-text-tools explains it):
+
+```{.bash filename="Terminal (laptop)"}
+echo "version 1" > old.txt
+echo "version 2" > new.txt
+cp new.txt old.txt
+cat old.txt
+echo "version 3" > newer.txt
+mv newer.txt old.txt
+cat old.txt
+ls
+```
+
+```{.console}
+version 2
+version 3
+new.txt  notes  old_notes  old.txt
+```
+
+No question, no warning: `version 1` is gone, then `version 2`. `-i`
+(interactive) asks first, and `-n` (no-clobber) never overwrites:
+
+```{.bash filename="Terminal (laptop)"}
+echo "version 4" > new.txt
+cp -n new.txt old.txt
+cat old.txt
+cp -i new.txt old.txt
+```
+
+```{.console}
+version 3
+cp: overwrite 'old.txt'? n
+```
+
+`cp -n` skipped the copy without a message; `cp -i` asked, and `n`
+kept the old file.
+
+**`rm` has no trash folder and no undo.** A file removed with `rm` is
+gone at once; nothing on the command line puts it back. `rm -i` asks
+before each file. `rm -r` on the wrong folder is the classic disaster.
+
+**A trailing slash matters for links.** @sec-organizing-projects showed
+that `rm -r data/ref/` follows the link and deletes the shared files.
+Remove a link with `unlink name` or `rm name`: no slash, no `-r`.
+
+::: {.callout-warning}
+## Pitfall: no undo
+`rm` deletes for good, and `cp` and `mv` overwrite silently. Before you
+delete, list exactly the names the command will get, with
+`ls -d -- <the same names>`. Keep raw data read-only and backed up
+(@sec-organizing-projects): those are the only undo.
+:::
+
+### The safe habit: preview, then delete
+
+Go to the practice tree and list what a wildcard would hand to `rm`
+(wildcards are explained in @sec-shell-basics-wildcards; `run*` means
+"names starting with `run`"):
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+ls run*
+ls -d -- run*
+```
+
+```{.console}
+run1:
+sample_A_R1.fastq.gz  sample_A_R2.fastq.gz
+
+run2:
+sample_B_R1.fastq.gz  sample_B_R1.fastq.gz.tmp  sample_B_R2.fastq.gz
+run1  run2
+```
+
+Plain `ls run*` showed what is **inside** the two folders. But
+`rm -r run*` would get the folders themselves, `run1` and `run2`, and
+`ls -d -- run*` lists exactly those. So the habit is:
+
+1. Run `ls -d --` with the names or pattern you mean to delete.
+2. If the list is right, press {{< kbd Up >}}, change `ls -d` to
+   `rm -i` (@sec-shell-basics-history shows the editing keys), and run
+   it.
+
+`--` means "no more options after this". Quotes keep a name with spaces
+as one argument, but they do not stop a name that starts with `-` from
+being read as an option. Try it on a throw-away file named `-n`:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/practice
+touch -- -n
+rm -n
+rm -i -- -n
+```
+
+```{.console}
+rm: invalid option -- 'n'
+Try 'rm ./-n' to remove the file '-n'.
+Try 'rm --help' for more information.
+rm: remove regular empty file '-n'? y
+```
+
+`rm` itself suggests the other way out: `./-n` starts with `.`, so it
+cannot be an option. That was your first real deletion, of a file you
+made a minute ago, with `-i` asking first.
+
+::: {.callout-caution .misconception}
+## Misconception: "Deleted files go to a trash folder I can restore from"
+**Reality.** `rm` removes the name at once. There is no trash on the
+command line; only backups, or snapshots that some sites keep of some
+storage (@sec-cluster-sites), can bring a file back. Ask before you
+count on snapshots.
+:::
+
+More habits, one line each:
+
+- Never run `rm -rf` on a path built from a variable or a wildcard you
+  have not previewed (variables are @sec-shell-scripts).
+- Keep raw data read-only: in @sec-organizing-projects, `chmod a-w`
+  turned a slip into `Permission denied`.
+- The book does not suggest making `rm` always ask (an alias for
+  `rm -i`): the habit stops protecting you the day you work on a machine
+  without it.
+
+@tbl-file-commands collects the commands.
+
+::: {.wide-table}
+: Commands that create, copy, move, link, and delete, and what they do
+without asking. {#tbl-file-commands}
+
+| Command | Does | Overwrites or deletes without asking? | Safer form | Undo? |
+|:--------|:-----|:--------------------------------------|:-----------|:------|
+| `mkdir -p a/b` | makes folders, with any missing parents | no | — | `rmdir` |
+| `touch f` | makes an empty file, or updates its time | no | — | `rm f` |
+| `cp a b` | copies a file | **yes**, if `b` exists | `cp -i`, `cp -n` | none |
+| `cp -r d e` | copies a folder and its contents | **yes**, files inside `e` | `cp -ri` | none |
+| `mv a b` | moves or renames | **yes**, if `b` exists | `mv -i`, `mv -n` | move back, if nothing was overwritten |
+| `rm f` | deletes a file | **yes**: that is its job | `ls -d -- f` first; `rm -i` | backups only |
+| `rm -r d` | deletes a folder and everything in it | **yes** | `ls -d -- d` first; `rm -ri` | backups only |
+| `rmdir d` | deletes an **empty** folder | no: refuses if not empty | — | `mkdir d` |
+| `ln -s target name` | makes a symbolic link | no: refuses if `name` exists | — | `unlink name` |
+| `unlink name` | removes one link or file | **yes** | no trailing slash | make the link again |
+:::
+
+::: {.check}
+**Check yourself.** You run `mv results_new.tsv results.tsv`, and
+`results.tsv` already existed. What happened to it?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+It is gone: replaced without a question. `mv -i` would have asked and
+`mv -n` would have refused; now only a backup brings it back.
+:::
+:::
+
+## Symbolic links, revisited {#sec-shell-basics-links}
+
+@sec-organizing-projects made `data/ref`, a link to the shared reference
+folder. Here are four ways to ask where a link points:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+ls -l data/ref
+readlink data/ref
+readlink -f data/ref
+realpath data/raw/../ref
+```
+
+```{.console}
+lrwxrwxrwx 1 you you 53 Nov 17 11:22 data/ref -> /home/you/bioinf-shared/references/yeast_R64-1-1_test
+/home/you/bioinf-shared/references/yeast_R64-1-1_test
+/home/you/bioinf-shared/references/yeast_R64-1-1_test
+/home/you/bioinf-shared/references/yeast_R64-1-1_test
+```
+
+`readlink` prints the path the link **stores**; `readlink -f` and
+`realpath` print where it finally **leads**, after following every link
+and every `..`. Here they agree because the link stores an absolute
+path. (For reference: you will rarely need `readlink -f` and
+`realpath`, but they are the tools for "where does this really go?")
+
+**A broken link.** The practice folder's `ref` points to a path that
+does not exist:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+ls -l ref
+cat ref
+find . -xtype l
+```
+
+```{.console}
+lrwxrwxrwx 1 you you 15 Nov 17 11:40 ref -> /no/such/genome
+cat: ref: No such file or directory
+./ref
+```
+
+`ls -l` still shows the link and its arrow (often in red), but anything
+that opens it fails with `No such file or directory`, although `ref` is
+right there in the listing. `find . -xtype l` lists broken links; it
+comes back in @sec-shell-basics-find.
+
+**Relative targets.** A link can store an absolute path or a relative
+one, and a relative one is read from **the link's own folder**, not from
+the folder where you ran `ln -s`. This is the most common way to make a
+broken link (@fig-link-targets). Try it from `share`, making links in a
+new folder `tidy` next to it:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+mkdir -p ../tidy
+ln -s run1/sample_A_R1.fastq.gz ../tidy/wrong.fastq.gz
+ln -s ../share/run1/sample_A_R1.fastq.gz ../tidy/right.fastq.gz
+file ../tidy/wrong.fastq.gz ../tidy/right.fastq.gz
+```
+
+```{.console}
+../tidy/wrong.fastq.gz: broken symbolic link to run1/sample_A_R1.fastq.gz
+../tidy/right.fastq.gz: symbolic link to ../share/run1/sample_A_R1.fastq.gz
+```
+
+`wrong.fastq.gz` stores `run1/sample_A_R1.fastq.gz`, which is read from
+`tidy/`, where there is no `run1`. `right.fastq.gz` stores a path that
+goes up from `tidy/` and into `share/`. (`file` names the kind of thing
+a path is; more in @sec-shell-basics-viewing.) Remove both with
+`unlink`, which removes only the links:
+
+```{.bash filename="Terminal (laptop)"}
+unlink ../tidy/wrong.fastq.gz
+unlink ../tidy/right.fastq.gz
+```
+
+::: {#fig-link-targets}
+{{< svg ../figures/link-targets.svg >}}
+
+A relative link target is read from the folder the link is in. Both
+commands were run in `share/`, but both links live in `tidy/`, so
+`run1/…` leads nowhere, while `../share/run1/…` reaches the file.
+:::
+
+::: {.callout-warning}
+## Pitfall: a relative target is read from the link's folder
+`ln -s run1/x.fastq.gz ../tidy/x.fastq.gz` stores `run1/x.fastq.gz`,
+which is looked up from `tidy/`, not from where you ran the command.
+Use an absolute target, or write the path as seen from the link's
+folder.
+:::
+
+When to use which (@tbl-link-targets): absolute targets for shared lab
+data and references, as in @sec-organizing-projects; relative targets
+inside one project that you might move or copy as a whole. In
+`ln -s target name`, the target comes first, as the source does in
+`cp source destination`. **Hard links** (`ln` without `-s`) also exist;
+this book does not use them.
+
+: Absolute and relative link targets. {#tbl-link-targets}
+
+| Target written as | Read from | Still works if you move the link? | Still works if you move the target? | Use for |
+|:------------------|:----------|:----------------------------------|:------------------------------------|:--------|
+| absolute, `/home/you/…` or `~/…` | the root | yes | no | shared data and references |
+| relative, `../share/…` | the link's own folder | only if the target moves with it | only if the link moves with it | links inside one project |
+
+::: {.check}
+**Check yourself.** In `~/proj/data/` you run
+`ln -s raw/x.fq.gz ~/proj/results/x.fq.gz`. Does the link work?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+No. The link is in `~/proj/results/`, so its target `raw/x.fq.gz` is
+looked up there, and there is no `results/raw/`. Use
+`../data/raw/x.fq.gz` or an absolute path.
+:::
+:::
+
+## Wildcards, quoting, and tab completion {#sec-shell-basics-wildcards}
+
+**A prediction round first.** Go to `run1` in the practice folder.
+`ls` shows two files, `sample_A_R1.fastq.gz` and
+`sample_A_R2.fastq.gz`. For each line, write down what `echo` will print
+(it prints its arguments), then run it:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share/run1
+echo *
+echo *.fastq.gz
+echo *_R1*
+echo sample_?_R1.fastq.gz
+echo *.fq.gz
+```
+
+Then one level up, in `share`:
+
+```{.bash filename="Terminal (laptop)"}
+cd ..
+echo *
+echo .*
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Output
+
+```{.console}
+sample_A_R1.fastq.gz sample_A_R2.fastq.gz
+sample_A_R1.fastq.gz sample_A_R2.fastq.gz
+sample_A_R1.fastq.gz
+sample_A_R1.fastq.gz
+*.fq.gz
+analysis meta notes.txt ref Run 3 final run1 run2
+.old_settings
+```
+
+`*` matches any characters, including none; `?` matches exactly one.
+`*.fq.gz` matched nothing, so it came out unchanged. `*` skipped
+`.old_settings`, and `.*` found only it. (Bash before 5.2, such as
+Nova's 5.1, also lists `.` and `..` for `.*`.)
+:::
+
+**Now name it.** `echo` did not do any matching. **Bash replaces an
+unquoted pattern with the matching names before the command starts**
+(called *globbing*, or filename expansion). The program receives a list
+of names and never sees the `*`. When nothing matches, bash's default is
+to pass the pattern on unchanged (changing that default is
+@sec-shell-scripts). That explains @sec-getting-help's case 2,
+`[ERRO] stat data/raw/*.fq.gz: no such file or directory`: seqkit was
+handed the literal `data/raw/*.fq.gz` and looked for a file with that
+name. `ls` does the same:
+
+```{.bash filename="Terminal (laptop)"}
+ls *.fq.gz
+```
+
+```{.console}
+ls: cannot access '*.fq.gz': No such file or directory
+```
+
+@fig-glob-expansion shows all three cases.
+
+::: {#fig-glob-expansion}
+{{< svg ../figures/glob-expansion.svg >}}
+
+Who matches a pattern. Unquoted, bash matches it against the files and
+the program gets the names; with no match, the program gets the pattern
+itself. Quoted, the pattern reaches the program unchanged, which is what
+`find -name` wants.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "The program reads the `*` and finds the matching files itself"
+**Reality.** For an unquoted pattern, bash does the matching first, and
+the program gets names, or the unchanged pattern when nothing matches.
+Only a quoted pattern reaches the program, which some programs, such
+as `find -name`, want.
+:::
+
+**One argument per name, spaces included.** `echo` joins its arguments
+with spaces, so it cannot show where one ends and the next begins. In
+`share/analysis`, `plot 1.png` is one name, but `echo` makes it look like
+two. `printf '<%s>\n'` prints each argument on its own line, between
+`<` and `>`:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+echo analysis/*
+printf '<%s>\n' analysis/*
+```
+
+```{.console}
+analysis/counts FINAL.txt analysis/plot 1.png analysis/plot 2.png
+<analysis/counts FINAL.txt>
+<analysis/plot 1.png>
+<analysis/plot 2.png>
+```
+
+Three arguments, spaces kept: a name that comes from a wildcard is not
+split again. That is why `ls analysis/*` handles these names fine, and
+why `echo` is only a quick preview for simple names like the ones in
+`run1`. To see the exact list a command would get, use `ls -d --` or
+`printf '<%s>\n'`.
+
+**Patterns.** @tbl-glob-patterns lists the ones you need. Brace
+expansion looks similar but is different: it **makes** words, whether
+or not files exist.
+
+::: {.wide-table}
+: Wildcard patterns, tried in `~/bioinf-computing-ch05/share` (before
+Exercise 3 tidies it). {#tbl-glob-patterns}
+
+| Pattern | Matches | Example | Result |
+|:--------|:--------|:--------|:-------|
+| `*` | any characters, including none (not a leading `.`) | `echo run1/*` | `run1/sample_A_R1.fastq.gz run1/sample_A_R2.fastq.gz` |
+| `?` | exactly one character | `echo run?` | `run1 run2` |
+| `[12]` | one of the listed characters | `echo run[12]/*_R1*` | `run1/sample_A_R1.fastq.gz run2/sample_B_R1.fastq.gz run2/sample_B_R1.fastq.gz.tmp` |
+| `[!1]` | one character **not** listed | `echo run[!1]` | `run2` |
+| `{A,B}` | brace expansion: makes each word, files or not | `echo sample_{A,B}_R1.fastq.gz` | `sample_A_R1.fastq.gz sample_B_R1.fastq.gz` |
+| `{01..03}` | brace expansion: a range | `echo sample_{01..03}` | `sample_01 sample_02 sample_03` |
+:::
+
+Note the `[12]` row: `*_R1*` also matched the `.tmp` copy, because `*`
+at the end matches `.fastq.gz.tmp` too. Patterns match **file names**,
+not what is inside files (that is `grep`, @sec-text-tools), and they are
+not regular expressions, which @sec-text-tools also covers. Brace
+ranges are for reference; you will meet them again in loops
+(@sec-shell-scripts).
+
+**Programs that match patterns themselves.** Compare these two in
+`share`:
+
+```{.bash filename="Terminal (laptop)"}
+ls *.fastq.gz
+find . -name '*.fastq.gz'
+```
+
+```{.console}
+ls: cannot access '*.fastq.gz': No such file or directory
+./run2/sample_B_R1.fastq.gz
+./run2/sample_B_R2.fastq.gz
+./run1/sample_A_R1.fastq.gz
+./run1/sample_A_R2.fastq.gz
+```
+
+`share` itself holds no `.fastq.gz` file, so bash passed `*.fastq.gz`
+to `ls` unchanged. In the `find` line the quotes stop bash, so `find`
+receives the `*` **on purpose** and matches it against every name in
+every folder below. Your order may differ from this one.
+
+### Quoting
+
+Step 1 of @fig-shell-steps reads a line into words at spaces. So a name
+with a space, typed plainly, becomes two arguments:
+
+```{.bash filename="Terminal (laptop)"}
+ls analysis/plot 1.png
+```
+
+```{.console}
+ls: cannot access 'analysis/plot': No such file or directory
+ls: cannot access '1.png': No such file or directory
+```
+
+Three ways to keep it one word, all of which work:
+
+```{.bash filename="Terminal (laptop)"}
+ls "analysis/plot 1.png"
+ls 'analysis/plot 1.png'
+ls analysis/plot\ 1.png
+```
+
+The backslash form is what {{< kbd Tab >}} inserts for you. Double and
+single quotes differ in one way that matters later: inside double
+quotes bash still expands `$…` (variables, @sec-shell-scripts), and
+inside single quotes it expands nothing. Quoting also turns off
+wildcards and `~` (@tbl-quoting):
+
+```{.bash filename="Terminal (laptop)"}
+ls "run1/*.fastq.gz"
+ls "~/bioinf-computing"
+```
+
+```{.console}
+ls: cannot access 'run1/*.fastq.gz': No such file or directory
+ls: cannot access '~/bioinf-computing': No such file or directory
+```
+
+The first looked for a file literally named `*.fastq.gz`. In the second,
+`~` was not expanded, so the path is **relative**: a folder literally
+named `~` inside the current folder, then `bioinf-computing` inside
+that (the `/` still separates folders). Leave `~` outside the quotes,
+or use `$HOME`, which double quotes do expand:
+
+```{.bash filename="Terminal (laptop)"}
+ls ~/"bioinf-computing-ch05/share/Run 3 final"
+ls "$HOME/bioinf-computing-ch05/share/Run 3 final"
+```
+
+```{.console}
+sample_C_R1.fq.gz  sample_C_R2.fq.gz
+sample_C_R1.fq.gz  sample_C_R2.fq.gz
+```
+
+::: {.callout-warning}
+## Pitfall: `~` and wildcards inside quotes
+`"~/data"` is a relative path: a folder literally named `~`, then `data`
+inside it. Write `~/"My Data"` or `"$HOME/My Data"`. And `"*.fastq.gz"`
+is the name `*.fastq.gz`, not a pattern.
+:::
+
+: What each kind of quoting keeps and expands. {#tbl-quoting}
+
+| Form | Example | Spaces kept in one word? | `*` expanded? | `~` expanded? | `$…` expanded? |
+|:-----|:--------|:-------------------------|:--------------|:--------------|:---------------|
+| none | `ls plot 1.png` | no | yes | yes, at the start of a word | yes |
+| double quotes | `ls "plot 1.png"` | yes | no | no | yes |
+| single quotes | `ls 'plot 1.png'` | yes | no | no | no |
+| backslash | `ls plot\ 1.png` | yes, for that character | not for an escaped `\*` | not for an escaped `\~` | not for an escaped `\$` |
+
+Curly quotes copied from a PDF or a word processor (`“…”`, `‘…’`) are
+not quotes to bash: they become part of the name, the same trap as
+@sec-getting-help's en dash.
+
+### Tab completion
+
+{{< kbd Tab >}} completes as far as the name is unique; a second
+{{< kbd Tab >}} lists the choices. It completes command names and paths,
+and with the bash-completion package (installed on most Linux systems)
+often options too. It is also a **typo detector**: if Tab will not
+complete a name you are sure of, check with `ls`. It would have flagged
+@sec-getting-help's `SRR6357070_l` at once. Treat it as a clue, not
+proof: a prefix may match several names, permissions can get in the
+way, and completion differs between commands.
+
+::: {.callout-important}
+## Key idea
+Bash expands an unquoted wildcard; the program sees the matching names,
+each as one argument. No match means the pattern is passed on as it is.
+Quote a pattern when the program should match it itself (`find -name`).
+:::
+
+::: {.check}
+**Check yourself.** In a folder with no `.bam` files you run `ls *.bam`.
+What does `ls` receive, and what does it print?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The literal word `*.bam`, because nothing matched. It prints
+`ls: cannot access '*.bam': No such file or directory`.
+:::
+:::
+
+### Why careful names pay off
+
+Experienced users name files `2026-11-17_read_counts.tsv` rather than
+`Read Counts (final).txt`. This is not a matter of taste. On the
+command line, names are typed, matched by wildcards, and split into
+words, not clicked. The practice tree is messy on purpose:
+`Run 3 final` breaks three of the naming rules in @tbl-file-names at
+once (a space, a capital letter, and the vague word "final"). This
+chapter has made you pay for each one. @tbl-name-costs gathers the
+costs in one place.
+
+: What each naming rule from @sec-organizing-projects saved you in this
+chapter. {#tbl-name-costs}
+
+| Rule | What breaking it cost here |
+|:-----|:---------------------------|
+| No spaces | `Run 3 final` needed quotes in every `cd`, `ls`, and `ln -s`; `echo` could not show where the name ended; `ls` printed it inside quotes |
+| One case, lowercase | `run?` and `run*` missed `Run 3 final`; Tab completion is case-sensitive, so `cd ru` then {{< kbd Tab >}} never offers it |
+| Only letters, digits, `_`, `-`, `.` | `*`, `?`, and `[ ]` match names; `$` expands; `( )`, `;`, `&`, `\|`, `<`, and `>` split or redirect commands. `ls Final FINAL (2).txt` stops with ``syntax error near unexpected token `('`` |
+| Never start a name with `-` | `rm -n` read the file name as an option, so you needed `--` or `./-n` |
+| Start with `.` only for hidden files | `ls` and `*` skip `.old_settings`; you see it only with `ls -a` |
+
+**What about `CamelCase` or `MyData`?** Capital letters work, and
+nothing breaks the first time you use them. The cost comes later. You
+have to remember which letters were capitals every time you type a
+name or press Tab. On Linux and the cluster, `MyData` and `mydata` can
+sit side by side as two folders. On a Mac or in a Windows folder they
+are the same name, so copying a project between them can overwrite one
+with the other. All lowercase removes the question. Join words with
+`_` (`read_counts.tsv`), and use `-` inside a single part, such as a
+date or a version (`2026-11-17`, `R64-1-1`), as @tbl-file-names does.
+For code, prefer `_`: Python cannot `import` a file named with a
+hyphen, such as `count-reads.py` (@sec-python-essentials).
+
+Two kinds of names keep their capitals. IDs from an archive or a
+sample sheet stay exactly as given (`SRR6357070`, `WT_REP1`), so they
+still match the records. A few files are capitalized by long
+convention so that people and tools find them first: `README.md`,
+`LICENSE`, `Makefile`, and your `NOTEBOOK.md`.
+
+## Finding files with `find` {#sec-shell-basics-find}
+
+`find` walks down a folder tree and prints every name that passes its
+tests. Start with no tests:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05
+find share
+```
+
+```{.console}
+share
+share/ref
+share/analysis
+share/analysis/plot 1.png
+share/analysis/plot 2.png
+share/analysis/counts FINAL.txt
+share/notes.txt
+share/meta
+share/meta/samples.tsv
+share/meta/samples_from_excel.csv
+share/run2
+share/run2/sample_B_R1.fastq.gz
+share/run2/sample_B_R2.fastq.gz
+share/run2/sample_B_R1.fastq.gz.tmp
+share/.old_settings
+share/run1
+share/run1/sample_A_R1.fastq.gz
+share/run1/sample_A_R2.fastq.gz
+share/Run 3 final
+share/Run 3 final/sample_C_R1.fq.gz
+share/Run 3 final/sample_C_R2.fq.gz
+```
+
+Everything, hidden files included, in the order `find` meets it (yours
+may differ). Now add tests:
+
+```{.bash filename="Terminal (laptop)"}
+find share -name "*.fastq.gz"
+find share -type l
+find share -iname "*final*"
+find share -maxdepth 1 -type f
+```
+
+```{.console}
+share/run2/sample_B_R1.fastq.gz
+share/run2/sample_B_R2.fastq.gz
+share/run1/sample_A_R1.fastq.gz
+share/run1/sample_A_R2.fastq.gz
+share/ref
+share/analysis/counts FINAL.txt
+share/Run 3 final
+share/notes.txt
+share/.old_settings
+```
+
+`-name` matched the pattern against each name (not the folders above
+it), and missed the `.fq.gz` files in `Run 3 final`. `-type l` found the
+link; `-type f` means ordinary files and `-type d` folders. `-iname`
+ignores upper and lower case, so `*final*` matched `FINAL` and `final`.
+`-maxdepth 1` stopped `find` from going into subfolders. To find all
+six read files, accept either ending:
+
+```{.bash filename="Terminal (laptop)"}
+find share -type f \( -name "*.fastq.gz" -o -name "*.fq.gz" \)
+```
+
+```{.console}
+share/run2/sample_B_R1.fastq.gz
+share/run2/sample_B_R2.fastq.gz
+share/run1/sample_A_R1.fastq.gz
+share/run1/sample_A_R2.fastq.gz
+share/Run 3 final/sample_C_R1.fq.gz
+share/Run 3 final/sample_C_R2.fq.gz
+```
+
+**The structure** is `find <where> <tests> [action]`:
+
+- Tests written next to each other must **all** be true (an implicit
+  AND): `-type f -name "*.tmp"` means "an ordinary file **and** named
+  `*.tmp`".
+- `-o` means OR, and `\( … \)` groups. The backslashes stop bash from
+  reading the parentheses itself; the spaces around them are needed.
+  Without the group, `-type f -name A -o -name B` means "(file and A) or
+  B".
+- The default **action** is to print each name.
+
+Two tests for reference, useful on real data:
+
+```{.bash filename="Terminal (laptop)"}
+find share -size +1k
+find share -mtime +30
+```
+
+```{.console}
+share/analysis/counts FINAL.txt
+share/notes.txt
+share/.old_settings
+```
+
+`-size +1k` means larger than 1 kilobyte: only the counts file, since
+the toy FASTQ files are under 50 bytes each. On a `.gz` file, `-size`
+measures the compressed file. `-mtime +30` means last changed more than
+30 days ago: the two files the setup block back-dated to 2025-03-01.
+`-mtime -1` would find files changed in the last day.
+
+::: {.callout-warning}
+## Pitfall: quote the pattern after `find -name`
+Unquoted, bash expands the pattern first (@sec-shell-basics-wildcards),
+and `find` gets file names instead of the pattern. It can fail, or worse,
+run and miss files.
+:::
+
+Both cases, on throw-away files:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch05/practice/findtest/deep
+cd ~/bioinf-computing-ch05/practice/findtest
+touch a_1.fastq.gz a_2.fastq.gz deep/b_1.fastq.gz
+find . -name *.fastq.gz
+rm -i -- a_2.fastq.gz
+find . -name *.fastq.gz
+find . -name "*.fastq.gz"
+```
+
+```{.console}
+find: paths must precede expression: `a_2.fastq.gz'
+find: possible unquoted pattern after predicate `-name'?
+rm: remove regular empty file 'a_2.fastq.gz'? y
+./a_1.fastq.gz
+./deep/b_1.fastq.gz
+./a_1.fastq.gz
+```
+
+With two matches in the current folder, bash turned the command into
+`find . -name a_1.fastq.gz a_2.fastq.gz`, and `find` objected (helpfully
+guessing why). With one match, it became `find . -name a_1.fastq.gz`:
+no error, and `deep/b_1.fastq.gz` silently missed. That is the worse
+case, @sec-getting-help's lesson that no error does not mean a correct
+result. Quoted, the last line found both.
+
+@tbl-find-tests sums up the parts.
+
+::: {.wide-table}
+: The parts of a `find` command used in this book. {#tbl-find-tests}
+
+| Part | Meaning | Example |
+|:-----|:--------|:--------|
+| `-name "pat"` | the name matches a quoted pattern | `-name "*.fastq.gz"` |
+| `-iname "pat"` | the same, ignoring case | `-iname "*final*"` |
+| `-type f` / `d` / `l` | ordinary file / folder / link | `-type f` |
+| `-xtype l` | a broken link (GNU `find`) | `find . -xtype l` |
+| `-maxdepth N` | go at most N levels down | `-maxdepth 1` |
+| `-size +N` (reference) | larger than N (`k`, `M`, `G`) | `-size +1G` |
+| `-mtime +N` / `-N` (reference) | changed more / less than N days ago | `-mtime -1` |
+| next to each other | AND: all must be true | `-type f -name "*.tmp"` |
+| `-o` | OR | `-name "*.fq.gz" -o -name "*.fastq.gz"` |
+| `\( … \)` | group | `-type f \( … -o … \)` |
+| (no action) | print each name (the default) | |
+| `-exec`, `-delete` | actions: run a command on each, delete each | not used here (below) |
+:::
+
+**Where you will use it.** Finding where a pipeline wrote its outputs
+(@sec-nf-core); counting your files when a cluster limits how many you
+may have, with `find … -type f | wc -l` (@sec-hpc-slurm; the `|` is
+@sec-text-tools); and finding broken links, as in Exercise 3.
+
+`-exec` and `-delete` are **actions**, not tests, and this chapter does
+not use them. `-delete` in particular is unforgiving: what it deletes
+depends on where it sits in the expression (placed before the tests, it
+deletes everything `find` reaches), it turns off printing, and it changes
+the order of the search ([GNU findutils
+manual](https://www.gnu.org/software/findutils/manual/)).
+Clean-up here uses `unlink` and `rm -i`.
+
+On a Mac, `-xtype` and `-printf` (used in Exercise 3) need GNU `find`,
+which @sec-orientation's setup installed; GNU and BSD tools are compared
+in @sec-linux-system. You may also meet `locate`, which searches a
+prebuilt index: fast, but missing on most clusters and often out of
+date.
+
+::: {.check}
+**Check yourself.** Why is `find . -name *.fastq.gz` wrong even when it
+seems to work?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Bash may expand the pattern first. With exactly one match in the current
+folder, `find` looks only for that one name and misses the rest, with no
+error.
+:::
+:::
+
+## Looking inside files {#sec-shell-basics-viewing}
+
+In the project, start with a short file, then the start and end of
+longer ones:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+cat data/meta/samples.tsv
+head -n 3 logs/01_count_reads_2026-11-17T122453_7WFs.log
+tail -n 3 logs/01_count_reads_2026-11-17T122453_7WFs.log
+```
+
+Use your own log's name: `ls -t logs` lists them newest first, and
+{{< kbd Tab >}} completes the name.
+
+```{.console}
+sample	run	geo_sample	condition	replicate
+WT_REP1	SRR6357070	GSM2879618	wild_type	1
+started:  2026-11-17 12:24:53 -0600
+host:     your-laptop
+script:   76fa8eb6a7b90f212042cfbe6d95cfcc  src/01_count_reads.sh
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-17 12:24:53 -0600
+```
+
+`cat` prints the whole file: fine for two lines. `head -n 3` prints the
+first 3 lines and `tail -n 3` the last 3 (10 if you leave out `-n`).
+`head` reads only the start of a file, so it is instant even on 100 GB.
+
+**`less`** lets you move around a file of any length:
+
+```{.bash filename="Terminal (laptop)"}
+less logs/01_count_reads_2026-11-17T122453_7WFs.log
+less data/ref/README.md
+```
+
+Move with {{< kbd Space >}} and `b`, search with `/finished` and
+{{< kbd Enter >}}, and quit with `q` (@tbl-less-keys). These are the keys
+you used in `man` in @sec-getting-help, because `man` shows its pages
+with `less`.
+
+: Keys in `less` (and in `man`). {#tbl-less-keys}
+
+| Key | Action |
+|:----|:-------|
+| {{< kbd Space >}} / `b` | one page forward / back |
+| {{< kbd Down >}} / {{< kbd Up >}} | one line forward / back |
+| `g` / `G` | start / end of the file |
+| `/word` then {{< kbd Enter >}} | search forward for `word` |
+| `n` / `N` | next / previous match |
+| `-S` then {{< kbd Enter >}} | chop long lines instead of wrapping them (also `less -S file`) |
+| `-N` then {{< kbd Enter >}} | show line numbers (also `less -N file`) |
+| `q` | quit |
+
+`less -S` keeps each line of a wide table on one screen line; scroll
+sideways with the arrow keys. You will want it for wide tables and SAM
+files (@sec-sam-bam-cram).
+
+**What kind of file is it?** Before you `cat` something, `file` tells
+you:
+
+```{.bash filename="Terminal (laptop)"}
+file data/raw/SRR6357070_1.fastq.gz data/meta/samples.tsv data/raw data/ref
+```
+
+```{.console}
+data/raw/SRR6357070_1.fastq.gz: gzip compressed data, last modified: Mon Apr 12 16:55:05 2021, from Unix, original size modulo 2^32 12776642
+data/meta/samples.tsv:          ASCII text
+data/raw:                       directory
+data/ref:                       symbolic link to /home/you/bioinf-shared/references/yeast_R64-1-1_test
+```
+
+`file` looks at the content, not the name: a `.txt` that is really
+compressed would show as gzip. (On a Mac, `file` follows the link and
+says `directory` for `data/ref`.) The FASTQ file is compressed, about
+12.8 MB of text in 2.2 MB: `cat` on it prints binary noise, which can
+garble the terminal (type `reset` and press {{< kbd Enter >}}, or close
+the tab). Read compressed text with `zless`, which comes with gzip, or
+with `gunzip -c … | head`, as in @sec-orientation:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 4
+zless data/raw/SRR6357070_1.fastq.gz
+```
+
+```{.console}
+@SRR6357070.25017281 25017281/1 kraken:taxid|4932
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
++
+BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+```
+
+One read, four lines (@sec-fasta-fastq explains them). `zless` opens
+the same file in `less`; quit with `q`. On some Linux systems plain
+`less` also opens `.gz` files, because of a helper set up for it (Nova
+has one); on others, including a Mac, it shows noise. Do not rely on it.
+
+::: {.callout-warning}
+## Pitfall: `cat` on a compressed or binary file
+It floods the terminal with noise and can leave it garbled. Check with
+`file` first; read compressed text with `zless` or
+`gunzip -c … | head`.
+:::
+
+**Two more.** `tail -f` follows a file as it grows, printing new lines
+as they arrive, until you press {{< kbd Ctrl-C >}}: you will watch cluster
+job logs this way (@sec-hpc-slurm). `wc -l` counts lines, as in
+@sec-orientation, and `head -c` cuts by bytes, as in
+@sec-getting-help's truncated copy.
+
+**Editor or viewer?** Open a file in VS Code (`code file`,
+@sec-book-setup) when you want to edit it. To look, use `head` or
+`less`: an editor may try to load the whole file at the start, and a
+5 GB file can freeze it. `head` reads only the start; `less` loads more
+as you move, though searching or jumping to the end (`G`) can still read
+most of the file, and paging through a decompressed stream is slower
+than through a plain file.
+
+: Ways to look inside a file. {#tbl-viewers}
+
+| Command | Best for | Reads the whole file? | Works on `.gz`? |
+|:--------|:---------|:----------------------|:----------------|
+| `cat f` | short files | yes, and prints it all | no: noise |
+| `head -n 5 f` | the first lines, column names | no | no; use `gunzip -c f \| head` |
+| `tail -n 5 f` | the last lines, the end of a log | no | no |
+| `tail -f f` | a log that is still growing | follows new lines | no |
+| `less f` | browsing, searching | as far as you move | on some systems |
+| `zless f` | browsing compressed text | as far as you move | yes |
+| `file f` | what kind of file it is | no, only the start | yes: says `gzip compressed data` |
+| `wc -l f` | counting lines | yes | no; `gunzip -c f \| wc -l` |
+
+::: {.callout-caution .misconception}
+## Misconception: "To see what is in a file, I open it in an editor"
+**Reality.** Large files can freeze an editor, and compressed ones show
+noise. `head`, `less`, and `file` let you look without loading the
+whole file; `zless` and `gunzip -c … | head` read compressed text.
+:::
+
+::: {.check}
+**Check yourself.** A colleague's 4 GB `counts.tsv` freezes their
+editor. How do you see the column names and the first rows?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`head -n 5 counts.tsv`, which reads only the start. Or browse with
+`less -S counts.tsv`, which does not load the whole file at the start
+and keeps wide rows on one line.
+:::
+:::
+
+## History and shortcuts {#sec-shell-basics-history}
+
+Bash remembers what you type. Press {{< kbd Up >}} a few times: earlier
+commands come back, ready to run with {{< kbd Enter >}} or to edit
+first. To see a numbered list of recent ones:
+
+```{.bash filename="Terminal (laptop)"}
+history | tail
+```
+
+(The `|` passes the list to `tail`, which keeps the last 10;
+@sec-text-tools explains it.) Faster for an old command is **reverse
+search**: press {{< kbd Ctrl-R >}} and type `seqkit`. The prompt changes
+to `(reverse-i-search)` and shows the newest command containing
+`seqkit`. Press {{< kbd Ctrl-R >}} again for older matches,
+{{< kbd Enter >}} to run the one shown, or {{< kbd Right >}} (or
+{{< kbd Esc >}}) to put it on the line to edit first.
+
+**Editing a recalled line** without the arrow keys (@tbl-shortcuts):
+jump to the start or end, move a word at a time, delete a word. The
+most useful one for this chapter's habit is {{< kbd Alt-. >}}, which
+inserts the last argument of the previous command. Preview with
+`ls -d -- run2/*.tmp`, then type `rm -i -- ` and press
+{{< kbd Alt-. >}}: the same pattern appears, without retyping it.
+
+: Keys for history and line editing. {#tbl-shortcuts}
+
+| Keys | Action | macOS note |
+|:-----|:-------|:-----------|
+| {{< kbd Up >}} / {{< kbd Down >}} | earlier / later command | |
+| {{< kbd Ctrl-R >}} | search history; again for older matches | |
+| {{< kbd Ctrl-A >}} / {{< kbd Ctrl-E >}} | start / end of the line | |
+| {{< kbd Alt-B >}} / {{< kbd Alt-F >}} | back / forward one word | needs Option as Meta (below) |
+| {{< kbd Ctrl-W >}} | delete the word before the cursor | |
+| {{< kbd Ctrl-U >}} / {{< kbd Ctrl-K >}} | delete to the start / to the end of the line | |
+| {{< kbd Alt-. >}} | insert the last argument of the previous command | needs Option as Meta |
+| {{< kbd Ctrl-C >}} | cancel the line, or stop a running program | |
+| {{< kbd Ctrl-D >}} | end input; at an empty prompt, close the shell | |
+| {{< kbd Ctrl-L >}} | clear the screen | |
+| {{< kbd Tab >}} | complete; twice to list choices | |
+
+{{< kbd Ctrl-C >}} stops a running program; stopping and managing
+programs properly (processes, {{< kbd Ctrl-Z >}}, `kill`) is
+@sec-linux-system. {{< kbd Ctrl-D >}} at an empty prompt closes the
+shell: on a cluster that logs you out, so press it with care.
+
+On a Mac, the {{< kbd Alt >}} keys need the Option key to act as Meta:
+in Terminal, *Settings → Profiles → Keyboard → Use Option as Meta key*;
+in iTerm2, *Settings → Profiles → Keys*, Left Option key: *Esc+*. VS
+Code's built-in terminal may keep some shortcuts for itself.
+
+You may also see `!!` (run the previous command again) and `!$` (its
+last argument) in other people's notes. They run without showing you the
+command first, so this book does not use them.
+
+**Where history lives.** Bash keeps it in `~/.bash_history` and saves
+each terminal's commands when that shell exits, so two open terminals do
+not see each other's newest commands until then. Anything you type on
+the command line is stored there, so never put a password or a token in
+a command (@sec-getting-help). How much history is kept is a setting in
+`~/.bashrc` (@sec-linux-system).
+
+::: {.callout-tip}
+## Search, don't scroll
+{{< kbd Ctrl-R >}} finds an old command by any part of it, and
+{{< kbd Alt-. >}} inserts the last argument of the previous one.
+:::
+
+::: {.check}
+**Check yourself.** Name two ways to rerun yesterday's `seqkit stats`
+command without retyping it.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Press {{< kbd Up >}} until it appears; or press {{< kbd Ctrl-R >}} and
+type `seqkit`. (`history | tail` and copying also works.)
+:::
+:::
+
+## Summary {#sec-shell-basics-summary}
+
+- Before a program starts, bash reads the line into words (respecting
+  quotes), expands `~`, wildcards, and `$…` where quoting allows, removes
+  the quotes, and starts the command with the resulting arguments.
+  Builtins such as `cd` are part of bash; most commands are programs.
+- Paths are absolute (from `/` or `~`) or relative (from the current
+  working directory, which `pwd` prints), even inside a script. `.` is
+  here, `..` is up one, `cd -` goes back, `cd` goes home.
+- `cp` and `mv` overwrite silently and `rm` has no undo: preview with
+  `ls -d --`, then use `-i`. A relative link target is read from the
+  link's own folder; remove links with `unlink`, no trailing slash.
+- An unquoted wildcard is matched by bash, each name one argument; no
+  match passes the pattern on unchanged. Quote names with spaces, and
+  quote patterns meant for the program, such as `find -name "*.fq.gz"`.
+  Tab completes names and catches typos. Lowercase names without
+  spaces or special characters need none of this care.
+- `find <where> <tests>` finds files by name, type, depth, size, and
+  age. `head`, `tail`, `less`, and `file` look inside files without
+  loading them whole; `zless` reads compressed text. {{< kbd Ctrl-R >}}
+  and the editing keys bring back and fix earlier commands.
+
+: The chapter's commands on one page. {#tbl-ch05-commands}
+
+| Task | Command |
+|:-----|:--------|
+| Where am I? Go somewhere | `pwd`, `cd path`, `cd ..`, `cd -`, `cd` |
+| List | `ls`, `ls -lh`, `ls -a`, `ls -t`, `ls -d -- names` |
+| Make | `mkdir -p a/b`, `touch file` |
+| Copy, move, rename | `cp -i a b`, `cp -r dir dir2`, `mv -i old new` |
+| Delete | `ls -d -- names` first, then `rm -i -- names`; `rmdir dir` |
+| Link | `ln -s /absolute/target name`, `readlink name`, `unlink name` |
+| Show arguments | `printf '<%s>\n' pattern` |
+| Find | `find dir -type f -name "*.fastq.gz"`, `find dir -xtype l` |
+| Look inside | `head -n 5`, `tail -n 5`, `less -S`, `zless`, `file`, `tail -f` |
+| Recall | {{< kbd Up >}}, {{< kbd Ctrl-R >}}, {{< kbd Alt-. >}}, `history` |
+
+## Exercises {#sec-shell-basics-exercises}
+
+::: {.check}
+**Exercise 1. Where am I?** Starting from `~`, reach
+`~/bioinf-computing/data/raw` twice: once with one absolute path, once
+with relative steps (one folder per `cd`). Then, from `data/raw` and
+without `cd`, list `data/meta` and the reference folder through
+`data/ref` using relative paths. Record each command in `NOTEBOOK.md`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`cd ~/bioinf-computing/data/raw` (or the path written out from `/`);
+then `cd`, `cd bioinf-computing`, `cd data`, `cd raw`. From `data/raw`:
+`ls ../meta` and `ls ../ref/` (the trailing slash lists the shared
+folder's files through the link: `checksums.md5  genes.gtf.gz
+genome.fa.gz  README.md`).
+:::
+:::
+
+::: {.check}
+**Exercise 2. Predict the wildcard.** Do this before Exercise 3, which
+changes the folder. In `~/bioinf-computing-ch05/share`, write down what
+each line prints, then run them:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+echo */*_R1*
+echo run?/*
+echo */*.f*q.gz
+echo *.bam
+echo .*
+echo run[!1]/*
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.console}
+Run 3 final/sample_C_R1.fq.gz run1/sample_A_R1.fastq.gz run2/sample_B_R1.fastq.gz run2/sample_B_R1.fastq.gz.tmp
+run1/sample_A_R1.fastq.gz run1/sample_A_R2.fastq.gz run2/sample_B_R1.fastq.gz run2/sample_B_R1.fastq.gz.tmp run2/sample_B_R2.fastq.gz
+Run 3 final/sample_C_R1.fq.gz Run 3 final/sample_C_R2.fq.gz run1/sample_A_R1.fastq.gz run1/sample_A_R2.fastq.gz run2/sample_B_R1.fastq.gz run2/sample_B_R2.fastq.gz
+*.bam
+.old_settings
+run2/sample_B_R1.fastq.gz run2/sample_B_R1.fastq.gz.tmp run2/sample_B_R2.fastq.gz
+```
+
+Points to check: `*_R1*` also catches the `.tmp` copy; `*.f*q.gz`
+matches both `.fastq.gz` and `.fq.gz` but not `.tmp`, because the name
+must **end** in `q.gz`; `*/` searches one level of subfolders, including
+the one with spaces; `*.bam` matched nothing and came out unchanged;
+`run?` does not match `Run 3 final`, because case matters and `?` is one
+character. The order follows your system's sorting rules and may
+differ slightly.
+:::
+:::
+
+::: {.check}
+**Exercise 3. Tidy a lab share.** You inherit `share/` and want a clean
+folder of read files to work from, without moving or copying the
+originals.
+
+1. From `~/bioinf-computing-ch05`, use `find` to list every read file,
+   both `.fastq.gz` and `.fq.gz`, including those in the folder with
+   spaces.
+2. Make `~/bioinf-computing-ch05/tidy/fastq/` and, from inside it, link
+   each read file there **with an absolute target**, renaming `.fq.gz`
+   to `.fastq.gz` so all six names are consistent. Two links, given
+   complete; adapt them for the other four:
+
+   ```{.bash filename="Terminal (laptop)"}
+   mkdir -p ~/bioinf-computing-ch05/tidy/fastq
+   cd ~/bioinf-computing-ch05/tidy/fastq
+   ln -s ~/bioinf-computing-ch05/share/run1/sample_A_R1.fastq.gz .
+   ln -s ~/bioinf-computing-ch05/share/"Run 3 final"/sample_C_R1.fq.gz sample_C_R1.fastq.gz
+   ```
+
+   (With `.` as the name, the link takes the target's own name.)
+3. In `share`, remove the broken link `ref` with `unlink` (no slash),
+   and delete the leftover `.tmp` file: preview with
+   `ls -d -- run2/*.tmp`, then `rm -i -- run2/*.tmp`.
+4. Check, with these four commands (the `| sort` puts the lines in
+   order; @sec-text-tools):
+
+   ```{.bash filename="Terminal (laptop)"}
+   find ~/bioinf-computing-ch05/tidy -type l -printf '%f -> %l\n' | sort
+   find ~/bioinf-computing-ch05/tidy -xtype l
+   find ~/bioinf-computing-ch05/tidy -type f
+   find ~/bioinf-computing-ch05/share \( -xtype l -o -name '*.tmp' \) -print
+   ```
+
+   The first lists each link and its target (`%f` the link's name, `%l`
+   the stored target); the second lists broken links; the third,
+   ordinary files that should not be in `tidy`; the fourth, a broken
+   link or `.tmp` file left in `share`. Only the first should print
+   anything.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05
+find share -type f \( -name "*.fastq.gz" -o -name "*.fq.gz" \)
+mkdir -p ~/bioinf-computing-ch05/tidy/fastq
+cd ~/bioinf-computing-ch05/tidy/fastq
+ln -s ~/bioinf-computing-ch05/share/run1/sample_A_R1.fastq.gz .
+ln -s ~/bioinf-computing-ch05/share/run1/sample_A_R2.fastq.gz .
+ln -s ~/bioinf-computing-ch05/share/run2/sample_B_R1.fastq.gz .
+ln -s ~/bioinf-computing-ch05/share/run2/sample_B_R2.fastq.gz .
+ln -s ~/bioinf-computing-ch05/share/"Run 3 final"/sample_C_R1.fq.gz sample_C_R1.fastq.gz
+ln -s ~/bioinf-computing-ch05/share/"Run 3 final"/sample_C_R2.fq.gz sample_C_R2.fastq.gz
+cd ~/bioinf-computing-ch05/share
+unlink ref
+ls -d -- run2/*.tmp
+rm -i -- run2/*.tmp
+```
+
+The first check prints these six lines, with your own home folder in
+place of `/home/you` (compare everything after it):
+
+```{.console}
+sample_A_R1.fastq.gz -> /home/you/bioinf-computing-ch05/share/run1/sample_A_R1.fastq.gz
+sample_A_R2.fastq.gz -> /home/you/bioinf-computing-ch05/share/run1/sample_A_R2.fastq.gz
+sample_B_R1.fastq.gz -> /home/you/bioinf-computing-ch05/share/run2/sample_B_R1.fastq.gz
+sample_B_R2.fastq.gz -> /home/you/bioinf-computing-ch05/share/run2/sample_B_R2.fastq.gz
+sample_C_R1.fastq.gz -> /home/you/bioinf-computing-ch05/share/Run 3 final/sample_C_R1.fq.gz
+sample_C_R2.fastq.gz -> /home/you/bioinf-computing-ch05/share/Run 3 final/sample_C_R2.fq.gz
+```
+
+The other three print nothing. Six working links that all point to the
+same file would pass the second check but not the first, which is why
+the first lists every target. Read a link to be sure it works:
+`gunzip -c sample_C_R1.fastq.gz | head -n 4` in `tidy/fastq` prints
+the first record, `@C.1`.
+
+The most common mistake is a relative target, such as
+`ln -s run1/sample_A_R1.fastq.gz ~/bioinf-computing-ch05/tidy/fastq/`
+run from `share`: the link stores `run1/…`, which is read from
+`tidy/fastq/`, and the second check lists it as broken. Remove it with
+`unlink` and make it again with the absolute path.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Read a log without opening it.** In `~/bioinf-computing`,
+list the logs newest first with `ls -t logs`. Find the newest log of a
+run that **finished**: @sec-getting-help made a run fail on purpose, and
+its log, probably the newest, has no `finished:` line. Check each
+candidate with `tail -n 3`. In the finished log, show the first 3 lines
+with `head`, then open it in `less` and use `/finished` to jump to the
+last line. Which seqkit version did the run use?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The failed run's log ends with the `md5sum` lines, with no `finished:`.
+A finished log ends like this (the book's, from @sec-organizing-projects):
+
+```{.console}
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-17 12:24:53 -0600
+```
+
+The version is on the `seqkit:` line, in the first lines `head -n 5`
+shows: `seqkit v2.14.0` in the book's log. If you have no log at all,
+read the book's in @sec-organizing-projects and rerun the script there
+when you can.
+:::
+:::
+
+::: {.check}
+**Exercise 5. Peek into compressed data.** Run `file` on
+`data/raw/SRR6357070_1.fastq.gz` and `data/ref/genes.gtf.gz`. Look at
+the first read with `zless`, and at the first two lines of the
+annotation with `gunzip -c data/ref/genes.gtf.gz | head -n 2`. The first
+column of a GTF line names the chromosome. Which chromosome does each
+of the two lines name? Note what you find in `NOTEBOOK.md`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`file` says `gzip compressed data` for both. The first GTF line names
+`not_in_genome`, and the second `I`:
+
+```{.console}
+not_in_genome	ensembl	CDS	335	646	.	+	0	exon_number "1"; gene_biotype "protein_coding"; …
+I	ensembl	exon	335	649	.	+	.	exon_id "YAL069W.1"; exon_number "1"; …
+```
+
+(Lines shortened here at `…`.) The genome file has one sequence, `I`,
+so the first line describes a chromosome that is not in the genome.
+This is a test file, and an odd line like this one tests how tools cope;
+of the file's 600 lines, all the others are on `I`. Looking at the
+start of a file is how you catch such things before a tool does. GTF is
+@sec-intervals-variants.
+:::
+:::
+
+::: {.check}
+**Exercise 6. History drill.** Using only {{< kbd Ctrl-R >}} and the
+editing keys, recall Exercise 4's `head` command and change it to `tail`
+without retyping the log's name.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+{{< kbd Ctrl-R >}}, type `head -n`, then {{< kbd Right >}} to edit;
+{{< kbd Ctrl-A >}} to jump to the start, {{< kbd Alt-F >}} past `head`,
+{{< kbd Ctrl-W >}} to delete it, type `tail`, {{< kbd Enter >}}. Other
+key sequences work as well; the point is not to retype the path.
+:::
+:::
+
+## Further reading {#sec-shell-basics-reading}
+
+- @shotts2025linux, *The Linux Command Line*, chapters 2–5 and 7
+  (navigation, exploring the system, manipulating files, "Seeing the
+  world as the shell sees it") --- the same ground as this chapter,
+  slower and with more examples; free online.
+- @wilson2019swcarpentry, Software Carpentry's [*The Unix
+  Shell*](https://swcarpentry.github.io/shell-novice/), episodes on
+  navigating, working with files, and finding things --- short lessons
+  with exercises, written for researchers.
+- @ramey2025bash, the [*Bash Reference
+  Manual*](https://www.gnu.org/software/bash/manual/), sections *Shell
+  Expansions* and *Quoting* --- the exact rules behind
+  @fig-shell-steps, for when you want the whole story.
+- @gnu2025findutils, the [GNU findutils
+  manual](https://www.gnu.org/software/findutils/manual/)
+  --- every `find` test and action, including the safe use of `-exec`
+  and `-delete` for later.

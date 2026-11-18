@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 312" role="img" aria-labelledby="shell-steps-title"
+     data-step-labels="Read|Expand|Unquote|Run">
+  <title id="shell-steps-title">What bash does with the line ls -l "Run 3 final" run1/*.fastq.gz, typed in ~/bioinf-computing-ch05/share, where run1/ holds sample_A_R1.fastq.gz and sample_A_R2.fastq.gz. Step 1: bash reads the line into four words at the spaces, ls, -l, "Run 3 final", and run1/*.fastq.gz; the quoted part stays one word. Step 2: the unquoted pattern run1/*.fastq.gz is replaced by the two matching file names, each one word; the quoted word is left alone. Step 3: the quote characters are removed, so "Run 3 final" becomes Run 3 final, still one word with its spaces. Step 4: bash starts the program ls with four arguments: -l, Run 3 final, run1/sample_A_R1.fastq.gz, and run1/sample_A_R2.fastq.gz. ls never sees the quotes or the star.</title>
+  <desc data-caption="1">Read: bash reads the line into words at the spaces, but the quoted part stays one word, so there are four words.</desc>
+  <desc data-caption="2">Expand: the unquoted pattern run1/*.fastq.gz is replaced by the file names that match it, each one word; the quoted word is left alone.</desc>
+  <desc data-caption="3">Unquote: bash removes the quote characters, so "Run 3 final" becomes Run 3 final, still one word with its spaces.</desc>
+  <desc data-caption="4">Run: bash finds the program ls and starts it with four arguments; ls never sees the quotes or the *.</desc>
+
+  <!-- The typed line: the same in every step -->
+  <rect x="10" y="10" width="440" height="86" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-computing-ch05/share</text>
+  <text x="26" y="70" font-size="15" class="mono">ls -l "Run 3 final" run1/*.fastq.gz</text>
+
+  <!-- What run1/ holds -->
+  <rect x="466" y="10" width="244" height="86" rx="10" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="480" y="32" font-size="13" font-weight="700" class="mono">run1/</text>
+  <text x="526" y="32" font-size="13" class="fill-muted">holds</text>
+  <rect x="480" y="42" width="216" height="22" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="490" y="58" font-size="13" class="mono">sample_A_R1.fastq.gz</text>
+  <rect x="480" y="68" width="216" height="22" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="490" y="84" font-size="13" class="mono">sample_A_R2.fastq.gz</text>
+
+  <!-- Heading for each step -->
+  <g font-size="13" font-weight="700">
+    <text x="26" y="126" data-hide="2">1 · Read into words: 4 words</text>
+    <text x="26" y="126" data-show="2" data-hide="3">2 · Expand the pattern: 5 words</text>
+    <text x="26" y="126" data-show="3" data-hide="4">3 · Remove the quotes: still 5 words</text>
+    <text x="26" y="126" data-show="4">4 · Run: start ls with 4 arguments</text>
+  </g>
+
+  <!-- Word chips -->
+  <g font-size="13" class="mono" text-anchor="middle">
+    <rect x="38" y="160" width="32" height="32" rx="5" class="fill-surface stroke-ink"/>
+    <text x="54" y="181">ls</text>
+    <rect x="80" y="160" width="32" height="32" rx="5" class="fill-surface stroke-ink"/>
+    <text x="96" y="181">-l</text>
+
+    <rect x="122" y="160" width="117" height="32" rx="5" class="fill-given-soft stroke-given"/>
+    <text x="180.5" y="181" data-hide="3">"Run 3 final"</text>
+    <text x="180.5" y="181" data-show="3">Run 3 final</text>
+
+    <g data-hide="2">
+      <rect x="249" y="160" width="133" height="32" rx="5" class="fill-given-soft stroke-given" stroke-dasharray="5 3"/>
+      <text x="315.5" y="181">run1/<tspan font-weight="700">*</tspan>.fastq.gz</text>
+    </g>
+    <g data-show="2">
+      <rect x="249" y="160" width="211" height="32" rx="5" class="fill-given-soft stroke-given"/>
+      <text x="354.5" y="181">run1/sample_A_R1.fastq.gz</text>
+      <rect x="470" y="160" width="211" height="32" rx="5" class="fill-given-soft stroke-given"/>
+      <text x="575.5" y="181">run1/sample_A_R2.fastq.gz</text>
+    </g>
+  </g>
+
+  <!-- Step 1 notes -->
+  <g data-hide="2">
+    <g class="stroke-muted" stroke-width="1.5" fill="none">
+      <path d="M122 200 v6 h117 v-6"/>
+      <path d="M249 200 v6 h133 v-6"/>
+    </g>
+    <g font-size="13" class="fill-muted" text-anchor="middle">
+      <text x="180.5" y="226">quoted: one word,</text>
+      <text x="180.5" y="244">spaces and all</text>
+      <text x="315.5" y="226">unquoted pattern</text>
+    </g>
+  </g>
+
+  <!-- Step 2 notes -->
+  <g data-show="2" data-hide="3">
+    <g class="stroke-muted" stroke-width="1.5" fill="none">
+      <path d="M122 200 v6 h117 v-6"/>
+      <path d="M249 200 v6 h432 v-6"/>
+    </g>
+    <g font-size="13" class="fill-muted" text-anchor="middle">
+      <text x="180.5" y="226">quoted: left alone</text>
+      <text x="465" y="226"><tspan class="mono">run1/*.fastq.gz</tspan> replaced by the 2 matching names,</text>
+      <text x="465" y="244">one word each</text>
+    </g>
+  </g>
+
+  <!-- Step 3 notes -->
+  <g data-show="3" data-hide="4">
+    <path d="M122 200 v6 h117 v-6" class="stroke-muted" stroke-width="1.5" fill="none"/>
+    <g font-size="13" class="fill-muted" text-anchor="middle">
+      <text x="180.5" y="226">quote marks removed,</text>
+      <text x="180.5" y="244">still one word</text>
+    </g>
+  </g>
+
+  <!-- Step 4: program and numbered arguments -->
+  <g data-show="4">
+    <g class="fill-surface stroke-ink">
+      <circle cx="96" cy="144" r="9"/>
+      <circle cx="180.5" cy="144" r="9"/>
+      <circle cx="354.5" cy="144" r="9"/>
+      <circle cx="575.5" cy="144" r="9"/>
+    </g>
+    <g font-size="12" font-weight="700" text-anchor="middle">
+      <text x="96" y="148">1</text>
+      <text x="180.5" y="148">2</text>
+      <text x="354.5" y="148">3</text>
+      <text x="575.5" y="148">4</text>
+    </g>
+    <rect x="36" y="158" width="36" height="36" rx="6" fill="none" class="stroke-ink" stroke-width="2"/>
+    <path d="M80 200 v6 h601 v-6" class="stroke-muted" stroke-width="1.5" fill="none"/>
+    <g font-size="13" class="fill-muted" text-anchor="middle">
+      <text x="54" y="226">program</text>
+      <text x="380" y="226">its 4 arguments</text>
+    </g>
+  </g>
+
+  <!-- Bottom note, one per step -->
+  <rect x="10" y="260" width="700" height="40" rx="8" fill="none" class="stroke-line"/>
+  <g font-size="13">
+    <text x="26" y="285" data-hide="2">Spaces separate words; the quotes keep <tspan class="mono">"Run 3 final"</tspan> together.</text>
+    <text x="26" y="285" data-show="2" data-hide="3">Only the unquoted pattern is expanded: 4 words became 5.</text>
+    <text x="26" y="285" data-show="3" data-hide="4">The quotes were instructions for bash, not part of the name.</text>
+    <text x="26" y="285" data-show="4" font-weight="700"><tspan class="mono">ls</tspan> never sees the quotes or the <tspan class="mono">*</tspan>.</text>
+  </g>
+</svg>

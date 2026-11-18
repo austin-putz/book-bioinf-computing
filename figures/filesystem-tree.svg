@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 466" role="img" aria-labelledby="filesystem-tree-title">
+  <title id="filesystem-tree-title">The file system as one tree that starts at the root, /. Under / are home and usr; on a cluster there are also project and scratch (Chapter 10). usr holds bin, where programs such as ls and mkdir live. home holds you, your home folder, written ~ (on macOS /Users/you). Your home holds the project folder bioinf-computing and the practice folder bioinf-computing-ch05. The project holds data, src, results, and logs; data holds raw, meta, and ref, which is a link to the shared reference. Two routes reach meta. The absolute path /home/you/bioinf-computing/data/meta starts at the root and walks down. The relative path ../meta starts where you are, in raw: up one to data, then down to meta.</title>
+  <defs>
+    <marker id="filesystem-tree-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+    <marker id="filesystem-tree-arrow-ref" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ref"/>
+    </marker>
+  </defs>
+
+  <!-- Tree edges -->
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <path d="M360,55 V70 M200,70 H440 M200,70 V85 M440,70 V85"/>
+    <path d="M200,115 V145 M440,115 V145"/>
+    <path d="M200,175 V190 H395 M200,190 V205 M395,190 V205"/>
+    <path d="M200,235 V255 M95,255 H375 M95,255 V270 M180,255 V270 M275,255 V270 M375,255 V270"/>
+    <path d="M95,300 V322 M60,322 H240 M60,322 V345 M150,322 V345 M240,322 V345"/>
+  </g>
+  <path d="M440,70 H660 M560,70 V85 M660,70 V85" fill="none" class="stroke-muted" stroke-width="1.25" stroke-dasharray="4 3"/>
+
+  <!-- System folders: neutral -->
+  <rect x="340" y="25" width="40" height="30" rx="6" class="fill-surface stroke-line" stroke-width="1.25"/>
+  <text x="360" y="45" font-size="15" font-weight="700" text-anchor="middle" class="mono">/</text>
+  <text x="388" y="45" font-size="12" class="fill-muted">root</text>
+
+  <rect x="170" y="85" width="60" height="30" rx="6" class="fill-surface stroke-line" stroke-width="1.25"/>
+  <text x="200" y="105" font-size="13" text-anchor="middle" class="mono">home/</text>
+  <rect x="415" y="85" width="50" height="30" rx="6" class="fill-surface stroke-line" stroke-width="1.25"/>
+  <text x="440" y="105" font-size="13" text-anchor="middle" class="mono">usr/</text>
+
+  <rect x="175" y="145" width="50" height="30" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="200" y="165" font-size="13" text-anchor="middle" class="mono">you/</text>
+  <text x="237" y="157" font-size="13" class="mono">~ = /home/you</text>
+  <text x="237" y="173" font-size="12" class="fill-muted">(macOS: /Users/you)</text>
+
+  <rect x="415" y="145" width="50" height="30" rx="6" class="fill-surface stroke-line" stroke-width="1.25"/>
+  <text x="440" y="165" font-size="13" text-anchor="middle" class="mono">bin/</text>
+  <text x="475" y="165" font-size="12" class="fill-muted">programs: <tspan class="mono">ls, mkdir, …</tspan></text>
+
+  <!-- Cluster-only branch: faded -->
+  <rect x="520" y="85" width="80" height="30" rx="6" fill="none" class="stroke-muted" stroke-width="1.25" stroke-dasharray="4 3"/>
+  <text x="560" y="105" font-size="13" text-anchor="middle" class="mono fill-muted">project/</text>
+  <rect x="620" y="85" width="80" height="30" rx="6" fill="none" class="stroke-muted" stroke-width="1.25" stroke-dasharray="4 3"/>
+  <text x="660" y="105" font-size="13" text-anchor="middle" class="mono fill-muted">scratch/</text>
+  <text x="610" y="136" font-size="12" text-anchor="middle" class="fill-muted">on a cluster (Chapter 10)</text>
+
+  <!-- Your folders: given -->
+  <rect x="125" y="205" width="150" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="200" y="225" font-size="13" font-weight="700" text-anchor="middle" class="mono">bioinf-computing/</text>
+  <rect x="300" y="205" width="190" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="395" y="225" font-size="13" text-anchor="middle" class="mono">bioinf-computing-ch05/</text>
+  <text x="500" y="224" font-size="12" class="fill-muted">practice</text>
+
+  <rect x="60" y="270" width="70" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="95" y="290" font-size="13" text-anchor="middle" class="mono">data/</text>
+  <rect x="150" y="270" width="60" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="180" y="290" font-size="13" text-anchor="middle" class="mono">src/</text>
+  <rect x="230" y="270" width="90" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="275" y="290" font-size="13" text-anchor="middle" class="mono">results/</text>
+  <rect x="340" y="270" width="70" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="375" y="290" font-size="13" text-anchor="middle" class="mono">logs/</text>
+
+  <rect x="30" y="345" width="60" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="60" y="365" font-size="13" text-anchor="middle" class="mono">raw/</text>
+  <rect x="115" y="345" width="70" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="150" y="365" font-size="13" text-anchor="middle" class="mono">meta/</text>
+
+  <!-- ref: a link -->
+  <rect x="205" y="345" width="70" height="30" rx="6" class="fill-surface stroke-ref" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="240" y="365" font-size="13" text-anchor="middle" class="mono">ref →</text>
+  <path d="M277,360 H335" fill="none" class="stroke-ref" stroke-width="2" marker-end="url(#filesystem-tree-arrow-ref)"/>
+  <text x="306" y="352" font-size="12" text-anchor="middle" class="fill-muted">link</text>
+  <text x="342" y="364" font-size="12" class="fill-muted">to the shared reference</text>
+
+  <!-- You are here: raw -->
+  <rect x="24" y="339" width="72" height="42" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+  <text x="22" y="398" font-size="12" font-weight="700">▲ you are here</text>
+
+  <!-- Absolute route: from / down to meta, drawn in the gaps between boxes -->
+  <path d="M360,57 V70 H200 V83 M200,117 V143 M200,177 V203 M200,237 V255 H95 V268 M95,302 V322 H150 V343"
+        fill="none" class="stroke-ink" stroke-width="3" stroke-linejoin="round" marker-end="url(#filesystem-tree-arrow)"/>
+
+  <!-- Relative route: from raw, up to data, down to meta -->
+  <path d="M36,337 C 18,320 22,290 57,285" fill="none" class="stroke-ink" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#filesystem-tree-arrow)"/>
+  <path d="M132,292 C 172,298 180,320 174,342" fill="none" class="stroke-ink" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#filesystem-tree-arrow)"/>
+  <text x="31" y="317" font-size="13" font-weight="700" class="mono">..</text>
+  <text x="183" y="318" font-size="12" class="mono">meta</text>
+
+  <!-- Key to the two routes -->
+  <path d="M20,420 H60" class="stroke-ink" stroke-width="3"/>
+  <text x="70" y="424" font-size="13">absolute, starts at /: <tspan class="mono" font-weight="700">/home/you/bioinf-computing/data/meta</tspan></text>
+  <path d="M20,446 H60" class="stroke-ink" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <text x="70" y="450" font-size="13">relative, from raw/ (you are here): <tspan class="mono" font-weight="700">../meta</tspan><tspan class="fill-muted" dx="10">up one to data/, then down to meta/</tspan></text>
+</svg>

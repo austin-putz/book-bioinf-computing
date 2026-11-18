@@ -35,7 +35,7 @@ Austin's hands-on checks on Windows/WSL, Atlas, Ceres, and Nova
   - `pixi run check` prints the Python, R, and seqkit versions recorded
     for the book release (it checks the environment only, so it keeps
     working wherever data files later move).
-  - `pixi run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz` reports
+  - `pixi run seqkit stats ~/bioinf-computing-ch01/SRR6357070_1.fastq.gz` reports
     `num_seqs` = `50,000` and `sum_len` = `5,050,000` (50,000 reads × 101
     bases). This repeats Chapter 1's count with a real tool.
   - Verified 2026-11-13 (pixi 0.84.2, macOS 15 Intel, draft manifest):
@@ -49,7 +49,7 @@ Austin's hands-on checks on Windows/WSL, Atlas, Ceres, and Nova
     SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      101
     ```
 
-    (Run from `~/bioinf-ch01` or the file column shows the full path.)
+    (Run from `~/bioinf-computing-ch01` or the file column shows the full path.)
 
 ## Learning goals (draft of the opening callout)
 
@@ -412,7 +412,7 @@ End-of-chapter exercises (core chapter, so required):
    search for seqkit to see where the same version is recorded.
 2. Run `pixi run seqkit stats` on the read-2 file from Chapter 1's
    exercise (change `_1` to `_2`; if you skipped that exercise, the
-   supplied `curl -fLO` command downloads it into `~/bioinf-ch01`). Do
+   supplied `curl -fLO` command downloads it into `~/bioinf-computing-ch01`). Do
    the two files have the same `num_seqs`?
 3. In nano, create `README.md` in `~/bioinf-computing` with one line saying
    what the folder is for. Then open it in vim, add a second line, and
@@ -430,7 +430,7 @@ End-of-chapter exercises (core chapter, so required):
   two lines, so readers can check by eye that the save worked.
 - Running dataset (yeast nf-core/rnaseq test data): `SRR6357070_1.fastq.gz`
   (and `_2` from Chapter 1's exercise), used **in place** in
-  `~/bioinf-ch01/` (2,239,317 bytes, 50,000 reads of 101 bases, verified
+  `~/bioinf-computing-ch01/` (2,239,317 bytes, 50,000 reads of 101 bases, verified
   2026-11-13). Chapter 2 does not move data: Chapter 1 promises that
   Chapter 3 brings these files and their source URLs into the project,
   and Chapter 3 does so inside `~/bioinf-computing`.
@@ -473,7 +473,7 @@ End-of-chapter exercises (core chapter, so required):
   curl -fLO https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/<tag>/setup/pixi.lock
   pixi install --locked
   pixi run check
-  pixi run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz
+  pixi run seqkit stats ~/bioinf-computing-ch01/SRR6357070_1.fastq.gz
   code .
   ```
 
@@ -512,7 +512,7 @@ is in brackets.
 
 ## Links to other chapters and books
 
-- Builds on: Chapter 1 (terminal, the FASTQ files in `~/bioinf-ch01`,
+- Builds on: Chapter 1 (terminal, the FASTQ files in `~/bioinf-computing-ch01`,
   laptop vs login node).
 - Leads to: Chapter 3 (organizes `~/bioinf-computing` into the recurring
   project and brings the Chapter 1 files in); Chapter 7 (`PATH`,
@@ -603,7 +603,7 @@ Not adopted:
   (both reviews). Chapter 1 says Chapter 3 brings these files into the
   project; moving them here would put raw data in the folder root one
   chapter before Chapter 3 organizes it. Chapter 2 uses them in place in
-  `~/bioinf-ch01/`. The reviews' main point, one book folder that
+  `~/bioinf-computing-ch01/`. The reviews' main point, one book folder that
   Chapter 3 organizes, is adopted.
 
 ## Decisions (2026-11-13, open questions round)
@@ -859,7 +859,7 @@ Chapter written from this plan. Choices made while writing:
   task now uses `Rscript --version` (the old `R --version | head -n 1`
   hid an R failure: confirmed in pixi 0.84.2, `false | head` returned
   0); vim teaches `G` then `o` for a new line (`i` typed before line 1);
-  recovery step if `~/bioinf-ch01` was deleted; official ISU/SCINet
+  recovery step if `~/bioinf-computing-ch01` was deleted; official ISU/SCINet
   guides linked where Appendix A is still a stub. The plan's draft
   `pixi.toml` above still shows the old task; `setup/pixi.toml` is the
   current one.

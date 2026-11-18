@@ -111,7 +111,7 @@ curl -fLO {{< var setup-url >}}/pixi.lock
 ```
 
 `~/bioinf-computing` is the book's project folder from now on. Unlike
-`~/bioinf-ch01`, you keep it; @sec-organizing-projects organizes it.
+`~/bioinf-computing-ch01`, you keep it; @sec-organizing-projects organizes it.
 
 **Step 3. Install the environment.**
 
@@ -151,18 +151,18 @@ seqkit v2.14.0
 
 Then use a real tool on real data. [SeqKit](https://bioinf.shenwei.me/seqkit/)
 [@shen2016seqkit; @shen2024seqkit2] summarizes FASTA and FASTQ files; run it on the file you
-downloaded in @sec-orientation. (If you deleted `~/bioinf-ch01`, which
+downloaded in @sec-orientation. (If you deleted `~/bioinf-computing-ch01`, which
 Chapter 1 said you could, download the file again first:
-`mkdir -p ~/bioinf-ch01`, then the `curl` command from
+`mkdir -p ~/bioinf-computing-ch01`, then the `curl` command from
 @sec-orientation-first-session, step 2, run inside that folder.)
 
 ```{.bash filename="Terminal (laptop)"}
-pixi run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz
+pixi run seqkit stats ~/bioinf-computing-ch01/SRR6357070_1.fastq.gz
 ```
 
 ```{.console}
-file                                         format  type  num_seqs    sum_len  min_len  avg_len  max_len
-/home/you/bioinf-ch01/SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      101
+file                                                   format  type  num_seqs    sum_len  min_len  avg_len  max_len
+/home/you/bioinf-computing-ch01/SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      101
 ```
 
 `num_seqs` is 50,000, the read count you worked out by hand in Chapter 1;
@@ -994,11 +994,11 @@ The version is part of the package's address.
 ::: {.check}
 **Exercise 2. Read 2.** Run `pixi run seqkit stats` on the read-2 file
 from Chapter 1's exercise (change `_1` to `_2`). If you skipped that
-exercise, or deleted `~/bioinf-ch01`, download the file first:
+exercise, or deleted `~/bioinf-computing-ch01`, download the file first:
 
 ```{.bash filename="Terminal (laptop)"}
-mkdir -p ~/bioinf-ch01
-curl -fL -o ~/bioinf-ch01/SRR6357070_2.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_2.fastq.gz
+mkdir -p ~/bioinf-computing-ch01
+curl -fL -o ~/bioinf-computing-ch01/SRR6357070_2.fastq.gz {{< var testdata-url >}}/testdata/GSE110004/SRR6357070_2.fastq.gz
 ```
 
 Do the two files have the same `num_seqs`?
@@ -1007,7 +1007,7 @@ Do the two files have the same `num_seqs`?
 ## Answer
 Yes: 50,000 reads in each, as Chapter 1's exercise found by counting
 lines. seqkit can take both files at once:
-`pixi run seqkit stats ~/bioinf-ch01/SRR6357070_*.fastq.gz`.
+`pixi run seqkit stats ~/bioinf-computing-ch01/SRR6357070_*.fastq.gz`.
 :::
 :::
 

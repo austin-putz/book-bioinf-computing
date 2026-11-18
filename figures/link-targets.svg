@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 612" role="img" aria-labelledby="link-targets-title">
+  <title id="link-targets-title">A relative link target is read from the link's own folder, not from where you ran ln -s. The folder ~/bioinf-computing-ch05 holds share, with run1/sample_A_R1.fastq.gz inside, and tidy. You are in share. Panel A, broken: ln -s run1/sample_A_R1.fastq.gz ../tidy/wrong.fastq.gz. The link tidy/wrong.fastq.gz stores the text run1/sample_A_R1.fastq.gz; read from tidy, that means tidy/run1/sample_A_R1.fastq.gz, which does not exist, and file reports a broken symbolic link. Panel B, works: ln -s ../share/run1/sample_A_R1.fastq.gz ../tidy/right.fastq.gz. Read from tidy, ../ goes up to ch05, then down into share/run1 to the real file. Below: an absolute target, starting with /, works from any folder but breaks if the target moves.</title>
+  <defs>
+    <marker id="link-targets-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+    <marker id="link-targets-arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-warn"/>
+    </marker>
+  </defs>
+
+  <text x="16" y="32" font-size="14" font-weight="700">A relative target is read from the link's own folder, not from where you ran <tspan class="mono">ln -s</tspan>.</text>
+
+  <!-- ===================== Panel A: broken ===================== -->
+  <rect x="10" y="50" width="700" height="240" rx="10" class="fill-surface stroke-line"/>
+
+  <!-- tree lines -->
+  <g class="stroke-line" stroke-width="1.5" fill="none">
+    <path d="M76 90 V184 H88"/>
+    <path d="M76 106 H88"/>
+    <path d="M100 116 V132 H112"/>
+    <path d="M124 142 V158 H134"/>
+    <path d="M100 194 V210 H110"/>
+  </g>
+
+  <g font-size="13" class="mono">
+    <text x="70" y="84" font-weight="700">~/bioinf-computing-ch05/</text>
+    <text x="94" y="110" font-weight="700">share/</text>
+    <text x="118" y="136" font-weight="700">run1/</text>
+    <text x="94" y="188" font-weight="700">tidy/</text>
+  </g>
+  <!-- the real file -->
+  <rect x="136" y="147" width="168" height="22" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="142" y="162" font-size="13" class="mono">sample_A_R1.fastq.gz</text>
+  <!-- the link -->
+  <rect x="112" y="199" width="122" height="22" rx="4" fill="none" class="stroke-given" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="118" y="214" font-size="13" class="mono">wrong.fastq.gz</text>
+  <text x="242" y="214" font-size="12" class="fill-muted">the link</text>
+  <!-- where it points: does not exist -->
+  <path d="M100 220 V236 H108" fill="none" class="stroke-warn" stroke-width="2" stroke-dasharray="4 3" marker-end="url(#link-targets-arrow-warn)"/>
+  <rect x="112" y="225" width="208" height="22" rx="4" fill="none" class="stroke-warn" stroke-width="1.5" stroke-dasharray="3 3"/>
+  <text x="118" y="240" font-size="13" class="mono fill-muted">run1/sample_A_R1.fastq.gz</text>
+  <text x="328" y="241" font-size="15" font-weight="700" class="fill-warn">✗</text>
+  <text x="118" y="268" font-size="12" class="fill-muted">not there: tidy/ has no run1/</text>
+
+  <!-- tags -->
+  <text x="150" y="110" font-size="12" class="fill-muted">← you ran <tspan class="mono">ln -s</tspan> here</text>
+  <text x="142" y="188" font-size="12" font-weight="700">← the link's folder: start here</text>
+
+  <!-- explanation -->
+  <text x="384" y="76" font-size="14" font-weight="700">A <tspan class="fill-warn">✗</tspan> Broken</text>
+  <g font-size="12" class="mono">
+    <text x="384" y="98">ln -s run1/sample_A_R1.fastq.gz \</text>
+    <text x="427.2" y="114">../tidy/wrong.fastq.gz</text>
+  </g>
+  <text x="384" y="142" font-size="13">The link stores the text</text>
+  <text x="384" y="160" font-size="13" class="mono">run1/sample_A_R1.fastq.gz</text>
+  <text x="384" y="186" font-size="13">Read from <tspan class="mono">tidy/</tspan>, that means</text>
+  <text x="384" y="204" font-size="13" class="mono"><tspan font-weight="700">tidy/</tspan>run1/sample_A_R1.fastq.gz</text>
+  <text x="384" y="222" font-size="13"><tspan class="fill-warn" font-weight="700">✗</tspan> which does not exist.</text>
+  <text x="384" y="248" font-size="13"><tspan class="mono">file tidy/wrong.fastq.gz</tspan> says:</text>
+  <text x="384" y="266" font-size="12" class="mono fill-muted">broken symbolic link to</text>
+  <text x="384" y="281" font-size="12" class="mono fill-muted">run1/sample_A_R1.fastq.gz</text>
+
+  <!-- ===================== Panel B: works ===================== -->
+  <rect x="10" y="302" width="700" height="210" rx="10" class="fill-surface stroke-line"/>
+
+  <g class="stroke-line" stroke-width="1.5" fill="none">
+    <path d="M76 342 V436 H88"/>
+    <path d="M76 358 H88"/>
+    <path d="M100 368 V384 H112"/>
+    <path d="M124 394 V410 H134"/>
+    <path d="M100 446 V462 H110"/>
+  </g>
+
+  <!-- the route: up with ../, then down into share/run1/ -->
+  <path d="M90 440 H64 V344" fill="none" class="stroke-ink" stroke-width="2" marker-end="url(#link-targets-arrow)"/>
+  <text x="58" y="396" font-size="13" font-weight="700" text-anchor="end" class="mono">../</text>
+  <g fill="none" class="stroke-ink" stroke-width="2">
+    <path d="M76 342 V358 H90"/>
+    <path d="M100 368 V384 H114"/>
+    <path d="M124 394 V410 H132" marker-end="url(#link-targets-arrow)"/>
+  </g>
+
+  <g font-size="13" class="mono">
+    <text x="70" y="336" font-weight="700">~/bioinf-computing-ch05/</text>
+    <text x="94" y="362" font-weight="700">share/</text>
+    <text x="118" y="388" font-weight="700">run1/</text>
+    <text x="94" y="440" font-weight="700">tidy/</text>
+  </g>
+  <rect x="136" y="399" width="168" height="22" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="142" y="414" font-size="13" class="mono">sample_A_R1.fastq.gz</text>
+  <text x="312" y="415" font-size="15" font-weight="700" class="fill-good">✓</text>
+  <rect x="112" y="451" width="122" height="22" rx="4" fill="none" class="stroke-given" stroke-width="1.5" stroke-dasharray="5 3"/>
+  <text x="118" y="466" font-size="13" class="mono">right.fastq.gz</text>
+  <text x="242" y="466" font-size="12" class="fill-muted">the link</text>
+
+  <text x="150" y="362" font-size="12" class="fill-muted">← you ran <tspan class="mono">ln -s</tspan> here</text>
+  <text x="142" y="440" font-size="12" font-weight="700">← the link's folder: start here</text>
+
+  <text x="384" y="328" font-size="14" font-weight="700">B <tspan class="fill-good">✓</tspan> Works</text>
+  <g font-size="12" class="mono">
+    <text x="384" y="350">ln -s ../share/run1/sample_A_R1.fastq.gz \</text>
+    <text x="427.2" y="366">../tidy/right.fastq.gz</text>
+  </g>
+  <text x="384" y="394" font-size="13">The link stores the text</text>
+  <text x="384" y="412" font-size="13" class="mono">../share/run1/sample_A_R1.fastq.gz</text>
+  <text x="384" y="438" font-size="13">Read from <tspan class="mono">tidy/</tspan>:</text>
+  <text x="384" y="458" font-size="13"><tspan class="mono" font-weight="700">../</tspan>  up from <tspan class="mono">tidy/</tspan> to <tspan class="mono">ch05/</tspan></text>
+  <text x="384" y="478" font-size="13"><tspan class="mono" font-weight="700">share/run1/</tspan>  down into <tspan class="mono">share/run1/</tspan></text>
+  <text x="384" y="498" font-size="13"><tspan class="mono" font-weight="700">sample_A_R1.fastq.gz</tspan>  <tspan class="fill-good" font-weight="700">✓</tspan> the real file</text>
+
+  <!-- ===================== Note: absolute target ===================== -->
+  <rect x="10" y="524" width="700" height="80" rx="10" fill="none" class="stroke-line" stroke-dasharray="6 5"/>
+  <text x="26" y="548" font-size="13"><tspan font-weight="700">An absolute target</tspan> (starts with <tspan class="mono">/</tspan>; the shell turns <tspan class="mono">~</tspan> into <tspan class="mono">/home/you</tspan>) works from any folder,</text>
+  <text x="26" y="566" font-size="13">but breaks if the target file moves.</text>
+  <text x="26" y="588" font-size="12" class="mono fill-muted">ln -s ~/bioinf-computing-ch05/share/run1/sample_A_R1.fastq.gz ../tidy/abs.fastq.gz</text>
+</svg>

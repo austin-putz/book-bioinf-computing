@@ -203,3 +203,7 @@ file beside the source (`embed-resources: true`: no `_files/` folder).
   `~/bioinf-book`, 2026-11-17), also the pixi workspace `name`. Each
   book in the series gets its own `~/bioinf-<topic>` folder, matching its
   repo suffix, so books never share one folder.
+- Per-chapter scratch folders: `~/bioinf-computing-chNN` (two-digit
+  chapter number; renamed from `~/bioinf-chNN`, 2026-11-17), outside the
+  project, for practice and exercises. Same rule: other books use
+  `~/bioinf-<topic>-chNN`.

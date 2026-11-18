@@ -3,7 +3,7 @@
 ::: {.callout-important icon=false}
 ## Under construction
 
-This book is being written. Chapters 1 and 2 are first drafts; every
+This book is being written. Chapters 1–5 are first drafts; every
 other chapter is a placeholder that lists its planned topics, and the plan
 itself will change. Nothing here is ready to teach from yet.
 :::
@@ -42,6 +42,12 @@ assembly graphs) are left to the book that owns them, and linked forward.
 
 This book also owns **file formats** for the series: FASTA, FASTQ, SAM/BAM,
 BED, GFF, VCF, and friends are taught here, and other books link back.
+
+**Why so much command line?** Most real bioinformatics runs on Linux
+machines reached through a terminal: university clusters, and the cloud
+servers that companies rent. So Part II teaches the Linux command line
+and bash before any programming language, and the rest of the book
+assumes them. @sec-shell-basics-why gives the reasons in full.
 
 ## How to read it
 

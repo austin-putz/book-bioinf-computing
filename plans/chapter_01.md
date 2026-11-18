@@ -90,7 +90,7 @@ aids* below.
    step prints an error, stop there; a summary of `reads: 0` means the
    file is missing or broken, not empty. Then the annotated FASTQ record:
    *this* file has four lines per read (full format, including files that
-   break that rule, in Chapter 15). Close by saying `~/bioinf-ch01` is a
+   break that rule, in Chapter 15). Close by saying `~/bioinf-computing-ch01` is a
    scratch folder; Chapter 3 starts the real project and brings this file
    and its source URL into it. [`fig-fastq-record`; self-check]
 4. **Parts of a computer that matter for analysis.** *Start hands-on:*
@@ -315,13 +315,13 @@ commands):
   - Browser fallback, only if `curl` is blocked (e.g., by a firewall):
     the file's GitHub page and its download button, then one supplied
     command to move it into place: `mv ~/Downloads/SRR6357070_1.fastq.gz
-    ~/bioinf-ch01/` (macOS/Linux) or `cp
+    ~/bioinf-computing-ch01/` (macOS/Linux) or `cp
     /mnt/c/Users/<your-windows-name>/Downloads/SRR6357070_1.fastq.gz
-    ~/bioinf-ch01/` (WSL).
+    ~/bioinf-computing-ch01/` (WSL).
 - Draft command sequence (laptop), each step with its expected output:
 
   ```bash
-  mkdir -p ~/bioinf-ch01 && cd ~/bioinf-ch01
+  mkdir -p ~/bioinf-computing-ch01 && cd ~/bioinf-computing-ch01
   curl -fLO https://raw.githubusercontent.com/nf-core/test-datasets/rnaseq/testdata/GSE110004/SRR6357070_1.fastq.gz
   ls -lh SRR6357070_1.fastq.gz                    # 2.1M (macOS) or 2.2M (Linux/WSL)
   gzip -t SRR6357070_1.fastq.gz                   # prints nothing if the file is intact
@@ -559,7 +559,7 @@ row (Codex suggested dropping it), because `PLAN_CHAPTERS.md` lists it.
   free space (File Explorer, *This PC*) and use the smaller.
 - WSL browser fallback: source path quoted; the placeholder is the folder
   name under `C:\Users`, which can differ from the sign-in name.
-- Exercises: `cd ~/bioinf-ch01` first, repeated in every new terminal or
+- Exercises: `cd ~/bioinf-computing-ch01` first, repeated in every new terminal or
   `srun` session.
 - Python row of `tbl-language-threads`:
   `concurrent.futures.ProcessPoolExecutor`, not all of

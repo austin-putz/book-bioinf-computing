@@ -302,3 +302,61 @@
     A reviewer asks which seqkit version made a table. Where do you look?
     (Correct: the run's log and the lockfile; not memory.)
   chapters: [03-organizing-projects, 23-environments]
+
+# Chapter 5 -----------------------------------------------------------------
+
+- id: relative-to-script
+  claim: "A relative path is relative to the script (or file) that contains it."
+  reality: >
+    A relative path is read from the current working directory of the
+    shell that runs the command, wherever the script itself is stored.
+  probe: >
+    From `~` you run `bash ~/bioinf-computing-ch05/where.sh`, which
+    contains `ls data/raw`. Which folder does `ls` look in? (Correct:
+    `~/data/raw`, which does not exist; captured 2026-11-17:
+    `ls: cannot access 'data/raw'`.)
+  chapters: [05-shell-basics, 04-getting-help, 08-shell-scripts]
+
+- id: rm-has-undo
+  claim: "Deleted files go to a trash folder I can restore them from."
+  reality: >
+    `rm` removes the name at once. There is no trash on the command line;
+    only backups or site snapshots can bring a file back.
+  probe: >
+    You `rm` a results file by mistake on a cluster. Where do you look?
+    (Correct: not in a trash folder; ask whether your site keeps
+    snapshots of that storage, or rerun from the raw data.)
+  chapters: [05-shell-basics, 03-organizing-projects]
+
+- id: cp-mv-warn
+  claim: "`cp` and `mv` warn me before they overwrite a file."
+  reality: >
+    They overwrite silently unless given `-i` (ask) or `-n` (never
+    overwrite).
+  probe: >
+    What does `mv new.tsv old.tsv` do if `old.tsv` already exists?
+    (Correct: replaces it without a question.)
+  chapters: [05-shell-basics]
+
+- id: program-sees-wildcard
+  claim: "The program reads the `*` and finds the matching files itself."
+  reality: >
+    For an unquoted pattern, bash expands it before the program starts;
+    the program gets the matching names, or the unchanged pattern when
+    nothing matches. Only a quoted pattern reaches the program, which
+    some programs (`find -name`) want.
+  probe: >
+    Why did seqkit's error in Chapter 4 contain a literal `*.fq.gz`?
+    (Correct: nothing matched, so bash passed the pattern on unchanged.)
+  chapters: [05-shell-basics, 04-getting-help, 08-shell-scripts]
+
+- id: open-to-look
+  claim: "To see what is in a file, I open it in an editor."
+  reality: >
+    Large files can freeze an editor and compressed ones show noise.
+    `head`, `less`, and `file` let you look without loading the whole
+    file into an editor.
+  probe: >
+    How do you see the first read of a 10 GB `.fastq.gz`? (Correct:
+    `gunzip -c file | head -n 4`, or `zless`.)
+  chapters: [05-shell-basics, 15-fasta-fastq]

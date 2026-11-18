@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 368" role="img" aria-labelledby="cd-steps-title"
+     data-step-labels="Project|Down|Up one|Up two|Back|Home">
+  <title id="cd-steps-title">Moving around with cd, in six steps, in a tree where your home folder you (written ~, /home/you) holds bioinf-computing and bioinf-computing-ch05, bioinf-computing holds data, src, and logs, and data holds raw and meta. A thick outline marks where you are; a dashed outline marks where you were. Starting in ~, cd ~/bioinf-computing goes into the project; cd data/raw goes down two levels to raw; cd .. goes up one level to data; cd ../.. goes up two levels to ~; cd - goes back to data, the previous folder, and prints its path; cd with no argument goes home to ~. A terminal strip shows each command and the path pwd prints.</title>
+  <desc data-caption="1">A new terminal opens in your home folder, ~. cd ~/bioinf-computing moves into the project, and pwd prints where you are as an absolute path.</desc>
+  <desc data-caption="2">cd data/raw is a relative path: it starts where you are and goes down two levels, to data and then raw.</desc>
+  <desc data-caption="3">cd .. goes up one level, to the folder that holds the one you are in: from raw back to data.</desc>
+  <desc data-caption="4">cd ../.. goes up two levels: from data to bioinf-computing, then on to your home folder.</desc>
+  <desc data-caption="5">cd - returns to the previous folder and prints it: back to data, where you were before the last cd.</desc>
+  <desc data-caption="6">cd with no argument goes home from wherever you are, the same as cd ~.</desc>
+  <defs>
+    <marker id="cd-steps-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+  </defs>
+
+  <!-- Tree edges -->
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <path d="M360,60 V75 M280,75 H505 M280,75 V90 M505,75 V90"/>
+    <path d="M280,120 V135 M205,135 H375 M205,135 V150 M290,135 V150 M375,135 V150"/>
+    <path d="M205,180 V195 M165,195 H250 M165,195 V210 M250,195 V210"/>
+  </g>
+
+  <!-- Home folder: neutral -->
+  <rect x="315" y="30" width="90" height="30" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="360" y="50" font-size="13" text-anchor="middle" class="mono">you/</text>
+  <text x="418" y="50" font-size="13" class="mono">= ~ <tspan class="fill-muted" font-size="12">(/home/you)</tspan></text>
+
+  <!-- Your folders: given -->
+  <rect x="205" y="90" width="150" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="280" y="110" font-size="13" font-weight="700" text-anchor="middle" class="mono">bioinf-computing/</text>
+  <rect x="410" y="90" width="190" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="505" y="110" font-size="13" text-anchor="middle" class="mono">bioinf-computing-ch05/</text>
+  <rect x="170" y="150" width="70" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="205" y="170" font-size="13" text-anchor="middle" class="mono">data/</text>
+  <rect x="260" y="150" width="60" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="290" y="170" font-size="13" text-anchor="middle" class="mono">src/</text>
+  <rect x="340" y="150" width="70" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="375" y="170" font-size="13" text-anchor="middle" class="mono">logs/</text>
+  <rect x="135" y="210" width="60" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="165" y="230" font-size="13" text-anchor="middle" class="mono">raw/</text>
+  <rect x="220" y="210" width="70" height="30" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="250" y="230" font-size="13" text-anchor="middle" class="mono">meta/</text>
+
+  <!-- Key -->
+  <rect x="452" y="160" width="30" height="18" rx="5" fill="none" class="stroke-ink" stroke-width="3"/>
+  <text x="492" y="174" font-size="12">you are here</text>
+  <rect x="452" y="190" width="30" height="18" rx="5" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+  <text x="492" y="204" font-size="12">where you were</text>
+
+  <!-- Terminal strip -->
+  <rect x="10" y="262" width="700" height="96" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="284" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+
+  <!-- Step 1: cd ~/bioinf-computing -->
+  <g data-show="1" data-hide="2">
+    <rect x="310" y="25" width="100" height="40" rx="9" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+    <rect x="200" y="85" width="160" height="40" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+    <text x="12" y="109" font-size="12" font-weight="700">you are here</text>
+    <path d="M98,105 H197" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#cd-steps-arrow)"/>
+    <text x="26" y="308" font-size="13" class="mono">cd ~/bioinf-computing</text>
+    <text x="694" y="308" font-size="12" text-anchor="end" class="fill-muted">a new terminal starts in ~</text>
+    <text x="26" y="328" font-size="13" class="mono">pwd</text>
+    <text x="26" y="348" font-size="13" class="mono fill-muted">/home/you/bioinf-computing</text>
+  </g>
+  <!-- Step 2: cd data/raw -->
+  <g data-show="2" data-hide="3">
+    <rect x="200" y="85" width="160" height="40" rx="9" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+    <rect x="130" y="205" width="70" height="40" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+    <text x="12" y="229" font-size="12" font-weight="700">you are here</text>
+    <path d="M98,225 H127" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#cd-steps-arrow)"/>
+    <text x="26" y="308" font-size="13" class="mono">cd data/raw</text>
+    <text x="694" y="308" font-size="12" text-anchor="end" class="fill-muted">relative: down two levels</text>
+    <text x="26" y="328" font-size="13" class="mono">pwd</text>
+    <text x="26" y="348" font-size="13" class="mono fill-muted">/home/you/bioinf-computing/data/raw</text>
+  </g>
+  <!-- Step 3: cd .. -->
+  <g data-show="3" data-hide="4">
+    <rect x="130" y="205" width="70" height="40" rx="9" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+    <rect x="165" y="145" width="80" height="40" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+    <text x="12" y="169" font-size="12" font-weight="700">you are here</text>
+    <path d="M98,165 H162" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#cd-steps-arrow)"/>
+    <text x="26" y="308" font-size="13" class="mono">cd ..</text>
+    <text x="694" y="308" font-size="12" text-anchor="end" class="fill-muted">.. is the folder above</text>
+    <text x="26" y="328" font-size="13" class="mono">pwd</text>
+    <text x="26" y="348" font-size="13" class="mono fill-muted">/home/you/bioinf-computing/data</text>
+  </g>
+  <!-- Step 4: cd ../.. -->
+  <g data-show="4" data-hide="5">
+    <rect x="165" y="145" width="80" height="40" rx="9" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+    <rect x="310" y="25" width="100" height="40" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+    <text x="12" y="49" font-size="12" font-weight="700">you are here</text>
+    <path d="M98,45 H307" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#cd-steps-arrow)"/>
+    <text x="26" y="308" font-size="13" class="mono">cd ../..</text>
+    <text x="694" y="308" font-size="12" text-anchor="end" class="fill-muted">up two levels</text>
+    <text x="26" y="328" font-size="13" class="mono">pwd</text>
+    <text x="26" y="348" font-size="13" class="mono fill-muted">/home/you</text>
+  </g>
+  <!-- Step 5: cd - -->
+  <g data-show="5" data-hide="6">
+    <rect x="310" y="25" width="100" height="40" rx="9" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+    <rect x="165" y="145" width="80" height="40" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+    <text x="12" y="169" font-size="12" font-weight="700">you are here</text>
+    <path d="M98,165 H162" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#cd-steps-arrow)"/>
+    <text x="26" y="308" font-size="13" class="mono">cd -</text>
+    <text x="694" y="308" font-size="12" text-anchor="end" class="fill-muted">cd - prints where it goes</text>
+    <text x="26" y="328" font-size="13" class="mono fill-muted">/home/you/bioinf-computing/data</text>
+  </g>
+  <!-- Step 6: cd -->
+  <g data-show="6">
+    <rect x="165" y="145" width="80" height="40" rx="9" fill="none" class="stroke-muted" stroke-width="1.75" stroke-dasharray="4 3"/>
+    <rect x="310" y="25" width="100" height="40" rx="9" fill="none" class="stroke-ink" stroke-width="3"/>
+    <text x="12" y="49" font-size="12" font-weight="700">you are here</text>
+    <path d="M98,45 H307" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#cd-steps-arrow)"/>
+    <text x="26" y="308" font-size="13" class="mono">cd</text>
+    <text x="694" y="308" font-size="12" text-anchor="end" class="fill-muted">cd alone goes home</text>
+    <text x="26" y="328" font-size="13" class="mono">pwd</text>
+    <text x="26" y="348" font-size="13" class="mono fill-muted">/home/you</text>
+  </g>
+</svg>

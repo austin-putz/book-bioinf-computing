@@ -60,7 +60,7 @@ checked while drafting.
   parameters in a methods section, look up a flag in `--help`, and check
   an AI-suggested command before running it.
 - **Check:** two parts.
-  1. Exercise 1's supplied script, `~/bioinf-ch04/count.sh`, holds one
+  1. Exercise 1's supplied script, `~/bioinf-computing-ch04/count.sh`, holds one
      `seqkit stats` command with three faults. It fails three times, in
      this order (*captured*, seqkit 2.14.0): `Error: unknown flag:
      --paired` → `[ERRO] stat –T: no such file or directory` →
@@ -308,7 +308,7 @@ items in brackets are specified under *Visuals and teaching aids*.
 
    ```bash
    pixi run seqkit head -n 100 data/raw/SRR6357070_1.fastq.gz \
-     -o ~/bioinf-ch04/small_R1.fastq.gz
+     -o ~/bioinf-computing-ch04/small_R1.fastq.gz
    ```
 
    (*captured*: 100 reads, 10,100 bases; written to the exercise
@@ -421,13 +421,13 @@ Pipe tables, caption above, `tbl-` label, cited by label.
   en dash (`–`, U+2013) inside code, and the corrected commands must
   keep ASCII `-`; check the rendered HTML, and that Quarto's smart
   punctuation does not touch code.
-- `filename="~/bioinf-ch04/count.sh"` for exercise 1's script; the
-  exercise folder is scratch, like `~/bioinf-ch01`, so the project
+- `filename="~/bioinf-computing-ch04/count.sh"` for exercise 1's script; the
+  exercise folder is scratch, like `~/bioinf-computing-ch01`, so the project
   stays clean. Starting version (*captured*):
 
   ```bash
   # count.sh: count reads in both raw files (has three faults)
-  # Run from ~/bioinf-computing:  pixi run bash ~/bioinf-ch04/count.sh
+  # Run from ~/bioinf-computing:  pixi run bash ~/bioinf-computing-ch04/count.sh
   seqkit stats –T --paired data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz
   ```
 
@@ -500,8 +500,8 @@ section:
 End-of-chapter exercises (core chapter, so required; all adapt supplied
 material):
 
-1. **Fix a broken script.** Copy the supplied `~/bioinf-ch04/count.sh`.
-   Run it with `pixi run bash ~/bioinf-ch04/count.sh` from
+1. **Fix a broken script.** Copy the supplied `~/bioinf-computing-ch04/count.sh`.
+   Run it with `pixi run bash ~/bioinf-computing-ch04/count.sh` from
    `~/bioinf-computing`. It fails three times; fix one fault at a time from
    the message and `--help` alone, rerunning after each, and note in
    `NOTEBOOK.md` what each message said and what you changed. (*Order:
@@ -511,7 +511,7 @@ material):
    `pixi run seqkit stats -a -T` on both raw files. Which columns
    appear that were not there before?
 3. **Write a help request.** Pretend exercise 1's first error is one
-   you cannot solve. Write the request in `~/bioinf-ch04/help_request.md`
+   you cannot solve. Write the request in `~/bioinf-computing-ch04/help_request.md`
    from the book's *Something doesn't run* form plus the added fields
    (expected, tried, `pixi run seqkit version`, small example), with
    `pixi info` output whose home path is replaced by `<home>`. For the
@@ -784,7 +784,7 @@ macOS 15 Intel), paths shown as `/home/you`. Changes from the plan:
   the `[ERRO]` lines come before the header line. `unknown flag`
   prints the usage on stderr and repeats `unknown flag: --paired` on
   stdout at the end. Both shown as captured.
-- **Setup step added:** `mkdir -p ~/bioinf-ch04` at the end of §1;
+- **Setup step added:** `mkdir -p ~/bioinf-computing-ch04` at the end of §1;
   exercise 1's script is copied from the page (no download yet).
 - **Exercise 2** answer adds that R2 has lower quality and more `N`s
   (`sum_n` 18,842 vs 280), from the `-a` capture.

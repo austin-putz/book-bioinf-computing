@@ -32,7 +32,7 @@ be checked while drafting.
 
 From the written Chapters 1 and 2 (check the wording again when drafting):
 
-- Chapter 1 (§3): "`~/bioinf-ch01` is a scratch folder … this chapter
+- Chapter 1 (§3): "`~/bioinf-computing-ch01` is a scratch folder … this chapter
   starts the book's real project and brings this file, **and the address
   you downloaded it from**, into it."
 - Chapter 2 (§2): "`~/bioinf-computing` is the book's project folder from now
@@ -100,7 +100,7 @@ the folder at the end of the chapter is the starting point for every
 later chapter. Every section starts with `cd ~/bioinf-computing`. Commands are
 copy-and-run; `mkdir`, `mv`, `ln -s`, `chmod` and the rest are explained
 in Part II (Chapters 5–7), as in Chapter 1. Practice and deliberately
-broken files go in a scratch folder, `~/bioinf-ch03/`, never in the
+broken files go in a scratch folder, `~/bioinf-computing-ch03/`, never in the
 project. Visual items in brackets are specified under *Visuals and
 teaching aids*.
 
@@ -152,7 +152,7 @@ teaching aids*.
    (Chapters 10, 26). [`fig-project-layout`, `tbl-project-folders`;
    key idea; self-check]
 3. **Names that work.** *Start with a sorting puzzle:* `ls` on a supplied
-   set of names in `~/bioinf-ch03/names/` (`final.txt`, `final_v2.txt`,
+   set of names in `~/bioinf-computing-ch03/names/` (`final.txt`, `final_v2.txt`,
    `Final FINAL (2).txt`, `run10.sh`, `run2.sh`, `11-3-25 counts.csv`)
    shows them in an order no one wants. Then the rules, with the fixed
    version beside each:
@@ -180,13 +180,13 @@ teaching aids*.
    archive (`SRR…`, `WT_REP1`) are kept as given so they still match the
    records; rename only your own files. [`tbl-file-names`; self-check]
 4. **Raw data: move it in, check it, protect it.** *Start hands-on:*
-   `cd ~/bioinf-computing`, then move both FASTQ files from `~/bioinf-ch01/`
+   `cd ~/bioinf-computing`, then move both FASTQ files from `~/bioinf-computing-ch01/`
    into `data/raw/`. Recovery, one mate at a time: readers who never
    downloaded R2 (an exercise in Chapters 1–2), or whose
-   `~/bioinf-ch01` is gone, use the supplied `curl -fLO` for each missing
+   `~/bioinf-computing-ch01` is gone, use the supplied `curl -fLO` for each missing
    file, pinned to one commit (see *Examples and data*). If a file is
    already in `data/raw/` from an earlier visit, skip it; never overwrite
-   a protected file (check it with `md5sum -c` instead). `~/bioinf-ch01`
+   a protected file (check it with `md5sum -c` instead). `~/bioinf-computing-ch01`
    keeps `fastq_summary.txt` and can be deleted later. Readers going back
    to Chapter 1–2 commands use the new `data/raw/` paths. Create
    `data/raw/checksums.md5` from the two lines the book supplies (in VS
@@ -204,7 +204,7 @@ teaching aids*.
    value by recomputing it from the damaged copy) and `FAILED open or
    read` / `No such file or directory` (the file is missing, misnamed,
    or you are in the wrong folder: check before assuming damage).
-   *Then protect it, first on a toy:* in `~/bioinf-ch03/practice/`,
+   *Then protect it, first on a toy:* in `~/bioinf-computing-ch03/practice/`,
    make a folder with one small file, `chmod a-w` the file **and** the
    folder, and try to append, delete, move, and add a file: all four
    fail with `Permission denied` (*checked*). Why the folder too: a
@@ -231,7 +231,7 @@ teaching aids*.
    route to the same data, not a copy. On a cluster, references and big
    shared datasets exist once (`/project/<lab>/…`), every project points
    at them, and no one's quota pays twice. Then two short demonstrations
-   on a **toy** link in `~/bioinf-ch03/practice/` (never on the real
+   on a **toy** link in `~/bioinf-computing-ch03/practice/` (never on the real
    reference): editing a file through the link changes the original;
    `unlink toylink` (or `rm toylink`, no slash, no `-r`) removes only
    the link and the target is untouched. A link whose target moves or is
@@ -559,10 +559,10 @@ section:
   Reusable.*)
 
 End-of-chapter exercises (core chapter, so required; all adapt supplied
-commands or templates; practice files go in `~/bioinf-ch03/`):
+commands or templates; practice files go in `~/bioinf-computing-ch03/`):
 
 1. **Rename a messy folder.** A supplied command creates
-   `~/bioinf-ch03/messy/` with eight badly named files (spaces, `final`,
+   `~/bioinf-computing-ch03/messy/` with eight badly named files (spaces, `final`,
    unpadded numbers, an ambiguous date, a `.txt` that is really a TSV).
    Propose new names in a table, then apply them with supplied `mv`
    commands adapted to your names. For the ambiguous date, say what you
@@ -570,7 +570,7 @@ commands or templates; practice files go in `~/bioinf-ch03/`):
    sorts them in order.*)
 2. **Catch a broken transfer.** Make a truncated copy in the practice
    folder (`head -c 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz
-   > ~/bioinf-ch03/practice/SRR6357070_1.fastq.gz`), copy
+   > ~/bioinf-computing-ch03/practice/SRR6357070_1.fastq.gz`), copy
    `checksums.md5` beside it, and run `md5sum -c` there (expected:
    `FAILED` for the copy, `FAILED open or read` for the missing R2; both
    are deliberate). Then run `gzip -t` on the copy. Which check caught
@@ -589,9 +589,9 @@ commands or templates; practice files go in `~/bioinf-ch03/`):
    and single-end input. A trailing space makes a different ID, so the
    records fail to match: Chapter 14 shows how to detect it.*)
 4. **Rebuild and compare.** Save a copy of the result outside
-   `results/` (`cp results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv`),
+   `results/` (`cp results/read_counts.tsv ~/bioinf-computing-ch03/read_counts_before.tsv`),
    delete `results/`, rerun `pixi run bash src/01_count_reads.sh`, and
-   compare with `cmp ~/bioinf-ch03/read_counts_before.tsv
+   compare with `cmp ~/bioinf-computing-ch03/read_counts_before.tsv
    results/read_counts.tsv` (no output means the files are identical).
    Look at `logs/`: both runs' logs are there. Add a `NOTEBOOK.md` entry
    for today. (*Identical; the two logs differ in date and time, which
@@ -605,7 +605,7 @@ commands or templates; practice files go in `~/bioinf-ch03/`):
 ## Examples and data
 
 - Toy examples: the sorting puzzle and messy folder (exercise 1), the
-  protected toy folder and toy link in `~/bioinf-ch03/practice/`, a
+  protected toy folder and toy link in `~/bioinf-computing-ch03/practice/`, a
   truncated copy (exercise 2), one changed byte for `fig-checksum`.
 - Downloads pinned to commit `9dd6d014f560e182047992834a8d267214fbccd1`
   of `nf-core/test-datasets` (`rnaseq` branch head, 2026-11-09), URL
@@ -673,7 +673,7 @@ is in brackets.
 
 ## Links to other chapters and books
 
-- Builds on: Chapter 1 (the FASTQ files in `~/bioinf-ch01`, the
+- Builds on: Chapter 1 (the FASTQ files in `~/bioinf-computing-ch01`, the
   hand-made `fastq_summary.txt`, `curl -fLO`, `gzip -t`); Chapter 2
   (`~/bioinf-computing`, pixi, `pixi run`, VS Code and nano for editing,
   `README.md` from exercise 3, project vs home storage on clusters).
@@ -810,8 +810,8 @@ environment, the pinned files, ENA). Accepted and applied above:
   dropped (Chapter 26 chooses the release).
 - **Teaching points:** permissions shown on a toy folder first and
   described as guarding against accidents; recovery per mate file and
-  for repeat visits; `~/bioinf-ch01` keeps `fastq_summary.txt`; practice
-  files in `~/bioinf-ch03/`, not `/tmp`; exercise 4 saves outside
+  for repeat visits; `~/bioinf-computing-ch01` keeps `fastq_summary.txt`; practice
+  files in `~/bioinf-computing-ch03/`, not `/tmp`; exercise 4 saves outside
   `results/` and says what `cmp`'s silence means; two kinds of checksum
   failure told apart; join answer says "fail to match", not "silently
   drop"; backup table gains recovery period and who restores; git

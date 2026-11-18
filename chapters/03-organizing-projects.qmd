@@ -43,7 +43,7 @@ Every later chapter starts from this folder. The commands are
 copy-and-run, as in @sec-orientation; `mkdir`, `mv`, `ln`, `chmod` and
 the rest are explained properly in Part II (@sec-shell-basics,
 @sec-linux-system). Practice files, and anything broken on purpose, go
-in a separate scratch folder, `~/bioinf-ch03`, never in the project.
+in a separate scratch folder, `~/bioinf-computing-ch03`, never in the project.
 
 ## A folder for each project {#sec-organizing-projects-layout}
 
@@ -199,7 +199,7 @@ Start with a puzzle. In the scratch folder, make seven empty files with
 names like the ones on many lab drives, then list them:
 
 ```{.bash filename="Terminal (laptop)"}
-mkdir -p ~/bioinf-ch03/names && cd ~/bioinf-ch03/names
+mkdir -p ~/bioinf-computing-ch03/names && cd ~/bioinf-computing-ch03/names
 touch run1.sh run2.sh run10.sh final.txt "Final FINAL (2).txt" "9-15-25 counts.csv" "10-2-26 counts.csv" # <1>
 ls -1 # <2>
 ```
@@ -277,11 +277,11 @@ each step does: `01_download.sh`, `02_trim.sh`, `10_report.sh`.
 ## Raw data: move it in, check it, protect it {#sec-organizing-projects-raw}
 
 **Move it in.** The two FASTQ files from @sec-orientation are still in
-the scratch folder `~/bioinf-ch01`. Move them into the project:
+the scratch folder `~/bioinf-computing-ch01`. Move them into the project:
 
 ```{.bash filename="Terminal (laptop)"}
 cd ~/bioinf-computing
-mv ~/bioinf-ch01/SRR6357070_1.fastq.gz ~/bioinf-ch01/SRR6357070_2.fastq.gz data/raw/ # <1>
+mv ~/bioinf-computing-ch01/SRR6357070_1.fastq.gz ~/bioinf-computing-ch01/SRR6357070_2.fastq.gz data/raw/ # <1>
 ls -l data/raw
 ```
 1. `mv` moves files; the last name is where they go. Moving within one
@@ -294,13 +294,13 @@ total 4368
 ```
 
 From now on the files live here: if you go back to a command in
-Chapters 1–2, use `~/bioinf-computing/data/raw/` instead of `~/bioinf-ch01/`.
-`~/bioinf-ch01` keeps `fastq_summary.txt`; you can delete it later.
+Chapters 1–2, use `~/bioinf-computing/data/raw/` instead of `~/bioinf-computing-ch01/`.
+`~/bioinf-computing-ch01` keeps `fastq_summary.txt`; you can delete it later.
 
 ::: {.callout-tip}
 ## Missing a file?
 If `mv` says `cannot stat … No such file or directory` for a file (you
-skipped the read-2 exercise, or deleted `~/bioinf-ch01`), the other file
+skipped the read-2 exercise, or deleted `~/bioinf-computing-ch01`), the other file
 still moved. Download each missing one straight into `data/raw/`:
 
 ```{.bash filename="Terminal (laptop)"}
@@ -396,7 +396,7 @@ computing its checksum, `md5sum -c` happily prints `OK`.
 read-only. Try it first on a practice folder with one small file:
 
 ```{.bash filename="Terminal (laptop)"}
-mkdir -p ~/bioinf-ch03/practice/locked && cd ~/bioinf-ch03/practice
+mkdir -p ~/bioinf-computing-ch03/practice/locked && cd ~/bioinf-computing-ch03/practice
 echo "first line" > locked/notes.txt
 chmod a-w locked/notes.txt locked # <1>
 echo "second line" >> locked/notes.txt # <2>
@@ -586,7 +586,7 @@ the real reference). Writing through a link writes to the original, and
 removing the link leaves the original alone:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-ch03/practice
+cd ~/bioinf-computing-ch03/practice
 mkdir -p target && echo "original line" > target/note.txt
 ln -s target toylink
 echo "added through the link" >> toylink/note.txt
@@ -1126,7 +1126,7 @@ what you tried first, or what went wrong. That goes in a notebook. Make
 
 ## 2026-11-17
 
-- Organized the project (Chapter 3): moved the reads from ~/bioinf-ch01
+- Organized the project (Chapter 3): moved the reads from ~/bioinf-computing-ch01
   into data/raw/, checked them with md5sum -c (both OK), made them read-only.
 - Linked the test reference from ~/bioinf-shared/ instead of copying it.
 - The nf-core test sheet groups 7 runs under 5 labels, but ENA lists
@@ -1230,14 +1230,14 @@ The project now looks like this:
 
 ## Exercises {#sec-organizing-projects-exercises}
 
-Practice files go in `~/bioinf-ch03/`, not in the project.
+Practice files go in `~/bioinf-computing-ch03/`, not in the project.
 
 ::: {.check}
 **Exercise 1. Rename a messy folder.** Make a folder of badly named
 files:
 
 ```{.bash filename="Terminal (laptop)"}
-mkdir -p ~/bioinf-ch03/messy && cd ~/bioinf-ch03/messy
+mkdir -p ~/bioinf-computing-ch03/messy && cd ~/bioinf-computing-ch03/messy
 touch "SRR6357070 R1.fastq.gz" "Analysis.R" "plot 1.png" "plot 2.png" "plot 10.png" "counts final.txt" "counts final_v2.txt" "11-3-25 notes.txt"
 ```
 
@@ -1276,7 +1276,7 @@ in the practice folder, as an interrupted transfer would, copy the
 checksum list beside it, and check:
 
 ```{.bash filename="Terminal (laptop)"}
-cd ~/bioinf-ch03/practice
+cd ~/bioinf-computing-ch03/practice
 head -c 1000000 ~/bioinf-computing/data/raw/SRR6357070_1.fastq.gz > SRR6357070_1.fastq.gz
 cp ~/bioinf-computing/data/raw/checksums.md5 .
 md5sum -c checksums.md5
@@ -1325,7 +1325,7 @@ seven runs in the upstream sheet (captured 2026-11-17 from ENA's
 | SRR6357076 | GSM2879624 | Rap1-AID degron induction 30 minutes total RNA-Seq biological replicate 1 | PAIRED |
 
 Copy the upstream sheet into the practice folder (`cp
-~/bioinf-computing/data/meta/samplesheet_upstream.csv ~/bioinf-ch03/`), open
+~/bioinf-computing/data/meta/samplesheet_upstream.csv ~/bioinf-computing-ch03/`), open
 the copy in VS Code, and add `geo_sample` and `condition` columns from
 this table. How many biological samples are there? How many runs are
 really paired-end? Why might a test fixture group them differently? And
@@ -1347,10 +1347,10 @@ match when joined; @sec-tabular-data shows how to detect it.
 
 ```{.bash filename="Terminal (laptop)"}
 cd ~/bioinf-computing
-cp results/read_counts.tsv ~/bioinf-ch03/read_counts_before.tsv
+cp results/read_counts.tsv ~/bioinf-computing-ch03/read_counts_before.tsv
 rm -r results
 pixi run bash src/01_count_reads.sh
-cmp ~/bioinf-ch03/read_counts_before.tsv results/read_counts.tsv # <1>
+cmp ~/bioinf-computing-ch03/read_counts_before.tsv results/read_counts.tsv # <1>
 ls logs
 ```
 1. `cmp` compares two files byte by byte and prints nothing if they are

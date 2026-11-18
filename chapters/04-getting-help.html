@@ -784,13 +784,13 @@ div.csl-indent {
 <li>check a command an AI assistant suggests before you trust it.</li>
 </ul>
 <p>Asking for help is part of the job, not a sign that you are not good enough: some problems (a broken node, a full quota) only an administrator can fix, and a clear request is a skill in its own right.</p>
-<p>Commands run on your laptop, from the book’s project folder, <code>~/bioinf-computing</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>). Practice files go in a scratch folder, <code>~/bioinf-ch04</code>, like Chapter 1’s <code>~/bioinf-ch01</code>, so the project stays clean. Make it now:</p>
+<p>Commands run on your laptop, from the book’s project folder, <code>~/bioinf-computing</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>). Practice files go in a scratch folder, <code>~/bioinf-computing-ch04</code>, like Chapter 1’s <code>~/bioinf-computing-ch01</code>, so the project stays clean. Make it now:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch04</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch04</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Cluster readers can run the same commands on a login node: they are small and quick.</p>
 </section>
@@ -1057,7 +1057,7 @@ Table&nbsp;4.1: Where to find out how a tool works. Only the ones that come from
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> ~/bioinf-ch04/broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span> <span class="at">-c</span> 1000000 data/raw/SRR6357070_1.fastq.gz <span class="op">&gt;</span> ~/bioinf-computing-ch04/broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>(<code>head -c 1000000</code> keeps the first million bytes, under half the file. It writes to the scratch folder, never into <code>data/raw/</code>.)</p>
 <p><strong>1.</strong></p>
@@ -1101,9 +1101,9 @@ unknown flag: --paired</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-ch04/broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-computing-ch04/broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<pre class="console"><code>[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+<pre class="console"><code>[ERRO] /home/you/bioinf-computing-ch04/broken.fastq.gz: unexpected EOF
 [ERRO]
 file    format  type    num_seqs    sum_len min_len avg_len max_len</code></pre>
 <p><strong>6.</strong></p>
@@ -1268,14 +1268,14 @@ NAs introduced by coercion</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-ch04/broken.fastq.gz</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-computing-ch04/broken.fastq.gz</span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$?</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<pre class="console"><code>[ERRO] /home/you/bioinf-ch04/broken.fastq.gz: unexpected EOF
+<pre class="console"><code>[ERRO] /home/you/bioinf-computing-ch04/broken.fastq.gz: unexpected EOF
 [ERRO]
 file    format  type    num_seqs    sum_len min_len avg_len max_len
 0</code></pre>
-<p>seqkit 2.14.0 printed an error <strong>and</strong> reported success. (SeqKit’s current <a href="https://bioinf.shenwei.me/seqkit/">documentation</a> says read errors give a nonzero status, so a later version may behave differently.) That is the lesson, whatever the version: the exit status says what the program <em>reported</em>. It does not prove the output answers your question. Read the messages, and check the result against something you know: here, a table with no rows instead of 50,000 reads. How scripts and pipelines use exit status is <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>.</p>
+<p>seqkit 2.14.0 printed an error <strong>and</strong> reported success. (SeqKit’s current <a href="https://bioinf.shenwei.me/seqkit/">documentation</a> says read errors give a nonzero status, so a later version may behave differently.) That is the lesson, whatever the version: the exit status says what the program <em>reported</em>. It does not prove the output answers your question. Read the messages, and check the result against something you know: here, a table with no rows instead of 50,000 reads. Given an intact file and this broken one in the same command, seqkit 2.14.0 printed only the header line: the intact file’s row was lost too, and the status was still <code>0</code>. How scripts and pipelines use exit status is <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>.</p>
 <div class="misconception callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2047,19 +2047,19 @@ Figure&nbsp;4.4: A help request someone can answer. It starts from the book’s 
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit head <span class="at">-n</span> 100 data/raw/SRR6357070_1.fastq.gz <span class="dt">\</span></span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> ~/bioinf-ch04/small_R1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> ~/bioinf-computing-ch04/small_R1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>That writes the first 100 reads (10,100 bases) to the scratch folder, never to <code>data/raw/</code>. Now the catch. Do the same with the truncated file, and check the small copy:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit head <span class="at">-n</span> 100 ~/bioinf-ch04/broken.fastq.gz <span class="dt">\</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> ~/bioinf-ch04/small_broken.fastq.gz</span>
-<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-ch04/small_broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit head <span class="at">-n</span> 100 ~/bioinf-computing-ch04/broken.fastq.gz <span class="dt">\</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-o</span> ~/bioinf-computing-ch04/small_broken.fastq.gz</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats <span class="at">-T</span> ~/bioinf-computing-ch04/small_broken.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>file    format  type    num_seqs    sum_len min_len avg_len max_len
-/home/you/bioinf-ch04/small_broken.fastq.gz FASTQ   DNA 100 10100   101 101.0   101</code></pre>
+/home/you/bioinf-computing-ch04/small_broken.fastq.gz   FASTQ   DNA 100 10100   101 101.0   101</code></pre>
 <p>No error. The first 100 reads of the broken file are intact; the damage is at its end. Shrinking removed the bug: this example is too small. That is why you rerun after every cut. Some failures need no real data at all (a wrong file name fails on any file), and often the shrinking finds the bug for you. In R, the <code>reprex</code> package builds such examples (<a href="https://reprex.tidyverse.org">reprex.tidyverse.org</a>, <a href="12-r-essentials.html" class="quarto-xref"><span>Chapter 12</span></a>).</p>
 </section>
 <section id="text-not-screenshots" class="level3" data-number="4.7.2">
@@ -2325,16 +2325,16 @@ Table&nbsp;4.7: Checks for an AI-suggested command.
 <section id="sec-getting-help-exercises" class="level2 page-columns page-full" data-number="4.10">
 <h2 data-number="4.10" class="anchored" data-anchor-id="sec-getting-help-exercises"><span class="header-section-number">4.10</span> Exercises</h2>
 <div class="check">
-<p><strong>Exercise 1. Fix a broken script.</strong> Make the script below in the scratch folder (in VS Code: <code>code ~/bioinf-ch04/count.sh</code>, paste, save). Copy it from this page exactly, faults and all:</p>
+<p><strong>Exercise 1. Fix a broken script.</strong> Make the script below in the scratch folder (in VS Code: <code>code ~/bioinf-computing-ch04/count.sh</code>, paste, save). Copy it from this page exactly, faults and all:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
-<pre><strong>~/bioinf-ch04/count.sh</strong></pre>
+<pre><strong>~/bioinf-computing-ch04/count.sh</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" data-filename="~/bioinf-ch04/count.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># count.sh: count reads in both raw files (has three faults)</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run from ~/bioinf-computing:  pixi run bash ~/bioinf-ch04/count.sh</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" data-filename="~/bioinf-computing-ch04/count.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co"># count.sh: count reads in both raw files (has three faults)</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Run from ~/bioinf-computing:  pixi run bash ~/bioinf-computing-ch04/count.sh</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> stats –T <span class="at">--paired</span> data/raw/SRR6357070_l.fastq.gz data/raw/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>From <code>~/bioinf-computing</code>, run it with <code>pixi run bash ~/bioinf-ch04/count.sh</code>. It fails three times. Fix one fault at a time, using only the message and <code>--help</code>, and rerun after each fix. Note in <code>NOTEBOOK.md</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>) what each message said and what you changed.</p>
+<p>From <code>~/bioinf-computing</code>, run it with <code>pixi run bash ~/bioinf-computing-ch04/count.sh</code>. It fails three times. Fix one fault at a time, using only the message and <code>--help</code>, and rerun after each fix. Note in <code>NOTEBOOK.md</code> (<a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>) what each message said and what you changed.</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -2382,7 +2382,7 @@ data/raw/SRR6357070_2.fastq.gz  FASTQ   DNA 50000   5050000 101 101.0   101</cod
 </div>
 </div>
 <div class="check">
-<p><strong>Exercise 3. Write a help request.</strong> Pretend that exercise 1’s first error is one you cannot solve. Write the request in <code>~/bioinf-ch04/help_request.md</code>, following <a href="#fig-good-request" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>: the <em>Something doesn’t run</em> fields (where it ran, the exact command, the complete message as text, <code>pixi info</code> with your home path replaced by <code>&lt;home&gt;</code>), plus what you expected, what you tried, the output of <code>pixi run seqkit version</code>, and a small example. For the example, make a 100-read file with the <code>seqkit head</code> command from <a href="#sec-getting-help-asking" class="quarto-xref"><span>Section 4.7</span></a>, and <strong>check that the same error still appears with it</strong>. Then shrink once more: does the error need an input file at all? Do not submit the request. Then test it: could someone reproduce the failure from the request alone, without access to your home folder?</p>
+<p><strong>Exercise 3. Write a help request.</strong> Pretend that exercise 1’s first error is one you cannot solve. Write the request in <code>~/bioinf-computing-ch04/help_request.md</code>, following <a href="#fig-good-request" class="quarto-xref">Figure&nbsp;<span>4.4</span></a>: the <em>Something doesn’t run</em> fields (where it ran, the exact command, the complete message as text, <code>pixi info</code> with your home path replaced by <code>&lt;home&gt;</code>), plus what you expected, what you tried, the output of <code>pixi run seqkit version</code>, and a small example. For the example, make a 100-read file with the <code>seqkit head</code> command from <a href="#sec-getting-help-asking" class="quarto-xref"><span>Section 4.7</span></a>, and <strong>check that the same error still appears with it</strong>. Then shrink once more: does the error need an input file at all? Do not submit the request. Then test it: could someone reproduce the failure from the request alone, without access to your home folder?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">

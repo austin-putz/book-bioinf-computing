@@ -832,7 +832,7 @@ div.csl-indent {
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/main/setup/pixi.toml</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fLO</span> https://raw.githubusercontent.com/austin-putz/book-bioinf-computing/main/setup/pixi.lock</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><code>~/bioinf-computing</code> is the book’s project folder from now on. Unlike <code>~/bioinf-ch01</code>, you keep it; <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> organizes it.</p>
+<p><code>~/bioinf-computing</code> is the book’s project folder from now on. Unlike <code>~/bioinf-computing-ch01</code>, you keep it; <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> organizes it.</p>
 <p><strong>Step 3. Install the environment.</strong></p>
 <div class="compute-note">
 <p>About 10 seconds on a laptop with a fast connection; from under a minute to several minutes on cluster storage. The environment takes about 1.3 GB on disk in about 15,500 files (measured on Linux, 2026-11-14; <code>scripts/ch02_env_size.sh</code> repeats the measurement).</p>
@@ -856,15 +856,15 @@ div.csl-indent {
 Python 3.12.16
 Rscript (R) version 4.4.3 (2025-02-28)
 seqkit v2.14.0</code></pre>
-<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit shen2024seqkit2">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>, <a href="../references.html#ref-shen2024seqkit2" role="doc-biblioref">2024</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>. (If you deleted <code>~/bioinf-ch01</code>, which Chapter 1 said you could, download the file again first: <code>mkdir -p ~/bioinf-ch01</code>, then the <code>curl</code> command from <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>, step 2, run inside that folder.)</p>
+<p>Then use a real tool on real data. <a href="https://bioinf.shenwei.me/seqkit/">SeqKit</a> <span class="citation" data-cites="shen2016seqkit shen2024seqkit2">(<a href="../references.html#ref-shen2016seqkit" role="doc-biblioref">Shen et al. 2016</a>, <a href="../references.html#ref-shen2024seqkit2" role="doc-biblioref">2024</a>)</span> summarizes FASTA and FASTQ files; run it on the file you downloaded in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>. (If you deleted <code>~/bioinf-computing-ch01</code>, which Chapter 1 said you could, download the file again first: <code>mkdir -p ~/bioinf-computing-ch01</code>, then the <code>curl</code> command from <a href="01-orientation.html#sec-orientation-first-session" class="quarto-xref"><span>Section 1.3</span></a>, step 2, run inside that folder.)</p>
 <div class="no-row-height column-margin column-container"></div><div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats ~/bioinf-ch01/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run seqkit stats ~/bioinf-computing-ch01/SRR6357070_1.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<pre class="console"><code>file                                         format  type  num_seqs    sum_len  min_len  avg_len  max_len
-/home/you/bioinf-ch01/SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      101</code></pre>
+<pre class="console"><code>file                                                   format  type  num_seqs    sum_len  min_len  avg_len  max_len
+/home/you/bioinf-computing-ch01/SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      101</code></pre>
 <p><code>num_seqs</code> is 50,000, the read count you worked out by hand in Chapter 1; <code>sum_len</code> is the total number of bases, 50,000 reads × 101 bases. (On a Mac the path starts with <code>/Users/</code> instead of <code>/home/</code>.)</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -2099,13 +2099,13 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 </div>
 </div>
 <div class="check">
-<p><strong>Exercise 2. Read 2.</strong> Run <code>pixi run seqkit stats</code> on the read-2 file from Chapter 1’s exercise (change <code>_1</code> to <code>_2</code>). If you skipped that exercise, or deleted <code>~/bioinf-ch01</code>, download the file first:</p>
+<p><strong>Exercise 2. Read 2.</strong> Run <code>pixi run seqkit stats</code> on the read-2 file from Chapter 1’s exercise (change <code>_1</code> to <code>_2</code>). If you skipped that exercise, or deleted <code>~/bioinf-computing-ch01</code>, download the file first:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-ch01</span>
-<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> ~/bioinf-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch01</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fL</span> <span class="at">-o</span> ~/bioinf-computing-ch01/SRR6357070_2.fastq.gz https://raw.githubusercontent.com/nf-core/test-datasets/9dd6d014f560e182047992834a8d267214fbccd1/testdata/GSE110004/SRR6357070_2.fastq.gz</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Do the two files have the same <code>num_seqs</code>?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -2120,7 +2120,7 @@ seqkit   2.14.0   hf2ff7e1_0             6.66 MiB  conda  https://conda.anaconda
 </div>
 <div id="callout-17" class="callout-17-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p>Yes: 50,000 reads in each, as Chapter 1’s exercise found by counting lines. seqkit can take both files at once: <code>pixi run seqkit stats ~/bioinf-ch01/SRR6357070_*.fastq.gz</code>.</p>
+<p>Yes: 50,000 reads in each, as Chapter 1’s exercise found by counting lines. seqkit can take both files at once: <code>pixi run seqkit stats ~/bioinf-computing-ch01/SRR6357070_*.fastq.gz</code>.</p>
 </div>
 </div>
 </div>

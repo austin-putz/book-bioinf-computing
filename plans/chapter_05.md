@@ -1007,3 +1007,16 @@ connection. A "Why bash" paragraph follows, then `tbl-part2-roadmap`,
 one row per chapter 5–10. The homepage gained a short "Why so much
 command line?" paragraph linking to it. Chapter 1's "Why Linux" is
 unchanged.
+
+**Codex chapter review applied (2026-11-18,
+`reviews/chapter_05_codex_review.md`).** All four findings accepted and
+checked here first: the `ln -s` row now says a link to an existing
+folder or folder link goes inside it, with `ln -sT` to refuse (tested:
+rc 0 and the link appears in the target folder; `-T` gives "File exists");
+the FASTQ quality line was recaptured from the pinned R1 (it was 102
+characters long; it is now 101, and the copies in Chapters 1 and 6 were
+already right); the link demo uses `file -h` (same output on a Mac);
+and the history paragraph now says an open shell doesn't pick up
+another shell's commands after that shell exits. The figure's
+`file tidy/wrong.fastq.gz` was left as it is, because a broken link
+reads the same with or without `-h`.

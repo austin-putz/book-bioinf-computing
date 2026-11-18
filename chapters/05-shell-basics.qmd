@@ -732,7 +732,7 @@ without asking. {#tbl-file-commands}
 | `rm f` | deletes a file | **yes**: that is its job | `ls -d -- f` first; `rm -i` | backups only |
 | `rm -r d` | deletes a folder and everything in it | **yes** | `ls -d -- d` first; `rm -ri` | backups only |
 | `rmdir d` | deletes an **empty** folder | no: refuses if not empty | — | `mkdir d` |
-| `ln -s target name` | makes a symbolic link | no: refuses if `name` exists | — | `unlink name` |
+| `ln -s target name` | makes a symbolic link | no existing file is replaced, but if `name` is a folder or a link to one, the new link goes **inside** it; `ln -sT` refuses instead | — | `unlink name` |
 | `unlink name` | removes one link or file | **yes** | no trailing slash | make the link again |
 :::
 
@@ -805,7 +805,7 @@ cd ~/bioinf-computing-ch05/share
 mkdir -p ../tidy
 ln -s run1/sample_A_R1.fastq.gz ../tidy/wrong.fastq.gz
 ln -s ../share/run1/sample_A_R1.fastq.gz ../tidy/right.fastq.gz
-file ../tidy/wrong.fastq.gz ../tidy/right.fastq.gz
+file -h ../tidy/wrong.fastq.gz ../tidy/right.fastq.gz
 ```
 
 ```{.console}
@@ -816,7 +816,9 @@ file ../tidy/wrong.fastq.gz ../tidy/right.fastq.gz
 `wrong.fastq.gz` stores `run1/sample_A_R1.fastq.gz`, which is read from
 `tidy/`, where there is no `run1`. `right.fastq.gz` stores a path that
 goes up from `tidy/` and into `share/`. (`file` names the kind of thing
-a path is; more in @sec-shell-basics-viewing.) Remove both with
+a path is, more in @sec-shell-basics-viewing; `-h` makes it describe
+the link itself instead of following it, which Linux does by default
+but a Mac does not.) Remove both with
 `unlink`, which removes only the links:
 
 ```{.bash filename="Terminal (laptop)"}
@@ -1443,7 +1445,7 @@ zless data/raw/SRR6357070_1.fastq.gz
 @SRR6357070.25017281 25017281/1 kraken:taxid|4932
 CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
 +
-BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF
 ```
 
 One read, four lines (@sec-fasta-fastq explains them). `zless` opens
@@ -1559,9 +1561,11 @@ You may also see `!!` (run the previous command again) and `!$` (its
 last argument) in other people's notes. They run without showing you the
 command first, so this book does not use them.
 
-**Where history lives.** Bash keeps it in `~/.bash_history` and saves
-each terminal's commands when that shell exits, so two open terminals do
-not see each other's newest commands until then. Anything you type on
+**Where history lives.** Bash keeps it in `~/.bash_history`. Each shell
+normally loads that file when it starts and saves its own commands when
+it exits, so a terminal that is already open will not show commands
+typed in another one, even after that one is closed; a new terminal
+will. Anything you type on
 the command line is stored there, so never put a password or a token in
 a command (@sec-getting-help). How much history is kept is a setting in
 `~/.bashrc` (@sec-linux-system).

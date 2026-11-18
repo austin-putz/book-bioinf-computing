@@ -746,9 +746,11 @@ cut -d, -f1 data/meta/samplesheet_upstream.csv | sort | uniq -c
       1 WT_REP2
 ```
 
-Seven runs under five sample labels, with `WT_REP1` and
-`RAP1_UNINDUCED_REP2` used twice each (two runs of the same sample), and
-the header `sample` counted again; `tail -n +2` removes it. Here the
+Seven runs under five test labels: `WT_REP1` and
+`RAP1_UNINDUCED_REP2` each group two runs, so the test exercises merging
+(they are not one sample sequenced twice;
+@sec-organizing-projects-metadata checked them against the archive). The
+header `sample` is counted too; `tail -n +2` removes it. Here the
 repeated labels already sit next to each other in the file, so
 `uniq -c` alone would happen to give the same counts. The practice table
 is why you sort anyway. One more column, the strandedness setting:
@@ -784,9 +786,10 @@ Same counts, different order. Your **locale** (language settings) tells
 mixed together, as in a dictionary. In the `C` locale, characters are
 ordered by their byte values, so all capitals come before all lower-case
 letters. `LC_ALL=C` in front of a command sets it for that command only.
-Use it when the order must be the same on every computer, or when
-another tool needs input sorted that way (`join` and `comm` do, for
-example). Which locale you have by default depends on the system; your
+Use it when the order must be the same on every computer. Tools that
+compare sorted files, such as `join` and `comm`, need their input sorted
+by the same rules they use themselves; if you sort with `LC_ALL=C`, run
+them with `LC_ALL=C` too. Which locale you have by default depends on the system; your
 settings are @sec-linux-system.
 
 ::: {.callout-tip}
@@ -1149,9 +1152,9 @@ SRR6357076
 11
 ```
 
-Seven runs, and 11 file names: four paired-end runs with two files each,
-plus three single-end runs with one. (`sed 's/_1$//'` removes the `_1`
-at the end; @sec-text-tools-sed-awk.) @fig-regex-anatomy takes the second
+Seven runs, and 11 file names: four runs with two files each, plus
+three runs that this test sheet uses as single-end, with one.
+(`sed 's/_1$//'` removes the `_1` at the end; @sec-text-tools-sed-awk.) @fig-regex-anatomy takes the second
 pattern apart.
 
 ::: {#fig-regex-anatomy}
@@ -1309,7 +1312,7 @@ sample-sheet lines, 5–8 a FASTQ read). {#tbl-regex-tester}
 | `GAATTC` | 6 | the exact site, in the sequence line |
 | `GA.TTC` | 6 | `.` is any character; only one such place here |
 | `^@SRR` | 5 | `@SRR` at the start: the header line |
-| `SRR[0-9]+_2\.fastq\.gz` | 2, 4 | the R2 file names: paired-end rows only |
+| `SRR[0-9]+_2\.fastq\.gz` | 2, 4 | the R2 file names: rows with two files only |
 | `reverse$` | 3, 4 | lines **ending** in `reverse` |
 | `^(WT\|RAP1_IAA)` | 2, 4 | lines starting with either name |
 | `fastq.gz` | 2, 3, 4 | would also match `fastqXgz`; `fastq\.gz` would not |
@@ -1881,7 +1884,7 @@ table to work on:
 cp ~/bioinf-computing-ch06/counts.tsv ~/bioinf-computing-ch06/counts_copy.tsv
 ```
 
-Each of these four lines has a redirection problem. Say what goes wrong,
+Each of the four lines below has a redirection problem. Say what goes wrong,
 then write a fixed version. Run them only after you have predicted the
 result.
 
@@ -1889,6 +1892,13 @@ result.
 cut -f1,4 ~/bioinf-computing-ch06/counts_copy.tsv
 pixi run seqkit stats -T ~/bioinf-computing-ch06/broken.fastq.gz > ~/bioinf-computing-ch06/stats.tsv 2>&1
 sort -t$'\t' -k4,4n ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/counts_copy.tsv
+```
+
+The third line empties the copy, so make it again before the fourth,
+and run the fourth line **twice**:
+
+```{.bash filename="Terminal (laptop)"}
+cp ~/bioinf-computing-ch06/counts.tsv ~/bioinf-computing-ch06/counts_copy.tsv
 cut -f1 ~/bioinf-computing-ch06/counts_copy.tsv >> ~/bioinf-computing-ch06/files.txt
 ```
 
@@ -1906,12 +1916,14 @@ however often you run the line.
    results file, ahead of the header. Fix: `> …/stats.tsv 2> …/stats.log`.
 3. The input is emptied before `sort` reads it (`wc -c` shows 0 bytes).
    Fix: `> ~/bioinf-computing-ch06/counts_sorted.tsv`, check it, and only
-   then `mv` if you want to replace the original. Re-make the copy with
-   `cp` first, since the broken line emptied it.
+   then `mv` if you want to replace the original.
 4. `>>` adds the names again on every run, so after two runs each name is
    there twice. Fix: `>`.
 
+Start the fixed versions from a fresh copy, since line 3 emptied it:
+
 ```{.bash filename="Terminal (laptop)"}
+cp ~/bioinf-computing-ch06/counts.tsv ~/bioinf-computing-ch06/counts_copy.tsv
 cut -f1,4 ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/reads_per_file.tsv
 pixi run seqkit stats -T ~/bioinf-computing-ch06/broken.fastq.gz > ~/bioinf-computing-ch06/stats.tsv 2> ~/bioinf-computing-ch06/stats.log
 sort -t$'\t' -k4,4n ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/counts_sorted.tsv
@@ -2024,8 +2036,8 @@ Extension: 124 distinct gene IDs; and the gene types of the transcripts:
 **Exercise 5. Regex practice on the sample sheet.** Write one `grep -E`
 that matches only the R2 file names in
 `data/meta/samplesheet_upstream.csv`, and count them. Then write one
-`awk -F,` command that prints the sample labels of the single-end rows,
-those with an empty `fastq_2` (column 3).
+`awk -F,` command that prints the sample labels of the rows given as
+single-end, those with an empty `fastq_2` (column 3).
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Answer
@@ -2042,8 +2054,10 @@ RAP1_UNINDUCED_REP2
 RAP1_UNINDUCED_REP2
 ```
 
-Four R2 files, one per paired-end run. `RAP1_UNINDUCED_REP2` appears
-twice because that sample has two single-end runs. Without `-o`, `grep -c`
+Four R2 files, one per row with two files. `RAP1_UNINDUCED_REP2`
+appears twice because the test sheet puts that label on two rows used as
+single-end; in the archive they are two different paired-end samples
+(@sec-organizing-projects-metadata). Without `-o`, `grep -c`
 would count lines, which is also 4 here.
 :::
 :::

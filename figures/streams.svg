@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 660" role="img" aria-labelledby="streams-title">
+  <title id="streams-title">Standard output and standard error in three cases: default, redirected to a file, and through a pipe. Each program has one input, stdin, and two outputs: stdout (solid arrow) and stderr (dashed arrow). Top, seqkit stats -T run with no redirection: stdout, the table, and stderr, the progress line processed files: 2 / 2 done, both go to the terminal. Middle, seqkit stats -T with > counts.tsv: only stdout goes to the file counts.tsv; stderr still reaches the terminal, which shows only the progress line. Bottom, gunzip -c broken.fastq.gz | wc -l: only gunzip's stdout enters the pipe and becomes the stdin of wc; gunzip's stderr skips the pipe and prints gzip: broken.fastq.gz: unexpected end of file on the terminal; wc then prints 89515, a partial count of lines, not a read count.</title>
+  <defs>
+    <marker id="streams-arrow-given" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-given"/>
+    </marker>
+    <marker id="streams-arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+    <marker id="streams-arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-warn"/>
+    </marker>
+  </defs>
+
+  <!-- Panel 1: default -->
+  <rect x="10" y="10" width="700" height="180" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="36" font-size="13" font-weight="700">1 · Default: both streams go to the terminal</text>
+  <text x="26" y="56" font-size="13" class="fill-muted">you ran <tspan class="mono">seqkit stats -T …</tspan></text>
+
+  <path d="M26,110 H76" class="stroke-muted" stroke-width="1.5" marker-end="url(#streams-arrow-muted)"/>
+  <text x="26" y="100" font-size="12" class="fill-muted">stdin</text>
+  <rect x="80" y="88" width="160" height="44" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="160" y="115" font-size="13" text-anchor="middle" class="mono">seqkit stats</text>
+
+  <path d="M242,100 L397,113" class="stroke-given" stroke-width="2" marker-end="url(#streams-arrow-given)"/>
+  <text x="300" y="96" font-size="13" font-weight="700" class="fill-given">stdout</text>
+  <path d="M242,122 L397,157" class="stroke-muted" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#streams-arrow-muted)"/>
+  <text x="290" y="158" font-size="13" class="fill-muted">stderr</text>
+
+  <rect x="400" y="72" width="300" height="106" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="414" y="92" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <g font-size="13" class="mono">
+    <text x="414" y="116" class="fill-given" xml:space="preserve">file  format  type  num_seqs …</text>
+    <text x="414" y="134" class="fill-given" xml:space="preserve">…     FASTQ   DNA   50000    …</text>
+    <text x="414" y="162" class="fill-muted">processed files: 2 / 2 … done</text>
+  </g>
+
+  <!-- Panel 2: > file -->
+  <rect x="10" y="202" width="700" height="190" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="228" font-size="13" font-weight="700">2 · <tspan class="mono">&gt; file</tspan>: only stdout goes to the file</text>
+  <text x="26" y="248" font-size="13" class="fill-muted">you ran <tspan class="mono">seqkit stats -T … &gt; counts.tsv</tspan></text>
+
+  <path d="M26,300 H76" class="stroke-muted" stroke-width="1.5" marker-end="url(#streams-arrow-muted)"/>
+  <text x="26" y="290" font-size="12" class="fill-muted">stdin</text>
+  <rect x="80" y="278" width="160" height="44" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="160" y="305" font-size="13" text-anchor="middle" class="mono">seqkit stats</text>
+
+  <path d="M242,290 L397,284" class="stroke-given" stroke-width="2" marker-end="url(#streams-arrow-given)"/>
+  <text x="290" y="278" font-size="13" font-weight="700" class="fill-given">stdout</text>
+  <text x="262" y="306" font-size="13" class="mono fill-given">&gt; counts.tsv</text>
+  <path d="M242,312 L397,358" class="stroke-muted" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#streams-arrow-muted)"/>
+  <text x="290" y="356" font-size="13" class="fill-muted">stderr</text>
+
+  <!-- the file, with a folded corner -->
+  <path d="M400,260 H576 L590,274 V308 H400 Z" class="fill-given-soft stroke-given" stroke-width="1.5"/>
+  <path d="M576,260 V274 H590" fill="none" class="stroke-given" stroke-width="1.5"/>
+  <text x="414" y="282" font-size="13" font-weight="700" class="mono">counts.tsv</text>
+  <text x="414" y="300" font-size="12" class="fill-given">file: the table</text>
+
+  <rect x="400" y="320" width="300" height="60" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="414" y="340" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <text x="414" y="364" font-size="13" class="mono fill-muted">processed files: 2 / 2 … done</text>
+
+  <!-- Panel 3: pipe -->
+  <rect x="10" y="404" width="700" height="246" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="430" font-size="13" font-weight="700">3 · <tspan class="mono">cmd1 | cmd2</tspan>: only stdout enters the pipe</text>
+  <text x="26" y="450" font-size="13" class="fill-muted">you ran <tspan class="mono">gunzip -c broken.fastq.gz | wc -l</tspan></text>
+
+  <path d="M26,496 H76" class="stroke-muted" stroke-width="1.5" marker-end="url(#streams-arrow-muted)"/>
+  <text x="26" y="486" font-size="12" class="fill-muted">stdin</text>
+  <rect x="80" y="474" width="160" height="44" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="160" y="501" font-size="13" text-anchor="middle" class="mono">gunzip -c</text>
+
+  <path d="M242,496 H397" class="stroke-given" stroke-width="2" marker-end="url(#streams-arrow-given)"/>
+  <text x="318" y="488" font-size="13" font-weight="700" text-anchor="middle" class="fill-given">stdout</text>
+  <text x="318" y="534" font-size="12" text-anchor="middle" class="fill-muted">through <tspan class="mono" font-weight="700">|</tspan>, becomes stdin of wc</text>
+
+  <rect x="400" y="474" width="110" height="44" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="455" y="501" font-size="13" text-anchor="middle" class="mono">wc -l</text>
+
+  <!-- gunzip's stderr skips the pipe: the one pitfall -->
+  <path d="M160,520 V573" class="stroke-warn" stroke-width="1.75" stroke-dasharray="5 4" marker-end="url(#streams-arrow-warn)"/>
+  <text x="170" y="552" font-size="13" class="fill-warn">stderr: skips the pipe</text>
+
+  <path d="M455,520 V573" class="stroke-given" stroke-width="2" marker-end="url(#streams-arrow-given)"/>
+  <text x="465" y="552" font-size="13" font-weight="700" class="fill-given">stdout</text>
+
+  <rect x="40" y="576" width="660" height="64" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="54" y="594" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <g font-size="13" class="mono">
+    <text x="54" y="612" class="fill-warn">gzip: broken.fastq.gz: unexpected end of file</text>
+    <text x="54" y="630" class="fill-given" font-weight="700">89515</text>
+  </g>
+  <text x="110" y="630" font-size="13" class="fill-muted">&#8592; partial count: not a read count</text>
+</svg>

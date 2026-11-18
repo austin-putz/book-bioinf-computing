@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 534" role="img" aria-labelledby="overwrite-title">
+  <title id="overwrite-title">Why sort toy.txt &gt; toy.txt leaves an empty file, and the safe route. Step 1: the shell opens toy.txt for writing and empties it before sort starts, so the lines b, a, c are gone. Step 2: sort starts, reads the now-empty toy.txt, and writes nothing, leaving toy.txt at 0 bytes. Safe route: write a new file with sort toy.txt &gt; toy.sorted.txt, check it with cat toy.sorted.txt, which shows a, b, c, then replace the original with mv toy.sorted.txt toy.txt. Chapter 3's script did the same with read_counts.tsv.tmp.</title>
+  <defs>
+    <marker id="overwrite-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Typed line -->
+  <rect x="10" y="10" width="700" height="62" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="32" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">YOU TYPE</text>
+  <text x="26" y="58" font-size="15" class="mono">sort toy.txt <tspan font-weight="700">&gt;</tspan> toy.txt</text>
+  <text x="694" y="58" font-size="13" class="fill-muted" text-anchor="end">same file on both sides</text>
+
+  <!-- Frame 1 -->
+  <rect x="10" y="86" width="343" height="214" rx="10" fill="none" class="stroke-line"/>
+  <circle cx="34" cy="110" r="12" class="fill-surface stroke-ink"/>
+  <text x="34" y="115" font-size="13" font-weight="700" text-anchor="middle">1</text>
+  <g font-size="13">
+    <text x="54" y="108">The shell opens <tspan class="mono">toy.txt</tspan> for writing</text>
+    <text x="54" y="126">and empties it, <tspan font-weight="700">before</tspan> sort starts.</text>
+  </g>
+
+  <text x="85" y="164" font-size="13" class="mono" text-anchor="middle">toy.txt</text>
+  <rect x="30" y="172" width="110" height="96" rx="6" class="fill-given-soft stroke-given"/>
+  <g font-size="14" class="mono">
+    <text x="48" y="198">b</text>
+    <text x="48" y="220">a</text>
+    <text x="48" y="242">c</text>
+  </g>
+  <text x="85" y="288" font-size="13" class="fill-muted" text-anchor="middle">before</text>
+
+  <text x="177" y="210" font-size="15" font-weight="700" class="mono" text-anchor="middle">&gt;</text>
+  <path d="M148 220 L206 220" fill="none" class="stroke-muted" stroke-width="1.5" marker-end="url(#overwrite-arrow)"/>
+
+  <text x="269" y="164" font-size="13" class="mono" text-anchor="middle">toy.txt</text>
+  <rect x="214" y="172" width="110" height="96" rx="6" class="fill-warn-soft stroke-warn" stroke-width="2"/>
+  <g font-size="14" class="mono fill-muted">
+    <text x="232" y="198">b</text>
+    <text x="232" y="220">a</text>
+    <text x="232" y="242">c</text>
+  </g>
+  <g class="stroke-muted" stroke-width="1.5">
+    <path d="M226 193 L250 193"/>
+    <path d="M226 215 L250 215"/>
+    <path d="M226 237 L250 237"/>
+  </g>
+  <text x="269" y="288" font-size="13" font-weight="700" class="fill-warn" text-anchor="middle">✗ emptied</text>
+
+  <!-- Frame 2 -->
+  <rect x="367" y="86" width="343" height="214" rx="10" fill="none" class="stroke-line"/>
+  <circle cx="391" cy="110" r="12" class="fill-surface stroke-ink"/>
+  <text x="391" y="115" font-size="13" font-weight="700" text-anchor="middle">2</text>
+  <g font-size="13">
+    <text x="411" y="108">sort starts, reads the now-empty</text>
+    <text x="411" y="126"><tspan class="mono">toy.txt</tspan>, and writes nothing.</text>
+  </g>
+
+  <text x="428" y="164" font-size="13" class="mono" text-anchor="middle">toy.txt</text>
+  <rect x="383" y="172" width="90" height="96" rx="6" class="fill-warn-soft stroke-warn" stroke-width="2"/>
+  <text x="428" y="288" font-size="13" class="fill-muted" text-anchor="middle">empty</text>
+
+  <path d="M475 220 L501 220" fill="none" class="stroke-muted" stroke-width="1.5" marker-end="url(#overwrite-arrow)"/>
+  <rect x="503" y="200" width="70" height="40" rx="6" class="fill-surface stroke-ink"/>
+  <text x="538" y="225" font-size="14" class="mono" text-anchor="middle">sort</text>
+  <text x="538" y="262" font-size="13" class="fill-muted" text-anchor="middle">0 lines in</text>
+  <path d="M575 220 L601 220" fill="none" class="stroke-muted" stroke-width="1.5" marker-end="url(#overwrite-arrow)"/>
+
+  <text x="648" y="164" font-size="13" class="mono" text-anchor="middle">toy.txt</text>
+  <rect x="603" y="172" width="90" height="96" rx="6" class="fill-warn-soft stroke-warn" stroke-width="2"/>
+  <text x="648" y="288" font-size="13" font-weight="700" class="fill-warn" text-anchor="middle">✗ 0 bytes</text>
+
+  <!-- Safe route -->
+  <rect x="10" y="314" width="700" height="212" rx="10" fill="none" class="stroke-good" stroke-width="2"/>
+  <text x="26" y="340" font-size="14" font-weight="700"><tspan class="fill-good">✓</tspan> Safe: write a new file, check it, then <tspan class="mono">mv</tspan></text>
+
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <circle cx="36" cy="373" r="11" class="fill-surface stroke-ink"/>
+    <circle cx="36" cy="419" r="11" class="fill-surface stroke-ink"/>
+    <circle cx="36" cy="465" r="11" class="fill-surface stroke-ink"/>
+    <text x="36" y="378">1</text>
+    <text x="36" y="424">2</text>
+    <text x="36" y="470">3</text>
+  </g>
+
+  <rect x="56" y="356" width="290" height="34" rx="5" class="fill-surface stroke-ink"/>
+  <rect x="56" y="402" width="290" height="34" rx="5" class="fill-good-soft stroke-good"/>
+  <rect x="56" y="448" width="290" height="34" rx="5" class="fill-surface stroke-ink"/>
+  <g font-size="13" class="mono">
+    <text x="66" y="378">sort toy.txt &gt; toy.sorted.txt</text>
+    <text x="66" y="424">cat toy.sorted.txt</text>
+    <text x="66" y="470">mv toy.sorted.txt toy.txt</text>
+  </g>
+  <g font-size="13">
+    <text x="362" y="378">a new file; <tspan class="mono">toy.txt</tspan> is untouched</text>
+    <text x="362" y="424"><tspan class="fill-good" font-weight="700">✓ check:</tspan> it shows <tspan class="mono">a</tspan>, <tspan class="mono">b</tspan>, <tspan class="mono">c</tspan> in order</text>
+    <text x="362" y="470">replace the original only after the check</text>
+  </g>
+  <text x="26" y="510" font-size="13" class="fill-muted">Chapter 3's script did the same with <tspan class="mono">read_counts.tsv.tmp</tspan>.</text>
+</svg>

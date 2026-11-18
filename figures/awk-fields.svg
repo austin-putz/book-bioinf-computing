@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 474" role="img" aria-labelledby="awk-fields-title">
+  <title id="awk-fields-title">A GTF line split by awk into nine tab-separated fields, $1 to $9. The line is the CDC19 transcript from the yeast test annotation. $1 seqname is I, $2 source is ensembl, $3 feature is transcript, $4 start is 71786, $5 end is 73288, $6 score is a dot, $7 strand is plus, $8 frame is a dot, and $9 attributes is gene_biotype "protein_coding"; gene_id "YAL038W"; gene_name "CDC19"; and more, shortened here. A tab separates each field from the next. Field 9 contains spaces too. awk with no -F splits on spaces and tabs, so field 9 breaks apart: $9 becomes gene_biotype, $10 "protein_coding";, $11 gene_id, and so on. Split on tabs only, with awk -F'\t'.</title>
+
+  <!-- Panel 1: the line, split on tabs -->
+  <rect x="10" y="10" width="700" height="252" rx="10" class="fill-surface stroke-line"/>
+  <text x="26" y="34" font-size="13" class="fill-muted">one line of the yeast GTF (nf-core test data), split on tabs</text>
+  <text x="694" y="34" font-size="13" class="fill-muted" text-anchor="end"><tspan font-weight="700">→</tspan> = one tab</text>
+
+  <!-- Row 1: fields 1 to 8 -->
+  <g font-size="13" font-weight="700" class="mono" text-anchor="middle">
+    <text x="57" y="76">$1</text>
+    <text x="149" y="76">$2</text>
+    <text x="259" y="76">$3</text>
+    <text x="361" y="76">$4</text>
+    <text x="443" y="76">$5</text>
+    <text x="521" y="76">$6</text>
+    <text x="596" y="76">$7</text>
+    <text x="670" y="76">$8</text>
+  </g>
+  <g class="fill-ref-soft stroke-ref">
+    <rect x="25" y="84" width="64" height="34" rx="5"/>
+    <rect x="111" y="84" width="76" height="34" rx="5"/>
+    <rect x="209" y="84" width="100" height="34" rx="5"/>
+    <rect x="331" y="84" width="60" height="34" rx="5"/>
+    <rect x="413" y="84" width="60" height="34" rx="5"/>
+    <rect x="495" y="84" width="52" height="34" rx="5"/>
+    <rect x="569" y="84" width="54" height="34" rx="5"/>
+    <rect x="645" y="84" width="50" height="34" rx="5"/>
+  </g>
+  <g font-size="14" class="mono" text-anchor="middle">
+    <text x="57" y="106">I</text>
+    <text x="149" y="106">ensembl</text>
+    <text x="259" y="106">transcript</text>
+    <text x="361" y="106">71786</text>
+    <text x="443" y="106">73288</text>
+    <text x="521" y="106">.</text>
+    <text x="596" y="106">+</text>
+    <text x="670" y="106">.</text>
+  </g>
+  <g font-size="14" font-weight="700" class="fill-muted" text-anchor="middle">
+    <text x="100" y="106">→</text>
+    <text x="198" y="106">→</text>
+    <text x="320" y="106">→</text>
+    <text x="402" y="106">→</text>
+    <text x="484" y="106">→</text>
+    <text x="558" y="106">→</text>
+    <text x="634" y="106">→</text>
+  </g>
+  <g font-size="13" class="fill-muted" text-anchor="middle">
+    <text x="57" y="138">seqname</text>
+    <text x="149" y="138">source</text>
+    <text x="259" y="138">feature</text>
+    <text x="361" y="138">start</text>
+    <text x="443" y="138">end</text>
+    <text x="521" y="138">score</text>
+    <text x="596" y="138">strand</text>
+    <text x="670" y="138">frame</text>
+  </g>
+
+  <!-- Row 2: field 9 (the tab after $8 comes first) -->
+  <text x="58" y="172" font-size="13" font-weight="700" class="mono">$9</text>
+  <text x="34" y="202" font-size="14" font-weight="700" class="fill-muted" text-anchor="middle">→</text>
+  <rect x="48" y="180" width="650" height="34" rx="5" class="fill-ref-soft stroke-ref"/>
+  <!-- tokens placed at their character positions (8.4 units per character) -->
+  <g font-size="14" class="mono">
+    <text x="58" y="202">gene_biotype</text>
+    <text x="167.2" y="202">"protein_coding";</text>
+    <text x="318.4" y="202">gene_id</text>
+    <text x="385.6" y="202">"YAL038W";</text>
+    <text x="478" y="202">gene_name</text>
+    <text x="562" y="202">"CDC19";</text>
+    <text x="637.6" y="202">…</text>
+  </g>
+  <!-- marks under the spaces inside field 9 -->
+  <g class="fill-muted">
+    <path d="M162 221 l-4 7 h8 z"/>
+    <path d="M313.2 221 l-4 7 h8 z"/>
+    <path d="M380.4 221 l-4 7 h8 z"/>
+    <path d="M472.8 221 l-4 7 h8 z"/>
+    <path d="M556.8 221 l-4 7 h8 z"/>
+    <path d="M634.4 221 l-4 7 h8 z"/>
+    <path d="M326 237 l-4 7 h8 z"/>
+  </g>
+  <g font-size="13" class="fill-muted">
+    <text x="58" y="246">attributes (shortened)</text>
+    <text x="336" y="246">a space inside field 9</text>
+  </g>
+
+  <!-- Panel 2: awk's default split -->
+  <rect x="10" y="276" width="700" height="124" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="300" font-size="13">awk with no <tspan class="mono">-F</tspan> splits on spaces <tspan font-style="italic">and</tspan> tabs, so field 9 breaks apart:</text>
+  <g font-size="12" class="mono fill-muted" text-anchor="middle">
+    <text x="108.4" y="324">$9</text>
+    <text x="238.6" y="324">$10</text>
+    <text x="347.8" y="324">$11</text>
+    <text x="427.6" y="324">$12</text>
+    <text x="515.8" y="324">$13</text>
+    <text x="595.6" y="324">$14</text>
+  </g>
+  <g fill="none" class="stroke-muted" stroke-dasharray="4 3">
+    <rect x="56" y="332" width="104.8" height="28" rx="4"/>
+    <rect x="165.2" y="332" width="146.8" height="28" rx="4"/>
+    <rect x="316.4" y="332" width="62.8" height="28" rx="4"/>
+    <rect x="383.6" y="332" width="88" height="28" rx="4"/>
+    <rect x="476" y="332" width="79.6" height="28" rx="4"/>
+    <rect x="560" y="332" width="71.2" height="28" rx="4"/>
+  </g>
+  <g font-size="14" class="mono fill-muted">
+    <text x="58" y="351">gene_biotype</text>
+    <text x="167.2" y="351">"protein_coding";</text>
+    <text x="318.4" y="351">gene_id</text>
+    <text x="385.6" y="351">"YAL038W";</text>
+    <text x="478" y="351">gene_name</text>
+    <text x="562" y="351">"CDC19";</text>
+    <text x="637.6" y="351">…</text>
+  </g>
+  <text x="26" y="386" font-size="13"><tspan font-weight="700">✗</tspan> <tspan class="mono">$9</tspan> is now only <tspan class="mono">gene_biotype</tspan>; the rest spills into <tspan class="mono">$10</tspan>, <tspan class="mono">$11</tspan>, …</text>
+
+  <!-- The fix -->
+  <rect x="10" y="414" width="700" height="50" rx="10" class="fill-good-soft stroke-good"/>
+  <text x="26" y="444" font-size="13"><tspan class="fill-good" font-weight="700">✓</tspan> Field 9 contains spaces too, so split on tabs only: <tspan class="mono" font-weight="700">awk -F'\t'</tspan></text>
+</svg>

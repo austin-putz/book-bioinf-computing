@@ -360,3 +360,85 @@
     How do you see the first read of a 10 GB `.fastq.gz`? (Correct:
     `gunzip -c file | head -n 4`, or `zless`.)
   chapters: [05-shell-basics, 15-fasta-fastq]
+
+# Chapter 6 -----------------------------------------------------------------
+
+- id: redirect-to-same-file
+  claim: "`sort data.txt > data.txt` sorts the file in place."
+  reality: >
+    The shell opens and empties `data.txt` before `sort` starts, so
+    `sort` reads an empty file and the result is empty. Write to a new
+    file, check it, then `mv` it into place.
+  probe: >
+    What is in `toy.txt` after `sort toy.txt > toy.txt`? (Correct:
+    nothing; it is 0 bytes.)
+  chapters: [06-text-tools, 08-shell-scripts]
+
+- id: errors-go-to-file
+  claim: "`> file` saves everything the command prints."
+  reality: >
+    It saves standard output only. Messages on standard error (progress,
+    warnings, errors) still go to the screen and are not in the file;
+    use `2>` to capture them.
+  probe: >
+    After `pixi run seqkit stats -T … > counts.tsv`, a progress line is
+    still on screen. Why? (Correct: it was written to standard error,
+    which `>` does not redirect.)
+  chapters: [06-text-tools, 08-shell-scripts, 10-hpc-slurm]
+
+- id: pipe-stops-on-error
+  claim: "If one command in a pipeline fails, the pipeline fails."
+  reality: >
+    By default the pipeline's exit status is the last command's, and
+    later commands keep working on whatever partial output they got.
+    `set -o pipefail` (Chapter 8) reports a failing stage, but cannot
+    catch a tool that reports success despite an error.
+  probe: >
+    `gunzip -c broken.fastq.gz | wc -l` prints an error and a number
+    (89515 with GNU gzip 1.15). What does `echo $?` print, and is the
+    number a read count? (Correct: `0`; no, it counts partial output.)
+  chapters: [06-text-tools, 08-shell-scripts]
+
+- id: uniq-finds-all-duplicates
+  claim: "`uniq` removes or counts all duplicate lines."
+  reality: >
+    It only merges identical lines that are next to each other. Sort
+    first, so equal values are counted wherever they are in the file.
+  probe: >
+    `cut -f1 samples.tsv | uniq -c` on the practice table shows
+    `sample_B` twice with count 1. Why? (Correct: the two rows are not
+    adjacent; use `sort | uniq -c`.)
+  chapters: [06-text-tools]
+
+- id: sort-is-numeric
+  claim: "`sort` puts numbers in numeric order."
+  reality: >
+    By default it compares text character by character, so `105` sorts
+    before `12` and `10091` before `1807`. Use `sort -n`, and `-k` to
+    pick the column.
+  probe: >
+    The practice table's read counts sort as `105 12 30 30 8 9`. What
+    went wrong? (Correct: text order; use `sort -t$'\t' -k4,4n`.)
+  chapters: [06-text-tools, 14-tabular-data]
+
+- id: grep-at-counts-reads
+  claim: "`grep -c '^@'` counts the reads in a FASTQ file."
+  reality: >
+    `@` is also a quality character (Phred 31), so a quality line can
+    start with it. It happened to work on the book's file. Count by line
+    position in a four-line file, or use `seqkit stats` in general.
+  probe: >
+    A 2-read FASTQ file gives `grep -c '^@'` = 3. How? (Correct: one
+    quality line starts with `@`.)
+  chapters: [06-text-tools, 15-fasta-fastq]
+
+- id: glob-is-regex
+  claim: "`*` means the same in `grep` as in `ls`."
+  reality: >
+    In a glob (`ls`, `find -name`) `*` means "any characters". In a
+    regular expression `*` means "zero or more of the previous
+    character", and `.` means "any one character".
+  probe: >
+    Does `grep 'fastq.gz'` match `fastqXgz`? (Correct: yes; `.` matches
+    any character. Use `'fastq\.gz'` or `grep -F`.)
+  chapters: [06-text-tools, 05-shell-basics]

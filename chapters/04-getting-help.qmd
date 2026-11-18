@@ -449,7 +449,9 @@ differently.) That is the lesson, whatever the version: the exit status
 says what the program *reported*. It does not prove the output answers
 your question. Read the messages, and check the result against
 something you know: here, a table with no rows instead of 50,000 reads.
-How scripts and pipelines use exit status is @sec-shell-scripts.
+Given an intact file and this broken one in the same command, seqkit
+2.14.0 printed only the header line: the intact file's row was lost too,
+and the status was still `0`. How scripts and pipelines use exit status is @sec-shell-scripts.
 
 ::: {.callout-caution .misconception}
 ## Misconception: "If no error appears, the result is right"

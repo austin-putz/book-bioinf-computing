@@ -818,6 +818,14 @@ All three findings accepted; each rechecked first.
   support section before release (same item as the Chapter 1 and 2
   reviews).
 
+## Note from the Chapter 6 plan (2026-11-17)
+
+- §3's exit-status passage gained one sentence (*captured*, seqkit
+  2.14.0, still the latest release): with an intact file and the broken
+  one in one command, `seqkit stats -T` prints only the header (the
+  intact file's row is lost too) and still exits 0. Decided with Austin
+  in `chapter_06.md` (*Decisions*).
+
 ## Open questions
 
 1. **To check while drafting is reviewed:** WSL Ubuntu has `man` pages

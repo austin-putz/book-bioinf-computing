@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" role="img" aria-labelledby="pipeline-steps-title"
+     data-step-labels="gunzip -c|line 2 of 4|length|sort|uniq -c">
+  <title id="pipeline-steps-title">The pipeline gunzip -c reads.fastq.gz | awk 'NR % 4 == 2' | awk '{print length($0)}' | sort | uniq -c, run on a toy file of three reads, shown one program at a time with the lines that leave each one. Step 1: gunzip -c writes all 12 lines, four per read: @r1, ACGTTGCA, +, FFFFFFFF; @r2, GGATCC, +, FFFFFF; @r3, TTAGGCAT, +, FFFFFFFF. Step 2: awk keeps line 2 of every 4, the sequences ACGTTGCA, GGATCC, and TTAGGCAT. Step 3: a second awk prints each length: 8, 6, 8. Step 4: sort puts equal values together: 6, 8, 8. Step 5: uniq -c counts each run of equal lines: 1 6 and 2 8, one read of 6 bases and two of 8. On the book's real file the same pipeline prints 50000 101. Each pipe hands lines straight to the next program; no file is written in between.</title>
+  <desc data-caption="1">gunzip -c decompresses the file and writes all 12 lines, four per read.</desc>
+  <desc data-caption="2">awk keeps line 2 of every 4: the sequences. This works only because the file has exactly four lines per read.</desc>
+  <desc data-caption="3">A second awk prints the length of each sequence.</desc>
+  <desc data-caption="4">sort puts equal values next to each other.</desc>
+  <desc data-caption="5">uniq -c counts each run of equal lines: one read of 6 bases, two of 8. On the book's real file the same pipeline prints 50000 101.</desc>
+  <defs>
+    <marker id="pipeline-steps-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+    <marker id="pipeline-steps-arrow-given" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-given"/>
+    </marker>
+  </defs>
+
+  <!-- The typed command, the same in every step -->
+  <rect x="10" y="10" width="700" height="70" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="30" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <g font-size="13" class="mono">
+    <text x="26" y="50">gunzip -c reads.fastq.gz | awk 'NR % 4 == 2' |</text>
+    <text x="42" y="68">awk '{print length($0)}' | sort | uniq -c</text>
+  </g>
+
+  <!-- Column 1: gunzip -c and its 12 lines -->
+  <rect x="10" y="100" width="124" height="32" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="72" y="121" font-size="13" text-anchor="middle" class="mono">gunzip -c</text>
+  <path d="M72,134 V146" class="stroke-given" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow-given)"/>
+  <rect x="10" y="150" width="124" height="214" rx="6" class="fill-given-soft stroke-given"/>
+  <g font-size="12" class="fill-muted" text-anchor="end">
+    <text x="32" y="168">1</text>
+    <text x="32" y="185">2</text>
+    <text x="32" y="202">3</text>
+    <text x="32" y="219">4</text>
+    <text x="32" y="236">5</text>
+    <text x="32" y="253">6</text>
+    <text x="32" y="270">7</text>
+    <text x="32" y="287">8</text>
+    <text x="32" y="304">9</text>
+    <text x="32" y="321">10</text>
+    <text x="32" y="338">11</text>
+    <text x="32" y="355">12</text>
+  </g>
+  <g font-size="13" class="mono fill-given">
+    <text x="42" y="168">@r1</text>
+    <text x="42" y="185">ACGTTGCA</text>
+    <text x="42" y="202">+</text>
+    <text x="42" y="219">FFFFFFFF</text>
+    <text x="42" y="236">@r2</text>
+    <text x="42" y="253">GGATCC</text>
+    <text x="42" y="270">+</text>
+    <text x="42" y="287">FFFFFF</text>
+    <text x="42" y="304">@r3</text>
+    <text x="42" y="321">TTAGGCAT</text>
+    <text x="42" y="338">+</text>
+    <text x="42" y="355">FFFFFFFF</text>
+  </g>
+  <!-- From step 2: the lines awk keeps (2, 6, 10) -->
+  <g data-show="2" fill="none" class="stroke-given" stroke-width="1.5">
+    <rect x="37" y="172" width="90" height="18" rx="3"/>
+    <rect x="37" y="240" width="90" height="18" rx="3"/>
+    <rect x="37" y="308" width="90" height="18" rx="3"/>
+  </g>
+
+  <!-- Column 2: awk 'NR%4==2' -->
+  <g data-show="2">
+    <path d="M136,116 H152" class="stroke-ink" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow)"/>
+    <rect x="154" y="100" width="124" height="32" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="216" y="121" font-size="13" text-anchor="middle" class="mono">awk 'NR%4==2'</text>
+    <path d="M216,134 V146" class="stroke-given" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow-given)"/>
+    <rect x="154" y="150" width="124" height="61" rx="6" class="fill-given-soft stroke-given"/>
+    <g font-size="13" class="mono fill-given" text-anchor="middle">
+      <text x="216" y="168">ACGTTGCA</text>
+      <text x="216" y="185">GGATCC</text>
+      <text x="216" y="202">TTAGGCAT</text>
+    </g>
+    <text x="216" y="229" font-size="12" text-anchor="middle" class="fill-muted">3 lines</text>
+  </g>
+
+  <!-- Column 3: awk length -->
+  <g data-show="3">
+    <path d="M280,116 H296" class="stroke-ink" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow)"/>
+    <rect x="298" y="100" width="124" height="32" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="360" y="121" font-size="13" text-anchor="middle" class="mono">awk length</text>
+    <path d="M360,134 V146" class="stroke-given" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow-given)"/>
+    <rect x="298" y="150" width="124" height="61" rx="6" class="fill-given-soft stroke-given"/>
+    <g font-size="13" class="mono fill-given" text-anchor="middle">
+      <text x="360" y="168">8</text>
+      <text x="360" y="185">6</text>
+      <text x="360" y="202">8</text>
+    </g>
+    <text x="360" y="229" font-size="12" text-anchor="middle" class="fill-muted">3 lines</text>
+  </g>
+
+  <!-- Column 4: sort -->
+  <g data-show="4">
+    <path d="M424,116 H440" class="stroke-ink" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow)"/>
+    <rect x="442" y="100" width="124" height="32" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="504" y="121" font-size="13" text-anchor="middle" class="mono">sort</text>
+    <path d="M504,134 V146" class="stroke-given" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow-given)"/>
+    <rect x="442" y="150" width="124" height="61" rx="6" class="fill-given-soft stroke-given"/>
+    <g font-size="13" class="mono fill-given" text-anchor="middle">
+      <text x="504" y="168">6</text>
+      <text x="504" y="185">8</text>
+      <text x="504" y="202">8</text>
+    </g>
+    <text x="504" y="229" font-size="12" text-anchor="middle" class="fill-muted">3 lines</text>
+  </g>
+
+  <!-- Column 5: uniq -c -->
+  <g data-show="5">
+    <path d="M568,116 H584" class="stroke-ink" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow)"/>
+    <rect x="586" y="100" width="124" height="32" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="648" y="121" font-size="13" text-anchor="middle" class="mono">uniq -c</text>
+    <path d="M648,134 V146" class="stroke-given" stroke-width="1.5" marker-end="url(#pipeline-steps-arrow-given)"/>
+    <rect x="586" y="150" width="124" height="44" rx="6" class="fill-given-soft stroke-given"/>
+    <g font-size="13" class="mono fill-given" text-anchor="middle">
+      <text x="648" y="168" font-weight="700">1 6</text>
+      <text x="648" y="185" font-weight="700">2 8</text>
+    </g>
+    <g font-size="12" text-anchor="middle" class="fill-muted">
+      <text x="648" y="212">2 lines:</text>
+      <text x="648" y="228">count, then value</text>
+      <text x="648" y="258">real file prints</text>
+    </g>
+    <text x="648" y="276" font-size="13" text-anchor="middle" class="mono fill-given">50000 101</text>
+  </g>
+
+  <!-- Under the short columns, from step 2 -->
+  <g data-show="2" font-size="13" class="fill-muted">
+    <text x="154" y="322">Each <tspan class="mono" font-weight="700">|</tspan> hands lines straight to the next program:</text>
+    <text x="154" y="340">no file is written in between.</text>
+  </g>
+</svg>

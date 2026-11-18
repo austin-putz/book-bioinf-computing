@@ -1,19 +1,2108 @@
 # Text tools and pipes {#sec-text-tools}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- Pipes and redirection; standard output vs standard error
-- `>` overwrites: destructive redirection
-- `grep`, `cut`, `sort`, `uniq`, `wc`
-- `sed` and `awk` basics
-- Regular expressions (shared across shell, R, Python)
-- Working with compressed files (`zcat`, `gzip`)
+By the end of this chapter you should be able to:
+
+1. Connect commands with pipes, and send output to a file with `>`,
+   `>>`, and `tee`, without overwriting an input.
+2. Keep results (standard output) and messages (standard error) apart,
+   and capture or discard each on purpose.
+3. Count, sort, and summarise columns with `cut`, `sort`, `uniq -c`,
+   and `wc`, and find lines with `grep`.
+4. Write a basic regular expression and use it in `grep` and `sed`, and
+   select and compute on fields with `awk`.
+5. Read and write gzipped files through a pipe, and say when a
+   format-aware tool is safer than a text tool.
+:::
+
+## What this chapter does {#sec-text-tools-intro}
+
+Most bioinformatics files are plain text with one record per line:
+sample sheets, annotation (GTF), tables of counts. FASTQ is text too,
+with one read per four lines in the book's files. So a dozen small tools,
+each doing one job, answer most quick questions about these files when
+you join them with `|`: how many reads, how long, how many of each kind,
+which lines match. That is the whole "Unix philosophy" this chapter
+needs: small tools, joined together.
+
+You have run pipes already. In @sec-orientation you typed
+`gunzip -c … | wc -l` and wrote a result with `>`; @sec-organizing-projects's
+script ends in `2>&1 | tee "$log"`; @sec-shell-basics used
+`history | tail`. This chapter explains each piece, so you can change
+those commands and write your own.
+
+Commands run on your laptop, from the project folder. You only **read**
+the project's files here. Everything you write goes to a scratch folder,
+`~/bioinf-computing-ch06`, never into `data/`; the one exception is your
+notes in `NOTEBOOK.md`, as in earlier chapters. Make the scratch folder
+and go to the project:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch06
+cd ~/bioinf-computing
+```
+
+Stay in `~/bioinf-computing` for the whole chapter: `pixi run` finds the
+book's environment from there, and the commands use paths such as
+`data/raw/…` that start from it. Every file the chapter writes is named
+with its full scratch path, `~/bioinf-computing-ch06/…`.
+
+The outputs shown were captured with GNU grep 3.12, GNU sed 4.10, GNU
+Awk 5.4.1, GNU coreutils 9.11, GNU gzip 1.15, and seqkit 2.14.0, in the
+`en_US.UTF-8` locale. Other versions give the same results except where
+a block says otherwise.
+
+## Pipes {#sec-text-tools-pipes}
+
+Rerun two commands from @sec-orientation, this time on the project's
+copy of the file:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 8
+gunzip -c data/raw/SRR6357070_1.fastq.gz | wc -l
+```
+
+```{.console}
+@SRR6357070.25017281 25017281/1 kraken:taxid|4932
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
++
+BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF
+@SRR6357070.6710070 6710070/1 kraken:taxid|4932
+GTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA
++
+BBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB
+200000
+```
+
+**Take the pipe apart.** `gunzip -c` on its own decompresses the file
+and prints all 200,000 lines to the screen: do not run it alone, or you
+will watch reads scroll past for a while (stop it with
+{{< kbd Ctrl-C >}}). `head -n 8` on its own, with no file name, waits
+for you to type lines; press {{< kbd Ctrl-C >}} to get the prompt back
+(stopping programs properly is @sec-linux-system). Joined by `|`, the
+first program's output becomes the second one's input, and you see only
+what you asked for.
+
+**Now name it.** Every program has one **standard input** (stdin) and
+one **standard output** (stdout). By default stdin is your keyboard and
+stdout is your screen. The pipe `|` connects the stdout of the program
+on its left to the stdin of the program on its right. No file is written
+in between, and both programs run at the same time: `head` starts
+printing while `gunzip` is still working.
+
+A pipe saves you an intermediate **file**, not all memory or disk use.
+`sort`, for example, must read all its input before it can print the
+first line, and for big inputs it writes temporary files of its own
+(where, on a cluster, is @sec-hpc-slurm).
+
+Programs that read stdin when you give them no file name are called
+**filters**: `head`, `wc`, `sort`, `cut`, `grep`, `sed`, `awk`, and
+`gzip` all are. That is what `[FILE]...` meant in the usage line of
+`gzip` in @sec-getting-help: with no file, it reads stdin.
+
+**Build a pipeline one step at a time.** Ask a real question: how long
+are the reads? Start with the sequence lines, which in this file are line
+2 of every 4, and look at the result before adding the next step:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 2' | head -n 3
+```
+
+```{.console}
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
+GTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA
+GGAATAGTATATGTTGAGCAAGTGTGTTGATGTAGTATAGTAAGTCAAATCTAAATTTATATCCAACATATGAAGCTAGACCAATCAACTTTTGCATTTCA
+```
+
+Sequences only. Now print each length, sort the lengths, and count each
+value:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz \
+  | awk 'NR % 4 == 2 {print length($0)}' \
+  | sort \
+  | uniq -c
+```
+
+```{.console}
+  50000 101
+```
+
+Every one of the 50,000 reads is 101 bases long. A long pipeline can be
+broken over lines with `\` at the end of each line, one step per line,
+as here; it is still one command. @fig-pipeline-steps shows what each
+step passes on, on a toy file of three reads.
+
+::: {#fig-pipeline-steps}
+{{< svg ../figures/pipeline-steps.svg >}}
+
+The read-length pipeline on a toy file of three reads, one program at a
+time. Each step prints lines that the next step reads; no file is
+written in between. (In the chapter's command the two `awk` steps are
+one `awk`.) Use *Next* to step through.
+:::
+
+`awk 'NR % 4 == 2'` means "print line 2, 6, 10, …": `NR` is the line
+number and `%` the remainder after division. @sec-text-tools-sed-awk
+explains `awk`. For now, note the assumption: this works **because this
+file has exactly four lines per read**, as you checked in
+@sec-orientation. FASTQ in general does not promise that
+(@sec-fasta-fastq), which is why format-aware tools exist
+(@sec-text-tools-format-aware).
+
+Two more things are worth knowing now. First, `head` stops reading after
+8 lines, so `gunzip` is stopped too, before it reaches the end of the
+file. That is normal. Bash records each program's exit status in the
+array `PIPESTATUS`:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 8 > /dev/null
+echo "${PIPESTATUS[@]}"
+```
+
+```{.console}
+141 0
+```
+
+`141` means `gunzip` was stopped because nobody was reading any more;
+`0` is `head`'s success. (`> /dev/null` throws the output away;
+@sec-text-tools-streams.) The exact number can vary with the program and
+the timing. It matters in scripts that stop on any error
+(`set -o pipefail`, @sec-shell-scripts). Second, because it stops early,
+`gunzip -c … | head` says nothing about whether the **rest** of the file
+is intact. Checking the whole file is `gzip -t`, from @sec-orientation.
+
+::: {.callout-important}
+## Key idea
+A pipe `|` joins one program's standard output to the next program's
+standard input. Build pipelines one step at a time, and look at the
+output after each step before adding the next.
+:::
+
+::: {.check}
+**Check yourself.** What does
+`gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 4 | wc -l` print?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`4`. `wc` counts only the four lines `head` passed on; it never sees the
+rest of the file.
+:::
+:::
+
+## Redirection and the `>` trap {#sec-text-tools-redirection}
+
+@sec-orientation saved a read count with `>` and added the second file's
+count with `>>`. Do the same into the scratch folder, running the `>`
+line **twice**:
+
+```{.bash filename="Terminal (laptop)"}
+echo "SRR6357070_1 reads: $(( $(gunzip -c data/raw/SRR6357070_1.fastq.gz | wc -l) / 4 ))" > ~/bioinf-computing-ch06/fastq_summary.txt
+echo "SRR6357070_1 reads: $(( $(gunzip -c data/raw/SRR6357070_1.fastq.gz | wc -l) / 4 ))" > ~/bioinf-computing-ch06/fastq_summary.txt
+cat ~/bioinf-computing-ch06/fastq_summary.txt
+```
+
+```{.console}
+SRR6357070_1 reads: 50000
+```
+
+One line: the second `>` replaced the first. Now the R2 line, with
+`>>`, also twice:
+
+```{.bash filename="Terminal (laptop)"}
+echo "SRR6357070_2 reads: $(( $(gunzip -c data/raw/SRR6357070_2.fastq.gz | wc -l) / 4 ))" >> ~/bioinf-computing-ch06/fastq_summary.txt
+echo "SRR6357070_2 reads: $(( $(gunzip -c data/raw/SRR6357070_2.fastq.gz | wc -l) / 4 ))" >> ~/bioinf-computing-ch06/fastq_summary.txt
+cat ~/bioinf-computing-ch06/fastq_summary.txt
+```
+
+```{.console}
+SRR6357070_1 reads: 50000
+SRR6357070_2 reads: 50000
+SRR6357070_2 reads: 50000
+```
+
+`>>` adds to the end every time, so the R2 line is there twice. Rerunning
+a command that appends is a common way to get duplicated rows. `>`
+**replaces** a file's contents; `>>` **appends**. Both create the file if
+it does not exist.
+
+`<` goes the other way: it connects a file to a program's stdin.
+
+```{.bash filename="Terminal (laptop)"}
+wc -l ~/bioinf-computing-ch06/fastq_summary.txt
+wc -l < ~/bioinf-computing-ch06/fastq_summary.txt
+```
+
+```{.console}
+3 /home/you/bioinf-computing-ch06/fastq_summary.txt
+3
+```
+
+Given a file name, `wc` prints the name too; reading stdin, it has no
+name to print. That makes `<` handy when you want only the number.
+
+### The trap: `cmd file > file`
+
+Make a three-line toy file and try to sort it "in place":
+
+```{.bash filename="Terminal (laptop)"}
+printf 'b\na\nc\n' > ~/bioinf-computing-ch06/toy.txt
+cat ~/bioinf-computing-ch06/toy.txt
+sort ~/bioinf-computing-ch06/toy.txt > ~/bioinf-computing-ch06/toy.txt
+wc -c ~/bioinf-computing-ch06/toy.txt
+```
+
+```{.console}
+b
+a
+c
+0 /home/you/bioinf-computing-ch06/toy.txt
+```
+
+Zero bytes: the file is empty, with no error and no warning. The reason
+is the order of events (@fig-overwrite). Bash sets up the redirection
+**before** it starts the program, and setting up `>` opens the file for
+writing, which empties it. Only then does `sort` start, read the now
+empty `toy.txt`, and write nothing. The same happens with `grep`, `cut`,
+`awk`, and any other command whose input and `>` output are the same
+file.
+
+::: {#fig-overwrite}
+{{< svg ../figures/overwrite.svg >}}
+
+Why `sort toy.txt > toy.txt` leaves an empty file. The shell empties
+`toy.txt` before `sort` starts, so `sort` reads nothing. The safe route:
+write a new file, check it, then `mv` it over the old one.
+:::
+
+The fix is the route in the figure: write to a **new** name, check it,
+then move it into place.
+
+```{.bash filename="Terminal (laptop)"}
+printf 'b\na\nc\n' > ~/bioinf-computing-ch06/toy.txt
+sort ~/bioinf-computing-ch06/toy.txt > ~/bioinf-computing-ch06/toy.sorted.txt
+cat ~/bioinf-computing-ch06/toy.sorted.txt
+mv ~/bioinf-computing-ch06/toy.sorted.txt ~/bioinf-computing-ch06/toy.txt
+```
+
+```{.console}
+a
+b
+c
+```
+
+This is exactly what @sec-organizing-projects's script does: `seqkit`
+writes `results/read_counts.tsv.tmp`, and only after that succeeds does
+`mv` put it in place of `read_counts.tsv`. Now you can see why.
+
+::: {.callout-warning}
+## Pitfall: `cmd file > file` empties the file
+The shell empties the output file before the command reads it. Write to
+a new name, check the result, then `mv` it over the original.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "`sort data.txt > data.txt` sorts the file in place"
+**Reality.** The shell empties `data.txt` before `sort` starts, so you
+are left with an empty file. Redirection never edits a file in place.
+:::
+
+**A safety net: `noclobber`.** @sec-shell-basics showed `cp -n`, which
+refuses to overwrite. Bash has the same idea for `>`. Try it inside
+`( … )`, which runs the commands in a separate copy of the shell, so the
+setting goes away afterwards:
+
+```{.bash filename="Terminal (laptop)"}
+( set -o noclobber; echo x > ~/bioinf-computing-ch06/toy.txt )
+echo $?
+```
+
+```{.console}
+bash: /home/you/bioinf-computing-ch06/toy.txt: cannot overwrite existing file
+1
+```
+
+With `noclobber` on, `>` refuses to replace an existing file, and `>|`
+forces it. It guards `>` only: `>>`, `tee`, `cp`, `mv`, and `sed -i` still
+overwrite. You could turn it on for good in your `~/.bashrc`
+(@sec-linux-system), but this book does not, because later chapters
+overwrite files on purpose. The habits that protect you are the
+`.tmp`-then-`mv` route and @sec-organizing-projects's read-only
+`data/raw/`:
+
+```{.bash filename="Terminal (laptop)"}
+echo test > data/raw/notes.txt
+```
+
+```{.console}
+bash: data/raw/notes.txt: Permission denied
+```
+
+The same message stops `sort data/raw/SRR6357070_1.fastq.gz >
+data/raw/SRR6357070_1.fastq.gz` before it can empty the file. (What
+permissions are is @sec-linux-system.) Note the two quieter dangers of
+`>`: on a mistyped name it silently makes a new file, and on the right
+name it silently replaces the old contents.
+
+### `tee`: save and see
+
+Sometimes you want a result in a file **and** on the screen. `tee`
+copies its stdin to a file and to its stdout:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats -T \
+  data/raw/SRR6357070_1.fastq.gz \
+  data/raw/SRR6357070_2.fastq.gz \
+  | tee ~/bioinf-computing-ch06/counts.tsv \
+  | cut -f1,4
+```
+
+```{.console}
+file	num_seqs
+data/raw/SRR6357070_1.fastq.gz	50000
+data/raw/SRR6357070_2.fastq.gz	50000
+```
+
+The full eight-column table went into `counts.tsv`, and the screen shows
+only columns 1 and 4 (`cut`, @sec-text-tools-counting). `-T` makes seqkit
+print a tab-separated table, which `cut` needs; seqkit's default table is
+laid out for people to read. You will also see a `processed files` line,
+which the next section explains. `tee -a` appends instead of replacing;
+@sec-organizing-projects's script used `tee "$log"` to save its messages
+while showing them.
+
+: Redirection operators. `cmd` is any command. {#tbl-redirection}
+
+| Operator | What it does | Example | Danger |
+|:---------|:-------------|:--------|:-------|
+| `\|` | stdout of the left command to stdin of the right | `gunzip -c f.gz \| wc -l` | the left command's errors still reach the screen |
+| `>` | stdout to a file, replacing it | `cmd > out.txt` | empties the file first, even if it is the input |
+| `>>` | stdout to the end of a file | `cmd >> log.txt` | rerunning duplicates lines |
+| `<` | a file to stdin | `wc -l < f.txt` | |
+| `2>` | stderr to a file | `cmd 2> err.txt` | |
+| `2>&1` | stderr to wherever stdout goes now | `cmd > all.txt 2>&1` | order matters (@sec-text-tools-streams) |
+| `&>` | both streams to a file (bash) | `cmd &> all.txt` | results and messages mixed |
+| `>\|` | `>` even when `noclobber` is on | `cmd >\| out.txt` | |
+| `tee f` | stdin to a file and to stdout | `cmd \| tee out.txt` | replaces `f`; `tee -a` appends |
+| `/dev/null` | a file that discards everything | `cmd 2> /dev/null` | hides messages you may need |
+
+::: {.check}
+**Check yourself.** You run `grep -v '^#' notes.txt > notes.txt`. What
+is in `notes.txt` now?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Nothing. The shell emptied `notes.txt` before `grep` started, so `grep`
+read an empty file. Write to `notes.clean.txt`, check it, then `mv`.
+:::
+:::
+
+## Standard output and standard error {#sec-text-tools-streams}
+
+Send the seqkit table into a file:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats -T data/raw/SRR6357070_1.fastq.gz \
+  data/raw/SRR6357070_2.fastq.gz > ~/bioinf-computing-ch06/counts.tsv
+```
+
+```{.console}
+processed files:  2 / 2 [======] ETA: 0s. done
+```
+
+The table went into `counts.tsv`, but a line still appeared on the
+screen. If `>` sends "the output" to a file, where did this line come
+from?
+
+**Two output streams.** Every program has a second output,
+**standard error** (stderr). By convention, programs write their
+**results** to stdout and their **messages**, progress, warnings, and
+errors to stderr. Both go to your terminal by default, so they look the
+same until you redirect one of them (@fig-streams). `>` and `|` carry
+stdout only; stderr still reaches the screen. seqkit's progress line is
+on stderr, which is why it stayed. (On screen it updates itself in
+place; saved to a file, it shows the cursor codes it uses for that.
+@sec-organizing-projects's script runs `seqkit stats --quiet`, which
+turns the line off.)
+
+::: {#fig-streams}
+{{< svg ../figures/streams.svg >}}
+
+A program has one input (stdin) and two outputs: stdout for results and
+stderr for messages. By default both reach the terminal. `> file` moves
+only stdout; a pipe carries only stdout, so the error from `gunzip`
+skips `wc` and goes straight to the screen.
+:::
+
+To send stderr somewhere, put its number in front of `>`. Stdin is
+stream 0, stdout 1, and stderr 2, so `2>` redirects stderr. Go back to
+@sec-getting-help's truncated file. Make a copy in the scratch folder
+and run seqkit on it, with each stream to its own file:
+
+```{.bash filename="Terminal (laptop)"}
+head -c 1000000 data/raw/SRR6357070_1.fastq.gz > ~/bioinf-computing-ch06/broken.fastq.gz
+pixi run seqkit stats -T ~/bioinf-computing-ch06/broken.fastq.gz \
+  > ~/bioinf-computing-ch06/out.tsv \
+  2> ~/bioinf-computing-ch06/err.txt
+cat ~/bioinf-computing-ch06/out.tsv
+cat ~/bioinf-computing-ch06/err.txt
+```
+
+```{.console}
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+[ERRO] /home/you/bioinf-computing-ch06/broken.fastq.gz: unexpected EOF
+[ERRO]
+```
+
+The header row (a result) is in `out.tsv`; the error is in `err.txt`.
+Nothing reached the screen. `cat` shows `[ERRO]` in red, as seqkit
+printed it. `cat -A`, which shows every invisible character, reveals how:
+
+```{.bash filename="Terminal (laptop)"}
+cat -A ~/bioinf-computing-ch06/err.txt
+```
+
+```{.console}
+^[[31m[ERRO]^[[0m /home/you/bioinf-computing-ch06/broken.fastq.gz: unexpected EOF$
+^[[31m[ERRO]^[[0m $
+```
+
+`^[[31m` and `^[[0m` are colour codes: "red on", "colour off". `$` marks
+each line's end. Colour codes end up in log files this way; they are
+harmless, but they are why a log can look odd in an editor. (`cat -A`
+returns in @sec-text-tools-counting for tabs, and @sec-linux-system uses
+it for Windows line endings.)
+
+**Both streams into one file.** `2>&1` means "send stderr to wherever
+stdout is going **now**". So the order matters:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit stats -T ~/bioinf-computing-ch06/broken.fastq.gz \
+  > ~/bioinf-computing-ch06/both.txt 2>&1
+```
+
+puts both streams in `both.txt`. Written the other way round,
+`2>&1 > both.txt`, stderr is pointed at the screen (where stdout was at
+that moment) and only stdout goes to the file. Bash's shorthand `&>`
+does the first version. Use these for **logs**, never for results: a
+results table with error lines in it breaks the next tool that reads it.
+@sec-organizing-projects's script wrapped its commands in `{ … }`, then
+sent `2>&1 | tee "$log"`, so its log keeps the messages from both
+streams, while the results went to their own file with `>`.
+
+`/dev/null` is a special file that discards whatever is written to it.
+`2> /dev/null` hides messages. Use it only for messages you have read
+and know you do not need, such as seqkit's progress line; never to make
+a screen of errors look clean.
+
+**The pipe carries stdout only.** Count the lines of the broken file:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c ~/bioinf-computing-ch06/broken.fastq.gz | wc -l
+echo $?
+```
+
+```{.console}
+
+gzip: /home/you/bioinf-computing-ch06/broken.fastq.gz: unexpected end of file
+89515
+0
+```
+
+Read this carefully. Decompression failed partway, after producing some
+text. The error went to stderr, around the pipe, to your screen. `wc`
+successfully counted the text it received: 89,515 lines. That count is
+**incomplete** and cannot be used as a read count. And `echo $?` says
+`0`, because a pipeline's exit status is the status of its **last**
+command, `wc`, which did its job. `"${PIPESTATUS[@]}"` here would show
+`1 0`: `gunzip` failed, `wc` succeeded. (The exact count depends on the
+gzip version: Apple's gzip on a Mac stopped at 89,253. Either way, it is
+partial.)
+
+Do not try to spot damage by checking whether a line count divides by
+4: another cut could land on a multiple of 4 and still be wrong. Know
+your expected count (50,000 reads here), and read the messages.
+`set -o pipefail` (@sec-shell-scripts) makes a pipeline fail when any
+stage reports failure, but it cannot help when a tool reports success
+despite an error, as seqkit 2.14.0 did in @sec-getting-help. That is why
+the result checks from @sec-getting-help still matter.
+
+::: {.callout-important}
+## Key idea
+By convention, results go to stdout and messages to stderr. `>` and `|`
+carry only stdout, so errors still reach the screen, and a pipeline can
+"succeed" on broken input. This is a convention tools follow, not a
+rule the shell enforces: some tools mix the two or write their own log
+files.
+:::
+
+::: {.check}
+**Check yourself.** A command prints a table and some warnings. You want
+the table in `out.tsv` and the warnings in `run.log`. Write the
+redirection. And after `seqkit stats … > counts.tsv`, why was a
+progress line still on the screen?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`cmd > out.tsv 2> run.log`. The progress line is on stderr, and `>`
+redirects only stdout.
+:::
+:::
+
+## Counting and summarising: `wc`, `cut`, `sort`, `uniq` {#sec-text-tools-counting}
+
+Start with a table small enough to check by eye: the practice sample
+table from @sec-shell-basics. If you built Chapter 5's practice folder,
+it is `~/bioinf-computing-ch05/share/meta/samples.tsv`. Either way, make
+the chapter's own copy with this block (the same lines Chapter 5 used;
+the list and `printf` are explained in @sec-shell-scripts):
+
+```{.bash filename="Terminal (laptop)"}
+rows=(sample run_folder condition reads
+  sample_C "Run 3 final" treated 12
+  sample_A run1 control 9
+  sample_B run2 control 30
+  sample_E run5 treated 105
+  sample_B run2 control 30
+  sample_D run4 control 8)
+printf '%s\t%s\t%s\t%s\n' "${rows[@]}" > ~/bioinf-computing-ch06/samples.tsv
+md5sum ~/bioinf-computing-ch06/samples.tsv
+```
+
+```{.console}
+971d8f742cb76a8d181d3bdc3dcbceaa  /home/you/bioinf-computing-ch06/samples.tsv
+```
+
+If you have Chapter 5's file, `md5sum` on it gives the same checksum.
+From here on the chapter uses the copy in `~/bioinf-computing-ch06`. (It
+is not the project's `data/meta/samples.tsv`, which has different
+columns.) Look at it:
+
+```{.bash filename="Terminal (laptop)"}
+cat ~/bioinf-computing-ch06/samples.tsv
+wc -l ~/bioinf-computing-ch06/samples.tsv
+cat -A ~/bioinf-computing-ch06/samples.tsv | head -n 3
+```
+
+```{.console}
+sample	run_folder	condition	reads
+sample_C	Run 3 final	treated	12
+sample_A	run1	control	9
+sample_B	run2	control	30
+sample_E	run5	treated	105
+sample_B	run2	control	30
+sample_D	run4	control	8
+7 /home/you/bioinf-computing-ch06/samples.tsv
+sample^Irun_folder^Icondition^Ireads$
+sample_C^IRun 3 final^Itreated^I12$
+sample_A^Irun1^Icontrol^I9$
+```
+
+A header and six rows, separated by tabs (`cat -A` shows each tab as
+`^I`). By eye: `sample_B` is listed twice, on rows 3 and 5. Can the
+tools find that?
+
+**`uniq` only merges neighbours.** `cut -f1` takes column 1; `uniq -c`
+counts repeated lines:
+
+```{.bash filename="Terminal (laptop)"}
+cut -f1 ~/bioinf-computing-ch06/samples.tsv | uniq -c
+```
+
+```{.console}
+      1 sample
+      1 sample_C
+      1 sample_A
+      1 sample_B
+      1 sample_E
+      1 sample_B
+      1 sample_D
+```
+
+`sample_B` appears twice, each with count 1. `uniq` compares each line
+only with the line before it, and the two `sample_B` lines are not next
+to each other. Sort first, so equal values become neighbours:
+
+```{.bash filename="Terminal (laptop)"}
+cut -f1 ~/bioinf-computing-ch06/samples.tsv | sort | uniq -c
+cut -f1 ~/bioinf-computing-ch06/samples.tsv | sort | uniq -d
+```
+
+```{.console}
+      1 sample
+      1 sample_A
+      2 sample_B
+      1 sample_C
+      1 sample_D
+      1 sample_E
+sample_B
+```
+
+`2 sample_B`. `uniq -d` prints only the lines that occur more than once.
+**`sort | uniq -c`** is the habit: it counts equal values wherever they
+sit in the file.
+
+::: {.callout-caution .misconception}
+## Misconception: "`uniq` removes or counts all duplicate lines"
+**Reality.** `uniq` only merges identical lines that are next to each
+other. Sort first: `sort | uniq -c`.
+:::
+
+**Skip the header.** Count the conditions:
+
+```{.bash filename="Terminal (laptop)"}
+cut -f3 ~/bioinf-computing-ch06/samples.tsv | sort | uniq -c
+tail -n +2 ~/bioinf-computing-ch06/samples.tsv | cut -f3 | sort | uniq -c
+```
+
+```{.console}
+      1 condition
+      4 control
+      2 treated
+      4 control
+      2 treated
+```
+
+The first version counted the header as a value. `tail -n +2` prints
+from line 2 onwards, which drops it. (`tail -n 2`, without the `+`, would
+print the last two lines.)
+
+**Numbers sort as text.** Sort the rows by the `reads` column, as text
+and then as numbers:
+
+```{.bash filename="Terminal (laptop)"}
+tail -n +2 ~/bioinf-computing-ch06/samples.tsv | sort -t$'\t' -k4,4
+tail -n +2 ~/bioinf-computing-ch06/samples.tsv | sort -t$'\t' -k4,4n
+```
+
+```{.console}
+sample_E	run5	treated	105
+sample_C	Run 3 final	treated	12
+sample_B	run2	control	30
+sample_B	run2	control	30
+sample_D	run4	control	8
+sample_A	run1	control	9
+sample_D	run4	control	8
+sample_A	run1	control	9
+sample_C	Run 3 final	treated	12
+sample_B	run2	control	30
+sample_B	run2	control	30
+sample_E	run5	treated	105
+```
+
+As text, `105` comes first, because `sort` compares character by
+character and `1` comes before `3`, `8`, and `9`. With `n`, the column is
+compared as numbers: 8, 9, 12, 30, 30, 105. The pieces: `-t$'\t'` says
+the fields are separated by tabs (`$'\t'` is how you type a tab
+character in bash); `-k4,4` sorts on field 4 only, from field 4 to field
+4; the `n` after it makes that key numeric.
+
+**The duplicate matters.** `sort -u` keeps one copy of each identical
+line:
+
+```{.bash filename="Terminal (laptop)"}
+tail -n +2 ~/bioinf-computing-ch06/samples.tsv | sort -u
+```
+
+```{.console}
+sample_A	run1	control	9
+sample_B	run2	control	30
+sample_C	Run 3 final	treated	12
+sample_D	run4	control	8
+sample_E	run5	treated	105
+```
+
+Five samples. The header was removed with `tail -n +2` **before**
+sorting, so it cannot end up among the data. The `reads` column adds up
+to 194 with the duplicate and 164 without it (you will compute both with
+`awk` in @sec-text-tools-sed-awk): a duplicated metadata row inflates
+totals silently. `sort -u` removes only rows that are identical in
+every column. Two rows with the same sample name and **different**
+values are a conflict to resolve, not a duplicate to drop
+(@sec-tabular-data). Note also that `sample_D` and `sample_E` have no read
+files in Chapter 5's practice folder: a sample table and the files on
+disk can disagree, which @sec-tabular-data checks properly.
+
+### The real sample sheet
+
+@sec-organizing-projects saved nf-core's sample sheet unchanged as
+`data/meta/samplesheet_upstream.csv`. It is comma-separated, so tell `cut`
+the delimiter with `-d,`:
+
+```{.bash filename="Terminal (laptop)"}
+cut -d, -f1 data/meta/samplesheet_upstream.csv | sort | uniq -c
+```
+
+```{.console}
+      1 RAP1_IAA_30M_REP1
+      1 RAP1_UNINDUCED_REP1
+      2 RAP1_UNINDUCED_REP2
+      1 sample
+      2 WT_REP1
+      1 WT_REP2
+```
+
+Seven runs under five sample labels, with `WT_REP1` and
+`RAP1_UNINDUCED_REP2` used twice each (two runs of the same sample), and
+the header `sample` counted again; `tail -n +2` removes it. Here the
+repeated labels already sit next to each other in the file, so
+`uniq -c` alone would happen to give the same counts. The practice table
+is why you sort anyway. One more column, the strandedness setting:
+
+```{.bash filename="Terminal (laptop)"}
+tail -n +2 data/meta/samplesheet_upstream.csv | cut -d, -f4 | sort | uniq -c
+```
+
+```{.console}
+      2 auto
+      5 reverse
+```
+
+**Sort order depends on the locale.** Look again at where `sample` landed
+above: between the `RAP1_…` and `WT_…` names. Now sort with
+`LC_ALL=C`:
+
+```{.bash filename="Terminal (laptop)"}
+cut -d, -f1 data/meta/samplesheet_upstream.csv | LC_ALL=C sort | uniq -c
+```
+
+```{.console}
+      1 RAP1_IAA_30M_REP1
+      1 RAP1_UNINDUCED_REP1
+      2 RAP1_UNINDUCED_REP2
+      2 WT_REP1
+      1 WT_REP2
+      1 sample
+```
+
+Same counts, different order. Your **locale** (language settings) tells
+`sort` how to order letters. In `en_US.UTF-8`, upper and lower case are
+mixed together, as in a dictionary. In the `C` locale, characters are
+ordered by their byte values, so all capitals come before all lower-case
+letters. `LC_ALL=C` in front of a command sets it for that command only.
+Use it when the order must be the same on every computer, or when
+another tool needs input sorted that way (`join` and `comm` do, for
+example). Which locale you have by default depends on the system; your
+settings are @sec-linux-system.
+
+::: {.callout-tip}
+## Sort before you count
+Sort before `uniq -c`, so equal values are counted wherever they are in
+the file. Use `LC_ALL=C sort` when the order must be reproducible.
+:::
+
+### The annotation
+
+Now the yeast annotation, `data/ref/genes.gtf.gz`, read through the
+`data/ref` link. A GTF file has nine tab-separated columns, and column 3
+is the feature type. Count the types, most common first:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz | cut -f3 | sort | uniq -c | sort -k1,1nr
+```
+
+```{.console}
+    129 exon
+    124 transcript
+    118 CDS
+    115 start_codon
+    114 stop_codon
+```
+
+The final `sort -k1,1nr`, piece by piece: sort on field 1 (the counts),
+as numbers (`n`), in reverse (`r`), largest first. With no `-t`, `sort`
+splits fields at blanks, and the leading spaces from `uniq -c` are
+skipped. What is **missing** is a finding too: there are no `gene`
+lines. Many GTF files have one per gene; this test file has transcripts,
+exons, coding parts (CDS), and start and stop codons only, 600 lines in
+all. A tool that expects `gene` lines would find none here.
+
+Now column 1, the sequence (chromosome) names:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz | cut -f1 | sort | uniq -c
+gunzip -c data/ref/genome.fa.gz | grep '^>'
+```
+
+```{.console}
+    599 I
+      1 not_in_genome
+```
+
+```{.console}
+>I
+```
+
+You may remember the `not_in_genome` line from Exercise 5 of
+@sec-shell-basics, where it was the first line of the file. Counting
+shows that it is the only one: 599 lines are on chromosome `I`, the one
+sequence in the genome (the `grep` prints FASTA header lines, which start
+with `>`; @sec-text-tools-grep). nf-core put that line there on purpose,
+to test that the pipeline copes with an annotation line on a sequence the
+genome does not have ([nf-core/test-datasets commit
+`1b17b24`](https://github.com/nf-core/test-datasets/commit/1b17b24),
+"Add gtf line using chromosome not in genome"). Real annotations and
+genomes do not always match either (@sec-fasta-fastq). Two minutes of
+counting found something you would otherwise meet as a pipeline error.
+
+**Text sort vs numeric sort, on real coordinates.** Column 4 holds start
+positions. Take the first 12 transcript starts and sort them both ways:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz | grep -w transcript | cut -f4 | head -n 12 \
+  > ~/bioinf-computing-ch06/starts.txt
+sort ~/bioinf-computing-ch06/starts.txt | tr '\n' ' '; echo
+sort -n ~/bioinf-computing-ch06/starts.txt | tr '\n' ' '; echo
+```
+
+```{.console}
+10091 11565 12046 13363 1807 21566 22395 24000 2480 335 538 7235
+335 538 1807 2480 7235 10091 11565 12046 13363 21566 22395 24000
+```
+
+Text order puts `10091` before `1807` and `335` near the end. (`tr '\n' '
+'` turns newlines into spaces, so the list fits on one line; `echo` ends
+the line.) Sorting coordinates as text is a classic way to break
+interval files (@sec-intervals-variants).
+
+::: {.callout-caution .misconception}
+## Misconception: "`sort` puts numbers in numeric order"
+**Reality.** By default `sort` compares text, character by character, so
+`10091` comes before `1807`. Use `sort -n`, with `-k` to choose the
+column.
+:::
+
+**One more count, on the reads.** How many distinct sequences are there
+among R1's 50,000 reads, and which is most common?
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 2' | sort -u | wc -l
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 2' \
+  | sort | uniq -c | sort -k1,1nr | head -n 3 | cut -c1-40
+```
+
+```{.console}
+21662
+    208 GTTAGGAGTGTGCAATACCTTTATTGATGTTT
+    186 CTTTGACCCAGGTAGGTAGGAATTGAGAGGGA
+    123 CTTTAAATGGGTCAGGGAATTCGGTAGGAGAT
+```
+
+21,662 distinct sequences; the most common one appears 208 times.
+(`cut -c1-40` keeps the first 40 characters of each line, to fit.) What
+duplicated reads mean for an RNA-seq experiment is a quality-control
+question for the Genomics and Transcriptomics books; here, the point is
+that the same `sort | uniq -c | sort -k1,1nr` pattern answered it.
+
+: The counting tools used in this chapter. {#tbl-text-tools}
+
+| Tool | What it does | Flags used here | Example |
+|:-----|:-------------|:----------------|:--------|
+| `wc` | counts lines, words, bytes | `-l` lines, `-c` bytes | `wc -l samples.tsv` |
+| `cut` | keeps columns (fields) or characters | `-f` fields, `-d` delimiter (tab by default), `-c` characters | `cut -d, -f1 sheet.csv` |
+| `sort` | sorts lines | `-n` numeric, `-k2,2` key, `-t` separator, `-r` reverse, `-u` unique | `sort -t$'\t' -k4,4n` |
+| `uniq` | merges identical **neighbouring** lines | `-c` count, `-d` only repeated | `sort \| uniq -c` |
+| `head`, `tail` | first or last lines | `-n 5`; `tail -n +2` from line 2 | `tail -n +2 samples.tsv` |
+| `tr` | replaces characters | `tr '\n' ' '` | newlines to spaces |
+| `paste` | joins lines side by side | `paste - - - -` four lines into one | (reference) |
+| `column -t` | lines up columns for reading | `column -t -s$'\t'` | (reference) |
+
+`cut` splits on tabs by default, which is why tab-separated files are
+easy to work with. A comma-separated file with commas **inside** quoted
+fields (`"Smith, J"`) defeats `cut -d,`; that needs a real table reader
+(@sec-tabular-data).
+
+::: {.check}
+**Check yourself.** `cut -d, -f1 samplesheet_upstream.csv | uniq -c`
+gives the right counts, but `cut -f1 samples.tsv | uniq -c` on the
+practice table does not. Why?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+In the sample sheet the repeated labels are on neighbouring lines; in the
+practice table the two `sample_B` rows are not, and `uniq` only merges
+neighbours. Sort first.
+:::
+:::
+
+## Finding lines: `grep` {#sec-text-tools-grep}
+
+`grep` prints the lines that match a pattern. With `-c` it counts them.
+Count the read headers in both mate files:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -c '^@SRR'
+gunzip -c data/raw/SRR6357070_2.fastq.gz | grep -c '^@SRR'
+```
+
+```{.console}
+50000
+50000
+```
+
+`^` means "at the start of the line" (@sec-text-tools-regex). Now a real
+question from @sec-getting-help: the paper's methods trimmed the adapter
+`AGATCGGAAGAGC` with cutadapt. How many reads contain that exact
+sequence? Search the sequence lines only:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 2' | grep -c AGATCGGAAGAGC
+gunzip -c data/raw/SRR6357070_2.fastq.gz | awk 'NR % 4 == 2' | grep -c AGATCGGAAGAGC
+```
+
+```{.console}
+1916
+1910
+```
+
+1,916 reads in R1 and 1,910 in R2 contain this **exact** 13-letter
+motif. That is not a measure of adapter contamination: partial adapters
+at a read's end and adapters with a sequencing error are missed. Trimming
+tools and quality reports measure that properly (the applied books).
+Note what `-c` counts: matching **lines**. A line with the motif twice
+counts once; `grep -o` prints each match on its own line, if you want to
+count occurrences.
+
+A gene in the annotation:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz | grep -w 'gene_name "CDC19"' | cut -f1-8
+```
+
+```{.console}
+I	ensembl	CDS	71786	73285	.	+	0
+I	ensembl	exon	71786	73288	.	+	.
+I	ensembl	start_codon	71786	71788	.	+	0
+I	ensembl	transcript	71786	73288	.	+	.
+I	ensembl	stop_codon	73286	73288	.	+	0
+```
+
+Five lines for CDC19 (pyruvate kinase), on the `+` strand from 71,786
+to 73,288. `-w` matches whole words only, so a search for `CDC1` would
+not match `CDC19`. The pattern is in single quotes because it contains
+spaces and double quotes (@sec-shell-basics).
+
+### The `@` trap
+
+Would `grep -c '^@'` also count the reads? On this file, yes:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -c '^@'
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 0' | grep -o . | sort | uniq -c
+```
+
+```{.console}
+50000
+ 216720 /
+    280 #
+ 191521 <
+  11539 7
+ 486514 B
+4143426 F
+```
+
+The second command lists every character used in the quality lines
+(line 4 of every 4; `grep -o .` prints each character on its own line).
+This file uses only six quality characters, and `@` is not one of them.
+But `@` **is** a valid quality character (a base quality of 31,
+@sec-fasta-fastq), so in other files a quality line can start with `@`.
+Here is a two-read toy file where one does:
+
+```{.bash filename="Terminal (laptop)"}
+printf '@r1\nACGT\n+\n@III\n@r2\nTTGA\n+\nIIII\n' > ~/bioinf-computing-ch06/at_quality.fastq
+grep -c '^@' ~/bioinf-computing-ch06/at_quality.fastq
+awk 'NR % 4 == 1' ~/bioinf-computing-ch06/at_quality.fastq | wc -l
+pixi run seqkit stats -T ~/bioinf-computing-ch06/at_quality.fastq
+```
+
+```{.console}
+3
+2
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+/home/you/bioinf-computing-ch06/at_quality.fastq	FASTQ	DNA	2	8	4	4.0	4
+```
+
+Two reads; `grep` says 3. Counting header lines by **position**
+(`awk 'NR % 4 == 1'`) gets 2, but only because the file has four lines
+per read, and it checks nothing else. seqkit reads the format and gets 2
+with no assumption. That is the same lesson as @sec-orientation: true for
+this file is not true for FASTQ.
+
+::: {.callout-warning}
+## Pitfall: `grep -c '^@'` is not a read count
+`@` is also a quality character, so a quality line can start with it.
+Count by position in a file you know has four lines per read, or, in
+general, with `pixi run seqkit stats`.
+:::
+
+### Flags you will use
+
+To see a whole read around a match, `-A 3` prints 3 lines **after** each
+matching line:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -A 3 '^@SRR6357070\.6710070 '
+```
+
+```{.console}
+@SRR6357070.6710070 6710070/1 kraken:taxid|4932
+GTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA
++
+BBBBBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFB
+```
+
+The backslash before the dot and the space at the end make the pattern
+exact; the next section explains both. When nothing matches, `grep`
+prints nothing (or `0` with `-c`) and returns exit status `1`:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -c ZZZZ
+echo $?
+```
+
+```{.console}
+0
+1
+```
+
+Status 1 means "no match", not "error" (an error is 2). That matters in
+scripts that stop on any nonzero status (@sec-shell-scripts).
+
+: `grep` flags, with output on the book's files. {#tbl-grep-flags}
+
+| Flag | Meaning | Example | Output here |
+|:-----|:--------|:--------|:------------|
+| `-c` | count matching lines | `grep -c '^@SRR'` (R1) | `50000` |
+| `-v` | lines that do **not** match | `grep -v control samples.tsv` | the header and the two `treated` rows |
+| `-i` | ignore case | `grep -i -c rep1 samplesheet_upstream.csv` | `4` |
+| `-w` | whole words only | `grep -w treated samples.tsv` | the `sample_C` and `sample_E` rows |
+| `-n` | show line numbers | `grep -n sample_B samples.tsv` | `4:sample_B…`, `6:sample_B…` |
+| `-o` | print only the matching part | `grep -o 'SRR[0-9]*_1'` | one run name per line |
+| `-A`, `-B`, `-C` | lines after, before, around a match | `grep -A 3 '^@SRR6357070\.6710070 '` | the whole read |
+| `-F` | fixed string: no special characters | `grep -F -c 'fastq.gz'` | `7` |
+| `-E` | extended regular expressions | `grep -E 'SRR[0-9]+'` | (@sec-text-tools-regex) |
+| `-f file` | patterns from a file, one per line | `grep -f ids.txt` | for ID lists later |
+| `-r` | search all files in a folder | `grep -r "seqkit" src/` | |
+
+`zgrep` searches a `.gz` file directly: `zgrep -c '^@SRR'
+data/raw/SRR6357070_1.fastq.gz` also gives 50,000.
+
+::: {.check}
+**Check yourself.** `gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -c
+CTG` gives 35,761. Is that the number of reads containing `CTG`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Here, yes, but only because this file's quality lines use none of the
+letters `C`, `T`, `G`. In general, search the sequence lines only:
+`awk 'NR % 4 == 2' | grep -c CTG`. Both give 35,761 on this file.
+:::
+:::
+
+## Regular expressions {#sec-text-tools-regex}
+
+Count an EcoRI restriction site, `GAATTC`, in R1, then the same pattern
+with one letter replaced by a dot:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -c GAATTC
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -c 'GA.TTC'
+gunzip -c data/raw/SRR6357070_1.fastq.gz | grep -o 'GA.TTC' | sort | uniq -c
+```
+
+```{.console}
+2818
+11404
+   2901 GAATTC
+   2917 GACTTC
+   2483 GAGTTC
+      1 GANTTC
+   4083 GATTTC
+```
+
+Four times as many lines. In a `grep` pattern, `.` matches **any one
+character**, and `grep -o` shows what it matched: `A`, `C`, `G`, `T`, and
+once an `N`. (`-o` counts matches, so its numbers add up to more than the
+2,818 matching lines.) The pattern is a **regular expression**, or regex:
+a small language for describing text.
+
+Two more on the sample sheet. List the run IDs, then count the FASTQ
+file names:
+
+```{.bash filename="Terminal (laptop)"}
+grep -o 'SRR[0-9]*_1' data/meta/samplesheet_upstream.csv | sed 's/_1$//'
+grep -Eo 'SRR[0-9]+_[12]\.fastq\.gz' data/meta/samplesheet_upstream.csv | wc -l
+```
+
+```{.console}
+SRR6357070
+SRR6357071
+SRR6357072
+SRR6357073
+SRR6357074
+SRR6357075
+SRR6357076
+11
+```
+
+Seven runs, and 11 file names: four paired-end runs with two files each,
+plus three single-end runs with one. (`sed 's/_1$//'` removes the `_1`
+at the end; @sec-text-tools-sed-awk.) @fig-regex-anatomy takes the second
+pattern apart.
+
+::: {#fig-regex-anatomy}
+{{< svg ../figures/regex-anatomy.svg >}}
+
+The parts of `SRR[0-9]+_[12]\.fastq\.gz`, and three strings tested
+against it. Only the first matches: `3` is not in `[12]`, and `\.` needs
+a real dot.
+:::
+
+**Now name the parts.** Most characters match themselves (**literals**).
+A few have special meanings (@tbl-regex-basics):
+
+- `.` matches any one character; `\.` matches a real dot. The backslash
+  turns a special character back into a literal.
+- `[0-9]` matches one character from a **class**, here any digit;
+  `[12]` matches `1` or `2`; `[^ACGT]` matches any character **except**
+  those listed.
+- `*` means "zero or more of the item before it", `+` "one or more",
+  `?` "zero or one", and `{10,}` "10 or more".
+- `^` and `$` anchor the match to the start and end of the line.
+- `( )` groups, and `|` means "or": `^(WT|RAP1_IAA)` matches lines that
+  start with either.
+
+**Basic and extended syntax.** `grep` and `sed` use **basic** regular
+expressions by default, where `+`, `?`, `{ }`, `( )`, and `|` are
+ordinary characters unless you put a backslash before them. `grep -E`,
+`sed -E`, and `awk` use **extended** syntax, where they are special
+without one. So the same pattern behaves differently:
+
+```{.bash filename="Terminal (laptop)"}
+grep -c 'SRR[0-9]+_' data/meta/samplesheet_upstream.csv
+grep -Ec 'SRR[0-9]+_' data/meta/samplesheet_upstream.csv
+```
+
+```{.console}
+0
+7
+```
+
+In basic syntax, `+` was a literal plus sign, and no line contains one.
+This book uses `-E` whenever a pattern needs `+`, `?`, `|`, or groups.
+(GNU `grep -P` adds Perl-style patterns; you will meet it in other
+people's commands.) Always put a regex in **single quotes**, so bash does
+not treat `*`, `?`, `[ ]`, or `$` as its own special characters first.
+
+: Regular expression basics. {#tbl-regex-basics}
+
+| Piece | Meaning | Basic (`grep`, `sed`) | Extended (`grep -E`, `sed -E`, `awk`, R, Python) | Example |
+|:------|:--------|:-------------------|:-------------------|:--------|
+| `a` | the character itself | `a` | `a` | `GAATTC` |
+| `.` | any one character | `.` | `.` | `GA.TTC` |
+| `[ ]`, `[^ ]` | one character from, or not from, a set | `[12]`, `[^ACGT]` | same | `_[12]\.` |
+| `*` | zero or more of the previous item | `*` | `*` | `SRR[0-9]*` |
+| `+` | one or more | `\+` (GNU) | `+` | `SRR[0-9]+` |
+| `?` | zero or one | `\?` (GNU) | `?` | `fastq(\.gz)?` |
+| `{n,m}` | between n and m | `\{n,m\}` | `{n,m}` | `A{10,}` |
+| `^`, `$` | start, end of line | `^`, `$` | same | `^@SRR`, `reverse$` |
+| `\` | makes a special character literal | `\.` | `\.` | `\.fastq\.gz` |
+| `( )`, `\|` | group, or | `\( \)`, `\|` (GNU) | `( )`, `\|` | `^(WT\|RAP1_IAA)` |
+
+### Try patterns
+
+@fig-regex-tester runs a pattern against eight fixed lines from the
+book's files. Pick one of the examples from the list, or type your own.
+Change one character at a time and watch what matches: try `GAATTC`,
+then `GA.TTC`; `fastq.gz`, then `fastq\.gz`; `reverse$`, then
+`reverse`.
+
+```{ojs}
+//| echo: false
+viewof pattern = Inputs.text({
+  label: "Pattern",
+  value: "GA.TTC",
+  placeholder: "type a regular expression",
+  datalist: [
+    "GAATTC", "GA.TTC", "^@SRR", "SRR[0-9]+_2\\.fastq\\.gz",
+    "reverse$", "^(WT|RAP1_IAA)", "fastq.gz", "^[ACGT]+$"
+  ],
+  spellcheck: false
+})
+```
+
+::: {#fig-regex-tester}
+```{ojs}
+//| echo: false
+testerLines = [
+  "sample,fastq_1,fastq_2,strandedness",
+  "WT_REP1,SRR6357070_1.fastq.gz,SRR6357070_2.fastq.gz,auto",
+  "RAP1_UNINDUCED_REP1,SRR6357073_1.fastq.gz,,reverse",
+  "RAP1_IAA_30M_REP1,SRR6357076_1.fastq.gz,SRR6357076_2.fastq.gz,reverse",
+  "@SRR6357070.25017281 25017281/1 kraken:taxid|4932",
+  "GTCAGACAACAACTTTTGGACCTTTGGAATTCTGGTAGAACC",
+  "+",
+  "BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFB"
+]
+
+testerResult = {
+  if (pattern === "") return {error: "Type a pattern.", rows: []};
+  let re;
+  try { re = new RegExp(pattern, "g"); }
+  catch (e) { return {error: "Not a valid pattern: " + e.message, rows: []}; }
+  const rows = testerLines.map((line) => {
+    const parts = [];
+    let last = 0, any = false;
+    for (const m of line.matchAll(re)) {
+      any = true;
+      if (m[0].length === 0) continue;
+      parts.push({text: line.slice(last, m.index), hit: false});
+      parts.push({text: m[0], hit: true});
+      last = m.index + m[0].length;
+    }
+    parts.push({text: line.slice(last), hit: false});
+    return {line, parts, any};
+  });
+  return {error: null, rows};
+}
+
+{
+  const lh = 22, top = 30, h = top + testerLines.length * lh + 30;
+  const n = testerResult.rows.filter((r) => r.any).length;
+  return htl.svg`<svg class="diagram" viewBox="0 0 720 ${h}" role="img"
+      aria-label="${testerResult.error ?? `${n} of 8 lines match the pattern ${pattern}`}">
+    <text x="8" y="18" font-size="13" class="fill-muted">${
+      testerResult.error ?? `${n} of 8 lines match`}</text>
+    ${testerResult.rows.map((r, i) => htl.svg`<g>
+      <text x="8" y=${top + 14 + i * lh} font-size="13"
+            class=${r.any ? "fill-given" : "fill-muted"}>${r.any ? "match" : "—"}</text>
+      <text x="64" y=${top + 14 + i * lh} font-size="12.5" class="mono">${
+        r.parts.map((p) => p.hit
+          ? htl.svg`<tspan class="fill-given" font-weight="700" text-decoration="underline">${p.text}</tspan>`
+          : htl.svg`<tspan class=${r.any ? "" : "fill-muted"}>${p.text}</tspan>`)
+      }</text>
+    </g>`)}
+  </svg>`;
+}
+```
+
+A regex tester on eight fixed lines from the sample sheet (shortened to
+file names) and one FASTQ read. Lines that match say *match*; the
+matched parts are underlined. It uses **JavaScript** regular
+expressions, which agree with `grep -E` on the example patterns but not
+in every detail.
+:::
+
+If the figure does not load, @tbl-regex-tester gives the same lesson:
+what each example pattern matches in those eight lines, checked with
+GNU `grep -E`.
+
+: What the example patterns match in the tester's eight lines (1–4
+sample-sheet lines, 5–8 a FASTQ read). {#tbl-regex-tester}
+
+| Pattern | Lines that match | Why |
+|:--------|:-----------------|:----|
+| `GAATTC` | 6 | the exact site, in the sequence line |
+| `GA.TTC` | 6 | `.` is any character; only one such place here |
+| `^@SRR` | 5 | `@SRR` at the start: the header line |
+| `SRR[0-9]+_2\.fastq\.gz` | 2, 4 | the R2 file names: paired-end rows only |
+| `reverse$` | 3, 4 | lines **ending** in `reverse` |
+| `^(WT\|RAP1_IAA)` | 2, 4 | lines starting with either name |
+| `fastq.gz` | 2, 3, 4 | would also match `fastqXgz`; `fastq\.gz` would not |
+| `^[ACGT]+$` | 6 | the whole line is bases only |
+
+Engines differ in details. GNU `grep -Eo 'a|ab'` on the text `ab` prints
+`ab` (the longest match), while JavaScript's `/a|ab/` picks `a` (the
+first alternative that fits). The tester's examples avoid such cases.
+
+### Globs are not regular expressions
+
+@sec-shell-basics promised this. A wildcard (glob) and a regex can look
+alike and mean different things:
+
+```{.bash filename="Terminal (laptop)"}
+grep -c '*.fastq.gz' data/meta/samplesheet_upstream.csv
+grep -c '.*\.fastq\.gz' data/meta/samplesheet_upstream.csv
+grep -o '[^/]*\.fastq\.gz' data/meta/samplesheet_upstream.csv | head -n 3
+```
+
+```{.console}
+0
+7
+SRR6357070_1.fastq.gz
+SRR6357070_2.fastq.gz
+SRR6357071_1.fastq.gz
+```
+
+`*.fastq.gz` as a **glob** means "any name ending in `.fastq.gz`". As a
+regex it means something else: a `*` at the very start has nothing
+before it to repeat, so `grep` reads it as a literal `*`, then any
+character, then `fastq`, any character, `gz`. No line contains a `*`, so
+0. In a regex, "anything" is `.*` and a real dot is `\.`: `.*\.fastq\.gz`
+matches the 7 data rows. The third line prints the file names
+themselves: `[^/]*` is "any run of characters that are not `/`", so the
+match starts after the last `/` of each URL. (In a regex, "ends in
+`.fastq.gz`" would be `\.fastq\.gz$`; no line of this sheet ends that
+way, because each row ends with its strandedness.)
+
+: The same characters in a glob and in a regex. {#tbl-glob-vs-regex}
+
+| Characters | In a glob (`ls`, `find -name`) | In a regex (`grep`, `sed`, `awk`, R, Python) | Example |
+|:-----------|:-------------------------------|:---------------------------------------------|:--------|
+| `*` | any characters, including none | zero or more of the **previous** item | glob `*.gz`; regex `.*\.gz` |
+| `?` | exactly one character | zero or one of the previous item (`-E`) | glob `run?`; regex `run.` |
+| `.` | a literal dot | any one character | glob `*.fastq.gz`; regex `\.fastq\.gz$` |
+| `[12]` | one of the characters | one of the characters | same in both |
+| `[!1]` vs `[^1]` | `[!1]` not `1` | `[^1]` not `1` | |
+| `^`, `$` | (no meaning) | start, end of line | regex `^SRR` |
+| `{A,B}` | brace expansion: makes words | `{n,m}` repeats (`-E`) | glob `{R1,R2}`; regex `A{10,}` |
+
+::: {.callout-caution .misconception}
+## Misconception: "`*` means the same in `grep` as in `ls`"
+**Reality.** In a glob, `*` is "any characters". In a regex, `*` is
+"zero or more of the previous character", and `.` is "any character".
+The regex for "anything" is `.*`.
+:::
+
+**The same regexes in R and Python.** Simple patterns like
+`^SRR[0-9]+` work the same in R, `grepl("^SRR[0-9]+", x)` (base R uses
+extended syntax), and in Python, `re.search(r"^SRR[0-9]+", s)`. But they
+are separate engines, not one universal regex: base R, R's stringr
+package, Python's `re`, JavaScript, and GNU `grep` differ in details such
+as backslashes (R needs `"\\."` inside a string; Python's raw strings
+`r"\."` avoid that) and which alternative wins in `a|ab`.
+@sec-r-essentials and @sec-python-essentials use them. One warning for
+all languages: regexes for structured formats, such as quoted CSV fields
+or GTF attributes, get fragile fast; use a parser for those.
+
+::: {.check}
+**Check yourself.** Does `grep 'fastq.gz'` match the text `fastqXgz`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Yes: `.` matches any character, including `X`. Use `'fastq\.gz'`, or
+`grep -F 'fastq.gz'`, which treats the whole pattern as plain text.
+:::
+:::
+
+## Editing streams with `sed`, computing with `awk` {#sec-text-tools-sed-awk}
+
+### `sed`: substitute
+
+Chromosome names differ between sources: `chr1` in one, `1` in another
+(@sec-fasta-fastq). Make a two-line toy file in the BED format and strip
+the `chr`:
+
+```{.bash filename="Terminal (laptop)"}
+printf 'chr1\t100\t200\nchr2\t300\t400\n' > ~/bioinf-computing-ch06/toy.bed
+sed 's/^chr//' ~/bioinf-computing-ch06/toy.bed
+cat ~/bioinf-computing-ch06/toy.bed
+```
+
+```{.console}
+1	100	200
+2	300	400
+chr1	100	200
+chr2	300	400
+```
+
+`sed` (stream editor) reads lines and writes them out, changed.
+`s/^chr//` is a **substitution**: `s/pattern/replacement/`, here "replace
+`chr` at the start of the line with nothing". The file itself is
+unchanged, as `cat` shows: `sed` wrote the result to stdout, so save it
+with `>` to a **new** file. Each `s` changes the first match on a line;
+add `g` to change all of them:
+
+```{.bash filename="Terminal (laptop)"}
+echo 'a-b-c' | sed 's/-/_/'
+echo 'a-b-c' | sed 's/-/_/g'
+```
+
+```{.console}
+a_b-c
+a_b_c
+```
+
+The pattern is a basic regular expression, as in `grep`. When the
+pattern contains `/`, pick another delimiter. File names from the URLs in
+the sample sheet:
+
+```{.bash filename="Terminal (laptop)"}
+tail -n +2 data/meta/samplesheet_upstream.csv | cut -d, -f2 | sed 's|.*/||'
+```
+
+```{.console}
+SRR6357070_1.fastq.gz
+SRR6357071_1.fastq.gz
+SRR6357072_1.fastq.gz
+SRR6357073_1.fastq.gz
+SRR6357074_1.fastq.gz
+SRR6357075_1.fastq.gz
+SRR6357076_1.fastq.gz
+```
+
+`s|.*/||` replaces "anything up to the last `/`" with nothing. (`.*`
+matches as much as it can.) `sed` can do much more, but substitution is
+what you need from it at this stage.
+
+**`sed -i` edits a file in place.** It writes the changed text back into
+the file. Two rules: never on `data/raw/`, and always run the command
+**without** `-i` first and check the output. On a Mac, `sed -i` behaves
+differently in the system's BSD `sed` (@sec-linux-system); this book uses
+GNU `sed`.
+
+::: {.callout-note collapse="true"}
+## Optional: FASTQ to FASTA with `sed`, and why to use seqkit instead
+
+FASTA keeps only a header (starting with `>`) and the sequence. In a file
+with exactly four lines per read, GNU `sed` can convert:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 8 | sed -n '1~4s/^@/>/p;2~4p'
+```
+
+```{.console}
+>SRR6357070.25017281 25017281/1 kraken:taxid|4932
+CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
+>SRR6357070.6710070 6710070/1 kraken:taxid|4932
+GTCAGATTGGAAGTCATGGTCAGATTCTATGTTAAGATCATCGGATTGTTGGATCTCATTTGACGCAATGAACGATTGATATGAAGCAGTTAAACGGTTTA
+```
+
+`-n` prints nothing unless told to; `1~4` means "line 1, then every 4th
+line" (GNU only), where `@` becomes `>` and the line is printed; `2~4p`
+prints the sequence lines. It works only because of the four-line
+layout. The format-aware command gives the same result with no such
+assumption:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit head -n 2 data/raw/SRR6357070_1.fastq.gz | pixi run seqkit fq2fa
+```
+
+Use `seqkit fq2fa` on real files.
+:::
+
+### `awk`: fields and computing
+
+Start with a mistake. Print column 3 of the practice table:
+
+```{.bash filename="Terminal (laptop)"}
+awk '{print $3}' ~/bioinf-computing-ch06/samples.tsv
+awk -F'\t' '{print $3}' ~/bioinf-computing-ch06/samples.tsv
+```
+
+```{.console}
+condition
+3
+control
+control
+treated
+control
+control
+condition
+treated
+control
+control
+treated
+control
+control
+```
+
+The first version printed `3` for `sample_C`, instead of `treated`. By
+default `awk` splits each line into fields at **any** run of spaces or
+tabs, so the run folder `Run 3 final` became three fields. `-F'\t'`
+tells `awk` to split at tabs only. For tab-separated files, always use
+it.
+
+`awk` reads its input one line (a **record**) at a time and splits it
+into **fields**, `$1`, `$2`, …; `$0` is the whole line. A program is a
+list of `pattern {action}` pairs: for each line where the pattern is
+true, run the action. Either part may be missing: `awk 'NR % 4 == 2'`
+from @sec-text-tools-pipes has a pattern and no action, which means
+"print the line". Add up the `reads` column:
+
+```{.bash filename="Terminal (laptop)"}
+awk -F'\t' 'NR > 1 {s += $4} END {print s}' ~/bioinf-computing-ch06/samples.tsv
+tail -n +2 ~/bioinf-computing-ch06/samples.tsv | sort -u | awk -F'\t' '{s += $4} END {print s}'
+```
+
+```{.console}
+194
+164
+```
+
+`NR > 1` skips the header (`NR` is the record number); `s += $4` adds
+field 4 to a running total `s`, which starts at 0; `END { … }` runs once,
+after the last line. 194 with the duplicated `sample_B` row, 164 without
+it, as promised in @sec-text-tools-counting.
+
+A filter with a condition, and output with tabs:
+
+```{.bash filename="Terminal (laptop)"}
+awk -F'\t' 'NR > 1 && $4 > 20' ~/bioinf-computing-ch06/samples.tsv
+awk -F'\t' -v OFS='\t' 'NR > 1 {print $1, $4}' ~/bioinf-computing-ch06/samples.tsv
+```
+
+```{.console}
+sample_B	run2	control	30
+sample_E	run5	treated	105
+sample_B	run2	control	30
+sample_C	12
+sample_A	9
+sample_B	30
+sample_E	105
+sample_B	30
+sample_D	8
+```
+
+`&&` means "and". In `print $1, $4`, the comma puts the **output field
+separator** between fields, a space by default; `-v OFS='\t'` makes it a
+tab, so the output is tab-separated too.
+
+**Fields in the annotation.** A GTF line has nine tab-separated fields,
+and the ninth, the attributes, contains spaces (@fig-awk-fields). That is
+another reason for `-F'\t'`.
+
+::: {#fig-awk-fields}
+{{< svg ../figures/awk-fields.svg >}}
+
+A GTF line (the CDC19 transcript) split by `awk -F'\t'` into nine
+fields, `$1` to `$9`, with the column names below. Field 9 contains
+spaces, so `awk`'s default splitting would break it apart.
+:::
+
+Count transcripts per strand: column 3 is the feature and column 7 the
+strand.
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz | awk -F'\t' '$3 == "transcript"' | cut -f7 | sort | uniq -c
+```
+
+```{.console}
+     60 -
+     64 +
+```
+
+124 transcript lines: 64 on the plus strand and 60 on the minus strand.
+In this file each transcript has one line, and each gene one
+transcript, but that is a property of this file, not of GTF. `==`
+compares; text values go in double quotes.
+
+::: {.callout-note collapse="true"}
+## Optional: the longest transcript spans
+
+For readers who want to see `awk` compute a column: the span of each
+transcript on the genome is `end − start + 1`. The `match()` part pulls
+the gene ID out of field 9; take it as given (GTF attributes are
+@sec-intervals-variants).
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz \
+  | awk -F'\t' '$3 == "transcript" {match($9, /gene_id "[^"]+"/); print $5 - $4 + 1, substr($9, RSTART + 9, RLENGTH - 10)}' \
+  | sort -k1,1nr | head -n 3
+```
+
+```{.console}
+4614 YAR050W
+4416 YAL029C
+4308 YAL024C
+```
+
+A span on the genome is not the length of the spliced transcript;
+coordinates are @sec-intervals-variants.
+:::
+
+**Check one tool against another.** Add up the `num_seqs` column of the
+seqkit table you saved with `tee`:
+
+```{.bash filename="Terminal (laptop)"}
+awk -F'\t' 'NR > 1 {s += $4} END {print s}' ~/bioinf-computing-ch06/counts.tsv
+```
+
+```{.console}
+100000
+```
+
+100,000 reads in two files, and remembering @sec-getting-help's meaning
+check: two mate files, so **50,000 read pairs**. Now count the `N`
+bases (unknown bases) in each file with `awk`:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 2 {n += gsub(/N/, "")} END {print n}'
+gunzip -c data/raw/SRR6357070_2.fastq.gz | awk 'NR % 4 == 2 {n += gsub(/N/, "")} END {print n}'
+```
+
+```{.console}
+280
+18842
+```
+
+`gsub(/N/, "")` removes every `N` from the line and returns how many it
+removed, and `n` adds them up. 280 and 18,842: exactly seqkit's `sum_n`
+column from @sec-getting-help's Exercise 2. (Every `N` also has the
+quality character `#`, the lowest score in this file, and no other base
+does: one more independent count that agrees.) Two independent
+tools agree, so you can trust the one-liner.
+
+::: {.callout-tip}
+## Check a one-liner against something independent
+Before trusting a new one-liner, compare it with a count you got
+another way: here `awk`'s `N` count and seqkit's `sum_n`.
+:::
+
+: The parts of `awk` used in this chapter. {#tbl-awk-basics}
+
+| Piece | Meaning | Example |
+|:------|:--------|:--------|
+| `$1`, `$2`, … | fields of the current line | `{print $3}` |
+| `$0` | the whole line | `{print length($0)}` |
+| `NF` | number of fields on the line | `{print NF}` |
+| `NR` | record (line) number | `NR > 1`, `NR % 4 == 2` |
+| `-F'\t'` | split fields at tabs only | `awk -F'\t' …` |
+| `pattern {action}` | run the action on lines where the pattern is true | `$3 == "transcript" {print $7}` |
+| pattern alone | print matching lines | `awk '$4 > 20'` |
+| `BEGIN {…}`, `END {…}` | run before the first line, after the last | `END {print s}` |
+| `-v OFS='\t'` | separator between printed fields | `print $1, $4` |
+| `gsub(/re/, "x")` | replace all matches; returns the count | `n += gsub(/N/, "")` |
+
+When a one-liner grows past one line, it belongs in a script
+(@sec-shell-scripts), or in R or Python (@sec-r-essentials,
+@sec-python-essentials), where it can be read, tested, and reused.
+
+::: {.check}
+**Check yourself.** What does
+`gunzip -c data/ref/genes.gtf.gz | awk -F'\t' '$7 == "-"' | wc -l`
+count?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Lines on the minus strand, of **every** feature type (transcripts,
+exons, CDS, codons): 296 here. Not genes.
+:::
+:::
+
+## Compressed files {#sec-text-tools-compression}
+
+You have read `.gz` files through `gunzip -c` all chapter. `gzip` writes
+them too, and as a filter it compresses whatever arrives on stdin. Save
+the first 100 reads of R1 as a small compressed file, then check it:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 400 | gzip > ~/bioinf-computing-ch06/small_R1.fastq.gz
+gunzip -c ~/bioinf-computing-ch06/small_R1.fastq.gz | wc -l
+gzip -t ~/bioinf-computing-ch06/small_R1.fastq.gz
+```
+
+```{.console}
+400
+```
+
+400 lines, and `gzip -t` is silent: intact. 400 lines are 100 reads
+**only** in a file with four lines per read; the general recipe is
+`pixi run seqkit head -n 100`, as in @sec-getting-help.
+
+Compress a stream you made yourself, the 50,000 sequence lines:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz | awk 'NR % 4 == 2' | gzip -c > ~/bioinf-computing-ch06/seqs.txt.gz
+ls -l ~/bioinf-computing-ch06/seqs.txt.gz
+```
+
+```{.console}
+-rw-r--r-- 1 you you 853893 Nov 17 20:49 /home/you/bioinf-computing-ch06/seqs.txt.gz
+```
+
+About 850 KB for 5.1 MB of text (the exact size depends on the gzip
+version). DNA compresses well because it uses only a few letters.
+
+**The family.** `gzip file` compresses `file` into `file.gz` and removes
+the original; `gunzip file.gz` does the reverse. `-c` writes to stdout
+instead and leaves the input alone, which is what you want almost
+always. `zcat file.gz` is the same as `gunzip -c file.gz` in GNU gzip,
+and you will see it in other people's scripts. This book writes
+`gunzip -c` because the `zcat` built into macOS does not read `.gz`
+files:
+
+```{.console}
+zcat: can't stat: data/raw/SRR6357070_1.fastq.gz (data/raw/SRR6357070_1.fastq.gz.Z): No such file or directory
+```
+
+(It looks for a `.Z` file, an older format.) On Linux, `zcat` works the
+same as `gunzip -c`.
+
+**Rules for big files.**
+
+- Do not decompress a large file to disk to read it: stream it with
+  `gunzip -c … |`. A 10 GB `.fastq.gz` is 40 GB or more uncompressed.
+- Many tools read `.gz` directly, including seqkit and most aligners, so
+  a decompressed copy is rarely needed.
+- Reading a 10 GB file through a pipe is real work: on a cluster, do it
+  in a job, not on the login node (@sec-hpc-slurm).
+- `bgzip` is a variant of gzip that allows jumping to a position inside
+  the file; indexed genomics files use it (@sec-intervals-variants).
+  `pigz` is a parallel gzip that uses several cores (@sec-performance).
+
+: Working with gzip files. {#tbl-compression}
+
+| Task | Command | Note |
+|:-----|:--------|:-----|
+| check a file is intact | `gzip -t f.gz` | silent when intact (@sec-orientation) |
+| read | `gunzip -c f.gz \| head` | `zcat` on Linux; not macOS's `zcat` |
+| browse | `zless f.gz` | @sec-shell-basics |
+| search | `zgrep -c pattern f.gz` | same flags as `grep` |
+| write compressed | `cmd \| gzip > out.gz` | never over the input |
+| compress, keep original | `gzip -k f` | without `-k`, `f` is removed |
+| indexable compression | `bgzip f` | for indexed genomics files (@sec-intervals-variants) |
+| faster on many cores | `pigz` | @sec-performance |
+
+::: {.callout-warning}
+## Pitfall: decompressing to disk
+`gunzip big.fastq.gz` writes the full uncompressed file and deletes the
+`.gz`. Stream instead with `gunzip -c big.fastq.gz | …`, or give the
+`.gz` file to a tool that reads it directly.
+:::
+
+::: {.check}
+**Check yourself.** Why stream a 10 GB `.fastq.gz` with `gunzip -c … |`
+instead of running `gunzip file.fastq.gz` first?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+No 40 GB or larger uncompressed copy on disk or in your quota, and the
+file is read once instead of twice.
+:::
+:::
+
+## Text tools and format-aware tools {#sec-text-tools-format-aware}
+
+You did several jobs in this chapter with text tools. Each has a tool
+that understands the file format (@tbl-text-vs-format).
+
+: Text tools and format-aware tools for the jobs in this chapter.
+{#tbl-text-vs-format}
+
+| Task | Text-tool way | Format-aware tool | Where the text tool breaks |
+|:-----|:--------------|:------------------|:---------------------------|
+| count reads | `wc -l` ÷ 4, `awk 'NR % 4 == 1'` | `seqkit stats` | records not exactly four lines |
+| count reads by header | `grep -c '^@'` | `seqkit stats` | quality lines that start with `@` |
+| FASTQ to FASTA | `sed -n '1~4s/^@/>/p;2~4p'` | `seqkit fq2fa` | multi-line records |
+| first N reads | `head -n 400` | `seqkit head -n 100` | multi-line records |
+| reads with a motif | `awk` + `grep -c` | `seqkit grep -s` | both strands, mismatches |
+| filter a GTF by feature | `awk -F'\t' '$3 == "exon"'` | an annotation package (@sec-intervals-variants) | attribute parsing, comment lines |
+| count alignments | (not text: BAM is binary) | `samtools view -c` (@sec-sam-bam-cram) | compressed binary format |
+
+The format-aware tool wins once files are real: records that span
+several lines (every `NR % 4`, `head -n 400`, and `1~4` in this chapter
+assumed four lines per read), comment and header lines, quoted fields,
+binary formats such as BAM, variants of compression, and the `@` trap.
+Text tools stay the best way to **look** at a file and to check a result
+quickly: count lines, find the odd one, compare two columns. Part IV
+opens with the same principle.
+
+::: {.callout-important}
+## Key idea
+Use text tools to look and to check; use format-aware tools to process.
+:::
+
+## Summary {#sec-text-tools-summary}
+
+- A pipe `|` joins one program's stdout to the next one's stdin, with no
+  file in between. Build pipelines one step at a time and look at each
+  step's output.
+- `>` replaces a file and `>>` appends; the shell empties a `>` target
+  **before** the command runs, so never redirect onto your input: write
+  a new file, check it, `mv` it. `tee` saves and shows at once.
+- Results go to stdout and messages to stderr, by convention. `2>`,
+  `2>&1`, and `/dev/null` route stderr on purpose; a pipeline's status is
+  its last command's, so read the messages and check counts against what
+  you expect.
+- `cut`, `sort`, `uniq -c`, and `wc` count and summarise columns; sort
+  before `uniq`, use `sort -n` for numbers and `LC_ALL=C` for a
+  reproducible order. `grep` finds lines and `-c` counts them.
+- A regular expression describes text (`.`, `[ ]`, `*`, `+`, `^`, `$`,
+  `\`); it is not a glob. `sed 's/…/…/'` substitutes; `awk -F'\t'`
+  selects fields and computes. Stream `.gz` files with `gunzip -c`, and
+  use format-aware tools to process real FASTQ, BAM, and annotation.
+
+: The chapter's commands on one page. {#tbl-ch06-commands}
+
+| Task | Command |
+|:-----|:--------|
+| Pipe, save, append, show and save | `cmd1 \| cmd2`, `> f`, `>> f`, `\| tee f` |
+| Errors to a file, both to a log, discard | `2> err.txt`, `> log 2>&1`, `2> /dev/null` |
+| Count lines, see invisible characters | `wc -l`, `cat -A` |
+| Columns, count values | `cut -f3`, `cut -d, -f1`, `sort \| uniq -c` |
+| Sort | `sort -n`, `sort -t$'\t' -k4,4n`, `sort -k1,1nr`, `LC_ALL=C sort` |
+| Skip a header | `tail -n +2` |
+| Find lines | `grep -c`, `-v`, `-w`, `-o`, `-A 3`, `-E`, `-F` |
+| Substitute | `sed 's/^chr//'`, `sed 's|.*/||'` |
+| Fields and sums | `awk -F'\t' '$3 == "x" {print $7}'`, `awk 'NR > 1 {s += $4} END {print s}'` |
+| Compressed files | `gunzip -c`, `\| gzip >`, `gzip -t`, `zgrep`, `zless` |
+| Compare two files | `cmp a b` (Exercise 3) |
+
+## Exercises {#sec-text-tools-exercises}
+
+Run every exercise from `~/bioinf-computing`, and write outputs to
+`~/bioinf-computing-ch06`.
+
+::: {.check}
+**Exercise 1. Build a pipeline step by step.** Start from
+`gunzip -c data/raw/SRR6357070_2.fastq.gz | head -n 8` and add one step
+at a time, checking the output after each, until the pipeline reports
+how many reads of each length R2 has. Then remove the `head`. Record the
+final command and its result in `NOTEBOOK.md`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_2.fastq.gz | head -n 8 | awk 'NR % 4 == 2'
+gunzip -c data/raw/SRR6357070_2.fastq.gz | head -n 8 | awk 'NR % 4 == 2 {print length($0)}'
+gunzip -c data/raw/SRR6357070_2.fastq.gz | awk 'NR % 4 == 2 {print length($0)}' | sort | uniq -c
+```
+
+```{.console}
+  50000 101
+```
+
+The same as R1: all 50,000 reads are 101 bases. Keeping `head` while you
+build makes each check instant.
+:::
+:::
+
+::: {.check}
+**Exercise 2. Fix the redirections.** First make a copy of the seqkit
+table to work on:
+
+```{.bash filename="Terminal (laptop)"}
+cp ~/bioinf-computing-ch06/counts.tsv ~/bioinf-computing-ch06/counts_copy.tsv
+```
+
+Each of these four lines has a redirection problem. Say what goes wrong,
+then write a fixed version. Run them only after you have predicted the
+result.
+
+```{.bash filename="Terminal (laptop)"}
+cut -f1,4 ~/bioinf-computing-ch06/counts_copy.tsv
+pixi run seqkit stats -T ~/bioinf-computing-ch06/broken.fastq.gz > ~/bioinf-computing-ch06/stats.tsv 2>&1
+sort -t$'\t' -k4,4n ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/counts_copy.tsv
+cut -f1 ~/bioinf-computing-ch06/counts_copy.tsv >> ~/bioinf-computing-ch06/files.txt
+```
+
+The goal: the per-file read counts saved in a file, seqkit's table in
+`stats.tsv` and its messages in a log, the sorted table in its own file
+with the input untouched, and `files.txt` holding each file name once
+however often you run the line.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+1. The counts only go to the screen. Fix: add
+   `> ~/bioinf-computing-ch06/reads_per_file.tsv`.
+2. `2>&1` puts the `[ERRO]` lines, with their colour codes, into the
+   results file, ahead of the header. Fix: `> …/stats.tsv 2> …/stats.log`.
+3. The input is emptied before `sort` reads it (`wc -c` shows 0 bytes).
+   Fix: `> ~/bioinf-computing-ch06/counts_sorted.tsv`, check it, and only
+   then `mv` if you want to replace the original. Re-make the copy with
+   `cp` first, since the broken line emptied it.
+4. `>>` adds the names again on every run, so after two runs each name is
+   there twice. Fix: `>`.
+
+```{.bash filename="Terminal (laptop)"}
+cut -f1,4 ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/reads_per_file.tsv
+pixi run seqkit stats -T ~/bioinf-computing-ch06/broken.fastq.gz > ~/bioinf-computing-ch06/stats.tsv 2> ~/bioinf-computing-ch06/stats.log
+sort -t$'\t' -k4,4n ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/counts_sorted.tsv
+cut -f1 ~/bioinf-computing-ch06/counts_copy.tsv > ~/bioinf-computing-ch06/files.txt
+```
+
+The fixed `stats.tsv` holds only the header, because the file is broken;
+the reason is in `stats.log`.
+:::
+:::
+
+::: {.check}
+**Exercise 3. Do the mates match?** Aligners pair reads by position: read
+1 in R1 with read 1 in R2, and so on (@sec-fasta-fastq). Check that the
+two files list the same reads in the same order. In this file a header
+looks like `@SRR6357070.25017281 25017281/1 kraken:taxid|4932` (R2:
+`…/2 …`): the mate number sits inside the second field, and the **first
+field** is the same in both mates. Write that field for every record,
+count the lines, and compare the files with `cmp`, which prints nothing
+when two files are identical:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/raw/SRR6357070_1.fastq.gz \
+  | awk 'NR % 4 == 1 {print $1}' > ~/bioinf-computing-ch06/ids_R1.txt
+gunzip -c data/raw/SRR6357070_2.fastq.gz \
+  | awk 'NR % 4 == 1 {print $1}' > ~/bioinf-computing-ch06/ids_R2.txt
+wc -l ~/bioinf-computing-ch06/ids_R1.txt ~/bioinf-computing-ch06/ids_R2.txt
+head -n 3 ~/bioinf-computing-ch06/ids_R1.txt
+cmp ~/bioinf-computing-ch06/ids_R1.txt ~/bioinf-computing-ch06/ids_R2.txt
+echo $?
+```
+
+Then make a copy of `ids_R2.txt` with line 3 changed, and compare again:
+
+```{.bash filename="Terminal (laptop)"}
+sed '3s/$/x/' ~/bioinf-computing-ch06/ids_R2.txt > ~/bioinf-computing-ch06/ids_R2_bad.txt
+cmp ~/bioinf-computing-ch06/ids_R1.txt ~/bioinf-computing-ch06/ids_R2_bad.txt
+echo $?
+```
+
+Why are both the line count and `cmp` needed?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.console}
+  50000 /home/you/bioinf-computing-ch06/ids_R1.txt
+  50000 /home/you/bioinf-computing-ch06/ids_R2.txt
+ 100000 total
+@SRR6357070.25017281
+@SRR6357070.6710070
+@SRR6357070.5843839
+0
+```
+
+```{.console}
+/home/you/bioinf-computing-ch06/ids_R1.txt /home/you/bioinf-computing-ch06/ids_R2_bad.txt differ: char 61, line 3
+1
+```
+
+50,000 IDs in each file, identical and in the same order: `cmp` is
+silent and its status is `0`. The altered copy differs at line 3
+(`sed '3s/$/x/'` added an `x` to the end of line 3), status `1`. `cmp`
+is also silent for two **empty** files, so the line count proves the
+extraction worked. This is a check for this four-line file; @sec-fasta-fastq
+does it with format-aware tools.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Summarise the annotation.** Using `cut`, `sort`,
+`uniq -c`, and `awk -F'\t'` on `data/ref/genes.gtf.gz`, and
+@fig-awk-fields for the column numbers, find: the feature types and
+their counts; the sequence names and their counts; and the transcript
+lines per strand. Which line is on a sequence that is not in the
+genome? Note your commands and answers in `NOTEBOOK.md`.
+
+**Extension (optional).** GTF attributes are @sec-intervals-variants, so
+these two commands are supplied. Run them and say what each counts:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c data/ref/genes.gtf.gz | grep -o 'gene_id "[^"]*"' | sort -u | wc -l
+gunzip -c data/ref/genes.gtf.gz | awk -F'\t' '$3 == "transcript"' \
+  | grep -o 'gene_biotype "[^"]*"' | sort | uniq -c | sort -k1,1nr
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Feature types: the chapter's pipeline, `cut -f3 | sort | uniq -c |
+sort -k1,1nr`: 129 exon, 124 transcript, 118 CDS, 115 start_codon,
+114 stop_codon. Sequence names, `cut -f1 | sort | uniq -c`: 599 `I`,
+1 `not_in_genome`. Strands, `awk -F'\t' '$3 == "transcript"' | cut -f7 |
+sort | uniq -c`: 60 `-`, 64 `+`. The odd line is line 1 (`grep -n
+not_in_genome` prints `1:`), a CDS on `not_in_genome`.
+
+Extension: 124 distinct gene IDs; and the gene types of the transcripts:
+
+```{.console}
+124
+    116 gene_biotype "protein_coding"
+      4 gene_biotype "tRNA"
+      2 gene_biotype "pseudogene"
+      1 gene_biotype "ncRNA"
+      1 gene_biotype "snoRNA"
+```
+:::
+:::
+
+::: {.check}
+**Exercise 5. Regex practice on the sample sheet.** Write one `grep -E`
+that matches only the R2 file names in
+`data/meta/samplesheet_upstream.csv`, and count them. Then write one
+`awk -F,` command that prints the sample labels of the single-end rows,
+those with an empty `fastq_2` (column 3).
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.bash filename="Terminal (laptop)"}
+grep -Eo 'SRR[0-9]+_2\.fastq\.gz' data/meta/samplesheet_upstream.csv | wc -l
+awk -F, '$3 == "" {print $1}' data/meta/samplesheet_upstream.csv
+```
+
+```{.console}
+4
+RAP1_UNINDUCED_REP1
+RAP1_UNINDUCED_REP2
+RAP1_UNINDUCED_REP2
+```
+
+Four R2 files, one per paired-end run. `RAP1_UNINDUCED_REP2` appears
+twice because that sample has two single-end runs. Without `-o`, `grep -c`
+would count lines, which is also 4 here.
+:::
+:::
+
+::: {.check}
+**Exercise 6. Check with a second tool.** Count the R1 reads that
+contain the exact motif `AGATCGGAAGAGC`, first with `grep -c` on the
+sequence lines (as in @sec-text-tools-grep), then with seqkit:
+
+```{.bash filename="Terminal (laptop)"}
+pixi run seqkit grep -s -P -C -p AGATCGGAAGAGC data/raw/SRR6357070_1.fastq.gz
+```
+
+`-s` searches the sequences, `-P` the given (positive) strand only, `-p`
+gives the pattern, and `-C` counts the matching reads (seqkit's `-C`, not
+`grep`'s `-c`). Do the numbers agree? Then make a one-read file that holds
+only the **reverse complement** of the motif, and run both tools on it,
+and seqkit once more without `-P`:
+
+```{.bash filename="Terminal (laptop)"}
+printf '@rc\nGCTCTTCCGATCT\n+\nIIIIIIIIIIIII\n' > ~/bioinf-computing-ch06/revcomp.fastq
+awk 'NR % 4 == 2' ~/bioinf-computing-ch06/revcomp.fastq | grep -c AGATCGGAAGAGC
+pixi run seqkit grep -s -P -C -p AGATCGGAAGAGC ~/bioinf-computing-ch06/revcomp.fastq
+pixi run seqkit grep -s -C -p AGATCGGAAGAGC ~/bioinf-computing-ch06/revcomp.fastq
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+On R1 both give 1,916. On the toy file, `grep` gives 0 and seqkit with
+`-P` gives 0, but seqkit without `-P` gives 1: by default `seqkit grep
+-s` searches **both** strands, and the reverse complement of the motif is
+the motif read from the other strand. On the real files both settings
+give 1,916 (R1) and 1,910 (R2), so only the toy file shows the
+difference. A second tool is a real check only when you know what each
+one counts.
+:::
+:::
+
+## Further reading {#sec-text-tools-reading}
+
+- @shotts2025linux, *The Linux Command Line*, chapters on redirection,
+  regular expressions, and text processing --- the same tools with more
+  examples, at a gentler pace; free online.
+- @wilson2019swcarpentry, Software Carpentry's [*The Unix
+  Shell*](https://swcarpentry.github.io/shell-novice/), episodes "Pipes
+  and Filters" and "Finding Things" --- a second walk-through with
+  exercises, written for researchers.
+- @buffalo2015bioinformatics, *Bioinformatics Data Skills*, its chapter
+  on Unix data tools --- the closest match to this chapter in audience
+  and examples: genomic text files, `sort -k`, `join`, and `awk` on
+  annotation.
+- @gnu2025grep, the [GNU Grep
+  manual](https://www.gnu.org/software/grep/manual/), section *Regular
+  Expressions* --- short and exact on basic vs extended syntax. The
+  [GNU coreutils](https://www.gnu.org/software/coreutils/manual/),
+  [sed](https://www.gnu.org/software/sed/manual/), and
+  [gawk](https://www.gnu.org/software/gawk/manual/) manuals cover the
+  other tools, and [POSIX's
+  chapter](https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap09.html)
+  defines regular expressions formally.
+- @aho2023awk, *The AWK Programming Language*, 2nd edition --- by awk's
+  authors, for readers who want much more `awk`; optional.

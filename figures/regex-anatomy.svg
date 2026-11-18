@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 458" role="img" aria-labelledby="regex-anatomy-title">
+  <title id="regex-anatomy-title">The parts of the regular expression SRR[0-9]+_[12]\.fastq\.gz, and three strings tested against it. SRR, the underscore, fastq, and gz are literal characters. [0-9] matches one character from a class: any digit. The plus sign means one or more of the previous item, in grep -E. [12] matches one character: 1 or 2. Each \. is an escaped dot that matches a real dot. SRR6357070_1.fastq.gz matches. SRR6357070_3.fastq.gz does not match, because 3 is not in [12]. SRR6357070_1.fastqXgz does not match, because \. needs a real dot; without the backslash, the dot would match the X.</title>
+
+  <!-- Panel 1: the pattern -->
+  <rect x="10" y="10" width="700" height="240" rx="10" class="fill-surface stroke-line"/>
+  <text x="26" y="34" font-size="13" class="fill-muted">a regular expression, as given to <tspan class="mono">grep -E</tspan></text>
+
+  <!-- Each piece placed at its own x (monospace, 15.6 units per character) -->
+  <g font-size="26" class="mono">
+    <text x="165" y="110">SRR</text>
+    <text x="211.8" y="110" font-weight="700">[0-9]</text>
+    <text x="289.8" y="110" font-weight="700">+</text>
+    <text x="305.4" y="110">_</text>
+    <text x="321" y="110" font-weight="700">[12]</text>
+    <text x="383.4" y="110" font-weight="700">\.</text>
+    <text x="414.6" y="110">fastq</text>
+    <text x="492.6" y="110" font-weight="700">\.</text>
+    <text x="523.8" y="110">gz</text>
+  </g>
+
+  <!-- Literal pieces: brackets above -->
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M167 84 v-6 h43 v6"/>
+    <path d="M307 84 v-6 h13 v6"/>
+    <path d="M417 84 v-6 h74 v6"/>
+    <path d="M526 84 v-6 h27 v6"/>
+  </g>
+  <g font-size="13" class="fill-muted" text-anchor="middle">
+    <text x="188.5" y="68">literal characters</text>
+    <text x="313.5" y="68">literal</text>
+    <text x="454" y="68">literal</text>
+    <text x="539.5" y="68">literal</text>
+  </g>
+
+  <!-- Special pieces: brackets below, with leader lines -->
+  <g class="stroke-ink" stroke-width="1.5" fill="none">
+    <path d="M214 118 v6 h74 v-6"/>
+    <path d="M291 118 v6 h13 v-6"/>
+    <path d="M323 118 v6 h58 v-6"/>
+    <path d="M385 118 v6 h28 v-6"/>
+    <path d="M494 118 v6 h28 v-6"/>
+  </g>
+  <g class="stroke-muted" stroke-width="1" fill="none">
+    <path d="M399 124 V140 H556"/>
+    <path d="M508 124 V140"/>
+    <path d="M352 124 V172 H360"/>
+    <path d="M297.5 124 V200 H306"/>
+    <path d="M251 124 V228 H259"/>
+  </g>
+  <g font-size="13">
+    <text x="562" y="144">escaped dot: a real <tspan class="mono" font-weight="700">.</tspan></text>
+    <text x="562" y="162" class="fill-muted">(both <tspan class="mono">\.</tspan> pieces)</text>
+    <text x="364" y="176">one character: <tspan class="mono">1</tspan> or <tspan class="mono">2</tspan></text>
+    <text x="310" y="204">one or more of the previous item (<tspan class="mono">grep -E</tspan>)</text>
+    <text x="263" y="232">one character from a class: any digit</text>
+  </g>
+
+  <!-- Panel 2: three strings tested -->
+  <rect x="10" y="264" width="700" height="186" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="290" font-size="13" class="fill-muted">three strings tested against it</text>
+
+  <!-- Row 1: match -->
+  <rect x="48" y="309" width="205" height="26" rx="5" class="fill-good-soft stroke-good"/>
+  <text x="56" y="327" font-size="15" class="mono">SRR6357070_1.fastq.gz</text>
+  <text x="272" y="327" font-size="13" font-weight="700" class="fill-good">✓ match</text>
+
+  <!-- Row 2: 3 is not in [12] -->
+  <rect x="152" y="355" width="15" height="24" rx="3" class="fill-muted-soft stroke-muted"/>
+  <g font-size="15" class="mono">
+    <text x="56" y="372">SRR6357070_</text>
+    <text x="155" y="372" font-weight="700">3</text>
+    <text x="164" y="372">.fastq.gz</text>
+  </g>
+  <text x="272" y="372" font-size="13"><tspan font-weight="700">✗ no match:</tspan> <tspan class="mono">3</tspan> is not in <tspan class="mono">[12]</tspan></text>
+
+  <!-- Row 3: X is not a dot -->
+  <rect x="215" y="399" width="15" height="24" rx="3" class="fill-muted-soft stroke-muted"/>
+  <g font-size="15" class="mono">
+    <text x="56" y="416">SRR6357070_1.fastq</text>
+    <text x="218" y="416" font-weight="700">X</text>
+    <text x="227" y="416">gz</text>
+  </g>
+  <text x="272" y="416" font-size="13"><tspan font-weight="700">✗ no match:</tspan> <tspan class="mono">\.</tspan> needs a real dot</text>
+  <text x="272" y="434" font-size="13" class="fill-muted">(without the backslash, <tspan class="mono">.</tspan> would match <tspan class="mono">X</tspan>)</text>
+</svg>

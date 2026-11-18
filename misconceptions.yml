@@ -49,7 +49,7 @@
     You have just logged in to the cluster. Where should an alignment of
     48 samples run, and how do you get it there? (Correct: on compute nodes,
     by submitting a job to the scheduler.)
-  chapters: [10-hpc-slurm, 01-orientation, 09-working-remotely]
+  chapters: [10-hpc-slurm, 01-orientation, 07-linux-system, 09-working-remotely]
 
 - id: ram-is-disk
   claim: "RAM and disk storage are the same thing."
@@ -113,7 +113,7 @@
     sudoers file". What do you do? (Correct: install it into your own
     environment with pixi or conda, or use the site's module; not ask for
     sudo.)
-  chapters: [02-book-setup, 23-environments]
+  chapters: [02-book-setup, 07-linux-system, 23-environments]
 
 - id: remote-runs-on-laptop
   claim: "With VS Code connected to the cluster, my code runs on my laptop."
@@ -264,11 +264,15 @@
 - id: readonly-cant-delete
   claim: "A read-only file can't be deleted."
   reality: >
-    Deleting, moving, and adding files are controlled by the folder's
-    permissions. Protect the folder as well as the files.
+    Deleting, moving, and adding files change the folder, so they need
+    `w` and `x` on the folder; the file's own permissions do not matter.
+    Protect the folder as well as the files.
   probe: >
     A file is read-only but its folder is writable. Does `rm -f file`
-    remove it? (Correct: yes.)
+    remove it? (Correct: yes.) Second probe: a folder you own is
+    `drw-r--r--` (no `x`); can you `cat` a readable file inside it?
+    (Correct: no; without `x` you can list the names but not reach the
+    entries.)
   chapters: [07-linux-system, 03-organizing-projects]
 
 - id: cluster-is-backed-up
@@ -442,3 +446,74 @@
     Does `grep 'fastq.gz'` match `fastqXgz`? (Correct: yes; `.` matches
     any character. Use `'fastq\.gz'` or `grep -F`.)
   chapters: [06-text-tools, 05-shell-basics]
+
+- id: chmod-777-fixes
+  claim: "When I get `Permission denied`, `chmod 777` (or `sudo`) is the fix."
+  reality: >
+    It removes protection for everyone and hides which permission was
+    missing. Read the permission string and change only the missing
+    letter. On a cluster `sudo` is not available.
+  probe: >
+    `./run.sh` says `Permission denied` and `ls -l` shows `-rw-r--r--`.
+    What is the smallest fix? (Correct: `chmod u+x run.sh`.)
+  chapters: [07-linux-system]
+
+- id: script-needs-bash
+  claim: "To run a script I must type `bash script.sh`."
+  reality: >
+    With a shebang line and the `x` bit a script runs as `./script.sh`,
+    and by name once its folder is on `PATH`. `bash script.sh` ignores the
+    shebang, so it runs anything as bash.
+  probe: >
+    `plot.py` starts with `#!/usr/bin/env python3`. What happens with
+    `bash plot.py`? (Correct: bash tries to read Python as shell commands
+    and fails; run `./plot.py` or `python3 plot.py`.)
+  chapters: [07-linux-system, 08-shell-scripts]
+
+- id: which-is-enough
+  claim: "`which` tells me exactly what will run."
+  reality: >
+    `which` is a separate program whose versions differ, and it does not
+    know bash's aliases or functions, which come before `PATH`. Bash's
+    `type -a` shows what bash will run, in order.
+  probe: >
+    On Ubuntu, `which ls` prints `/usr/bin/ls`. What does typing `ls`
+    actually run? (Correct: the alias `ls --color=auto`, as `type -a ls`
+    shows.)
+  chapters: [07-linux-system]
+
+- id: export-is-permanent
+  claim: "Once I `export` a variable, it stays set."
+  reality: >
+    It lasts for that shell and the programs it starts. A separately
+    opened terminal does not see it; put the line in `~/.bashrc` for every
+    new terminal.
+  probe: >
+    You run `export THREADS=4`, then open a second terminal. What does
+    `echo "$THREADS"` print there? (Correct: an empty line.)
+  chapters: [07-linux-system]
+
+- id: closed-window-decides
+  claim: "Closing the terminal window decides whether my command keeps running."
+  reality: >
+    Neither "it keeps going" nor "it always stops" is safe: it depends on
+    how the program was started and how it handles signals. Long work
+    belongs in tmux or a scheduler job; check with `ps -u "$USER"`.
+  probe: >
+    You start a 3-hour command over SSH and your laptop sleeps. Is it still
+    running? (Correct: do not count on it either way; run it in tmux or as
+    a job.)
+  chapters: [07-linux-system, 09-working-remotely, 10-hpc-slurm]
+
+- id: csv-is-csv
+  claim: "A CSV file is a CSV file; where it was saved doesn't matter."
+  reality: >
+    The program and system that saved it decide its line endings (and
+    whether it starts with a byte-order mark). With CRLF endings a `\r`
+    sticks to the last field, so shell matches and comparisons on it fail
+    silently.
+  probe: >
+    A sample sheet looks right in `cat`, but `grep -c ',30$'` finds 0
+    rows you can see. What do you check first? (Correct: `cat -A` for
+    `^M`, or `grep -c $'\r'`.)
+  chapters: [07-linux-system, 14-tabular-data]

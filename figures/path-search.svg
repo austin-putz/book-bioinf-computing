@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 444" role="img" aria-labelledby="path-search-title"
+     data-step-labels="Not found|pixi run|Two copies|type -a">
+  <title id="path-search-title">How the shell finds a command on PATH, in four steps. PATH is a list of folders, searched from the top down: /home/you/.pixi/bin, /usr/local/bin, /usr/bin, /bin. 1: in a plain terminal no folder holds seqkit, and the shell prints bash: seqkit: command not found (exit status 127). 2: pixi run puts the project environment's folder, /home/you/bioinf-computing/.pixi/envs/default/bin, on top, and seqkit is found there. 3: an old copy of seqkit in /home/you/bin sits above it on PATH; the first match wins, so the old copy runs and the environment's copy is never reached. 4: type -a seqkit lists every match in PATH order: seqkit is /home/you/bin/seqkit, then seqkit is /home/you/bioinf-computing/.pixi/envs/default/bin/seqkit.</title>
+  <desc data-caption="1">In a plain terminal the shell looks for seqkit in each PATH folder, top to bottom. None holds it, so you get command not found (exit status 127).</desc>
+  <desc data-caption="2">pixi run puts the project environment's bin folder at the top of PATH, so the shell finds seqkit there first.</desc>
+  <desc data-caption="3">An old copy in /home/you/bin sits higher on PATH. The search stops at the first match, so the old copy runs and the environment's copy is never reached.</desc>
+  <desc data-caption="4">type -a seqkit lists every match in PATH order, so you can see which copy runs (the first line) and which ones are hidden behind it.</desc>
+  <defs>
+    <marker id="path-search-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Heading -->
+  <text x="26" y="30" font-size="13" font-weight="700">The shell looks for <tspan class="mono">seqkit</tspan> in each <tspan class="mono">PATH</tspan> folder, top to bottom</text>
+  <text x="26" y="50" font-size="13" class="fill-muted">the first folder that holds it wins; the search stops there</text>
+
+  <!-- Search order -->
+  <text x="40" y="90" font-size="12" class="fill-muted">first</text>
+  <path d="M100,72 V304" class="stroke-muted" stroke-width="1.5" marker-end="url(#path-search-arrow)"/>
+  <text x="40" y="300" font-size="12" class="fill-muted">last</text>
+
+  <!-- Row 1: /home/you/bin (step 3 on) -->
+  <g data-show="3">
+    <rect x="130" y="68" width="410" height="34" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+    <text x="144" y="90" font-size="13" class="mono">/home/you/bin</text>
+    <text x="526" y="90" font-size="12" text-anchor="end" class="fill-muted">your own folder</text>
+    <rect x="552" y="70" width="156" height="30" rx="6" class="fill-warn-soft stroke-warn"/>
+    <text x="630" y="90" font-size="12" text-anchor="middle" class="fill-warn">✓ old copy: this runs</text>
+  </g>
+
+  <!-- Row 2: project environment (step 2 on) -->
+  <g data-show="2">
+    <rect x="130" y="110" width="410" height="34" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+    <text x="144" y="132" font-size="13" class="mono">/home/you/bioinf-computing/.pixi/envs/default/bin</text>
+  </g>
+  <g data-show="2" data-hide="3">
+    <rect x="552" y="112" width="156" height="30" rx="6" class="fill-good-soft stroke-good"/>
+    <text x="630" y="132" font-size="12" text-anchor="middle">✓ found: this runs</text>
+  </g>
+  <g data-show="3">
+    <text x="560" y="125" font-size="12" class="fill-muted">seqkit here too, but</text>
+    <text x="560" y="140" font-size="12" class="fill-muted">never reached</text>
+  </g>
+
+  <!-- Rows 3-6: the usual PATH -->
+  <g class="fill-surface stroke-line" stroke-width="1.25">
+    <rect x="130" y="152" width="410" height="34" rx="6"/>
+    <rect x="130" y="194" width="410" height="34" rx="6"/>
+    <rect x="130" y="236" width="410" height="34" rx="6"/>
+    <rect x="130" y="278" width="410" height="34" rx="6"/>
+  </g>
+  <g font-size="13" class="mono">
+    <text x="144" y="174">/home/you/.pixi/bin</text>
+    <text x="144" y="216">/usr/local/bin</text>
+    <text x="144" y="258">/usr/bin</text>
+    <text x="144" y="300">/bin</text>
+  </g>
+  <g data-show="1" data-hide="2" font-size="12" class="fill-muted">
+    <text x="560" y="174">✗ no seqkit</text>
+    <text x="560" y="216">✗ no seqkit</text>
+    <text x="560" y="258">✗ no seqkit</text>
+    <text x="560" y="300">✗ no seqkit</text>
+  </g>
+  <g data-show="2" font-size="12" class="fill-muted">
+    <text x="560" y="174">not searched</text>
+    <text x="560" y="216">not searched</text>
+    <text x="560" y="258">not searched</text>
+    <text x="560" y="300">not searched</text>
+  </g>
+
+  <!-- Terminal -->
+  <rect x="10" y="326" width="700" height="108" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="346" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <g data-show="1" data-hide="2">
+    <text x="26" y="370" font-size="13" class="mono">seqkit</text>
+    <text x="26" y="390" font-size="13" class="mono fill-warn">bash: seqkit: command not found</text>
+    <text x="694" y="370" font-size="12" text-anchor="end" class="fill-muted">a plain terminal, outside the project</text>
+    <text x="694" y="390" font-size="12" text-anchor="end" class="fill-muted">exit 127</text>
+  </g>
+  <g data-show="2" data-hide="3">
+    <text x="26" y="370" font-size="13" class="mono">pixi run seqkit</text>
+    <text x="26" y="390" font-size="13" class="fill-muted">runs <tspan class="mono">/home/you/bioinf-computing/.pixi/envs/default/bin/seqkit</tspan></text>
+  </g>
+  <g data-show="3" data-hide="4">
+    <text x="26" y="370" font-size="13" class="mono">seqkit</text>
+    <text x="26" y="390" font-size="13" class="fill-warn">runs <tspan class="mono">/home/you/bin/seqkit</tspan>: the old copy, not the project's</text>
+  </g>
+  <g data-show="4">
+    <text x="26" y="370" font-size="13" class="mono">type -a seqkit</text>
+    <text x="26" y="390" font-size="13" class="mono fill-muted">seqkit is /home/you/bin/seqkit</text>
+    <text x="26" y="410" font-size="13" class="mono fill-muted">seqkit is /home/you/bioinf-computing/.pixi/envs/default/bin/seqkit</text>
+    <text x="694" y="390" font-size="12" text-anchor="end" class="fill-warn">1st: this one runs</text>
+    <text x="694" y="410" font-size="12" text-anchor="end" class="fill-muted">2nd: hidden</text>
+  </g>
+</svg>

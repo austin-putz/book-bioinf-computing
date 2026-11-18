@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 352" role="img" aria-labelledby="process-states-title">
+  <title id="process-states-title">The life of a process started from the shell, as a state diagram, using sleep 300. Typed as is, it runs in the foreground and holds the terminal; typed as sleep 300 &amp;, it starts in the background and the prompt comes back. Ctrl-Z stops a foreground process: it is paused but still holds its memory. From stopped, fg brings it back to the foreground and bg lets it run in the background; fg also brings a background job to the foreground. A process ends with Ctrl-C (sends SIGINT, which asks it to stop; reaches only the foreground), kill (sends SIGTERM, which also asks), or kill -9 (sends SIGKILL, which forces it and cannot be caught). kill and kill -9 work on any job. The shell is the parent of every job it starts.</title>
+  <defs>
+    <marker id="process-states-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+    <marker id="process-states-arrow-warn" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-warn"/>
+    </marker>
+  </defs>
+
+  <!-- Start -->
+  <text x="71" y="142" font-size="12" text-anchor="middle" class="fill-muted">you type</text>
+  <rect x="16" y="150" width="110" height="36" rx="18" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="71" y="173" font-size="13" text-anchor="middle" class="mono">sleep 300</text>
+  <text x="16" y="214" font-size="12" class="fill-muted">the shell (bash) is</text>
+  <text x="16" y="230" font-size="12" class="fill-muted">the parent of every job</text>
+
+  <!-- States -->
+  <rect x="180" y="50" width="140" height="52" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"/>
+  <text x="250" y="72" font-size="13" font-weight="700" text-anchor="middle">Foreground</text>
+  <text x="250" y="90" font-size="12" text-anchor="middle" class="fill-muted">holds the terminal</text>
+
+  <rect x="390" y="146" width="120" height="52" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"/>
+  <text x="450" y="168" font-size="13" font-weight="700" text-anchor="middle">Background</text>
+  <text x="450" y="186" font-size="12" text-anchor="middle" class="fill-muted">runs; prompt free</text>
+
+  <rect x="180" y="240" width="140" height="52" rx="8" class="fill-warn-soft stroke-warn" stroke-width="1.5"/>
+  <text x="250" y="262" font-size="13" font-weight="700" text-anchor="middle" class="fill-warn">Stopped</text>
+  <text x="250" y="280" font-size="12" text-anchor="middle" class="fill-muted">paused</text>
+  <text x="250" y="310" font-size="12" text-anchor="middle" class="fill-warn">still holds its memory</text>
+
+  <rect x="600" y="146" width="104" height="52" rx="8" class="fill-muted-soft stroke-muted" stroke-width="1.5"/>
+  <text x="652" y="168" font-size="13" font-weight="700" text-anchor="middle">Ended</text>
+  <text x="652" y="186" font-size="12" text-anchor="middle" class="fill-muted">process exits</text>
+
+  <!-- Start arrows -->
+  <path d="M110,152 L190,104" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="112" y="116" font-size="12" class="fill-muted">as is</text>
+  <path d="M128,172 H386" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="338" y="164" font-size="13" text-anchor="middle" class="mono">sleep 300 &amp;</text>
+
+  <!-- Foreground <-> Stopped -->
+  <path d="M225,104 V236" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="218" y="140" font-size="13" text-anchor="end" class="mono">Ctrl-Z</text>
+  <path d="M275,238 V106" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="282" y="140" font-size="13" class="mono">fg</text>
+
+  <!-- Background -> Foreground, Stopped -> Background -->
+  <path d="M396,144 L324,98" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="364" y="114" font-size="13" class="mono">fg</text>
+  <path d="M324,246 L398,200" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="366" y="240" font-size="13" class="mono">bg</text>
+
+  <!-- To Ended -->
+  <path d="M322,62 H652 V142" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="470" y="54" font-size="13" text-anchor="middle"><tspan class="mono">Ctrl-C</tspan> <tspan font-size="12" class="fill-muted">SIGINT: asks</tspan></text>
+
+  <path d="M512,172 H596" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#process-states-arrow)"/>
+  <text x="555" y="164" font-size="13" text-anchor="middle" class="mono">kill</text>
+  <text x="555" y="190" font-size="12" text-anchor="middle" class="fill-muted">SIGTERM:</text>
+  <text x="555" y="204" font-size="12" text-anchor="middle" class="fill-muted">asks</text>
+
+  <path d="M322,276 H652 V202" fill="none" class="stroke-warn" stroke-width="2" marker-end="url(#process-states-arrow-warn)"/>
+  <text x="490" y="294" font-size="13" text-anchor="middle" class="fill-warn"><tspan class="mono" font-weight="700">kill -9</tspan> <tspan font-size="12">SIGKILL: forces</tspan></text>
+
+  <!-- Note -->
+  <text x="16" y="340" font-size="12" class="fill-muted"><tspan class="mono">kill</tspan> and <tspan class="mono">kill -9</tspan> work on any job; <tspan class="mono">Ctrl-C</tspan> reaches only the foreground.</text>
+</svg>

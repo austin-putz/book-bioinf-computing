@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" role="img" aria-labelledby="permission-string-title">
+  <title id="permission-string-title">Reading a permission string, part by part. Two examples: drwxr-x--- (a folder) and -rw-r--r-- (a file). The first character is the type: d for a folder, a dash for a file. The next nine characters are three triplets, for the user who owns the file, for its group, and for everyone else (other). In each triplet the places are r, w, and x, and a dash means that permission is off. Each letter is worth a number, r 4, w 2, x 1, and a dash 0; adding them gives one octal digit per triplet. drwxr-x--- gives 4+2+1 = 7, 4+0+1 = 5, and 0, so 750. -rw-r--r-- gives 4+2+0 = 6, 4, and 4, so 644. Below, what the letters mean. On a folder: r lists the names, x reaches the entries and lets you go inside, w adds, removes, and renames entries (and needs x too). On a file: r reads the contents, w changes the contents, x runs it.</title>
+
+  <!-- Panel: the two strings -->
+  <rect x="10" y="10" width="700" height="290" rx="10" class="fill-surface stroke-line"/>
+
+  <!-- Column headings and brackets -->
+  <g font-size="13" font-weight="700" text-anchor="middle">
+    <text x="167" y="34">type</text>
+    <text x="249" y="34">user (owner)</text>
+    <text x="365" y="34">group</text>
+    <text x="481" y="34">other</text>
+  </g>
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M152 46 v-5 h30 v5"/>
+    <path d="M200 46 v-5 h98 v5"/>
+    <path d="M316 46 v-5 h98 v5"/>
+    <path d="M432 46 v-5 h98 v5"/>
+  </g>
+  <g font-size="12" text-anchor="middle" class="mono fill-muted">
+    <text x="215" y="66">r</text><text x="249" y="66">w</text><text x="283" y="66">x</text>
+    <text x="331" y="66">r</text><text x="365" y="66">w</text><text x="399" y="66">x</text>
+    <text x="447" y="66">r</text><text x="481" y="66">w</text><text x="515" y="66">x</text>
+  </g>
+
+  <!-- Key -->
+  <rect x="566" y="26" width="18" height="18" rx="3" class="fill-good-soft stroke-good"/>
+  <text x="592" y="40" font-size="12">permission on</text>
+  <rect x="566" y="52" width="18" height="18" rx="3" class="fill-surface stroke-line"/>
+  <text x="575" y="66" font-size="12" text-anchor="middle" class="mono fill-muted">-</text>
+  <text x="592" y="66" font-size="12">off</text>
+
+  <!-- Row 1: the folder string -->
+  <text x="26" y="104" font-size="15" font-weight="700" class="mono">drwxr-x---</text>
+  <text x="26" y="124" font-size="13" class="fill-muted">a folder</text>
+
+  <rect x="150" y="80" width="34" height="36" rx="5" class="fill-muted-soft stroke-muted"/>
+  <g class="fill-good-soft stroke-good">
+    <rect x="198" y="80" width="34" height="36" rx="5"/>
+    <rect x="232" y="80" width="34" height="36" rx="5"/>
+    <rect x="266" y="80" width="34" height="36" rx="5"/>
+    <rect x="314" y="80" width="34" height="36" rx="5"/>
+    <rect x="382" y="80" width="34" height="36" rx="5"/>
+  </g>
+  <g class="fill-surface stroke-line">
+    <rect x="348" y="80" width="34" height="36" rx="5"/>
+    <rect x="430" y="80" width="34" height="36" rx="5"/>
+    <rect x="464" y="80" width="34" height="36" rx="5"/>
+    <rect x="498" y="80" width="34" height="36" rx="5"/>
+  </g>
+  <g font-size="18" font-weight="700" text-anchor="middle" class="mono">
+    <text x="167" y="104">d</text>
+    <text x="215" y="104">r</text><text x="249" y="104">w</text><text x="283" y="104">x</text>
+    <text x="331" y="104">r</text><text x="365" y="104" class="fill-muted">-</text><text x="399" y="104">x</text>
+    <text x="447" y="104" class="fill-muted">-</text><text x="481" y="104" class="fill-muted">-</text><text x="515" y="104" class="fill-muted">-</text>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="215" y="134">4</text><text x="249" y="134">2</text><text x="283" y="134">1</text>
+    <text x="331" y="134">4</text><text x="365" y="134">0</text><text x="399" y="134">1</text>
+    <text x="447" y="134">0</text><text x="481" y="134">0</text><text x="515" y="134">0</text>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="232" y="134">+</text><text x="266" y="134">+</text>
+    <text x="348" y="134">+</text><text x="382" y="134">+</text>
+    <text x="464" y="134">+</text><text x="498" y="134">+</text>
+  </g>
+  <g font-size="18" font-weight="700" text-anchor="middle" class="mono">
+    <text x="249" y="162">7</text>
+    <text x="365" y="162">5</text>
+    <text x="481" y="162">0</text>
+  </g>
+  <text x="566" y="162" font-size="18" class="mono">= <tspan font-weight="700">750</tspan></text>
+
+  <!-- Row 2: the file string -->
+  <line x1="26" y1="182" x2="694" y2="182" class="stroke-line" stroke-dasharray="4 4"/>
+  <text x="26" y="224" font-size="15" font-weight="700" class="mono">-rw-r--r--</text>
+  <text x="26" y="244" font-size="13" class="fill-muted">a file</text>
+
+  <rect x="150" y="200" width="34" height="36" rx="5" class="fill-muted-soft stroke-muted"/>
+  <g class="fill-good-soft stroke-good">
+    <rect x="198" y="200" width="34" height="36" rx="5"/>
+    <rect x="232" y="200" width="34" height="36" rx="5"/>
+    <rect x="314" y="200" width="34" height="36" rx="5"/>
+    <rect x="430" y="200" width="34" height="36" rx="5"/>
+  </g>
+  <g class="fill-surface stroke-line">
+    <rect x="266" y="200" width="34" height="36" rx="5"/>
+    <rect x="348" y="200" width="34" height="36" rx="5"/>
+    <rect x="382" y="200" width="34" height="36" rx="5"/>
+    <rect x="464" y="200" width="34" height="36" rx="5"/>
+    <rect x="498" y="200" width="34" height="36" rx="5"/>
+  </g>
+  <g font-size="18" font-weight="700" text-anchor="middle" class="mono">
+    <text x="167" y="224">-</text>
+    <text x="215" y="224">r</text><text x="249" y="224">w</text><text x="283" y="224" class="fill-muted">-</text>
+    <text x="331" y="224">r</text><text x="365" y="224" class="fill-muted">-</text><text x="399" y="224" class="fill-muted">-</text>
+    <text x="447" y="224">r</text><text x="481" y="224" class="fill-muted">-</text><text x="515" y="224" class="fill-muted">-</text>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="215" y="254">4</text><text x="249" y="254">2</text><text x="283" y="254">0</text>
+    <text x="331" y="254">4</text><text x="365" y="254">0</text><text x="399" y="254">0</text>
+    <text x="447" y="254">4</text><text x="481" y="254">0</text><text x="515" y="254">0</text>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="232" y="254">+</text><text x="266" y="254">+</text>
+    <text x="348" y="254">+</text><text x="382" y="254">+</text>
+    <text x="464" y="254">+</text><text x="498" y="254">+</text>
+  </g>
+  <g font-size="18" font-weight="700" text-anchor="middle" class="mono">
+    <text x="249" y="282">6</text>
+    <text x="365" y="282">4</text>
+    <text x="481" y="282">4</text>
+  </g>
+  <text x="566" y="282" font-size="18" class="mono">= <tspan font-weight="700">644</tspan></text>
+
+  <!-- Panel: on a folder -->
+  <rect x="10" y="314" width="343" height="146" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="340" font-size="13" font-weight="700">On a folder</text>
+  <g class="fill-good-soft stroke-good">
+    <rect x="26" y="352" width="22" height="22" rx="4"/>
+    <rect x="26" y="382" width="22" height="22" rx="4"/>
+    <rect x="26" y="412" width="22" height="22" rx="4"/>
+  </g>
+  <g font-size="14" font-weight="700" text-anchor="middle" class="mono">
+    <text x="37" y="368">r</text>
+    <text x="37" y="398">x</text>
+    <text x="37" y="428">w</text>
+  </g>
+  <g font-size="13">
+    <text x="60" y="368">list the names</text>
+    <text x="60" y="398">reach the entries, go inside</text>
+    <text x="60" y="428">add, remove, rename entries</text>
+    <text x="60" y="446" font-size="12" class="fill-muted">(needs <tspan class="mono">x</tspan> too)</text>
+  </g>
+
+  <!-- Panel: on a file -->
+  <rect x="367" y="314" width="343" height="146" rx="10" fill="none" class="stroke-line"/>
+  <text x="383" y="340" font-size="13" font-weight="700">On a file</text>
+  <g class="fill-good-soft stroke-good">
+    <rect x="383" y="352" width="22" height="22" rx="4"/>
+    <rect x="383" y="382" width="22" height="22" rx="4"/>
+    <rect x="383" y="412" width="22" height="22" rx="4"/>
+  </g>
+  <g font-size="14" font-weight="700" text-anchor="middle" class="mono">
+    <text x="394" y="368">r</text>
+    <text x="394" y="398">w</text>
+    <text x="394" y="428">x</text>
+  </g>
+  <g font-size="13">
+    <text x="417" y="368">read the contents</text>
+    <text x="417" y="398">change the contents</text>
+    <text x="417" y="428">run it</text>
+  </g>
+</svg>

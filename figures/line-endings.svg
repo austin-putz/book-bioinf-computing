@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 470" role="img" aria-labelledby="line-endings-title">
+  <title id="line-endings-title">Line endings, and why a Windows-saved CSV breaks a pattern match. Top, the same last line of a table, ending in the bytes 3 and 0: as TSV with Unix endings, sample_B, tab, run2, tab, control, tab, 30 ends in one byte, \n (line feed); as CSV saved on Windows, sample_B,run2,control,30 ends in two bytes, \r\n, where \r (carriage return) is the extra one. Middle, cat shows both lines clean, because \r is invisible; cat -A shows tabs as ^I, \r as ^M, and each line end as $, giving sample_B^Irun2^Icontrol^I30$ and sample_B,run2,control,30^M$. Bottom, how a command splits the CSV line into fields: field 2, run2, is clean, but the last field is 30\r, not 30, so grep ',30$' finds 0 lines.</title>
+
+  <!-- Panel 1: bytes -->
+  <rect x="10" y="10" width="700" height="154" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="34" font-size="13" font-weight="700">1 · The same last line, with the bytes at its end</text>
+
+  <!-- TSV row -->
+  <text x="26" y="78" font-size="13" font-weight="700">TSV</text>
+  <text x="26" y="94" font-size="12" class="fill-muted">Linux, macOS</text>
+  <text x="114" y="80" font-size="15" class="mono">sample_B<tspan class="fill-muted">⇥</tspan>run2<tspan class="fill-muted">⇥</tspan>control<tspan class="fill-muted">⇥</tspan></text>
+  <g class="fill-given-soft stroke-given">
+    <rect x="316" y="58" width="32" height="32" rx="4"/>
+    <rect x="352" y="58" width="32" height="32" rx="4"/>
+  </g>
+  <rect x="388" y="58" width="32" height="32" rx="4" class="fill-surface stroke-ink"/>
+  <g font-size="15" text-anchor="middle" class="mono">
+    <text x="332" y="80">3</text>
+    <text x="368" y="80">0</text>
+    <text x="404" y="80" font-weight="700">\n</text>
+  </g>
+  <text x="470" y="72" font-size="12"><tspan class="mono">\n</tspan> = LF, line feed:</text>
+  <text x="470" y="87" font-size="12" class="fill-muted">one byte ends the line</text>
+
+  <!-- CSV row -->
+  <text x="26" y="132" font-size="13" font-weight="700">CSV</text>
+  <text x="26" y="148" font-size="12" class="fill-muted">saved on Windows</text>
+  <text x="114" y="134" font-size="15" class="mono">sample_B,run2,control,</text>
+  <g class="fill-given-soft stroke-given">
+    <rect x="316" y="112" width="32" height="32" rx="4"/>
+    <rect x="352" y="112" width="32" height="32" rx="4"/>
+  </g>
+  <rect x="388" y="112" width="32" height="32" rx="4" class="fill-warn-soft stroke-warn" stroke-width="2"/>
+  <rect x="424" y="112" width="32" height="32" rx="4" class="fill-surface stroke-ink"/>
+  <g font-size="15" text-anchor="middle" class="mono">
+    <text x="332" y="134">3</text>
+    <text x="368" y="134">0</text>
+    <text x="404" y="134" font-weight="700" class="fill-warn">\r</text>
+    <text x="440" y="134" font-weight="700">\n</text>
+  </g>
+  <text x="470" y="126" font-size="12"><tspan class="mono">\r\n</tspan> = CRLF: <tspan class="fill-warn"><tspan class="mono">\r</tspan>, carriage return,</tspan></text>
+  <text x="470" y="141" font-size="12" class="fill-warn">is an extra, invisible byte</text>
+
+  <!-- Panel 2: what you see -->
+  <rect x="10" y="176" width="700" height="132" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="200" font-size="13" font-weight="700">2 · What you see</text>
+  <text x="114" y="226" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">CAT FILE</text>
+  <text x="414" y="226" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">CAT -A FILE</text>
+
+  <text x="26" y="252" font-size="13" font-weight="700">TSV</text>
+  <text x="114" y="252" font-size="13" class="mono" xml:space="preserve">sample_B        run2    control 30</text>
+  <text x="414" y="252" font-size="13" class="mono">sample_B<tspan class="fill-muted">^I</tspan>run2<tspan class="fill-muted">^I</tspan>control<tspan class="fill-muted">^I</tspan>30<tspan class="fill-muted">$</tspan></text>
+
+  <text x="26" y="276" font-size="13" font-weight="700">CSV</text>
+  <text x="114" y="276" font-size="13" class="mono">sample_B,run2,control,30</text>
+  <text x="414" y="276" font-size="13" class="mono">sample_B,run2,control,30<tspan class="fill-warn" font-weight="700">^M</tspan><tspan class="fill-muted">$</tspan></text>
+
+  <text x="114" y="298" font-size="12" class="fill-muted">both look clean: <tspan class="mono">\r</tspan> prints nothing</text>
+  <text x="414" y="298" font-size="12" class="fill-muted"><tspan class="mono">^I</tspan> tab · <tspan class="mono fill-warn">^M</tspan> <tspan class="mono">\r</tspan> · <tspan class="mono">$</tspan> end of line</text>
+
+  <!-- Panel 3: what a command reads -->
+  <rect x="10" y="320" width="700" height="140" rx="10" fill="none" class="stroke-line"/>
+  <text x="26" y="344" font-size="13" font-weight="700">3 · What a command reads from the CSV line</text>
+
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="159" y="364">field 1</text>
+    <text x="246" y="364">field 2</text>
+    <text x="332" y="364">field 3</text>
+    <text x="424" y="364">field 4 (last)</text>
+  </g>
+  <rect x="114" y="370" width="90" height="32" rx="5" class="fill-given-soft stroke-given"/>
+  <rect x="216" y="370" width="60" height="32" rx="5" class="fill-good-soft stroke-good" stroke-width="1.5"/>
+  <rect x="288" y="370" width="88" height="32" rx="5" class="fill-given-soft stroke-given"/>
+  <rect x="388" y="370" width="72" height="32" rx="5" class="fill-warn-soft stroke-warn" stroke-width="2"/>
+  <g font-size="14" text-anchor="middle" class="mono">
+    <text x="159" y="391">sample_B</text>
+    <text x="246" y="391">run2</text>
+    <text x="332" y="391">control</text>
+    <text x="424" y="391">30<tspan class="fill-warn" font-weight="700">\r</tspan></text>
+  </g>
+  <g font-size="14" text-anchor="middle" class="mono fill-muted">
+    <text x="210" y="391">,</text>
+    <text x="282" y="391">,</text>
+    <text x="382" y="391">,</text>
+  </g>
+  <text x="246" y="420" font-size="12" text-anchor="middle" class="fill-good">✓ clean</text>
+  <text x="424" y="420" font-size="12" text-anchor="middle" class="fill-warn">✗ <tspan class="mono">30\r</tspan>, not <tspan class="mono">30</tspan></text>
+
+  <text x="114" y="446" font-size="13"><tspan class="mono">grep ',30$'</tspan> finds <tspan font-weight="700" class="fill-warn">0 lines</tspan><tspan class="fill-muted">: <tspan class="mono">$</tspan> wants the line to end right after <tspan class="mono">30</tspan>, but <tspan class="mono">\r</tspan> comes first</tspan></text>
+</svg>

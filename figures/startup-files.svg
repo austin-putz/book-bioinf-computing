@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="startup-files-title">
+  <title id="startup-files-title">Which startup files bash reads, by how it starts. An interactive login shell (an SSH login, the macOS Terminal, or bash --login) reads the first of ~/.bash_profile, ~/.bash_login, and ~/.profile that exists, and only that one. An interactive shell that is not a login shell (a new terminal on Ubuntu or WSL, or bash typed inside a shell) reads ~/.bashrc. ssh host command, which runs one command with no prompt, often reads ~/.bashrc too. A script, a non-interactive shell, reads no startup file (only the file named in BASH_ENV, if that is set). The book's setup has ~/.bash_profile read ~/.bashrc, as Ubuntu's ~/.profile already does, so every interactive shell ends up with the same settings.</title>
+  <defs>
+    <marker id="startup-files-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+    <marker id="startup-files-arrow-muted" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+    <marker id="startup-files-arrow-good" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-good"/>
+    </marker>
+  </defs>
+
+  <!-- Column headings -->
+  <text x="10" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">HOW BASH STARTS</text>
+  <text x="400" y="22" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">WHAT IT READS</text>
+
+  <g transform="translate(0,20)">
+    <!-- Left: four ways bash starts -->
+    <rect x="10" y="16" width="280" height="96" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="24" y="40" font-size="13" font-weight="700">Interactive login</text>
+    <text x="24" y="60" font-size="13" class="fill-muted">SSH login, macOS Terminal,</text>
+    <text x="24" y="78" font-size="13" class="fill-muted">or <tspan class="mono">bash --login</tspan></text>
+
+    <rect x="10" y="136" width="280" height="72" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="24" y="160" font-size="13" font-weight="700">Interactive, not login</text>
+    <text x="24" y="180" font-size="13" class="fill-muted">new Ubuntu or WSL terminal,</text>
+    <text x="24" y="198" font-size="13" class="fill-muted">or <tspan class="mono">bash</tspan> typed in a shell</text>
+
+    <rect x="10" y="228" width="280" height="64" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="24" y="252" font-size="13" font-weight="700" class="mono">ssh host command</text>
+    <text x="24" y="272" font-size="13" class="fill-muted">one command, no prompt</text>
+
+    <rect x="10" y="312" width="280" height="64" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="24" y="336" font-size="13" font-weight="700">Script <tspan font-weight="400" class="fill-muted">(non-interactive)</tspan></text>
+    <text x="24" y="356" font-size="13" class="mono fill-muted">bash script.sh</text>
+
+    <!-- Right: login files, first that exists -->
+    <rect x="392" y="16" width="236" height="150" rx="8" fill="none" class="stroke-line" stroke-dasharray="4 3"/>
+    <text x="404" y="32" font-size="12" class="fill-muted">first that exists of:</text>
+    <g class="fill-given-soft stroke-given" stroke-width="1.25">
+      <rect x="404" y="40" width="212" height="28" rx="6"/>
+      <rect x="404" y="86" width="212" height="28" rx="6"/>
+      <rect x="404" y="132" width="212" height="28" rx="6"/>
+    </g>
+    <g font-size="13" class="mono">
+      <text x="416" y="59">~/.bash_profile</text>
+      <text x="416" y="105">~/.bash_login</text>
+      <text x="416" y="151">~/.profile</text>
+    </g>
+    <g font-size="12" class="fill-muted">
+      <text x="510" y="81" text-anchor="middle">else ↓</text>
+      <text x="510" y="127" text-anchor="middle">else ↓</text>
+    </g>
+
+    <!-- ~/.bashrc -->
+    <rect x="404" y="196" width="212" height="28" rx="6" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+    <text x="416" y="215" font-size="13" class="mono" font-weight="700">~/.bashrc</text>
+
+    <!-- The book's setup: login files read ~/.bashrc -->
+    <g fill="none" class="stroke-good" stroke-width="2">
+      <path d="M618,54 H676 V210 H620" marker-end="url(#startup-files-arrow-good)"/>
+      <path d="M618,146 H676"/>
+    </g>
+    <circle cx="676" cy="146" r="3.5" class="fill-good"/>
+    <text x="404" y="246" font-size="13" font-weight="700" class="fill-good">✓ the book's setup: reads <tspan class="mono">~/.bashrc</tspan></text>
+    <text x="404" y="262" font-size="12" class="fill-muted">from <tspan class="mono">~/.bash_profile</tspan> (Ubuntu: <tspan class="mono">~/.profile</tspan>)</text>
+
+    <!-- Script: nothing -->
+    <text x="404" y="340" font-size="13" font-weight="700" class="fill-muted">no startup file</text>
+    <text x="404" y="358" font-size="12" class="fill-muted">(only <tspan class="mono">BASH_ENV</tspan>, if it is set)</text>
+
+    <!-- Arrows -->
+    <path d="M292,64 L388,90" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#startup-files-arrow)"/>
+    <path d="M292,172 L400,206" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#startup-files-arrow)"/>
+    <path d="M292,260 L400,218" fill="none" class="stroke-muted" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#startup-files-arrow-muted)"/>
+    <text x="350" y="262" font-size="12" class="fill-muted">often</text>
+    <path d="M292,344 L398,344" fill="none" class="stroke-muted" stroke-width="1.5" marker-end="url(#startup-files-arrow-muted)"/>
+  </g>
+</svg>

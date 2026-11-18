@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 458" role="img" aria-labelledby="run-a-script-title"
+     data-step-labels="Path|x bit|Shebang|Interpreter|CRLF">
+  <title id="run-a-script-title">What happens when you type ./hello.sh, in five steps. 1: the shell sees a slash in the name, so it treats ./hello.sh as a path and runs that file, with no search of PATH. 2: the kernel checks the file's x (execute) bit; without it the run stops with bash: ./hello.sh: Permission denied (exit status 126), and with it the run goes on. 3: the kernel reads line 1, the shebang #!/usr/bin/env bash, which names the program that runs the file. 4: env finds bash on PATH, bash runs the file, and the terminal shows hello from ./hello.sh. 5: the same file saved with Windows (CRLF) line endings: line 1 really ends in an invisible \r, so env looks for a program called bash\r, finds none, and prints /usr/bin/env: 'bash\r': No such file or directory (exit status 127).</title>
+  <desc data-caption="1">You type ./hello.sh. The name holds a slash, so the shell treats it as a path to a file and does not search PATH.</desc>
+  <desc data-caption="2">The kernel checks the file's x bit. Without it, the run stops with Permission denied (exit status 126); with it, the run goes on.</desc>
+  <desc data-caption="3">The kernel reads line 1. A shebang, #! and a path, names the program that should run the file: here /usr/bin/env, asked for bash.</desc>
+  <desc data-caption="4">env searches PATH for bash and starts it on the file. bash runs the commands, and the script prints its greeting.</desc>
+  <desc data-caption="5">The same script saved with Windows line endings: line 1 ends in an invisible \r, so env looks for a program named bash\r, finds none, and the run fails with exit status 127.</desc>
+
+  <!-- Typed line -->
+  <rect x="10" y="10" width="700" height="52" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="30" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">YOU TYPE</text>
+  <text x="26" y="52" font-size="15" class="mono">./hello.sh</text>
+  <text x="694" y="52" font-size="13" class="fill-muted" text-anchor="end">a script in the folder you are in</text>
+
+  <!-- Row 1: path -->
+  <g data-show="1">
+    <rect x="10" y="74" width="700" height="64" rx="10" fill="none" class="stroke-line"/>
+    <circle cx="34" cy="98" r="12" class="fill-surface stroke-ink"/>
+    <text x="34" y="103" font-size="13" font-weight="700" text-anchor="middle">1</text>
+    <text x="56" y="98" font-size="13" font-weight="700">The shell sees a slash: it is a path</text>
+    <text x="56" y="118" font-size="13" class="fill-muted">so it runs that file; no <tspan class="mono">PATH</tspan> search</text>
+    <text x="414" y="104" font-size="15" class="mono">.<tspan font-weight="700">/</tspan>hello.sh</text>
+    <path d="M427.5 112 v6" class="stroke-ink" stroke-width="1.5"/>
+    <text x="414" y="130" font-size="12" class="fill-muted">a <tspan class="mono">/</tspan> in the name = a path</text>
+  </g>
+
+  <!-- Row 2: x bit -->
+  <g data-show="2">
+    <rect x="10" y="148" width="700" height="64" rx="10" fill="none" class="stroke-line"/>
+    <circle cx="34" cy="172" r="12" class="fill-surface stroke-ink"/>
+    <text x="34" y="177" font-size="13" font-weight="700" text-anchor="middle">2</text>
+    <text x="56" y="172" font-size="13" font-weight="700">The kernel checks the <tspan class="mono">x</tspan> bit</text>
+    <text x="56" y="192" font-size="13" class="mono fill-muted">-rwxr-xr-x  hello.sh</text>
+    <rect x="400" y="162" width="140" height="36" rx="6" class="fill-good-soft stroke-good"/>
+    <text x="470" y="185" font-size="13" text-anchor="middle">✓ <tspan class="mono">x</tspan> set: go on</text>
+    <rect x="552" y="162" width="146" height="36" rx="6" class="fill-warn-soft stroke-warn"/>
+    <text x="625" y="185" font-size="13" text-anchor="middle" class="fill-warn">✗ no <tspan class="mono">x</tspan>: exit 126</text>
+  </g>
+
+  <!-- Row 3: shebang -->
+  <g data-show="3">
+    <rect x="10" y="222" width="700" height="64" rx="10" fill="none" class="stroke-line"/>
+    <circle cx="34" cy="246" r="12" class="fill-surface stroke-ink"/>
+    <text x="34" y="251" font-size="13" font-weight="700" text-anchor="middle">3</text>
+    <text x="56" y="246" font-size="13" font-weight="700">The kernel reads line 1, the shebang</text>
+    <rect x="400" y="234" width="298" height="40" rx="6" class="fill-given-soft stroke-given"/>
+    <text x="412" y="260" font-size="15" class="mono">#!/usr/bin/env bash</text>
+  </g>
+  <text data-show="3" data-hide="5" x="56" y="266" font-size="13" class="fill-muted"><tspan class="mono">#!</tspan> names the program that runs the file</text>
+  <g data-show="5">
+    <text x="56" y="266" font-size="13" class="fill-warn">saved with CRLF: line 1 ends in a hidden <tspan class="mono">\r</tspan></text>
+    <rect x="586" y="242" width="28" height="24" rx="4" class="fill-warn-soft stroke-warn" stroke-width="1.5"/>
+    <text x="600" y="259" font-size="14" font-weight="700" text-anchor="middle" class="mono fill-warn">\r</text>
+  </g>
+
+  <!-- Row 4: interpreter -->
+  <g data-show="4">
+    <rect x="10" y="296" width="700" height="64" rx="10" fill="none" class="stroke-line"/>
+    <circle cx="34" cy="320" r="12" class="fill-surface stroke-ink"/>
+    <text x="34" y="325" font-size="13" font-weight="700" text-anchor="middle">4</text>
+  </g>
+  <g data-show="4" data-hide="5">
+    <text x="56" y="320" font-size="13" font-weight="700"><tspan class="mono">env</tspan> finds <tspan class="mono">bash</tspan> on <tspan class="mono">PATH</tspan>; bash runs the file</text>
+    <text x="56" y="340" font-size="13" class="fill-muted">the rest of the file is bash commands</text>
+    <rect x="400" y="310" width="298" height="36" rx="6" class="fill-good-soft stroke-good"/>
+    <text x="414" y="333" font-size="13">✓ found: <tspan class="mono">/usr/bin/bash</tspan></text>
+  </g>
+  <g data-show="5">
+    <text x="56" y="320" font-size="13" font-weight="700"><tspan class="mono">env</tspan> looks for a program named <tspan class="mono fill-warn">bash\r</tspan></text>
+    <text x="56" y="340" font-size="13" class="fill-muted">no program has that name, so nothing runs</text>
+    <rect x="400" y="310" width="298" height="36" rx="6" class="fill-warn-soft stroke-warn"/>
+    <text x="414" y="333" font-size="13" class="fill-warn">✗ no program called <tspan class="mono">bash\r</tspan></text>
+  </g>
+
+  <!-- Current step: thick outline -->
+  <rect data-show="1" data-hide="2" x="7" y="71" width="706" height="70" rx="12" fill="none" class="stroke-ink" stroke-width="3"/>
+  <rect data-show="2" data-hide="3" x="7" y="145" width="706" height="70" rx="12" fill="none" class="stroke-ink" stroke-width="3"/>
+  <rect data-show="3" data-hide="4" x="7" y="219" width="706" height="70" rx="12" fill="none" class="stroke-ink" stroke-width="3"/>
+  <rect data-show="4" data-hide="5" x="7" y="293" width="706" height="70" rx="12" fill="none" class="stroke-ink" stroke-width="3"/>
+  <rect data-show="5" x="7" y="219" width="706" height="144" rx="12" fill="none" class="stroke-ink" stroke-width="3"/>
+
+  <!-- Terminal -->
+  <rect x="10" y="374" width="700" height="74" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="394" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL</text>
+  <text x="26" y="416" font-size="13" class="mono">./hello.sh</text>
+  <g data-show="1" data-hide="2">
+    <text x="694" y="416" font-size="12" text-anchor="end" class="fill-muted">the shell decides: a path, not a command name</text>
+  </g>
+  <g data-show="2" data-hide="3">
+    <text x="26" y="436" font-size="13" class="mono fill-warn">bash: ./hello.sh: Permission denied</text>
+    <text x="694" y="416" font-size="12" text-anchor="end" class="fill-muted">if the <tspan class="mono">x</tspan> bit is missing · exit 126</text>
+    <text x="694" y="436" font-size="12" text-anchor="end" class="fill-muted"><tspan class="mono">chmod +x hello.sh</tspan> adds it</text>
+  </g>
+  <g data-show="3" data-hide="4">
+    <text x="26" y="436" font-size="13" class="fill-muted">(nothing printed yet: the kernel is choosing the program)</text>
+  </g>
+  <g data-show="4" data-hide="5">
+    <text x="26" y="436" font-size="13" class="mono fill-good" font-weight="700">hello from ./hello.sh</text>
+    <text x="694" y="436" font-size="12" text-anchor="end" class="fill-muted">exit 0</text>
+  </g>
+  <g data-show="5">
+    <text x="26" y="436" font-size="13" class="mono fill-warn">/usr/bin/env: 'bash\r': No such file or directory</text>
+    <text x="694" y="436" font-size="12" text-anchor="end" class="fill-muted">exit 127</text>
+  </g>
+</svg>

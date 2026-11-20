@@ -104,9 +104,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-d4a656369b10048819d5ba4205b32a06.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-ca5ca7db393fe4e43a994111f5b5d2ea.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-b4f194da33962df49b6ccd01f8f087cc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
 <script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
 <link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
@@ -1077,7 +1077,7 @@ Figure&nbsp;5.1: What bash does with a line before <code>ls</code> starts. The q
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$BASH_VERSION</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>5.3.15(1)-release</code></pre>
-<p>Any version from 4 up is fine; Ubuntu 24.04 has 5.2, and a cluster may have an older one (Nova had 5.1 in November 2026). If nothing prints, you are not in bash: go back to <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>.</p>
+<p>Any version from 4 up is fine; Ubuntu 24.04 has 5.2 and 26.04 has 5.3 (what WSL installed in November 2026), and a cluster may have an older one (Nova had 5.1 in November 2026). If nothing prints, you are not in bash: go back to <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>.</p>
 <p><strong>The prompt.</strong> A prompt such as <code>you@laptop:~/bioinf-computing$</code> tells you who you are (<code>you</code>), which machine you are on (<code>laptop</code>), and which folder you are in (<code>~/bioinf-computing</code>), then <code>$</code>: ready. Clusters set theirs up for you; the host name tells you whether you are on a login node (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>). Yours may look different; <a href="07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a> shows how to change it.</p>
 <div class="check">
 <p><strong>Check yourself.</strong> Why can’t <code>cd</code> be a separate program, like <code>mkdir</code>?</p>
@@ -1814,7 +1814,7 @@ new.txt  notes  old_notes  old.txt</code></pre>
 </div>
 <pre class="console"><code>version 3
 cp: overwrite 'old.txt'? n</code></pre>
-<p><code>cp -n</code> skipped the copy without a message; <code>cp -i</code> asked, and <code>n</code> kept the old file.</p>
+<p><code>cp -n</code> skipped the copy without a message; <code>cp -i</code> asked, and <code>n</code> kept the old file. (On Ubuntu 24.04 and later, <code>cp -n</code> also prints <code>cp: warning: behavior of -n is non-portable and may change in future; use --update=none instead</code>. The copy is still skipped, so ignore it: <code>--update=none</code> does not exist on older systems such as many clusters.)</p>
 <p><strong><code>rm</code> has no trash folder and no undo.</strong> A file removed with <code>rm</code> is gone at once; nothing on the command line puts it back. <code>rm -i</code> asks before each file. <code>rm -r</code> on the wrong folder is the classic disaster.</p>
 <p><strong>A trailing slash matters for links.</strong> <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> showed that <code>rm -r data/ref/</code> follows the link and deletes the shared files. Remove a link with <code>unlink name</code> or <code>rm name</code>: no slash, no <code>-r</code>.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
@@ -2854,13 +2854,13 @@ share/Run 3 final/sample_C_R2.fq.gz</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> share <span class="at">-size</span> +1k</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> share <span class="at">-type</span> f <span class="at">-size</span> +1k</span>
 <span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> share <span class="at">-mtime</span> +30</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>share/analysis/counts FINAL.txt
 share/notes.txt
 share/.old_settings</code></pre>
-<p><code>-size +1k</code> means larger than 1 kilobyte: only the counts file, since the toy FASTQ files are under 50 bytes each. On a <code>.gz</code> file, <code>-size</code> measures the compressed file. <code>-mtime +30</code> means last changed more than 30 days ago: the two files the setup block back-dated to 2025-03-01. <code>-mtime -1</code> would find files changed in the last day.</p>
+<p><code>-size +1k</code> means larger than 1 kilobyte: only the counts file, since the toy FASTQ files are under 50 bytes each. <code>-type f</code> keeps it to files: on Linux every folder takes 4 KB, so without it <code>share</code> and its folders would be listed too (a Mac’s folders are smaller). On a <code>.gz</code> file, <code>-size</code> measures the compressed file. <code>-mtime +30</code> means last changed more than 30 days ago: the two files the setup block back-dated to 2025-03-01. <code>-mtime -1</code> would find files changed in the last day.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -3115,7 +3115,7 @@ data/ref:                       symbolic link to /home/you/bioinf-shared/referen
 CCTGAATCGAGAAGGAGGTGTCCAGGGAGTTCATCATCAGAATGATTAGTATGATTTACTGTAGATTCAGTAAGTTTCTGGCCTAAGATGAAGGTCGTGCT
 +
 BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFBFFFFFFF</code></pre>
-<p>One read, four lines (<a href="15-fasta-fastq.html" class="quarto-xref"><span>Chapter 15</span></a> explains them). <code>zless</code> opens the same file in <code>less</code>; quit with <code>q</code>. On some Linux systems plain <code>less</code> also opens <code>.gz</code> files, because of a helper set up for it (Nova has one); on others, including a Mac, it shows noise. Do not rely on it.</p>
+<p>One read, four lines (<a href="15-fasta-fastq.html" class="quarto-xref"><span>Chapter 15</span></a> explains them). <code>zless</code> opens the same file in <code>less</code>; quit with <code>q</code>. On some Linux systems plain <code>less</code> also opens <code>.gz</code> files, because of a helper set up for it (Ubuntu, WSL, and Nova have one); on others, including a Mac, it shows noise. Do not rely on it.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

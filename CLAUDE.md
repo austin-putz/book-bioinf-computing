@@ -196,6 +196,13 @@ file beside the source (`embed-resources: true`: no `_files/` folder).
   (gnubin directories first on `PATH` in `~/.bash_profile`) and make bash
   their login shell. Do not write zsh variants. GNU vs BSD differences are
   taught in Chapter 7.
+- **Ubuntu/WSL keeps its default core tools** (decided 2026-11-20).
+  Ubuntu 26.04 (what WSL installs from late 2026) ships uutils
+  coreutils, a Rust rewrite, instead of GNU for most commands. The book
+  does not tell readers to switch back to GNU coreutils; where a
+  uutils message differs from the GNU output shown, the text notes it
+  (Chapter 7 §9 explains the three families). Clusters still run GNU.
+  Recapture Linux outputs on 26.04 when it becomes the main target.
 - Running dataset: the yeast (*S. cerevisiae*) paired-end RNA-seq subset
   from nf-core/rnaseq's test profile (GEO GSE110004). Details in
   `PLAN_CHAPTERS.md`.

@@ -60,8 +60,10 @@ changing it. If you do not have it, paste the setup block from
 The Linux outputs shown were captured on Ubuntu 24.04 (bash 5.2.21, GNU
 coreutils 9.4, grep 3.11, sed 4.9, file 5.45), on a machine named
 `laptop` with the user `you`; macOS outputs on macOS 15 with the Mac's
-own tools, where the text says so. Process numbers, dates, and sizes on
-your machine will differ.
+own tools, where the text says so. Ubuntu 26.04, which WSL installs in
+late 2026, replaces most GNU core tools with a rewrite called uutils
+(@sec-linux-system-gnu-bsd); where its output differs, the text says so.
+Process numbers, dates, and sizes on your machine will differ.
 
 ## Who may do what: permissions {#sec-linux-system-permissions}
 
@@ -143,7 +145,8 @@ cat: d/f: Permission denied
 bash: cd: d: Permission denied
 ```
 
-`ls d` still lists the name `f`: reading a folder means reading its
+(Ubuntu 26.04's `ls` shows the `?` line without the `cannot access`
+message.) `ls d` still lists the name `f`: reading a folder means reading its
 list of names, and you kept `r`. Everything *about* the entry fails:
 `ls -l` cannot read its details (the question marks), `cat` cannot open
 it although the file itself is readable, and `cd` cannot go in. On a
@@ -871,12 +874,17 @@ login
 not interactive
 ```
 
-(Copy these as they are; `&&` and `||` are @sec-shell-scripts.) A new
-terminal window on Ubuntu or WSL is **interactive** (you type into it)
-but **not a login** shell. `bash -l` starts a login shell, and a
-`bash -c` that just runs a line is not interactive. An SSH login is
-both login and interactive; so is a new Terminal window on a Mac, and
-VS Code's terminal on a Mac with @sec-book-setup's `-l` setting. Run
+(Copy these as they are; `&&` and `||` are @sec-shell-scripts.) This
+output is from a terminal window on desktop Ubuntu, which is
+**interactive** (you type into it) but **not a login** shell; so is VS
+Code's terminal on Linux and WSL, and a `bash` typed inside a shell.
+`bash -l` starts a login shell, and a `bash -c` that just runs a line
+is not interactive. An SSH login is both login and interactive; so is
+a new Ubuntu window on WSL (Windows Terminal, or `wsl` typed in
+PowerShell), a new Terminal window on a Mac, and VS Code's terminal on
+a Mac with @sec-book-setup's `-l` setting. There the first line says
+`login`, and bash's own messages start with `-bash:` instead of
+`bash:`. Run
 the first two lines in each place you open a shell, including your
 cluster, to see what yours are.
 
@@ -889,8 +897,8 @@ for the cases you will meet:
 
 | How bash starts | Example | Reads |
 |:----------------|:--------|:------|
-| interactive login | SSH login; Mac Terminal; `bash -l` | the **first one that exists** of `~/.bash_profile`, `~/.bash_login`, `~/.profile` |
-| interactive, not login | new Ubuntu/WSL terminal; `bash` typed in a shell | `~/.bashrc` |
+| interactive login | SSH login; new WSL window; Mac Terminal; `bash -l` | the **first one that exists** of `~/.bash_profile`, `~/.bash_login`, `~/.profile` |
+| interactive, not login | new desktop Ubuntu terminal; VS Code's terminal on Linux/WSL; `bash` typed in a shell | `~/.bashrc` |
 | not interactive (a script) | `bash script.sh`, `./script.sh`, a job script | neither (unless the variable `BASH_ENV` names a file) |
 | a command over SSH | `ssh host command` | often `~/.bashrc` (bash's special case for remote commands) |
 
@@ -946,7 +954,8 @@ the script read `~/.bashrc`.
 
 Make @sec-book-setup's `EDITOR` setting permanent. First a backup, with
 `cp -n` so that a second try never overwrites the first backup
-(@sec-shell-basics):
+(@sec-shell-basics; ignore the `non-portable` warning Ubuntu's `cp`
+prints):
 
 ```{.bash filename="Terminal (laptop)"}
 cp -n ~/.bashrc ~/.bashrc.bak-ch07
@@ -1133,7 +1142,8 @@ exit
 There are stopped jobs.
 ```
 
-Bash refuses the first `exit` to warn you. Resume the job with `fg`
+Bash refuses the first `exit` to warn you. (In a login shell, such as
+a WSL window or a Mac Terminal, `exit` prints `logout` first.) Resume the job with `fg`
 (foreground) or `bg` (background), or end it with `kill %1`. A large
 analysis stopped with {{< kbd Ctrl-Z >}} keeps all its memory until
 then.
@@ -1219,7 +1229,7 @@ df -h ~
 
 ```{.console}
 Filesystem      Size  Used Avail Use% Mounted on
-/dev/sdc       1007G   18G  939G   2% /
+/dev/sdd       1007G  2.0G  954G   1% /
 ```
 
 `df` reports a whole **filesystem**: one disk or storage area, named in
@@ -1356,6 +1366,16 @@ options and messages. @sec-orientation's `gnubin` lines put GNU first on
 your Mac's `PATH`, so the book's commands work as written. To see which
 you have, use `type -a` (@sec-linux-system-path) or `--version`: GNU
 tools print a version, BSD tools usually reject the option.
+
+**A third family on new Ubuntu.** From Ubuntu 25.10, and in 26.04 LTS
+(what WSL installs in late 2026), `ls --version` prints `ls (uutils
+coreutils) 0.8.0`. [uutils](https://github.com/uutils/coreutils) is a
+rewrite of GNU's core tools in the Rust language that aims to accept
+the same options; Ubuntu keeps GNU's `cp`, `mv`, `rm`, and `df`, and
+`grep` and `sed` are still GNU ([release
+notes](https://documentation.ubuntu.com/release-notes/26.04/summary-for-lts-users/)).
+The book's commands work there; a few messages read differently, as
+noted where they appear. Clusters still run GNU.
 
 It still matters in three places:
 
@@ -1512,9 +1532,12 @@ chmod u+x crlf.sh
 ```
 
 (The second line is `env` guessing at a different problem; ignore it.
-With `#!/bin/bash` instead, bash 5.2 says only `cannot execute:
-required file not found`, which is even less helpful. On a Mac,
-`/usr/bin/env` prints `env: bash\r: No such file or directory`.)
+Ubuntu 26.04's `env` writes the first line as `env: $'bash\r': No such
+file or directory`; on a Mac it is `env: bash\r: No such file or
+directory`. With `#!/bin/bash` instead, bash 5.2 says only `cannot
+execute: required file not found`, and bash 5.3 says `/bin/bash^M: bad
+interpreter: No such file or directory`, with status 126 instead of
+127: the `^M` is the carriage return.)
 
 **How to detect it.** Look with `cat -A` (for `^M`), and count with
 `grep -c $'\r' file`, which prints how many lines contain a carriage
@@ -1522,7 +1545,8 @@ return: `7` for the CSV, `0` for the TSV. Do not rely on `file`: it
 reports `with CRLF line terminators` for some text (`file crlf.sh`
 does), but once it recognises a CSV it says only `CSV ASCII text`, with
 or without carriage returns (Ubuntu's `file` 5.45; macOS's says `CSV
-text`).
+text`). On a two-line CSV saved by Excel, `file` did mention CRLF; on
+the seven-line sheet it did not, so its answer depends on the file.
 
 **Now name it.** Linux and macOS end each line with one character, a
 **line feed** (LF, `\n`). Windows ends lines with two, **carriage
@@ -1533,7 +1557,11 @@ the last field. Files get CRLF endings from Windows editors, Excel's
 "Save as CSV", and email attachments. In WSL, files under `/mnt/c`
 (@sec-orientation's pitfall) are often edited with Windows programs,
 which is where the CRLF comes from; the folder itself does not change
-the bytes.
+the bytes. Excel's **CSV UTF-8** format also puts three invisible bytes,
+a **byte order mark**, before the first column name: `cat -A` shows
+`M-oM-;M-?sample,reads^M$`, and a shell tool then sees a first column
+called something other than `sample`. `sed '1s/^\xEF\xBB\xBF//'`
+removes it; R's and Python's CSV readers handle it.
 
 **Fix it** by deleting the `\r` at each line end. Write a fixed copy
 first and check it:

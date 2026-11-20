@@ -240,7 +240,7 @@ echo "$BASH_VERSION"
 5.3.15(1)-release
 ```
 
-Any version from 4 up is fine; Ubuntu 24.04 has 5.2, and a cluster may
+Any version from 4 up is fine; Ubuntu 24.04 has 5.2 and 26.04 has 5.3 (what WSL installed in November 2026), and a cluster may
 have an older one (Nova had 5.1 in November 2026). If nothing prints, you are not in bash: go back to
 @sec-orientation.
 
@@ -628,7 +628,11 @@ cp: overwrite 'old.txt'? n
 ```
 
 `cp -n` skipped the copy without a message; `cp -i` asked, and `n`
-kept the old file.
+kept the old file. (On Ubuntu 24.04 and later, `cp -n` also prints
+`cp: warning: behavior of -n is non-portable and may change in future;
+use --update=none instead`. The copy is still skipped, so ignore it:
+`--update=none` does not exist on older systems such as many
+clusters.)
 
 **`rm` has no trash folder and no undo.** A file removed with `rm` is
 gone at once; nothing on the command line puts it back. `rm -i` asks
@@ -1252,7 +1256,7 @@ share/Run 3 final/sample_C_R2.fq.gz
 Two tests for reference, useful on real data:
 
 ```{.bash filename="Terminal (laptop)"}
-find share -size +1k
+find share -type f -size +1k
 find share -mtime +30
 ```
 
@@ -1263,7 +1267,9 @@ share/.old_settings
 ```
 
 `-size +1k` means larger than 1 kilobyte: only the counts file, since
-the toy FASTQ files are under 50 bytes each. On a `.gz` file, `-size`
+the toy FASTQ files are under 50 bytes each. `-type f` keeps it to
+files: on Linux every folder takes 4 KB, so without it `share` and its
+folders would be listed too (a Mac's folders are smaller). On a `.gz` file, `-size`
 measures the compressed file. `-mtime +30` means last changed more than
 30 days ago: the two files the setup block back-dated to 2025-03-01.
 `-mtime -1` would find files changed in the last day.
@@ -1450,8 +1456,8 @@ BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 
 One read, four lines (@sec-fasta-fastq explains them). `zless` opens
 the same file in `less`; quit with `q`. On some Linux systems plain
-`less` also opens `.gz` files, because of a helper set up for it (Nova
-has one); on others, including a Mac, it shows noise. Do not rely on it.
+`less` also opens `.gz` files, because of a helper set up for it (Ubuntu,
+WSL, and Nova have one); on others, including a Mac, it shows noise. Do not rely on it.
 
 ::: {.callout-warning}
 ## Pitfall: `cat` on a compressed or binary file

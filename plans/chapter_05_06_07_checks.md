@@ -236,6 +236,20 @@ starts bash as a **login** shell (its `ps` line shows `-bash`). If so,
 the table row, the figure caption, and the sentence need changing.
 Desktop Ubuntu's terminal is non-login; WSL may not be.
 
+::: {.callout-tip}
+## WSL status (2026-11-20): complete
+All WSL checks are done (screenshots plus `blockB-WSL.txt`). Optional
+only: 1.1 from a Windows Terminal **Ubuntu** tab (you used `wsl ~` in
+PowerShell).
+
+The machine is **Ubuntu 26.04.1 LTS**, bash **5.3.9**, WSL kernel
+6.18, not the 24.04 the checks assumed, and its core tools are
+**uutils coreutils 0.8.0** (a Rust rewrite), not GNU, except `cp`,
+`mv`, `rm`, `df`, which Ubuntu keeps GNU. `grep` 3.12 and `sed` 4.9 are
+GNU; gzip 1.14, file 5.46, procps 4.0.4.
+:::
+
+
 1. Open a new Ubuntu window, from the Start menu or Windows Terminal.
    Run **Block A**.
 2. Open VS Code connected to WSL (Chapter 2) and open its terminal
@@ -246,11 +260,70 @@ Desktop Ubuntu's terminal is non-login; WSL may not be.
 **Record:** each of the three outputs, labelled Windows Terminal, VS
 Code, and nested `bash`.
 
+::: {.callout-tip}
+## WSL result, 2026-11-19: complete
+| Where | `login_shell` | `$-` | `ps` shows |
+|:--|:--|:--|:--|
+| `wsl ~` from PowerShell | **login** | interactive | `-bash` |
+| VS Code terminal (WSL) | not login | interactive | `/bin/bash --init-file …` |
+| `bash` typed in WSL | not login | interactive | `bash` |
+
+Block A, rest: `type -a ls` → alias `ls --color=auto`, `/usr/bin/ls`,
+`/bin/ls` (as the chapter); `which` → `/usr/bin/ls`; `command -v` →
+the alias. Files: `.bash_history .bash_logout .bashrc .profile`;
+`~/.profile` lines 13–15 read `~/.bashrc`. `locale`: `LANG=C.UTF-8`,
+all `LC_*` `C.UTF-8` (not `en_US.UTF-8`). `LESSOPEN=| /usr/bin/lesspipe
+%s`; `zless` is `/usr/bin/zless`; `umask` `0022`; `df -h ~` →
+`/dev/sdd 1007G 2.0G 954G 1% /`.
+
+**Changed in the book:** Chapter 7 now says a new WSL window is a
+**login** shell (text, `tbl-startup-files`, `fig-startup-files`), VS
+Code's terminal on Linux/WSL is not, and the captured `not login` is
+from desktop Ubuntu. `df` example now shows the real `/dev/sdd` line.
+:::
+
+
 ### 1.2 Block B and Block C
 
 Run **Block B**, then **Block C**.
 
 **Record:** `blockB-<name>.txt` and Block C's output.
+
+::: {.callout-warning}
+## WSL result, 2026-11-20: complete
+Block C: Ctrl-C → `130`. Ctrl-Z → `[1]+ Stopped sleep 600`; `ps -o
+pid,stat,rss,command` works (`-bash` `Ss`, `sleep 600` `T`); `exit`
+printed **`logout`** then `There are stopped jobs.`; `kill %1` →
+`Terminated`. `top -u "$USER"` header matches the chapter's shape
+(`top - … up …, 1 user, load average`, `Tasks:`, `%Cpu(s):`, `MiB
+Mem`, `MiB Swap`; columns `PID USER PR NI VIRT RES SHR S %CPU %MEM
+TIME+ COMMAND`).
+
+**Changed in the book:** Chapter 7 notes that a login shell prints
+`logout` before refusing.
+
+**Block B (`blockB-WSL.txt`):**
+
+| Check | WSL output | Same as the chapter? |
+|:--|:--|:--|
+| `echo .*` | `.old_settings` | yes |
+| default `sort` | `sample` **last** (as `LC_ALL=C`) | no: chapter shows `en_US.UTF-8` |
+| read-only redirect | `-bash: ro.txt: Permission denied`, status 1 | yes, apart from `-bash:` (login shell) |
+| MD5, `head` pipeline | `d19f3c7a…`; `PIPESTATUS 141 0` | yes |
+| truncated file | `89515`, `PIPESTATUS 1 0` (gzip 1.14) | yes |
+| CRLF + `env` | `env: $'bash\r': No such file or directory` + `use -[v]S` line; 127 | wording differs (uutils `env`) |
+| CRLF + `/bin/bash` | `/bin/bash^M: bad interpreter: No such file or directory`; **126** | no: bash 5.2 said `required file not found`, 127 |
+| `file` on CRLF sheet | `CSV ASCII text`; 7 `\r` lines; 0 `,30$` | yes |
+| folder without `x` | `f`; `-?????????` line **without** `cannot access`; `cd` refused | `ls -l` message missing (uutils) |
+| `ps -o …,command` | works | yes |
+
+**Changed in the book:** Chapter 6 says WSL's `C.UTF-8` already sorts
+like `C`. Chapter 7: capture note and a new paragraph in §9 on uutils
+(with the Ubuntu 26.04 release-notes link); the uutils `env` and bash
+5.3 CRLF messages (status 126); the missing `cannot access` line;
+`-bash:` in login shells.
+:::
+
 
 What WSL settles:
 
@@ -280,6 +353,20 @@ FINAL.txt` for `-size +1k`. In Docker the folders were listed too (see
 *Done in Docker*), and WSL's real disk should show the same. The
 `-mtime` line should list `notes.txt` and `.old_settings`.
 
+::: {.callout-tip}
+## WSL result, 2026-11-19: complete
+Toy files 43, 43, 46, 46, 46, 49, 49 bytes: "under 50" holds.
+`find share -size +1k` listed `share`, `share/run1`, `share/run2`,
+`share/meta`, `share/Run 3 final`, `share/analysis`, and `counts
+FINAL.txt`: **folders included**, as in Docker. `-mtime +30` →
+`notes.txt`, `.old_settings`. `echo .*` printed `.*` (no dotfiles there;
+bash 5.3 never lists `.` and `..`).
+
+**Changed in the book:** Chapter 5 now uses `find share -type f -size
++1k` and explains that Linux folders take 4 KB.
+:::
+
+
 ### 1.4 Does `less` open a `.gz` on WSL?
 
 ```bash
@@ -288,6 +375,13 @@ less ~/bioinf-computing-checks/SRR6357070_1.fastq.gz
 
 Quit with `q`. **Record:** readable reads or binary noise. Chapter 5
 says "some Linux systems" can open them. If WSL can, add it beside Nova.
+
+::: {.callout-tip}
+## WSL result, 2026-11-19: complete
+Readable reads (the `LESSOPEN` helper). **Changed in the book:**
+Chapter 5 now says Ubuntu, WSL, and Nova have the helper.
+:::
+
 
 ### 1.5 Hard links between pixi's cache and `.pixi` (only if Chapter 2's setup is done)
 
@@ -298,6 +392,14 @@ du -sh ~/bioinf-computing/.pixi ~/.cache/rattler
 
 **Record:** both pairs. In Docker the shared 1.3 GB was counted under
 whichever came first. Chapter 7 §8 depends on this.
+
+::: {.callout-tip}
+## WSL result, 2026-11-19: complete
+`~/.cache/rattler` first: `1.3G`, then `.pixi` `97M`. Reversed:
+`.pixi` `1.3G`, then `~/.cache/rattler` `118M`. Identical to the Docker
+numbers; Chapter 7 §8 is right as written.
+:::
+
 
 ### 1.6 A CSV saved by Excel, read from `/mnt/c` (only if Excel is installed)
 
@@ -319,11 +421,40 @@ also start with `M-oM-;M-?`, a byte order mark. If it does, Chapter 7
 §10 should mention it in a sentence, since it breaks the first column
 name the same quiet way.
 
+::: {.callout-tip}
+## WSL result, 2026-11-19: complete
+Both files end every line in `^M$` (3 of 3 lines). `utf8.csv` starts
+with the BOM: `M-oM-;M-?sample,reads^M$`. `file`: `plain.csv: ASCII
+text, with CRLF line terminators`; `utf8.csv: Unicode text, UTF-8
+(with BOM) text, with CRLF line terminators`.
+
+**Changed in the book:** Chapter 7 §10 adds the BOM (what `cat -A`
+shows, `sed '1s/^\xEF\xBB\xBF//'` to remove it, tested on Ubuntu)
+and notes that `file` did report CRLF for this small Excel file but not
+for the seven-line sheet.
+:::
+
+
 ### 1.7 Exercise 4 on WSL
 
 Do Part 2.5's laptop steps here: backup, add the line, new terminal.
 Record which startup files exist, and whether `~/.profile` reads
 `~/.bashrc`. Chapter 7 says it usually does on Ubuntu and WSL.
+
+::: {.callout-tip}
+## WSL result, 2026-11-19: complete
+`cp -n` worked but printed `cp: warning: behavior of -n is
+non-portable and may change in future; use --update=none instead`.
+`grep -n 'EDITOR='` found nothing; the append ran; after `source
+~/.bashrc`, `echo "$EDITOR"` → `nano`. (You also found that `echo
+'$EDITOR'` prints the literal text: single quotes stop expansion.)
+
+**Changed in the book:** Chapters 5 and 7 now say to ignore that `cp
+-n` warning, and why `--update=none` isn't used (missing on Nova's
+coreutils 8.32 and on Apple's `cp`). Chapter 5 also gives 26.04's bash
+5.3.
+:::
+
 
 ---
 
@@ -543,30 +674,30 @@ errors.
 
 Fill in, or paste outputs into the chat and I'll fill it in.
 
-| Check | WSL | Nova | Atlas | Ceres | Chapter it changes |
+| Check | WSL (2026-11-19) | Nova | Atlas | Ceres | Chapter it changes |
 |:------|:---:|:----:|:-----:|:-----:|:-------------------|
-| New terminal: login? interactive? | | | | | 7 §6 table and figure |
-| VS Code terminal: login? | | — | — | — | 7 §6 |
+| New terminal: login? interactive? | **login**, interactive | | | | 7 §6 table and figure |
+| VS Code terminal: login? | not login | — | — | — | 7 §6 |
 | `ssh host command` reads `~/.bashrc`? | — | | | | 7 `tbl-startup-files` |
-| Login file reads `~/.bashrc`? | | | | | 7 §6, Exercise 4 |
-| `EDITOR` in a new login after Ex. 4 | | | | | 7 Exercise 4 answer |
-| `type -a ls` (alias first?) | | done | | | 7 §4 |
-| `echo .*` (`.`/`..` listed?) | | done | | | 5 §7 |
-| Default locale; `sample` sorts where | | | | | 6 sort, 7 §5 |
-| `PIPESTATUS` after `head` | | | | | 6 §2 |
-| Truncated count / `PIPESTATUS` | | | | | 6 §3 |
-| `Permission denied` wording | | | | | 6 §3 |
-| CRLF + `env` message, status | | | | | 7 §10 |
-| CRLF + `/bin/bash` message, status | | | | | 7 §10 |
-| `file` on the CRLF CSV | | | | | 7 §10 |
-| Folder without `x` behaves as in 7 §2 | | | | | 7 §2 |
-| `ps -o …,command` works | | | | | 7 §7 |
-| Ctrl-C status | | | | | 7 §7 |
-| `top` header | | | | | 7 §7 |
-| `df -h ~` first column | | | | | 7 §8 |
+| Login file reads `~/.bashrc`? | yes (`~/.profile`) | | | | 7 §6, Exercise 4 |
+| `EDITOR` in a new login after Ex. 4 | `nano` (via `source`) | | | | 7 Exercise 4 answer |
+| `type -a ls` (alias first?) | yes | done | | | 7 §4 |
+| `echo .*` (`.`/`..` listed?) | no (bash 5.3) | done | | | 5 §7 |
+| Default locale; `sample` sorts where | `C.UTF-8`; last | | | | 6 sort, 7 §5 |
+| `PIPESTATUS` after `head` | `141 0` | | | | 6 §2 |
+| Truncated count / `PIPESTATUS` | `89515`, `1 0` | | | | 6 §3 |
+| `Permission denied` wording | same (`-bash:`) | | | | 6 §3 |
+| CRLF + `env` message, status | `env: $'bash\r'…`, 127 | | | | 7 §10 |
+| CRLF + `/bin/bash` message, status | `bad interpreter`, 126 | | | | 7 §10 |
+| `file` on the CRLF CSV | `CSV ASCII text` | | | | 7 §10 |
+| Folder without `x` behaves as in 7 §2 | yes; no `ls` message | | | | 7 §2 |
+| `ps -o …,command` works | yes | | | | 7 §7 |
+| Ctrl-C status | 130 | | | | 7 §7 |
+| `top` header | matches | | | | 7 §7 |
+| `df -h ~` first column | `/dev/sdd` | | | | 7 §8 |
 | Quota command name | — | | | | 7 §8 table |
 | Folder group, setgid, umask | — | | | | 7 §2, Appendix A |
-| `less` opens `.gz` | | done | | | 5 §9 |
-| Toy FASTQ sizes under 50 B | | — | — | — | 5 §8 |
-| pixi cache / `.pixi` hard links in `du` | | — | — | — | 7 §8 |
-| Excel CSV: CRLF, BOM | | — | — | — | 7 §10 |
+| `less` opens `.gz` | yes | done | | | 5 §9 |
+| Toy FASTQ sizes under 50 B | yes (43–49) | — | — | — | 5 §8 |
+| pixi cache / `.pixi` hard links in `du` | confirmed | — | — | — | 7 §8 |
+| Excel CSV: CRLF, BOM | both; BOM in CSV UTF-8 | — | — | — | 7 §10 |

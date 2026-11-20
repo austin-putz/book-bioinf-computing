@@ -789,8 +789,9 @@ letters. `LC_ALL=C` in front of a command sets it for that command only.
 Use it when the order must be the same on every computer. Tools that
 compare sorted files, such as `join` and `comm`, need their input sorted
 by the same rules they use themselves; if you sort with `LC_ALL=C`, run
-them with `LC_ALL=C` too. Which locale you have by default depends on the system; your
-settings are @sec-linux-system.
+them with `LC_ALL=C` too. Which locale you have by default depends on the system: WSL's
+Ubuntu uses `C.UTF-8`, which already sorts like `C`, so there both
+commands give this second order. Your settings are @sec-linux-system.
 
 ::: {.callout-tip}
 ## Sort before you count

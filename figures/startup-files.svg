@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" role="img" aria-labelledby="startup-files-title">
-  <title id="startup-files-title">Which startup files bash reads, by how it starts. An interactive login shell (an SSH login, the macOS Terminal, or bash --login) reads the first of ~/.bash_profile, ~/.bash_login, and ~/.profile that exists, and only that one. An interactive shell that is not a login shell (a new terminal on Ubuntu or WSL, or bash typed inside a shell) reads ~/.bashrc. ssh host command, which runs one command with no prompt, often reads ~/.bashrc too. A script, a non-interactive shell, reads no startup file (only the file named in BASH_ENV, if that is set). The book's setup has ~/.bash_profile read ~/.bashrc, as Ubuntu's ~/.profile already does, so every interactive shell ends up with the same settings.</title>
+  <title id="startup-files-title">Which startup files bash reads, by how it starts. An interactive login shell (an SSH login, a new WSL window, the macOS Terminal, or bash --login) reads the first of ~/.bash_profile, ~/.bash_login, and ~/.profile that exists, and only that one. An interactive shell that is not a login shell (a new terminal on desktop Ubuntu, VS Code's terminal on Linux or WSL, or bash typed inside a shell) reads ~/.bashrc. ssh host command, which runs one command with no prompt, often reads ~/.bashrc too. A script, a non-interactive shell, reads no startup file (only the file named in BASH_ENV, if that is set). The book's setup has ~/.bash_profile read ~/.bashrc, as Ubuntu's ~/.profile already does, so every interactive shell ends up with the same settings.</title>
   <defs>
     <marker id="startup-files-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
@@ -20,12 +20,12 @@
     <!-- Left: four ways bash starts -->
     <rect x="10" y="16" width="280" height="96" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
     <text x="24" y="40" font-size="13" font-weight="700">Interactive login</text>
-    <text x="24" y="60" font-size="13" class="fill-muted">SSH login, macOS Terminal,</text>
+    <text x="24" y="60" font-size="13" class="fill-muted">SSH login, WSL, Mac Terminal,</text>
     <text x="24" y="78" font-size="13" class="fill-muted">or <tspan class="mono">bash --login</tspan></text>
 
     <rect x="10" y="136" width="280" height="72" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
     <text x="24" y="160" font-size="13" font-weight="700">Interactive, not login</text>
-    <text x="24" y="180" font-size="13" class="fill-muted">new Ubuntu or WSL terminal,</text>
+    <text x="24" y="180" font-size="13" class="fill-muted">desktop Ubuntu, VS Code terminal,</text>
     <text x="24" y="198" font-size="13" class="fill-muted">or <tspan class="mono">bash</tspan> typed in a shell</text>
 
     <rect x="10" y="228" width="280" height="64" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>

@@ -1241,3 +1241,22 @@ accepted:
    (`export x=1; x=2; bash -c 'echo $x'` prints `2` on macOS bash and
    Ubuntu). Table now says "no, unless already exported"; the prose
    adds that `PATH` can be changed by plain assignment for this reason.
+
+## WSL checks applied (2026-11-20)
+
+From Austin's WSL screenshots (Ubuntu 26.04.1, bash 5.3.9); details in
+`chapter_05_06_07_checks.md`. A new WSL window (`wsl ~`) is a **login**
+shell; VS Code's WSL terminal is not, so §6's text, `tbl-startup-files`,
+and `fig-startup-files` were corrected. Also: `logout` before the
+stopped-jobs refusal in login shells; real `df` line (`/dev/sdd`); the
+`cp -n` warning on Ubuntu; Excel's CSV UTF-8 byte order mark in §10.
+Block B's output (coreutils flavour, sort order under `C.UTF-8`) still
+to come.
+Block B arrived (`blockB-WSL.txt`): Ubuntu 26.04's core tools are
+**uutils coreutils 0.8.0** (GNU kept for `cp`, `mv`, `rm`, `df`; grep
+and sed GNU). Added a uutils paragraph to §9 with the release-notes
+link, the uutils `env` and bash 5.3 CRLF messages (`bad interpreter`,
+status 126), the missing `cannot access` line from `ls -l` in §2, and
+`-bash:` in login shells. Chapter 6 notes WSL's `C.UTF-8` sorts like
+`C`. Not done: telling readers to switch to GNU coreutils (needs
+`--allow-remove-essential`): Austin decided 2026-11-20 to keep Ubuntu's default (book `CLAUDE.md`).

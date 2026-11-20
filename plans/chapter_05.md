@@ -1020,3 +1020,9 @@ and the history paragraph now says an open shell doesn't pick up
 another shell's commands after that shell exits. The figure's
 `file tidy/wrong.fastq.gz` was left as it is, because a broken link
 reads the same with or without `-h`.
+
+**WSL checks applied (2026-11-20, `chapter_05_06_07_checks.md`).**
+`find share -size +1k` lists every folder on Linux (4 KB each), so §8
+now uses `-type f`; the `cp -n` warning on Ubuntu 24.04+ is noted; WSL
+and Ubuntu added beside Nova for `less` on `.gz`; Ubuntu 26.04's bash
+5.3 added to the version line.

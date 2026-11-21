@@ -104,9 +104,9 @@ div.csl-indent {
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="../site_libs/bootstrap/bootstrap-dark-b4f194da33962df49b6ccd01f8f087cc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-62bf2bb0586c5a2c172f9f5f3e60a94e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-dark-e4e9d88dc4bd4bc4f331ef4419ecfa8f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="../site_libs/bootstrap/bootstrap-62bf2bb0586c5a2c172f9f5f3e60a94e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
 <script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
 <link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
@@ -1110,7 +1110,7 @@ drwxr-xr-x 755 private
 -rw-r--r-- 1 you you 0 Nov 17 14:04 notes.txt
 drwx------ 700 private
 0022</code></pre>
-<p>A symbolic change <strong>modifies</strong> the current permissions (<code>u+x</code> added one letter to whatever was there); an octal number <strong>sets</strong> all nine at once. So the same <code>chmod a-w</code> gave <code>555</code> on <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>’s folder and <code>444</code> on its files only because they started at <code>755</code> and <code>644</code>. Why do new files start at <code>644</code> and folders at <code>755</code>? Your <strong>umask</strong>, <code>0022</code>, removes <code>w</code> for group and other from every new file and folder. Sites can set a different umask; you rarely need to change it.</p>
+<p>A symbolic change <strong>modifies</strong> the current permissions (<code>u+x</code> added one letter to whatever was there); an octal number <strong>sets</strong> all nine at once. So the same <code>chmod a-w</code> gave <code>555</code> on <a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>’s folder and <code>444</code> on its files only because they started at <code>755</code> and <code>644</code>. Why do new files start at <code>644</code> and folders at <code>755</code>? Your <strong>umask</strong>, <code>0022</code>, removes <code>w</code> for group and other from every new file and folder. Sites can set a different umask: Nova’s is <code>0002</code>, which leaves <code>w</code> for the group, so new files start at <code>664</code> and folders at <code>775</code>, and your lab can edit them. SCINet’s Ceres sets <code>0027</code>, so new files start at <code>640</code> and folders at <code>750</code>: your group can read them but not change them, and other users cannot see them. On a cluster that does this, a labmate who must edit your file in a shared project folder needs you to run <code>chmod g+w</code> on it (<a href="#tbl-chmod-recipes" class="quarto-xref">Table&nbsp;<span>7.2</span></a>). Check yours with <code>umask</code>; you rarely need to change it.</p>
 <div id="tbl-chmod-recipes" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-chmod-recipes-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1210,7 +1210,7 @@ Table&nbsp;7.2: Common permission changes. The “before” column matters for s
 <h3 data-number="7.2.2" class="anchored" data-anchor-id="try-it-three-ways-to-write-the-same-permissions"><span class="header-section-number">7.2.2</span> Try it: three ways to write the same permissions</h3>
 <p><a href="#fig-permission-calculator" class="quarto-xref">Figure&nbsp;<span>7.2</span></a> shows the string, the octal number, and the symbolic <code>chmod</code> for any combination. Tick boxes and watch all three change; switch between file and folder to see what the letters mean. Try making <code>750</code>, then <code>644</code>, then the folder setting <code>700</code>.</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="313" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 312;"><span id="cb8-313"><a href="#cb8-313" aria-hidden="true" tabindex="-1"></a>viewof permKind <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"file"</span><span class="op">,</span> <span class="st">"folder"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Permissions on a"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"file"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb8" data-startfrom="319" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 318;"><span id="cb8-319"><a href="#cb8-319" aria-hidden="true" tabindex="-1"></a>viewof permKind <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">radio</span>([<span class="st">"file"</span><span class="op">,</span> <span class="st">"folder"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"Permissions on a"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> <span class="st">"file"</span>})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-1" data-nodetype="declaration">
 
@@ -1218,7 +1218,7 @@ Table&nbsp;7.2: Common permission changes. The “before” column matters for s
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb9" data-startfrom="318" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 317;"><span id="cb9-318"><a href="#cb9-318" aria-hidden="true" tabindex="-1"></a>viewof permUser <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"user (owner)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb9" data-startfrom="324" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 323;"><span id="cb9-324"><a href="#cb9-324" aria-hidden="true" tabindex="-1"></a>viewof permUser <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"user (owner)"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-2" data-nodetype="declaration">
 
@@ -1226,7 +1226,7 @@ Table&nbsp;7.2: Common permission changes. The “before” column matters for s
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb10" data-startfrom="323" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 322;"><span id="cb10-323"><a href="#cb10-323" aria-hidden="true" tabindex="-1"></a>viewof permGroup <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"group"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"r"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb10" data-startfrom="329" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 328;"><span id="cb10-329"><a href="#cb10-329" aria-hidden="true" tabindex="-1"></a>viewof permGroup <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"group"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"r"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-3" data-nodetype="declaration">
 
@@ -1234,7 +1234,7 @@ Table&nbsp;7.2: Common permission changes. The “before” column matters for s
 </div>
 </div>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb11" data-startfrom="328" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 327;"><span id="cb11-328"><a href="#cb11-328" aria-hidden="true" tabindex="-1"></a>viewof permOther <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"other"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"r"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb11" data-startfrom="334" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 333;"><span id="cb11-334"><a href="#cb11-334" aria-hidden="true" tabindex="-1"></a>viewof permOther <span class="op">=</span> Inputs<span class="op">.</span><span class="fu">checkbox</span>([<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">,</span> {<span class="dt">label</span><span class="op">:</span> <span class="st">"other"</span><span class="op">,</span> <span class="dt">value</span><span class="op">:</span> [<span class="st">"r"</span>]})</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-4" data-nodetype="declaration">
 
@@ -1245,56 +1245,56 @@ Table&nbsp;7.2: Common permission changes. The “before” column matters for s
 <figure class="quarto-float quarto-float-fig figure">
 <div aria-describedby="fig-permission-calculator-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb12" data-startfrom="334" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 333;"><span id="cb12-334"><a href="#cb12-334" aria-hidden="true" tabindex="-1"></a>{</span>
-<span id="cb12-335"><a href="#cb12-335" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> classes <span class="op">=</span> [</span>
-<span id="cb12-336"><a href="#cb12-336" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">name</span><span class="op">:</span> <span class="st">"user"</span><span class="op">,</span> <span class="dt">key</span><span class="op">:</span> <span class="st">"u"</span><span class="op">,</span> <span class="dt">bits</span><span class="op">:</span> permUser}<span class="op">,</span></span>
-<span id="cb12-337"><a href="#cb12-337" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">name</span><span class="op">:</span> <span class="st">"group"</span><span class="op">,</span> <span class="dt">key</span><span class="op">:</span> <span class="st">"g"</span><span class="op">,</span> <span class="dt">bits</span><span class="op">:</span> permGroup}<span class="op">,</span></span>
-<span id="cb12-338"><a href="#cb12-338" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">name</span><span class="op">:</span> <span class="st">"other"</span><span class="op">,</span> <span class="dt">key</span><span class="op">:</span> <span class="st">"o"</span><span class="op">,</span> <span class="dt">bits</span><span class="op">:</span> permOther}</span>
-<span id="cb12-339"><a href="#cb12-339" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">;</span></span>
-<span id="cb12-340"><a href="#cb12-340" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> letters <span class="op">=</span> [<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">;</span></span>
-<span id="cb12-341"><a href="#cb12-341" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> value <span class="op">=</span> {<span class="dt">r</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">1</span>}<span class="op">;</span></span>
-<span id="cb12-342"><a href="#cb12-342" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> isDir <span class="op">=</span> permKind <span class="op">===</span> <span class="st">"folder"</span><span class="op">;</span></span>
-<span id="cb12-343"><a href="#cb12-343" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> str <span class="op">=</span> (isDir <span class="op">?</span> <span class="st">"d"</span> <span class="op">:</span> <span class="st">"-"</span>) <span class="op">+</span> classes<span class="op">.</span><span class="fu">map</span>((c) <span class="kw">=&gt;</span></span>
-<span id="cb12-344"><a href="#cb12-344" aria-hidden="true" tabindex="-1"></a>    letters<span class="op">.</span><span class="fu">map</span>((l) <span class="kw">=&gt;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l) <span class="op">?</span> l <span class="op">:</span> <span class="st">"-"</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="op">;</span></span>
-<span id="cb12-345"><a href="#cb12-345" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> octal <span class="op">=</span> classes<span class="op">.</span><span class="fu">map</span>((c) <span class="kw">=&gt;</span></span>
-<span id="cb12-346"><a href="#cb12-346" aria-hidden="true" tabindex="-1"></a>    c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">reduce</span>((s<span class="op">,</span> l) <span class="kw">=&gt;</span> s <span class="op">+</span> value[l]<span class="op">,</span> <span class="dv">0</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="op">;</span></span>
-<span id="cb12-347"><a href="#cb12-347" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sym <span class="op">=</span> classes<span class="op">.</span><span class="fu">map</span>((c) <span class="kw">=&gt;</span></span>
-<span id="cb12-348"><a href="#cb12-348" aria-hidden="true" tabindex="-1"></a>    c<span class="op">.</span><span class="at">key</span> <span class="op">+</span> <span class="st">"="</span> <span class="op">+</span> letters<span class="op">.</span><span class="fu">filter</span>((l) <span class="kw">=&gt;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l))<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">","</span>)<span class="op">;</span></span>
-<span id="cb12-349"><a href="#cb12-349" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> name <span class="op">=</span> isDir <span class="op">?</span> <span class="st">"folder"</span> <span class="op">:</span> <span class="st">"file.txt"</span><span class="op">;</span></span>
-<span id="cb12-350"><a href="#cb12-350" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> fileWords <span class="op">=</span> {<span class="dt">r</span><span class="op">:</span> <span class="st">"read it"</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="st">"change it"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"run it"</span>}<span class="op">;</span></span>
-<span id="cb12-351"><a href="#cb12-351" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> dirWords <span class="op">=</span> {<span class="dt">r</span><span class="op">:</span> <span class="st">"list names"</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="st">"add/remove entries"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"reach entries"</span>}<span class="op">;</span></span>
-<span id="cb12-352"><a href="#cb12-352" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> say <span class="op">=</span> (c) <span class="kw">=&gt;</span> {</span>
-<span id="cb12-353"><a href="#cb12-353" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> w <span class="op">=</span> isDir <span class="op">?</span> dirWords <span class="op">:</span> fileWords<span class="op">;</span></span>
-<span id="cb12-354"><a href="#cb12-354" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> can <span class="op">=</span> letters<span class="op">.</span><span class="fu">filter</span>((l) <span class="kw">=&gt;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l))<span class="op">.</span><span class="fu">map</span>((l) <span class="kw">=&gt;</span> w[l])<span class="op">;</span></span>
-<span id="cb12-355"><a href="#cb12-355" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (isDir <span class="op">&amp;&amp;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(<span class="st">"w"</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span>c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(<span class="st">"x"</span>))</span>
-<span id="cb12-356"><a href="#cb12-356" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> can<span class="op">.</span><span class="fu">join</span>(<span class="st">", "</span>) <span class="op">+</span> <span class="st">" (but w is useless without x)"</span><span class="op">;</span></span>
-<span id="cb12-357"><a href="#cb12-357" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> can<span class="op">.</span><span class="at">length</span> <span class="op">?</span> can<span class="op">.</span><span class="fu">join</span>(<span class="st">", "</span>) <span class="op">:</span> <span class="st">"nothing"</span><span class="op">;</span></span>
-<span id="cb12-358"><a href="#cb12-358" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
-<span id="cb12-359"><a href="#cb12-359" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> box <span class="op">=</span> <span class="dv">40</span><span class="op">,</span> gap <span class="op">=</span> <span class="dv">6</span><span class="op">,</span> groupGap <span class="op">=</span> <span class="dv">30</span><span class="op">,</span> left <span class="op">=</span> <span class="dv">60</span><span class="op">,</span> top <span class="op">=</span> <span class="dv">40</span><span class="op">;</span></span>
-<span id="cb12-360"><a href="#cb12-360" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> gx <span class="op">=</span> (i) <span class="kw">=&gt;</span> left <span class="op">+</span> i <span class="op">*</span> (<span class="dv">3</span> <span class="op">*</span> box <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> gap <span class="op">+</span> groupGap)<span class="op">;</span></span>
-<span id="cb12-361"><a href="#cb12-361" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;svg class="diagram" viewBox="0 0 720 300" role="img"</span></span>
-<span id="cb12-362"><a href="#cb12-362" aria-hidden="true" tabindex="-1"></a><span class="vs">      aria-label="</span><span class="sc">${</span><span class="vs">`</span><span class="sc">${</span>str<span class="sc">}</span><span class="vs">, octal </span><span class="sc">${</span>octal<span class="sc">}</span><span class="vs">, chmod </span><span class="sc">${</span>sym<span class="sc">}</span><span class="vs">`</span><span class="sc">}</span><span class="vs">"&gt;</span></span>
-<span id="cb12-363"><a href="#cb12-363" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="</span><span class="sc">${</span>left <span class="op">-</span> <span class="dv">40</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">27</span><span class="sc">}</span><span class="vs">" font-size="22" class="mono fill-muted"&gt;</span><span class="sc">${</span>isDir <span class="op">?</span> <span class="st">"d"</span> <span class="op">:</span> <span class="st">"-"</span><span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
-<span id="cb12-364"><a href="#cb12-364" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>classes<span class="op">.</span><span class="fu">map</span>((c<span class="op">,</span> i) <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;g&gt;</span></span>
-<span id="cb12-365"><a href="#cb12-365" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;text x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> (<span class="dv">3</span> <span class="op">*</span> box <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> gap) <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">-</span> <span class="dv">12</span><span class="sc">}</span><span class="vs">" font-size="13"</span></span>
-<span id="cb12-366"><a href="#cb12-366" aria-hidden="true" tabindex="-1"></a><span class="vs">            text-anchor="middle" class="fill-muted"&gt;</span><span class="sc">${</span>c<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
-<span id="cb12-367"><a href="#cb12-367" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>letters<span class="op">.</span><span class="fu">map</span>((l<span class="op">,</span> j) <span class="kw">=&gt;</span> {</span>
-<span id="cb12-368"><a href="#cb12-368" aria-hidden="true" tabindex="-1"></a>        <span class="kw">const</span> on <span class="op">=</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l)<span class="op">;</span></span>
-<span id="cb12-369"><a href="#cb12-369" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;g&gt;</span></span>
-<span id="cb12-370"><a href="#cb12-370" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;rect x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> j <span class="op">*</span> (box <span class="op">+</span> gap)<span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top<span class="sc">}</span><span class="vs">" width="</span><span class="sc">${</span>box<span class="sc">}</span><span class="vs">" height="</span><span class="sc">${</span>box<span class="sc">}</span><span class="vs">" rx="5"</span></span>
-<span id="cb12-371"><a href="#cb12-371" aria-hidden="true" tabindex="-1"></a><span class="vs">                class="</span><span class="sc">${</span>on <span class="op">?</span> <span class="st">"fill-given-soft stroke-given"</span> <span class="op">:</span> <span class="st">"fill-surface stroke-line"</span><span class="sc">}</span><span class="vs">"/&gt;</span></span>
-<span id="cb12-372"><a href="#cb12-372" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;text x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> j <span class="op">*</span> (box <span class="op">+</span> gap) <span class="op">+</span> box <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">27</span><span class="sc">}</span><span class="vs">" font-size="20"</span></span>
-<span id="cb12-373"><a href="#cb12-373" aria-hidden="true" tabindex="-1"></a><span class="vs">                text-anchor="middle" class="mono </span><span class="sc">${</span>on <span class="op">?</span> <span class="st">"fill-given"</span> <span class="op">:</span> <span class="st">"fill-muted"</span><span class="sc">}</span><span class="vs">"&gt;</span><span class="sc">${</span>on <span class="op">?</span> l <span class="op">:</span> <span class="st">"-"</span><span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
-<span id="cb12-374"><a href="#cb12-374" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;/g&gt;`</span><span class="op">;</span>})<span class="sc">}</span></span>
-<span id="cb12-375"><a href="#cb12-375" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;text x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> (<span class="dv">3</span> <span class="op">*</span> box <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> gap) <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">+</span> box <span class="op">+</span> <span class="dv">26</span><span class="sc">}</span><span class="vs">" font-size="18"</span></span>
-<span id="cb12-376"><a href="#cb12-376" aria-hidden="true" tabindex="-1"></a><span class="vs">            text-anchor="middle" class="mono"&gt;</span><span class="sc">${</span>c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">reduce</span>((s<span class="op">,</span> l) <span class="kw">=&gt;</span> s <span class="op">+</span> value[l]<span class="op">,</span> <span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
-<span id="cb12-377"><a href="#cb12-377" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/g&gt;`</span>)<span class="sc">}</span></span>
-<span id="cb12-378"><a href="#cb12-378" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">120</span><span class="sc">}</span><span class="vs">" font-size="15"&gt;String: &lt;tspan class="mono" font-weight="700"&gt;</span><span class="sc">${</span>str<span class="sc">}</span><span class="vs">&lt;/tspan&gt;&lt;/text&gt;</span></span>
-<span id="cb12-379"><a href="#cb12-379" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">146</span><span class="sc">}</span><span class="vs">" font-size="15"&gt;Octal: &lt;tspan class="mono" font-weight="700"&gt;chmod </span><span class="sc">${</span>octal<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">&lt;/tspan&gt;&lt;/text&gt;</span></span>
-<span id="cb12-380"><a href="#cb12-380" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">172</span><span class="sc">}</span><span class="vs">" font-size="15"&gt;Symbolic: &lt;tspan class="mono" font-weight="700"&gt;chmod </span><span class="sc">${</span>sym<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">&lt;/tspan&gt;&lt;/text&gt;</span></span>
-<span id="cb12-381"><a href="#cb12-381" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>classes<span class="op">.</span><span class="fu">map</span>((c<span class="op">,</span> i) <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">204</span> <span class="op">+</span> i <span class="op">*</span> <span class="dv">20</span><span class="sc">}</span><span class="vs">" font-size="13.5" class="fill-muted"&gt;</span><span class="sc">${</span>c<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs">: </span><span class="sc">${</span><span class="fu">say</span>(c)<span class="sc">}</span><span class="vs">&lt;/text&gt;`</span>)<span class="sc">}</span></span>
-<span id="cb12-382"><a href="#cb12-382" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/svg&gt;`</span><span class="op">;</span></span>
-<span id="cb12-383"><a href="#cb12-383" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code hidden" id="cb12" data-startfrom="340" data-source-offset="0"><pre class="sourceCode js code-with-copy"><code class="sourceCode javascript" style="counter-reset: source-line 339;"><span id="cb12-340"><a href="#cb12-340" aria-hidden="true" tabindex="-1"></a>{</span>
+<span id="cb12-341"><a href="#cb12-341" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> classes <span class="op">=</span> [</span>
+<span id="cb12-342"><a href="#cb12-342" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">name</span><span class="op">:</span> <span class="st">"user"</span><span class="op">,</span> <span class="dt">key</span><span class="op">:</span> <span class="st">"u"</span><span class="op">,</span> <span class="dt">bits</span><span class="op">:</span> permUser}<span class="op">,</span></span>
+<span id="cb12-343"><a href="#cb12-343" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">name</span><span class="op">:</span> <span class="st">"group"</span><span class="op">,</span> <span class="dt">key</span><span class="op">:</span> <span class="st">"g"</span><span class="op">,</span> <span class="dt">bits</span><span class="op">:</span> permGroup}<span class="op">,</span></span>
+<span id="cb12-344"><a href="#cb12-344" aria-hidden="true" tabindex="-1"></a>    {<span class="dt">name</span><span class="op">:</span> <span class="st">"other"</span><span class="op">,</span> <span class="dt">key</span><span class="op">:</span> <span class="st">"o"</span><span class="op">,</span> <span class="dt">bits</span><span class="op">:</span> permOther}</span>
+<span id="cb12-345"><a href="#cb12-345" aria-hidden="true" tabindex="-1"></a>  ]<span class="op">;</span></span>
+<span id="cb12-346"><a href="#cb12-346" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> letters <span class="op">=</span> [<span class="st">"r"</span><span class="op">,</span> <span class="st">"w"</span><span class="op">,</span> <span class="st">"x"</span>]<span class="op">;</span></span>
+<span id="cb12-347"><a href="#cb12-347" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> value <span class="op">=</span> {<span class="dt">r</span><span class="op">:</span> <span class="dv">4</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="dv">2</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="dv">1</span>}<span class="op">;</span></span>
+<span id="cb12-348"><a href="#cb12-348" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> isDir <span class="op">=</span> permKind <span class="op">===</span> <span class="st">"folder"</span><span class="op">;</span></span>
+<span id="cb12-349"><a href="#cb12-349" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> str <span class="op">=</span> (isDir <span class="op">?</span> <span class="st">"d"</span> <span class="op">:</span> <span class="st">"-"</span>) <span class="op">+</span> classes<span class="op">.</span><span class="fu">map</span>((c) <span class="kw">=&gt;</span></span>
+<span id="cb12-350"><a href="#cb12-350" aria-hidden="true" tabindex="-1"></a>    letters<span class="op">.</span><span class="fu">map</span>((l) <span class="kw">=&gt;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l) <span class="op">?</span> l <span class="op">:</span> <span class="st">"-"</span>)<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="op">;</span></span>
+<span id="cb12-351"><a href="#cb12-351" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> octal <span class="op">=</span> classes<span class="op">.</span><span class="fu">map</span>((c) <span class="kw">=&gt;</span></span>
+<span id="cb12-352"><a href="#cb12-352" aria-hidden="true" tabindex="-1"></a>    c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">reduce</span>((s<span class="op">,</span> l) <span class="kw">=&gt;</span> s <span class="op">+</span> value[l]<span class="op">,</span> <span class="dv">0</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>)<span class="op">;</span></span>
+<span id="cb12-353"><a href="#cb12-353" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> sym <span class="op">=</span> classes<span class="op">.</span><span class="fu">map</span>((c) <span class="kw">=&gt;</span></span>
+<span id="cb12-354"><a href="#cb12-354" aria-hidden="true" tabindex="-1"></a>    c<span class="op">.</span><span class="at">key</span> <span class="op">+</span> <span class="st">"="</span> <span class="op">+</span> letters<span class="op">.</span><span class="fu">filter</span>((l) <span class="kw">=&gt;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l))<span class="op">.</span><span class="fu">join</span>(<span class="st">""</span>))<span class="op">.</span><span class="fu">join</span>(<span class="st">","</span>)<span class="op">;</span></span>
+<span id="cb12-355"><a href="#cb12-355" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> name <span class="op">=</span> isDir <span class="op">?</span> <span class="st">"folder"</span> <span class="op">:</span> <span class="st">"file.txt"</span><span class="op">;</span></span>
+<span id="cb12-356"><a href="#cb12-356" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> fileWords <span class="op">=</span> {<span class="dt">r</span><span class="op">:</span> <span class="st">"read it"</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="st">"change it"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"run it"</span>}<span class="op">;</span></span>
+<span id="cb12-357"><a href="#cb12-357" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> dirWords <span class="op">=</span> {<span class="dt">r</span><span class="op">:</span> <span class="st">"list names"</span><span class="op">,</span> <span class="dt">w</span><span class="op">:</span> <span class="st">"add/remove entries"</span><span class="op">,</span> <span class="dt">x</span><span class="op">:</span> <span class="st">"reach entries"</span>}<span class="op">;</span></span>
+<span id="cb12-358"><a href="#cb12-358" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> say <span class="op">=</span> (c) <span class="kw">=&gt;</span> {</span>
+<span id="cb12-359"><a href="#cb12-359" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> w <span class="op">=</span> isDir <span class="op">?</span> dirWords <span class="op">:</span> fileWords<span class="op">;</span></span>
+<span id="cb12-360"><a href="#cb12-360" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> can <span class="op">=</span> letters<span class="op">.</span><span class="fu">filter</span>((l) <span class="kw">=&gt;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l))<span class="op">.</span><span class="fu">map</span>((l) <span class="kw">=&gt;</span> w[l])<span class="op">;</span></span>
+<span id="cb12-361"><a href="#cb12-361" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (isDir <span class="op">&amp;&amp;</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(<span class="st">"w"</span>) <span class="op">&amp;&amp;</span> <span class="op">!</span>c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(<span class="st">"x"</span>))</span>
+<span id="cb12-362"><a href="#cb12-362" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> can<span class="op">.</span><span class="fu">join</span>(<span class="st">", "</span>) <span class="op">+</span> <span class="st">" (but w is useless without x)"</span><span class="op">;</span></span>
+<span id="cb12-363"><a href="#cb12-363" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> can<span class="op">.</span><span class="at">length</span> <span class="op">?</span> can<span class="op">.</span><span class="fu">join</span>(<span class="st">", "</span>) <span class="op">:</span> <span class="st">"nothing"</span><span class="op">;</span></span>
+<span id="cb12-364"><a href="#cb12-364" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb12-365"><a href="#cb12-365" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> box <span class="op">=</span> <span class="dv">40</span><span class="op">,</span> gap <span class="op">=</span> <span class="dv">6</span><span class="op">,</span> groupGap <span class="op">=</span> <span class="dv">30</span><span class="op">,</span> left <span class="op">=</span> <span class="dv">60</span><span class="op">,</span> top <span class="op">=</span> <span class="dv">40</span><span class="op">;</span></span>
+<span id="cb12-366"><a href="#cb12-366" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> gx <span class="op">=</span> (i) <span class="kw">=&gt;</span> left <span class="op">+</span> i <span class="op">*</span> (<span class="dv">3</span> <span class="op">*</span> box <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> gap <span class="op">+</span> groupGap)<span class="op">;</span></span>
+<span id="cb12-367"><a href="#cb12-367" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;svg class="diagram" viewBox="0 0 720 300" role="img"</span></span>
+<span id="cb12-368"><a href="#cb12-368" aria-hidden="true" tabindex="-1"></a><span class="vs">      aria-label="</span><span class="sc">${</span><span class="vs">`</span><span class="sc">${</span>str<span class="sc">}</span><span class="vs">, octal </span><span class="sc">${</span>octal<span class="sc">}</span><span class="vs">, chmod </span><span class="sc">${</span>sym<span class="sc">}</span><span class="vs">`</span><span class="sc">}</span><span class="vs">"&gt;</span></span>
+<span id="cb12-369"><a href="#cb12-369" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="</span><span class="sc">${</span>left <span class="op">-</span> <span class="dv">40</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">27</span><span class="sc">}</span><span class="vs">" font-size="22" class="mono fill-muted"&gt;</span><span class="sc">${</span>isDir <span class="op">?</span> <span class="st">"d"</span> <span class="op">:</span> <span class="st">"-"</span><span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
+<span id="cb12-370"><a href="#cb12-370" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>classes<span class="op">.</span><span class="fu">map</span>((c<span class="op">,</span> i) <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;g&gt;</span></span>
+<span id="cb12-371"><a href="#cb12-371" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;text x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> (<span class="dv">3</span> <span class="op">*</span> box <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> gap) <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">-</span> <span class="dv">12</span><span class="sc">}</span><span class="vs">" font-size="13"</span></span>
+<span id="cb12-372"><a href="#cb12-372" aria-hidden="true" tabindex="-1"></a><span class="vs">            text-anchor="middle" class="fill-muted"&gt;</span><span class="sc">${</span>c<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
+<span id="cb12-373"><a href="#cb12-373" aria-hidden="true" tabindex="-1"></a><span class="vs">      </span><span class="sc">${</span>letters<span class="op">.</span><span class="fu">map</span>((l<span class="op">,</span> j) <span class="kw">=&gt;</span> {</span>
+<span id="cb12-374"><a href="#cb12-374" aria-hidden="true" tabindex="-1"></a>        <span class="kw">const</span> on <span class="op">=</span> c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">includes</span>(l)<span class="op">;</span></span>
+<span id="cb12-375"><a href="#cb12-375" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;g&gt;</span></span>
+<span id="cb12-376"><a href="#cb12-376" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;rect x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> j <span class="op">*</span> (box <span class="op">+</span> gap)<span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top<span class="sc">}</span><span class="vs">" width="</span><span class="sc">${</span>box<span class="sc">}</span><span class="vs">" height="</span><span class="sc">${</span>box<span class="sc">}</span><span class="vs">" rx="5"</span></span>
+<span id="cb12-377"><a href="#cb12-377" aria-hidden="true" tabindex="-1"></a><span class="vs">                class="</span><span class="sc">${</span>on <span class="op">?</span> <span class="st">"fill-given-soft stroke-given"</span> <span class="op">:</span> <span class="st">"fill-surface stroke-line"</span><span class="sc">}</span><span class="vs">"/&gt;</span></span>
+<span id="cb12-378"><a href="#cb12-378" aria-hidden="true" tabindex="-1"></a><span class="vs">          &lt;text x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> j <span class="op">*</span> (box <span class="op">+</span> gap) <span class="op">+</span> box <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">27</span><span class="sc">}</span><span class="vs">" font-size="20"</span></span>
+<span id="cb12-379"><a href="#cb12-379" aria-hidden="true" tabindex="-1"></a><span class="vs">                text-anchor="middle" class="mono </span><span class="sc">${</span>on <span class="op">?</span> <span class="st">"fill-given"</span> <span class="op">:</span> <span class="st">"fill-muted"</span><span class="sc">}</span><span class="vs">"&gt;</span><span class="sc">${</span>on <span class="op">?</span> l <span class="op">:</span> <span class="st">"-"</span><span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
+<span id="cb12-380"><a href="#cb12-380" aria-hidden="true" tabindex="-1"></a><span class="vs">        &lt;/g&gt;`</span><span class="op">;</span>})<span class="sc">}</span></span>
+<span id="cb12-381"><a href="#cb12-381" aria-hidden="true" tabindex="-1"></a><span class="vs">      &lt;text x="</span><span class="sc">${</span><span class="fu">gx</span>(i) <span class="op">+</span> (<span class="dv">3</span> <span class="op">*</span> box <span class="op">+</span> <span class="dv">2</span> <span class="op">*</span> gap) <span class="op">/</span> <span class="dv">2</span><span class="sc">}</span><span class="vs">" y="</span><span class="sc">${</span>top <span class="op">+</span> box <span class="op">+</span> <span class="dv">26</span><span class="sc">}</span><span class="vs">" font-size="18"</span></span>
+<span id="cb12-382"><a href="#cb12-382" aria-hidden="true" tabindex="-1"></a><span class="vs">            text-anchor="middle" class="mono"&gt;</span><span class="sc">${</span>c<span class="op">.</span><span class="at">bits</span><span class="op">.</span><span class="fu">reduce</span>((s<span class="op">,</span> l) <span class="kw">=&gt;</span> s <span class="op">+</span> value[l]<span class="op">,</span> <span class="dv">0</span>)<span class="sc">}</span><span class="vs">&lt;/text&gt;</span></span>
+<span id="cb12-383"><a href="#cb12-383" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;/g&gt;`</span>)<span class="sc">}</span></span>
+<span id="cb12-384"><a href="#cb12-384" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">120</span><span class="sc">}</span><span class="vs">" font-size="15"&gt;String: &lt;tspan class="mono" font-weight="700"&gt;</span><span class="sc">${</span>str<span class="sc">}</span><span class="vs">&lt;/tspan&gt;&lt;/text&gt;</span></span>
+<span id="cb12-385"><a href="#cb12-385" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">146</span><span class="sc">}</span><span class="vs">" font-size="15"&gt;Octal: &lt;tspan class="mono" font-weight="700"&gt;chmod </span><span class="sc">${</span>octal<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">&lt;/tspan&gt;&lt;/text&gt;</span></span>
+<span id="cb12-386"><a href="#cb12-386" aria-hidden="true" tabindex="-1"></a><span class="vs">    &lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">172</span><span class="sc">}</span><span class="vs">" font-size="15"&gt;Symbolic: &lt;tspan class="mono" font-weight="700"&gt;chmod </span><span class="sc">${</span>sym<span class="sc">}</span><span class="vs"> </span><span class="sc">${</span>name<span class="sc">}</span><span class="vs">&lt;/tspan&gt;&lt;/text&gt;</span></span>
+<span id="cb12-387"><a href="#cb12-387" aria-hidden="true" tabindex="-1"></a><span class="vs">    </span><span class="sc">${</span>classes<span class="op">.</span><span class="fu">map</span>((c<span class="op">,</span> i) <span class="kw">=&gt;</span> htl<span class="op">.</span><span class="fu">svg</span><span class="vs">`&lt;text x="20" y="</span><span class="sc">${</span>top <span class="op">+</span> <span class="dv">204</span> <span class="op">+</span> i <span class="op">*</span> <span class="dv">20</span><span class="sc">}</span><span class="vs">" font-size="13.5" class="fill-muted"&gt;</span><span class="sc">${</span>c<span class="op">.</span><span class="at">name</span><span class="sc">}</span><span class="vs">: </span><span class="sc">${</span><span class="fu">say</span>(c)<span class="sc">}</span><span class="vs">&lt;/text&gt;`</span>)<span class="sc">}</span></span>
+<span id="cb12-388"><a href="#cb12-388" aria-hidden="true" tabindex="-1"></a><span class="vs">  &lt;/svg&gt;`</span><span class="op">;</span></span>
+<span id="cb12-389"><a href="#cb12-389" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display">
 <div id="ojs-cell-5" data-nodetype="expression">
 
@@ -1348,7 +1348,19 @@ Table&nbsp;7.3: Two special permissions on shared folders (overview).
 </div>
 </figure>
 </div>
-<p>Setgid decides the group of a new file, not whether the group may read it: the new file’s permissions still come from your umask (and any default ACLs). If files you create in a project folder come out unreadable to your lab, check their group and permissions with <code>ls -l</code> and ask the help desk what the site expects. The <a href="https://www.gnu.org/software/coreutils/manual/html_node/File-permissions.html">GNU coreutils manual</a> describes all of this in full.</p>
+<p>Setgid decides the group of a new file, not whether the group may read it: the new file’s permissions still come from your umask (and any default ACLs). If files you create in a project folder come out unreadable to your lab, check their group and permissions with <code>ls -l</code> and ask the help desk what the site expects.</p>
+<p>Here is what this looks like on Nova, in a group folder and a lab folder inside it (names replaced by <code>&lt;group&gt;</code>, <code>&lt;lab&gt;</code>, and <code>you</code>):</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-ld</span> /work/<span class="op">&lt;</span>group<span class="op">&gt;</span> /work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>lab<span class="op">&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>lab<span class="op">&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> group_test <span class="kw">&amp;&amp;</span> <span class="fu">ls</span> <span class="at">-l</span> group_test</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="bu">umask</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<pre><code>drwxrws--T. 43 root its-hpc-nova-&lt;group&gt; 44 Nov 18 12:11 /work/&lt;group&gt;
+drwxrwsr-x. 16 you  its-hpc-nova-&lt;group&gt; 16 Nov 16 18:24 /work/&lt;group&gt;/&lt;lab&gt;
+-rw-rw-r--. 1 you its-hpc-nova-&lt;group&gt; 0 Nov 20 12:34 group_test
+0002</code></pre>
+<p>Both folders have the setgid <code>s</code>, so the new file belongs to the lab’s group, not to your main group (<code>domain users</code> on Nova). It is <code>rw-rw-r--</code> because Nova’s umask is <code>0002</code>, so your labmates can edit it. The group folder also has a capital <code>T</code>. That is the sticky bit on a folder that others can’t enter (no <code>x</code> for other); a lowercase <code>t</code> means the sticky bit plus <code>x</code>. The <code>.</code> after each permission string means the file has an SELinux security label, which you can ignore. Delete the test file with <code>rm group_test</code> when you are done.</p>
+<p>SCINet’s Ceres follows the same pattern in <code>/project/&lt;name&gt;</code>, owned by <code>root</code> and the group <code>proj-&lt;name&gt;</code>, with two differences. Your main group there is a personal group named after you, so without the setgid <code>s</code> your files would belong to a group nobody else is in. And the umask is <code>0027</code>, so the same <code>touch</code> gives <code>-rw-r-----</code>, and a folder you make gives <code>drwxr-s---</code>: your lab can read and enter, but not edit or add files, until you run <code>chmod g+w</code> on them.</p>
+<p>The <a href="https://www.gnu.org/software/coreutils/manual/html_node/File-permissions.html">GNU coreutils manual</a> describes all of this in full.</p>
 <p><strong>Administrators and <code>sudo</code>.</strong> On your laptop, <code>sudo</code> runs one command as the administrator (<code>root</code>), for changes to the system itself, such as installing packages with <code>apt</code>. Never use it to fix permissions on your own files: files created by <code>root</code> in your home folder are a new problem. On a cluster you are not an administrator and this book never needs <code>sudo</code>: the book environment and later ones install into your own folders (1, <a href="23-environments.html" class="quarto-xref"><span>Chapter 23</span></a>).</p>
 <div class="check">
 <p><strong>Check yourself.</strong> (a) A folder is <code>drwxr-xr-x</code> and owned by you; a file in it is <code>-r--r--r--</code>. Can you delete the file? (b) What does <code>chmod 640 notes.txt</code> give, as a string? (c) A folder you own is <code>drw-r--r--</code>. Can you <code>cat</code> a readable file inside it?</p>
@@ -1380,18 +1392,18 @@ Table&nbsp;7.3: Two special permissions on shared folders (overview).
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-14" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-14-1"><a href="#annotated-cell-14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch07</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-14" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-14-2" class="code-annotation-target"><a href="#annotated-cell-14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'echo "hello from $0"\n'</span> <span class="op">&gt;</span> hello.sh</span>
-<span id="annotated-cell-14-3"><a href="#annotated-cell-14-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> hello.sh</span>
-<span id="annotated-cell-14-4"><a href="#annotated-cell-14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./hello.sh</span></span>
-<span id="annotated-cell-14-5"><a href="#annotated-cell-14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x hello.sh</span>
-<span id="annotated-cell-14-6"><a href="#annotated-cell-14-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./hello.sh</span></span>
-<span id="annotated-cell-14-7"><a href="#annotated-cell-14-7" aria-hidden="true" tabindex="-1"></a><span class="ex">hello.sh</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-16-1"><a href="#annotated-cell-16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch07</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-16" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-16-2" class="code-annotation-target"><a href="#annotated-cell-16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'echo "hello from $0"\n'</span> <span class="op">&gt;</span> hello.sh</span>
+<span id="annotated-cell-16-3"><a href="#annotated-cell-16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> hello.sh</span>
+<span id="annotated-cell-16-4"><a href="#annotated-cell-16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./hello.sh</span></span>
+<span id="annotated-cell-16-5"><a href="#annotated-cell-16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x hello.sh</span>
+<span id="annotated-cell-16-6"><a href="#annotated-cell-16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">./hello.sh</span></span>
+<span id="annotated-cell-16-7"><a href="#annotated-cell-16-7" aria-hidden="true" tabindex="-1"></a><span class="ex">hello.sh</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-14" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-16" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-14" data-code-lines="2" data-code-annotation="1"><code>$0</code> is the name the script was started as (<a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>).</span>
+<span data-code-cell="annotated-cell-16" data-code-lines="2" data-code-annotation="1"><code>$0</code> is the name the script was started as (<a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>).</span>
 </dd>
 </dl>
 <pre class="console"><code>hello from hello.sh
@@ -1455,8 +1467,8 @@ Table&nbsp;7.4: Four ways to run the same file.
 <div class="code-with-filename-file">
 <pre><strong>hello.sh</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="hello.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"hello from </span><span class="va">$0</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="hello.sh"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env bash</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"hello from </span><span class="va">$0</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>When a file with the <code>x</code> bit is run, the kernel reads its first line. If it starts with <code>#!</code> (said “shebang”), the rest names the program that should read the file, and the kernel starts that program with the file’s name (<a href="#fig-run-a-script" class="quarto-xref">Figure&nbsp;<span>7.3</span></a>). Without a shebang, bash happens to run the file as a bash script, but other programs that start it may not; always write one. It must be the very first line, starting at the first character.</p>
 <div id="fig-run-a-script" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -1621,12 +1633,12 @@ Figure&nbsp;7.3: What happens when you type <code>./hello.sh</code>. A path skip
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-17" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-17" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-17-1" class="code-annotation-target"><a href="#annotated-cell-17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-19" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-19" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-19-1" class="code-annotation-target"><a href="#annotated-cell-19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$PATH</span><span class="st">"</span> <span class="kw">|</span> <span class="fu">tr</span> <span class="st">':'</span> <span class="st">'\n'</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-17" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-19" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-17" data-code-lines="1" data-code-annotation="1"><code>PATH</code> is one line with folders separated by <code>:</code>; <code>tr</code> turns each <code>:</code> into a newline (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</span>
+<span data-code-cell="annotated-cell-19" data-code-lines="1" data-code-annotation="1"><code>PATH</code> is one line with folders separated by <code>:</code>; <code>tr</code> turns each <code>:</code> into a newline (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</span>
 </dd>
 </dl>
 <pre class="console"><code>/home/you/.pixi/bin
@@ -1642,8 +1654,8 @@ Figure&nbsp;7.3: What happens when you type <code>./hello.sh</code>. A path skip
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> ls</span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> cd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> ls</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> cd</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>ls is aliased to `ls --color=auto'
 ls is /usr/bin/ls
@@ -1659,9 +1671,9 @@ ls is /bin/ls</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> seqkit</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash <span class="at">-c</span> <span class="st">'type -a seqkit; echo "$PATH" | tr ":" "\n" | head -n 3'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> seqkit</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash <span class="at">-c</span> <span class="st">'type -a seqkit; echo "$PATH" | tr ":" "\n" | head -n 3'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>bash: type: seqkit: not found
 seqkit is /home/you/bioinf-computing/.pixi/envs/default/bin/seqkit
@@ -1769,7 +1781,7 @@ Figure&nbsp;7.4: How bash finds <code>seqkit</code>: it checks each <code>PATH</
 </figure>
 </div>
 <p><strong>The wrong copy.</strong> If two copies are on <code>PATH</code>, the first wins, even if it is older. This is what <a href="04-getting-help.html" class="quarto-xref"><span>Chapter 4</span></a> warned about: a bare <code>seqkit</code> might run some other installation, with a different version. Check with <code>type -a seqkit</code> and <code>seqkit version</code>; inside the book, <code>pixi run</code> makes the environment’s copy win. On a cluster, <code>module load</code> also works by changing <code>PATH</code> (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>), so a module loaded beside <code>pixi shell</code> can put a second copy in front. Exercise 3 sets up a fake <code>seqkit</code> to show this safely.</p>
-<p><code>which seqkit</code> is a common alternative, but it is a separate program, its versions behave differently, and its answer need not match what bash will run (it knows nothing of your aliases, for example). Use bash’s own <code>type -a</code>. <a href="#tbl-finding-commands" class="quarto-xref">Table&nbsp;<span>7.5</span></a> collects the commands.</p>
+<p><code>which seqkit</code> is a common alternative, but it is a separate program, its versions behave differently, and its answer need not match what bash will run. Usually it knows nothing of your aliases; on Nova <code>which ls</code> shows the alias too, because there <code>type which</code> reports <code>which is a function</code>: the site wraps the real <code>/usr/bin/which</code> in a shell function that passes it your aliases and functions. Use bash’s own <code>type -a</code>. <a href="#tbl-finding-commands" class="quarto-xref">Table&nbsp;<span>7.5</span></a> collects the commands.</p>
 <div id="tbl-finding-commands" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-finding-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
@@ -1831,7 +1843,7 @@ Table&nbsp;7.5: Commands for finding out what runs.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/bin:</span><span class="va">$PATH</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/bin:</span><span class="va">$PATH</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>$PATH</code> on the right is the old list, so this adds one folder and keeps the rest. It is the same shape as the <code>gnubin</code> line in <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>’s <code>~/.bash_profile</code> and the line the pixi installer added to <code>~/.bashrc</code>. It lasts for this terminal only; <a href="#sec-linux-system-startup" class="quarto-xref"><span>Section 7.6</span></a> makes such lines permanent. Two mistakes to avoid:</p>
 <ul>
@@ -1891,9 +1903,9 @@ Table&nbsp;7.5: Commands for finding out what runs.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">"</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$USER</span><span class="st">"</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$SHELL</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$HOME</span><span class="st">"</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$USER</span><span class="st">"</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"</span><span class="va">$SHELL</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>/home/you
 you
@@ -1903,10 +1915,10 @@ you
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="va">x</span><span class="op">=</span>1</span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-c</span> <span class="st">'echo "child sees x=[$x]"'</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">x</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-c</span> <span class="st">'echo "child sees x=[$x]"'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="va">x</span><span class="op">=</span>1</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-c</span> <span class="st">'echo "child sees x=[$x]"'</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">x</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-c</span> <span class="st">'echo "child sees x=[$x]"'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>child sees x=[]
 child sees x=[1]</code></pre>
@@ -2070,7 +2082,7 @@ Table&nbsp;7.7: Environment variables you will meet.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">locale</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 6</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="ex">locale</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 6</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>LANG=en_US.UTF-8
 LANGUAGE=
@@ -2106,10 +2118,10 @@ LC_COLLATE="en_US.UTF-8"</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">shopt</span> <span class="at">-q</span> login_shell <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> login <span class="kw">||</span> <span class="bu">echo</span> <span class="st">"not login"</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">[[</span> <span class="va">$-</span> <span class="ot">==</span> <span class="pp">*</span>i<span class="pp">*</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> interactive <span class="kw">||</span> <span class="bu">echo</span> <span class="st">"not interactive"</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-l</span> <span class="at">-c</span> <span class="st">'shopt -q login_shell &amp;&amp; echo login || echo "not login"'</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-c</span> <span class="st">'[[ $- == *i* ]] &amp;&amp; echo interactive || echo "not interactive"'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">shopt</span> <span class="at">-q</span> login_shell <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> login <span class="kw">||</span> <span class="bu">echo</span> <span class="st">"not login"</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">[[</span> <span class="va">$-</span> <span class="ot">==</span> <span class="pp">*</span>i<span class="pp">*</span> <span class="kw">]]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> interactive <span class="kw">||</span> <span class="bu">echo</span> <span class="st">"not interactive"</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-l</span> <span class="at">-c</span> <span class="st">'shopt -q login_shell &amp;&amp; echo login || echo "not login"'</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> <span class="at">-c</span> <span class="st">'[[ $- == *i* ]] &amp;&amp; echo interactive || echo "not interactive"'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>not login
 interactive
@@ -2155,7 +2167,7 @@ Table&nbsp;7.8: Which of your startup files bash reads.
 <tr class="even">
 <td style="text-align: left;">a command over SSH</td>
 <td style="text-align: left;"><code>ssh host command</code></td>
-<td style="text-align: left;">often <code>~/.bashrc</code> (bash’s special case for remote commands)</td>
+<td style="text-align: left;">often <code>~/.bashrc</code> (bash’s special case for remote commands; Nova and Ceres do)</td>
 </tr>
 </tbody>
 </table>
@@ -2256,17 +2268,17 @@ Figure&nbsp;7.5: Which startup file bash reads, by how it was started. A login s
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-33" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-33" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-33-1" class="code-annotation-target"><a href="#annotated-cell-33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-a</span> ~ <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^\.(bash|profile)'</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-33" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-33-2" class="code-annotation-target"><a href="#annotated-cell-33-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> bashrc ~/.bash_profile ~/.bash_login ~/.profile <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-35" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-35-1" class="code-annotation-target"><a href="#annotated-cell-35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-a</span> ~ <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^\.(bash|profile)'</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-35" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-35-2" class="code-annotation-target"><a href="#annotated-cell-35-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> bashrc ~/.bash_profile ~/.bash_login ~/.profile <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-33" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-33" data-code-lines="1" data-code-annotation="1"><code>grep -E</code> with a regular expression (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>): names starting with <code>.bash</code> or <code>.profile</code>.</span>
+<span data-code-cell="annotated-cell-35" data-code-lines="1" data-code-annotation="1"><code>grep -E</code> with a regular expression (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>): names starting with <code>.bash</code> or <code>.profile</code>.</span>
 </dd>
-<dt data-target-cell="annotated-cell-33" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-35" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-33" data-code-lines="2" data-code-annotation="2">Which login file reads <code>~/.bashrc</code>, and on which line; <code>2&gt;/dev/null</code> hides the messages for files you do not have.</span>
+<span data-code-cell="annotated-cell-35" data-code-lines="2" data-code-annotation="2">Which login file reads <code>~/.bashrc</code>, and on which line; <code>2&gt;/dev/null</code> hides the messages for files you do not have.</span>
 </dd>
 </dl>
 <p>A script that sees one of your variables usually <strong>inherited</strong> it from the shell that started it (it was exported there); that does not mean the script read <code>~/.bashrc</code>.</p>
@@ -2277,14 +2289,14 @@ Figure&nbsp;7.5: Which startup file bash reads, by how it was started. A login s
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-34" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-34-1"><a href="#annotated-cell-34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-n</span> ~/.bashrc ~/.bashrc.bak-ch07</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-34" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-34-2" class="code-annotation-target"><a href="#annotated-cell-34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export EDITOR=nano'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
-<span id="annotated-cell-34-3"><a href="#annotated-cell-34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> 2 ~/.bashrc</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-36" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-36-1"><a href="#annotated-cell-36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-n</span> ~/.bashrc ~/.bashrc.bak-ch07</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-36-2" class="code-annotation-target"><a href="#annotated-cell-36-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">'export EDITOR=nano'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
+<span id="annotated-cell-36-3"><a href="#annotated-cell-36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">tail</span> <span class="at">-n</span> 2 ~/.bashrc</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-34" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-36" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-34" data-code-lines="2" data-code-annotation="1"><code>&gt;&gt;</code> <strong>appends</strong>. A single <code>&gt;</code> would replace your whole <code>~/.bashrc</code> with this one line (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</span>
+<span data-code-cell="annotated-cell-36" data-code-lines="2" data-code-annotation="1"><code>&gt;&gt;</code> <strong>appends</strong>. A single <code>&gt;</code> would replace your whole <code>~/.bashrc</code> with this one line (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</span>
 </dd>
 </dl>
 <p>Then open a <strong>new</strong> terminal and check with <code>echo "$EDITOR"</code>. (To apply the file to the terminal you are in, <code>source ~/.bashrc</code> reads it again; a new terminal is the honest test.) Rules for every change:</p>
@@ -2311,11 +2323,11 @@ Figure&nbsp;7.5: Which startup file bash reads, by how it was started. A login s
 <div class="code-with-filename-file">
 <pre><strong>~/.bashrc (additions)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="~/.bashrc (additions)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">EDITOR</span><span class="op">=</span>nano                 <span class="co"># @sec-book-setup</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="va">HISTSIZE</span><span class="op">=</span>10000                     <span class="co"># remember more history (@sec-shell-basics)</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="va">HISTCONTROL</span><span class="op">=</span>ignoreboth             <span class="co"># skip duplicates and lines starting with a space</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="bu">alias</span> ll=<span class="st">'ls -l'</span>                   <span class="co"># a shortcut of your own</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="va">PS1</span><span class="op">=</span><span class="st">'\u@\h:\w\$ '</span>                  <span class="co"># the prompt: user@host:folder$</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-filename="~/.bashrc (additions)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">EDITOR</span><span class="op">=</span>nano                 <span class="co"># @sec-book-setup</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="va">HISTSIZE</span><span class="op">=</span>10000                     <span class="co"># remember more history (@sec-shell-basics)</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="va">HISTCONTROL</span><span class="op">=</span>ignoreboth             <span class="co"># skip duplicates and lines starting with a space</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">alias</span> ll=<span class="st">'ls -l'</span>                   <span class="co"># a shortcut of your own</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="va">PS1</span><span class="op">=</span><span class="st">'\u@\h:\w\$ '</span>                  <span class="co"># the prompt: user@host:folder$</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ul>
 <li><strong>History:</strong> <code>HISTSIZE</code> is how many commands a shell remembers (Ubuntu sets 1000); <code>ignoreboth</code> skips repeated lines and lines you start with a space. These are the settings <a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a> mentioned.</li>
@@ -2351,12 +2363,12 @@ Figure&nbsp;7.5: Which startup file bash reads, by how it was started. A login s
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-36" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-36" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-36-1" class="code-annotation-target"><a href="#annotated-cell-36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 300</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-38" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-38" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-38-1" class="code-annotation-target"><a href="#annotated-cell-38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 300</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-36" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-38" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-36" data-code-lines="1" data-code-annotation="1"><code>sleep</code> waits for the given number of seconds and does nothing else: a safe stand-in for a long analysis. Press <kbd title="Ctrl-C" aria-hidden="true">Ctrl-C</kbd><span class="visually-hidden">Ctrl-C</span> while it waits.</span>
+<span data-code-cell="annotated-cell-38" data-code-lines="1" data-code-annotation="1"><code>sleep</code> waits for the given number of seconds and does nothing else: a safe stand-in for a long analysis. Press <kbd title="Ctrl-C" aria-hidden="true">Ctrl-C</kbd><span class="visually-hidden">Ctrl-C</span> while it waits.</span>
 </dd>
 </dl>
 <pre class="console"><code>^C</code></pre>
@@ -2365,11 +2377,11 @@ Figure&nbsp;7.5: Which startup file bash reads, by how it was started. A login s
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 300 <span class="kw">&amp;</span></span>
-<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span>
-<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ps</span></span>
-<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="bu">kill</span> %1</span>
-<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 300 <span class="kw">&amp;</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ps</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="bu">kill</span> %1</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>[1] 3219
 [1]+  Running                 sleep 300 &amp;
@@ -2505,21 +2517,21 @@ Table&nbsp;7.9: Ways to stop a process, and what the program can do about each.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 600</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 600</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Press <kbd title="Ctrl-Z" aria-hidden="true">Ctrl-Z</kbd><span class="visually-hidden">Ctrl-Z</span>, then:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-41" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-41-1"><a href="#annotated-cell-41-1" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-41" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-41-2" class="code-annotation-target"><a href="#annotated-cell-41-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ps</span> <span class="at">-o</span> pid,stat,rss,command</span>
-<span id="annotated-cell-41-3"><a href="#annotated-cell-41-3" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-43" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-43-1"><a href="#annotated-cell-43-1" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-43" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-43-2" class="code-annotation-target"><a href="#annotated-cell-43-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ps</span> <span class="at">-o</span> pid,stat,rss,command</span>
+<span id="annotated-cell-43-3"><a href="#annotated-cell-43-3" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-41" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-43" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-41" data-code-lines="2" data-code-annotation="1"><code>-o</code> chooses columns: <code>stat</code> the state (<code>T</code> stopped, <code>S</code> sleeping, <code>R</code> running), <code>rss</code> the memory it holds, in kB, <code>command</code> the command line. Linux also accepts <code>cmd</code>, but the Mac’s <code>ps</code> does not.</span>
+<span data-code-cell="annotated-cell-43" data-code-lines="2" data-code-annotation="1"><code>-o</code> chooses columns: <code>stat</code> the state (<code>T</code> stopped, <code>S</code> sleeping, <code>R</code> running), <code>rss</code> the memory it holds, in kB, <code>command</code> the command line. Linux also accepts <code>cmd</code>, but the Mac’s <code>ps</code> does not.</span>
 </dd>
 </dl>
 <pre class="console"><code>^Z
@@ -2545,6 +2557,7 @@ There are stopped jobs.</code></pre>
 <p>It pauses it, still holding its memory. Use <kbd title="Ctrl-C" aria-hidden="true">Ctrl-C</kbd><span class="visually-hidden">Ctrl-C</span> to stop a command; if you pressed <kbd title="Ctrl-Z" aria-hidden="true">Ctrl-Z</kbd><span class="visually-hidden">Ctrl-Z</span>, finish with <code>fg</code> or <code>kill %1</code>.</p>
 </div>
 </div>
+<p>Some clusters switch <kbd title="Ctrl-Z" aria-hidden="true">Ctrl-Z</kbd><span class="visually-hidden">Ctrl-Z</span> off (SCINet’s Ceres leaves it on). On Nova, a site startup file (<code>/etc/profile.d/disable-control-z.sh</code>) runs <code>stty susp undef</code>, so the key does nothing and the command keeps running: no paused jobs are left holding memory on a shared login node. <code>stty -a</code> shows <code>susp = &lt;undef&gt;</code> when the key is off, and <code>susp = ^Z</code> when it works. Press <kbd title="Ctrl-C" aria-hidden="true">Ctrl-C</kbd><span class="visually-hidden">Ctrl-C</span> instead, which still works there.</p>
 <p><strong>Watching the machine: <code>top</code>.</strong> <code>top</code> shows the busiest processes, updated every few seconds; <code>q</code> quits. Here two busy test processes run alongside everything else (Linux <code>top</code>, sorted by CPU):</p>
 <pre class="console"><code>top - 14:25:42 up  9:05,  1 user,  load average: 0.38, 0.28, 0.19
 Tasks:   9 total,   3 running,   5 sleeping,   0 stopped,   0 zombie
@@ -2562,7 +2575,7 @@ MiB Swap:   1024.0 total,   1024.0 free,      0.0 used.   6468.1 avail Mem
 <li><code>USER</code> and <code>COMMAND</code>: whose it is and what it is.</li>
 </ul>
 <p>On Linux, press <code>M</code> to sort by memory and <code>P</code> by CPU. macOS <code>top</code> looks different and sorts with <code>top -o cpu</code> or <code>top -o mem</code> (<a href="#sec-linux-system-gnu-bsd" class="quarto-xref"><span>Section 7.9</span></a>). <code>htop</code>, where installed, is a friendlier version with the same information; this book uses <code>top</code>, which every system has.</p>
-<p><strong>On a cluster.</strong> Do not rely on a command started in an ordinary SSH terminal surviving when the connection drops, and do not rely on closing the window to stop everything you started either: what happens depends on how the program was started and how it handles signals (the <a href="https://www.gnu.org/software/bash/manual/html_node/Signals.html">Bash manual’s <em>Signals</em></a> has the rules). For work that must keep running, use the site’s persistent sessions (<code>tmux</code>, <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>), or submit it to the scheduler as a job, whose life does not depend on your window at all (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>). On a login node, <code>ps -u "$USER"</code> or <code>top -u "$USER"</code> lists only your own processes, so you can find and end leftovers. Heavy work belongs in a job, not on the login node (<a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>).</p>
+<p><strong>On a cluster.</strong> Do not rely on a command started in an ordinary SSH terminal surviving when the connection drops, and do not rely on closing the window to stop everything you started either: what happens depends on how the program was started and how it handles signals (the <a href="https://www.gnu.org/software/bash/manual/html_node/Signals.html">Bash manual’s <em>Signals</em></a> has the rules). For work that must keep running, use the site’s persistent sessions (<code>tmux</code>, <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>), or submit it to the scheduler as a job, whose life does not depend on your window at all (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>). On a login node, <code>ps -u "$USER"</code> or <code>top -u "$USER"</code> lists only your own processes, so you can find and end leftovers. You need the <code>-u</code>: on Nova, <code>top</code>’s header showed 41 users and 1,714 processes on one login node, and on Ceres 62 users and 1,165. (<code>top</code> cuts long user names to eight characters, so <code>first.last</code> shows as <code>first.+</code>; <code>-u</code> still takes the full name.) Heavy work belongs in a job, not on the login node (<a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>).</p>
 <div class="misconception callout callout-style-default callout-caution callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2603,7 +2616,7 @@ MiB Swap:   1024.0 total,   1024.0 free,      0.0 used.   6468.1 avail Mem
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span> ~</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">df</span> <span class="at">-h</span> ~</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>Filesystem      Size  Used Avail Use% Mounted on
 /dev/sdd       1007G  2.0G  954G   1% /</code></pre>
@@ -2612,12 +2625,12 @@ MiB Swap:   1024.0 total,   1024.0 free,      0.0 used.   6468.1 avail Mem
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-46" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-46" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-46-1" class="code-annotation-target"><a href="#annotated-cell-46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-sh</span> ~/bioinf-computing/<span class="pp">*</span> ~/bioinf-computing/.pixi <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-h</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-48" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-48" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-48-1" class="code-annotation-target"><a href="#annotated-cell-48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-sh</span> ~/bioinf-computing/<span class="pp">*</span> ~/bioinf-computing/.pixi <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-h</span></span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-46" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-48" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-46" data-code-lines="1" data-code-annotation="1"><code>-s</code> one total per name, <code>-h</code> human units. <code>sort -h</code> is like <a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>’s <code>sort -n</code>, but understands sizes such as <code>512K</code> and <code>1.2G</code> (with <code>-n</code>, <code>1.2G</code> would sort before <code>512K</code>).</span>
+<span data-code-cell="annotated-cell-48" data-code-lines="1" data-code-annotation="1"><code>-s</code> one total per name, <code>-h</code> human units. <code>sort -h</code> is like <a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>’s <code>sort -n</code>, but understands sizes such as <code>512K</code> and <code>1.2G</code> (with <code>-n</code>, <code>1.2G</code> would sort before <code>512K</code>).</span>
 </dd>
 </dl>
 <pre class="console"><code>4.0K    /home/you/bioinf-computing/NOTEBOOK.md
@@ -2666,7 +2679,7 @@ Table&nbsp;7.10: Disk questions and the commands that answer them.
 <td style="text-align: left;">How full is the disk this folder is on?</td>
 <td style="text-align: left;"><code>df -h folder</code></td>
 <td style="text-align: left;"><code>Avail</code>, <code>Use%</code></td>
-<td style="text-align: left;">shows the whole shared system, not your share</td>
+<td style="text-align: left;">often the whole shared system, not your share</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">What is big in here?</td>
@@ -2682,7 +2695,7 @@ Table&nbsp;7.10: Disk questions and the commands that answer them.
 </tr>
 <tr class="even">
 <td style="text-align: left;">What is my limit?</td>
-<td style="text-align: left;">the site’s quota command</td>
+<td style="text-align: left;">the site’s quota command or usage file</td>
 <td style="text-align: left;">used vs limit</td>
 <td style="text-align: left;"><a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>, <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a></td>
 </tr>
@@ -2692,7 +2705,54 @@ Table&nbsp;7.10: Disk questions and the commands that answer them.
 </figure>
 </div>
 <p>(In the second row, <code>.[!.]*</code> matches hidden names such as <code>.pixi</code> without matching <code>..</code>, <a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a>.)</p>
-<p><strong>On a cluster</strong> <code>df</code> on shared storage shows the whole system, often petabytes, not your share. Your real limit is a <strong>quota</strong> for your user or project, read with the site’s own command (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>, <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>). Quotas can also count files, not just bytes; <code>df -i</code> shows a whole filesystem’s file slots (inodes), which is likewise not your file-count quota. And <code>du</code> on a huge tree is slow and loads storage that everyone shares, so point it at the folder you suspect. <code>ncdu</code>, where installed, lets you browse sizes interactively.</p>
+<p><strong>On a cluster</strong> <code>df</code> on shared storage often shows the whole system, many terabytes or petabytes, not your share. On Nova, <code>df -h ~</code> gives <code>172.16.7.238:/stor014/home  14T  7.5T  5.9T  56% /home</code>: the home folders of everyone, on another machine (the <code>address:/path</code> form means network storage). Your real limit is a <strong>quota</strong> for your user or project, which each site reports its own way (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>, <a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>). <a href="#tbl-cluster-quotas" class="quarto-xref">Table&nbsp;<span>7.11</span></a> compares two clusters.</p>
+<div id="tbl-cluster-quotas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-cluster-quotas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;7.11: Checking storage limits on two clusters (captured November 2026).
+</figcaption>
+<div aria-describedby="tbl-cluster-quotas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Nova (ISU)</th>
+<th style="text-align: left;">Ceres (SCINet)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Quota command</td>
+<td style="text-align: left;">none (<code>quota -s</code> prints nothing)</td>
+<td style="text-align: left;"><code>my_quotas</code>: home and every project you belong to, usage vs quota in GB</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Home limit</td>
+<td style="text-align: left;">10 GB; check with <code>du -sh ~</code></td>
+<td style="text-align: left;">about 30 GB; <code>my_quotas</code> or <code>quota -s</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Group storage</td>
+<td style="text-align: left;"><code>/work/&lt;group&gt;</code>; usage and quota in the file <code>/work/&lt;group&gt;/group_storage_usage</code>, updated hourly</td>
+<td style="text-align: left;"><code>/project/&lt;name&gt;</code>; in <code>my_quotas</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>df -h</code> on group storage</td>
+<td style="text-align: left;">shows the group’s share</td>
+<td style="text-align: left;">shows the project’s quota as the size</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>So <code>df</code> can mislead in both directions: on one folder it shows the disk everyone shares, on another just your group’s allowance. Trust the site’s own command or file (<a href="https://research.it.iastate.edu/file-storage">ISU file storage</a>, <a href="https://scinet.usda.gov/guides/data/project-management">SCINet project management</a>).</p>
+<p>Quotas can also count files, not just bytes; <code>df -i</code> shows a whole filesystem’s file slots (inodes), which is likewise not your file-count quota. And <code>du</code> on a huge tree is slow and loads storage that everyone shares, so point it at the folder you suspect. <code>ncdu</code>, where installed, lets you browse sizes interactively.</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -2707,7 +2767,7 @@ Table&nbsp;7.10: Disk questions and the commands that answer them.
 </div>
 </div>
 <div class="check">
-<p><strong>Check yourself.</strong> <code>df -h /project</code> says <code>2.1P</code> available, but your job fails with <code>Disk quota exceeded</code>. Why?</p>
+<p><strong>Check yourself.</strong> <code>df -h</code> on a shared folder says <code>2.1P</code> available, but your job fails with <code>Disk quota exceeded</code>. Why?</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
 <div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
 <div class="callout-icon-container">
@@ -2720,7 +2780,7 @@ Table&nbsp;7.10: Disk questions and the commands that answer them.
 </div>
 <div id="callout-20" class="callout-20-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
-<p><code>df</code> describes the whole shared filesystem. Your group’s quota is a separate, much smaller limit; check it with the site’s quota command (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>). It may also be a limit on the number of files.</p>
+<p>There <code>df</code> describes the whole shared filesystem. Your group’s quota is a separate, much smaller limit; check it the way your site says, with a quota command or a usage file (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>). It may also be a limit on the number of files.</p>
 </div>
 </div>
 </div>
@@ -2767,7 +2827,7 @@ sed: 1: "samples.csv": unterminated substitute pattern</code></pre>
 <div id="tbl-gnu-bsd" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-gnu-bsd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.11: Options you may meet that differ between GNU and BSD (overview).
+Table&nbsp;7.12: Options you may meet that differ between GNU and BSD (overview).
 </figcaption>
 <div aria-describedby="tbl-gnu-bsd-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -2868,14 +2928,14 @@ Table&nbsp;7.11: Options you may meet that differ between GNU and BSD (overview)
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-49" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-49-1"><a href="#annotated-cell-49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch05/share</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-49" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-49-2" class="code-annotation-target"><a href="#annotated-cell-49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">$'</span><span class="dt">\t</span><span class="st">30$'</span> meta/samples.tsv</span>
-<span id="annotated-cell-49-3"><a href="#annotated-cell-49-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">',30$'</span> meta/samples_from_excel.csv</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-51" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-51-1"><a href="#annotated-cell-51-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch05/share</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-51" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-51-2" class="code-annotation-target"><a href="#annotated-cell-51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">$'</span><span class="dt">\t</span><span class="st">30$'</span> meta/samples.tsv</span>
+<span id="annotated-cell-51-3"><a href="#annotated-cell-51-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">',30$'</span> meta/samples_from_excel.csv</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-49" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-51" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-49" data-code-lines="2" data-code-annotation="1"><code>$'\t'</code> is bash’s way to write a tab; <code>$</code> in the pattern is the end of the line (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</span>
+<span data-code-cell="annotated-cell-51" data-code-lines="2" data-code-annotation="1"><code>$'\t'</code> is bash’s way to write a tab; <code>$</code> in the pattern is the end of the line (<a href="06-text-tools.html" class="quarto-xref"><span>Chapter 6</span></a>).</span>
 </dd>
 </dl>
 <pre class="console"><code>2
@@ -2885,9 +2945,9 @@ Table&nbsp;7.11: Options you may meet that differ between GNU and BSD (overview)
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> meta/samples_from_excel.csv</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="at">-A</span> meta/samples_from_excel.csv <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3</span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="at">-A</span> meta/samples.tsv <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> meta/samples_from_excel.csv</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="at">-A</span> meta/samples_from_excel.csv <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> <span class="at">-A</span> meta/samples.tsv <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>sample,run_folder,condition,reads
 sample_C,Run 3 final,treated,12
@@ -2998,19 +3058,19 @@ Figure&nbsp;7.7: The same row in the two files. <code>cat</code> shows them alik
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-53" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-53-1"><a href="#annotated-cell-53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-d,</span> <span class="at">-f2</span> meta/samples_from_excel.csv <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3 <span class="kw">|</span> <span class="fu">cat</span> <span class="at">-A</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-53" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-53-2" class="code-annotation-target"><a href="#annotated-cell-53-2" aria-hidden="true" tabindex="-1"></a><span class="va">f</span><span class="op">=</span><span class="va">$(</span><span class="fu">sed</span> <span class="at">-n</span> 3p meta/samples_from_excel.csv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d,</span> <span class="at">-f4</span><span class="va">)</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-53" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-53-3" class="code-annotation-target"><a href="#annotated-cell-53-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%q\n'</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span></span>
-<span id="annotated-cell-53-4"><a href="#annotated-cell-53-4" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span> <span class="ot">=</span> 9 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> same <span class="kw">||</span> <span class="bu">echo</span> different</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-55" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-55-1"><a href="#annotated-cell-55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cut</span> <span class="at">-d,</span> <span class="at">-f2</span> meta/samples_from_excel.csv <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 3 <span class="kw">|</span> <span class="fu">cat</span> <span class="at">-A</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-55" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-55-2" class="code-annotation-target"><a href="#annotated-cell-55-2" aria-hidden="true" tabindex="-1"></a><span class="va">f</span><span class="op">=</span><span class="va">$(</span><span class="fu">sed</span> <span class="at">-n</span> 3p meta/samples_from_excel.csv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d,</span> <span class="at">-f4</span><span class="va">)</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-55" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-55-3" class="code-annotation-target"><a href="#annotated-cell-55-3" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%q\n'</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span></span>
+<span id="annotated-cell-55-4"><a href="#annotated-cell-55-4" aria-hidden="true" tabindex="-1"></a><span class="bu">[</span> <span class="st">"</span><span class="va">$f</span><span class="st">"</span> <span class="ot">=</span> 9 <span class="bu">]</span> <span class="kw">&amp;&amp;</span> <span class="bu">echo</span> same <span class="kw">||</span> <span class="bu">echo</span> different</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-53" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-55" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-53" data-code-lines="2" data-code-annotation="1">Store the <code>reads</code> field of line 3 in <code>f</code>. <code>$( )</code> and variables are <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>; copy this as it is.</span>
+<span data-code-cell="annotated-cell-55" data-code-lines="2" data-code-annotation="1">Store the <code>reads</code> field of line 3 in <code>f</code>. <code>$( )</code> and variables are <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>; copy this as it is.</span>
 </dd>
-<dt data-target-cell="annotated-cell-53" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-55" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-53" data-code-lines="3" data-code-annotation="2"><code>%q</code> prints a value with invisible characters spelled out.</span>
+<span data-code-cell="annotated-cell-55" data-code-lines="3" data-code-annotation="2"><code>%q</code> prints a value with invisible characters spelled out.</span>
 </dd>
 </dl>
 <pre class="console"><code>run_folder$
@@ -3023,9 +3083,9 @@ different</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch07</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample,fastq_1\r\nWT_REP1,SRR6357070_1.fastq.gz\r\n'</span> <span class="op">&gt;</span> sheet.csv</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/bioinf-computing/data/raw/<span class="va">$(</span><span class="fu">tail</span> <span class="at">-n</span> 1 sheet.csv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d,</span> <span class="at">-f2</span><span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch07</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'sample,fastq_1\r\nWT_REP1,SRR6357070_1.fastq.gz\r\n'</span> <span class="op">&gt;</span> sheet.csv</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> ~/bioinf-computing/data/raw/<span class="va">$(</span><span class="fu">tail</span> <span class="at">-n</span> 1 sheet.csv <span class="kw">|</span> <span class="fu">cut</span> <span class="at">-d,</span> <span class="at">-f2</span><span class="va">)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>ls: cannot access '/home/you/bioinf-computing/data/raw/SRR6357070_1.fastq.gz'$'\r': No such file or directory</code></pre>
 <p>GNU <code>ls</code> spells out the <code>$'\r'</code>; many tools print a name that looks exactly right. And a <strong>script</strong> saved with CRLF fails on its first line, because the shebang now names a program called <code>bash\r</code>:</p>
@@ -3033,24 +3093,24 @@ different</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\r\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="st">'echo "hello"'</span> <span class="op">&gt;</span> crlf.sh</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x crlf.sh</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./crlf.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\r\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="st">'echo "hello"'</span> <span class="op">&gt;</span> crlf.sh</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x crlf.sh</span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./crlf.sh</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>/usr/bin/env: ‘bash\r’: No such file or directory
 /usr/bin/env: use -[v]S to pass options in shebang lines</code></pre>
-<p>(The second line is <code>env</code> guessing at a different problem; ignore it. Ubuntu 26.04’s <code>env</code> writes the first line as <code>env: $'bash\r': No such file or directory</code>; on a Mac it is <code>env: bash\r: No such file or directory</code>. With <code>#!/bin/bash</code> instead, bash 5.2 says only <code>cannot execute: required file not found</code>, and bash 5.3 says <code>/bin/bash^M: bad interpreter: No such file or directory</code>, with status 126 instead of 127: the <code>^M</code> is the carriage return.)</p>
-<p><strong>How to detect it.</strong> Look with <code>cat -A</code> (for <code>^M</code>), and count with <code>grep -c $'\r' file</code>, which prints how many lines contain a carriage return: <code>7</code> for the CSV, <code>0</code> for the TSV. Do not rely on <code>file</code>: it reports <code>with CRLF line terminators</code> for some text (<code>file crlf.sh</code> does), but once it recognises a CSV it says only <code>CSV ASCII text</code>, with or without carriage returns (Ubuntu’s <code>file</code> 5.45; macOS’s says <code>CSV text</code>). On a two-line CSV saved by Excel, <code>file</code> did mention CRLF; on the seven-line sheet it did not, so its answer depends on the file.</p>
+<p>(The second line is <code>env</code> guessing at a different problem; ignore it. Older <code>env</code>, such as Nova’s, prints only the first line. Ubuntu 26.04’s <code>env</code> writes it as <code>env: $'bash\r': No such file or directory</code>; on a Mac it is <code>env: bash\r: No such file or directory</code>. With <code>#!/bin/bash</code> instead, bash 5.1 (Nova) and 5.3 say <code>/bin/bash^M: bad interpreter: No such file or directory</code>, with status 126 instead of 127: the <code>^M</code> is the carriage return. Bash 5.2 says only <code>cannot execute: required file not found</code>, which is even less helpful.)</p>
+<p><strong>How to detect it.</strong> Look with <code>cat -A</code> (for <code>^M</code>), and count with <code>grep -c $'\r' file</code>, which prints how many lines contain a carriage return: <code>7</code> for the CSV, <code>0</code> for the TSV. Do not rely on <code>file</code>: it reports <code>with CRLF line terminators</code> for some text (<code>file crlf.sh</code> does), but once it recognises a CSV it says only <code>CSV ASCII text</code>, with or without carriage returns (Ubuntu’s <code>file</code> 5.45; macOS’s and Nova’s 5.39 say <code>CSV text</code>). On a two-line CSV saved by Excel, <code>file</code> did mention CRLF; on the seven-line sheet it did not, so its answer depends on the file.</p>
 <p><strong>Now name it.</strong> Linux and macOS end each line with one character, a <strong>line feed</strong> (LF, <code>\n</code>). Windows ends lines with two, <strong>carriage return + line feed</strong> (CRLF, <code>\r\n</code>). CRLF is normal in CSV files, and proper CSV readers in R and Python handle it (<a href="14-tabular-data.html" class="quarto-xref"><span>Chapter 14</span></a>); what breaks is a shell tool or simple script that keeps the <code>\r</code> as part of the last field. Files get CRLF endings from Windows editors, Excel’s “Save as CSV”, and email attachments. In WSL, files under <code>/mnt/c</code> (<a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>’s pitfall) are often edited with Windows programs, which is where the CRLF comes from; the folder itself does not change the bytes. Excel’s <strong>CSV UTF-8</strong> format also puts three invisible bytes, a <strong>byte order mark</strong>, before the first column name: <code>cat -A</code> shows <code>M-oM-;M-?sample,reads^M$</code>, and a shell tool then sees a first column called something other than <code>sample</code>. <code>sed '1s/^\xEF\xBB\xBF//'</code> removes it; R’s and Python’s CSV readers handle it.</p>
 <p><strong>Fix it</strong> by deleting the <code>\r</code> at each line end. Write a fixed copy first and check it:</p>
 <div class="code-with-filename">
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">'s/\r$//'</span> ~/bioinf-computing-ch05/share/meta/samples_from_excel.csv <span class="op">&gt;</span> samples_lf.csv</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">$'</span><span class="dt">\r</span><span class="st">'</span> samples_lf.csv</span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$?</span></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">',30$'</span> samples_lf.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sed</span> <span class="st">'s/\r$//'</span> ~/bioinf-computing-ch05/share/meta/samples_from_excel.csv <span class="op">&gt;</span> samples_lf.csv</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">$'</span><span class="dt">\r</span><span class="st">'</span> samples_lf.csv</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$?</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-c</span> <span class="st">',30$'</span> samples_lf.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>0
 1
@@ -3059,7 +3119,7 @@ different</code></pre>
 <div id="tbl-line-endings" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-line-endings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.12: Line endings by system.
+Table&nbsp;7.13: Line endings by system.
 </figcaption>
 <div aria-describedby="tbl-line-endings-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -3165,7 +3225,7 @@ Table&nbsp;7.12: Line endings by system.
 <div id="tbl-ch07-commands" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch07-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Table&nbsp;7.13: The chapter’s commands on one page.
+Table&nbsp;7.14: The chapter’s commands on one page.
 </figcaption>
 <div aria-describedby="tbl-ch07-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <table class="caption-top table">
@@ -3243,13 +3303,13 @@ Table&nbsp;7.13: The chapter’s commands on one page.
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch07/bin <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing-ch07</span>
-<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\r\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="dt">\</span></span>
-<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">'# count_lines.sh: print a file name and its number of lines'</span> <span class="dt">\</span></span>
-<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'printf "%s: %s lines\n" "$(basename "$1")" "$(wc -l &lt; "$1")"'</span> <span class="dt">\</span></span>
-<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> bin/count_lines.sh</span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 644 bin/count_lines.sh</span>
-<span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-computing-ch05/share/meta/samples_from_excel.csv samples.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch07/bin <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing-ch07</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\r\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="dt">\</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">'# count_lines.sh: print a file name and its number of lines'</span> <span class="dt">\</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'printf "%s: %s lines\n" "$(basename "$1")" "$(wc -l &lt; "$1")"'</span> <span class="dt">\</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">&gt;</span> bin/count_lines.sh</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 644 bin/count_lines.sh</span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/bioinf-computing-ch05/share/meta/samples_from_excel.csv samples.csv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>The goal: from any folder, <code>count_lines.sh ~/bioinf-computing-ch07/samples.csv</code> prints <code>samples.csv: 7 lines</code>. Fix one fault at a time, using only the message, and run the script <strong>by its path</strong> until the last step:</p>
 <ol type="1">
@@ -3322,12 +3382,12 @@ $ grep -c $'\r' ~/bioinf-computing-ch07/samples.csv
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch07/perm2 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing-ch07/perm2</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> notes.txt run.sh <span class="kw">&amp;&amp;</span> <span class="fu">mkdir</span> private</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x,go+rx run.sh              <span class="co"># from -rw-r--r--: add x for all, r for group and other</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> go-rx private                 <span class="co"># from drwxr-xr-x</span></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stat</span> <span class="at">-c</span> <span class="st">'%A %a %n'</span> notes.txt run.sh private</span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 644 notes.txt <span class="kw">&amp;&amp;</span> <span class="fu">chmod</span> 755 run.sh <span class="kw">&amp;&amp;</span> <span class="fu">chmod</span> 700 private</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch07/perm2 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing-ch07/perm2</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="fu">touch</span> notes.txt run.sh <span class="kw">&amp;&amp;</span> <span class="fu">mkdir</span> private</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x,go+rx run.sh              <span class="co"># from -rw-r--r--: add x for all, r for group and other</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> go-rx private                 <span class="co"># from drwxr-xr-x</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="fu">stat</span> <span class="at">-c</span> <span class="st">'%A %a %n'</span> notes.txt run.sh private</span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> 644 notes.txt <span class="kw">&amp;&amp;</span> <span class="fu">chmod</span> 755 run.sh <span class="kw">&amp;&amp;</span> <span class="fu">chmod</span> 700 private</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <pre class="console"><code>-rw-r--r-- 644 notes.txt
 -rwxr-xr-x 755 run.sh
@@ -3343,14 +3403,14 @@ drwx------ 700 private</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch07/fakebin</span>
-<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="st">'echo "seqkit v0.0.1 (fake)"'</span> <span class="op">&gt;</span> ~/bioinf-computing-ch07/fakebin/seqkit</span>
-<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x ~/bioinf-computing-ch07/fakebin/seqkit</span>
-<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/bioinf-computing-ch07/fakebin:</span><span class="va">$PATH</span><span class="st">"</span></span>
-<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> seqkit</span>
-<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> version</span>
-<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb56-8"><a href="#cb56-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash <span class="at">-c</span> <span class="st">'type -a seqkit; seqkit version'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch07/fakebin</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="st">'echo "seqkit v0.0.1 (fake)"'</span> <span class="op">&gt;</span> ~/bioinf-computing-ch07/fakebin/seqkit</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x ~/bioinf-computing-ch07/fakebin/seqkit</span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/bioinf-computing-ch07/fakebin:</span><span class="va">$PATH</span><span class="st">"</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> seqkit</span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="ex">seqkit</span> version</span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash <span class="at">-c</span> <span class="st">'type -a seqkit; seqkit version'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Which copy runs in each case, and why? Close the terminal afterwards to undo the <code>PATH</code> change. (Do not put this in <code>~/.bashrc</code>.)</p>
 <div class="callout callout-style-simple callout-tip no-icon callout-titled">
@@ -3393,21 +3453,21 @@ seqkit v2.14.0</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-91" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-91-1"><a href="#annotated-cell-91-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-n</span> ~/.bashrc ~/.bashrc.bak-ch07</span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-91" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-91-2" class="code-annotation-target"><a href="#annotated-cell-91-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> <span class="st">'EDITOR='</span> ~/.bashrc</span>
-<span id="annotated-cell-91-3"><a href="#annotated-cell-91-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-qxF</span> <span class="st">'export EDITOR=nano'</span> ~/.bashrc <span class="kw">||</span></span>
-<a class="code-annotation-anchor" data-target-cell="annotated-cell-91" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-91-4" class="code-annotation-target"><a href="#annotated-cell-91-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">'export EDITOR=nano'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
-<span id="annotated-cell-91-5"><a href="#annotated-cell-91-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-a</span> ~ <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^\.(bash|profile)'</span></span>
-<span id="annotated-cell-91-6"><a href="#annotated-cell-91-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> bashrc ~/.bash_profile ~/.bash_login ~/.profile <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-93" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><span id="annotated-cell-93-1"><a href="#annotated-cell-93-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> <span class="at">-n</span> ~/.bashrc ~/.bashrc.bak-ch07</span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-93" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-93-2" class="code-annotation-target"><a href="#annotated-cell-93-2" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> <span class="st">'EDITOR='</span> ~/.bashrc</span>
+<span id="annotated-cell-93-3"><a href="#annotated-cell-93-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-qxF</span> <span class="st">'export EDITOR=nano'</span> ~/.bashrc <span class="kw">||</span></span>
+<a class="code-annotation-anchor" data-target-cell="annotated-cell-93" data-target-annotation="2" onclick="event.preventDefault();">2</a><span id="annotated-cell-93-4" class="code-annotation-target"><a href="#annotated-cell-93-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">'export EDITOR=nano'</span> <span class="op">&gt;&gt;</span> ~/.bashrc</span>
+<span id="annotated-cell-93-5"><a href="#annotated-cell-93-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-a</span> ~ <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^\.(bash|profile)'</span></span>
+<span id="annotated-cell-93-6"><a href="#annotated-cell-93-6" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> bashrc ~/.bash_profile ~/.bash_login ~/.profile <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <dl class="code-annotation-container-grid">
-<dt data-target-cell="annotated-cell-91" data-target-annotation="1">1</dt>
+<dt data-target-cell="annotated-cell-93" data-target-annotation="1">1</dt>
 <dd>
-<span data-code-cell="annotated-cell-91" data-code-lines="2" data-code-annotation="1">Look first. If an active line (not starting with <code>#</code>) already sets <code>EDITOR</code> to something else, change that line in <code>nano</code> rather than adding a second one.</span>
+<span data-code-cell="annotated-cell-93" data-code-lines="2" data-code-annotation="1">Look first. If an active line (not starting with <code>#</code>) already sets <code>EDITOR</code> to something else, change that line in <code>nano</code> rather than adding a second one.</span>
 </dd>
-<dt data-target-cell="annotated-cell-91" data-target-annotation="2">2</dt>
+<dt data-target-cell="annotated-cell-93" data-target-annotation="2">2</dt>
 <dd>
-<span data-code-cell="annotated-cell-91" data-code-lines="4" data-code-annotation="2"><code>-x</code> matches whole lines only, <code>-F</code> treats the text as plain text, not a pattern, and <code>-q</code> prints nothing. The <code>||</code> adds the line only if that exact line is missing, so running it twice does not add it twice. A commented-out <code># export EDITOR=vim</code> does not count.</span>
+<span data-code-cell="annotated-cell-93" data-code-lines="4" data-code-annotation="2"><code>-x</code> matches whole lines only, <code>-F</code> treats the text as plain text, not a pattern, and <code>-q</code> prints nothing. The <code>||</code> adds the line only if that exact line is missing, so running it twice does not add it twice. A commented-out <code># export EDITOR=vim</code> does not count.</span>
 </dd>
 </dl>
 <p>A later line wins over an earlier one, so the real check is a new terminal, where <code>echo "$EDITOR"</code> prints <code>nano</code>. On Ubuntu and WSL you will usually find <code>~/.profile</code> reading <code>~/.bashrc</code>; on a Mac, <code>~/.bash_profile</code> from <a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>. If the SSH login does not see the setting, the cluster’s login file does not read <code>~/.bashrc</code> (see the check in <a href="#sec-linux-system-startup" class="quarto-xref"><span>Section 7.6</span></a>).</p>
@@ -3433,12 +3493,12 @@ seqkit v2.14.0</code></pre>
 <div class="code-with-filename-file">
 <pre><strong>Terminal (laptop)</strong></pre>
 </div>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 600 <span class="kw">&amp;</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ps</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="bu">kill</span> %1          <span class="co"># or: kill &lt;the PID from ps&gt;</span></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-sh</span> <span class="pp">*</span> .<span class="pp">[</span><span class="ss">!.</span><span class="pp">]*</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-h</span> <span class="kw">|</span> <span class="fu">tail</span> <span class="at">-n</span> 5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sleep</span> 600 <span class="kw">&amp;</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ps</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="bu">kill</span> %1          <span class="co"># or: kill &lt;the PID from ps&gt;</span></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="bu">jobs</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a><span class="fu">du</span> <span class="at">-sh</span> <span class="pp">*</span> .<span class="pp">[</span><span class="ss">!.</span><span class="pp">]*</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-h</span> <span class="kw">|</span> <span class="fu">tail</span> <span class="at">-n</span> 5</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>In <code>top</code>, look for <code>sleep</code> in the <code>COMMAND</code> column (press <code>q</code> to quit). The largest item is <code>.pixi</code> (about 1.3 GB on Linux): Python, R, and seqkit with every library they need, for one operating system. The data are a few megabytes. Real projects have far more data, but environments are always this kind of size, which is why pixi’s cache and environments go on project storage on a cluster (1).</p>
 </div>

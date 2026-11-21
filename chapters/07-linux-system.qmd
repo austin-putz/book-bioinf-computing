@@ -265,7 +265,7 @@ folder and `444` on its files only because they started at `755` and
 **umask**, `0022`, removes `w` for group and other from every new file
 and folder. Sites can set a different umask: Nova's is `0002`, which
 leaves `w` for the group, so new files start at `664` and folders at
-`775`, and your lab can edit them. SCINet's Ceres sets `0027`, so new
+`775`, and your lab can edit them. SCINet's Ceres and Atlas set `0027`, so new
 files start at `640` and folders at `750`: your group can read them
 but not change them, and other users cannot see them. On a cluster
 that does this, a labmate who must edit your file in a shared project
@@ -458,7 +458,9 @@ group there is a personal group named after you, so without the setgid
 `s` your files would belong to a group nobody else is in. And the
 umask is `0027`, so the same `touch` gives `-rw-r-----`, and a folder
 you make gives `drwxr-s---`: your lab can read and enter, but not edit
-or add files, until you run `chmod g+w` on them.
+or add files, until you run `chmod g+w` on them. Atlas, SCINet's other
+cluster, gives the same results; its project folder is `drwxrws---`,
+without the sticky `T` and without the SELinux `.`.
 
 The [GNU coreutils
 manual](https://www.gnu.org/software/coreutils/manual/html_node/File-permissions.html)
@@ -1200,8 +1202,8 @@ a command; if you pressed {{< kbd Ctrl-Z >}}, finish with `fg` or
 `kill %1`.
 :::
 
-Some clusters switch {{< kbd Ctrl-Z >}} off (SCINet's Ceres leaves it
-on). On Nova, a site startup
+Some clusters switch {{< kbd Ctrl-Z >}} off (SCINet's Ceres and Atlas
+leave it on). On Nova, a site startup
 file (`/etc/profile.d/disable-control-z.sh`) runs `stty susp undef`,
 so the key does nothing and the command keeps running: no paused jobs
 are left holding memory on a shared login node. `stty -a` shows
@@ -1363,7 +1365,7 @@ or project, which each site reports its own way (@sec-hpc-slurm,
 : Checking storage limits on two clusters (captured November 2026).
 {#tbl-cluster-quotas}
 
-| | Nova (ISU) | Ceres (SCINet) |
+| | Nova (ISU) | Ceres (SCINet; Atlas the same) |
 |:--|:--|:--|
 | Quota command | none (`quota -s` prints nothing) | `my_quotas`: home and every project you belong to, usage vs quota in GB |
 | Home limit | 10 GB; check with `du -sh ~` | about 30 GB; `my_quotas` or `quota -s` |

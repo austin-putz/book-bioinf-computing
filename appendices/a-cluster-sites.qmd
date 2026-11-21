@@ -33,6 +33,17 @@ by @sec-orientation, @sec-working-remotely, and @sec-hpc-slurm.
   works for home: `30518M` quota, `50545M` limit, no file limit);
   `/90daydata` has no quota but deletes data 90 days after last access;
   `df -h /project/<name>` shows the project's quota as the size
+- Atlas (checked 2026-11-21): Rocky Linux 9.6, bash 5.1.8, umask
+  `0027`, Ctrl-Z on. `my_quotas` is `/apps/bin/my_quotas` (same
+  columns, spelled `Available`; sections Atlas home directory, Atlas
+  working project space; no Juno), home 30 GB; projects have separate,
+  smaller allocations from Ceres. `df -h ~` shows the whole
+  `/atlas/home` (6.8P), not your share; `quota -s` fails with
+  `Operation not permitted` on `/atlas/90daydata`. Atlas `/project/<name>`
+  is `drwxrws---` (`root`, `proj-<name>`; setgid, no sticky, no SELinux
+  label); new files `-rw-r-----` with the project group; `df -h
+  /project/<name>` shows the project quota (1.1T for a 1,000 GB
+  allocation)
 - Shared group folders: Nova `/work/<group>` is `drwxrws--T`, owned by
   `root` and the lab's group (setgid on, sticky, closed to others); new
   files take the lab's group and, with Nova's umask `0002`, are

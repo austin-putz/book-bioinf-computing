@@ -908,6 +908,37 @@ After the four lines, a new SSH login printed `nano`: Ceres's
 `~/.bash_profile` reads `~/.bashrc` (as Block A showed). No book change.
 :::
 
+### 3.7 Atlas short check (2026-11-21)
+
+::: {.callout-note}
+## Atlas result, 2026-11-21: complete (short set plus group check)
+| Line | Atlas | Compared with Ceres |
+|:--|:--|:--|
+| OS | Rocky Linux 9.6 | RHEL 9.6 rebuild: Block B skipped (same versions expected) |
+| bash | 5.1.8 | same |
+| `umask` | `0027` | same |
+| `stty` susp | `^Z` | same (Ctrl-Z works) |
+| `df -h ~` | `atlas-vast-c1.hpc.msstate.edu:/atlas/home 6.8P 4.7T 6.8P 1% /home` | Ceres's home showed 91T; here the whole system |
+| `my_quotas` | `/apps/bin/my_quotas`; same note and columns (`Available` spelled right); Atlas home 30 GB; project allocations separate from Ceres; no Juno section | same command, different path |
+| `quota -s` | `quota: error … /atlas/90daydata … Operation not permitted` | works on Ceres |
+
+**Changed in the book:** Chapter 7: umask and Ctrl-Z sentences say
+"Ceres and Atlas"; quota table column "Ceres (SCINet; Atlas the
+same)". Appendix A: an Atlas bullet.
+
+**Group check:** `df -h /project/ibdru_bioinformatics` →
+`atlas-vast-c1.hpc.msstate.edu:/atlas/project 1.1T 798M 1.0T 1%
+/project`: the project's 1,000 GB quota, so the quota table's "Atlas
+the same" holds. Project folder `drwxrws---` (`root`,
+`proj-ibdru_bioinformatics`): setgid, **no sticky**, **no SELinux
+`.`** (and no `context=` in `id`); `…/Austin` `drwxr-s---`; test file
+`-rw-r-----`, project group. Same personal primary group.
+**Changed in the book:** Chapter 7 §2's Ceres paragraph adds that
+Atlas gives the same results, its project folder `drwxrws---` without
+the `T` and the `.`; Appendix A's Atlas bullet adds the folder and
+`df` results.
+:::
+
 ---
 
 ## Part 4: Apple silicon Mac (optional, only if you have one)

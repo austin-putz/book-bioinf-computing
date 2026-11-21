@@ -263,8 +263,14 @@ once. So the same `chmod a-w` gave `555` on @sec-organizing-projects's
 folder and `444` on its files only because they started at `755` and
 `644`. Why do new files start at `644` and folders at `755`? Your
 **umask**, `0022`, removes `w` for group and other from every new file
-and folder. Sites can set a different umask; you rarely need to change
-it.
+and folder. Sites can set a different umask: Nova's is `0002`, which
+leaves `w` for the group, so new files start at `664` and folders at
+`775`, and your lab can edit them. SCINet's Ceres sets `0027`, so new
+files start at `640` and folders at `750`: your group can read them
+but not change them, and other users cannot see them. On a cluster
+that does this, a labmate who must edit your file in a shared project
+folder needs you to run `chmod g+w` on it (@tbl-chmod-recipes). Check
+yours with `umask`; you rarely need to change it.
 
 : Common permission changes. The "before" column matters for symbolic
 changes, which modify the current mode. {#tbl-chmod-recipes}
@@ -418,7 +424,43 @@ Setgid decides the group of a new file, not whether the group may read
 it: the new file's permissions still come from your umask (and any
 default ACLs). If files you create in a project folder come out
 unreadable to your lab, check their group and permissions with `ls -l`
-and ask the help desk what the site expects. The [GNU coreutils
+and ask the help desk what the site expects.
+
+Here is what this looks like on Nova, in a group folder and a lab folder
+inside it (names replaced by `<group>`, `<lab>`, and `you`):
+
+```bash
+ls -ld /work/<group> /work/<group>/<lab>
+cd /work/<group>/<lab>
+touch group_test && ls -l group_test
+umask
+```
+
+```
+drwxrws--T. 43 root its-hpc-nova-<group> 44 Nov 18 12:11 /work/<group>
+drwxrwsr-x. 16 you  its-hpc-nova-<group> 16 Nov 16 18:24 /work/<group>/<lab>
+-rw-rw-r--. 1 you its-hpc-nova-<group> 0 Nov 20 12:34 group_test
+0002
+```
+
+Both folders have the setgid `s`, so the new file belongs to the lab's
+group, not to your main group (`domain users` on Nova). It is `rw-rw-r--`
+because Nova's umask is `0002`, so your labmates can edit it. The group
+folder also has a capital `T`. That is the sticky bit on a folder that
+others can't enter (no `x` for other); a lowercase `t` means the sticky
+bit plus `x`. The `.` after each permission string means the file has
+an SELinux security label, which you can ignore. Delete the test file
+with `rm group_test` when you are done.
+
+SCINet's Ceres follows the same pattern in `/project/<name>`, owned by
+`root` and the group `proj-<name>`, with two differences. Your main
+group there is a personal group named after you, so without the setgid
+`s` your files would belong to a group nobody else is in. And the
+umask is `0027`, so the same `touch` gives `-rw-r-----`, and a folder
+you make gives `drwxr-s---`: your lab can read and enter, but not edit
+or add files, until you run `chmod g+w` on them.
+
+The [GNU coreutils
 manual](https://www.gnu.org/software/coreutils/manual/html_node/File-permissions.html)
 describes all of this in full.
 
@@ -658,8 +700,11 @@ Exercise 3 sets up a fake `seqkit` to show this safely.
 
 `which seqkit` is a common alternative, but it is a separate program,
 its versions behave differently, and its answer need not match what
-bash will run (it knows nothing of your aliases, for example). Use
-bash's own `type -a`. @tbl-finding-commands collects the commands.
+bash will run. Usually it knows nothing of your aliases; on Nova
+`which ls` shows the alias too, because there `type which` reports
+`which is a function`: the site wraps the real `/usr/bin/which` in a
+shell function that passes it your aliases and functions. Use bash's
+own `type -a`. @tbl-finding-commands collects the commands.
 
 : Commands for finding out what runs. {#tbl-finding-commands}
 
@@ -900,7 +945,7 @@ for the cases you will meet:
 | interactive login | SSH login; new WSL window; Mac Terminal; `bash -l` | the **first one that exists** of `~/.bash_profile`, `~/.bash_login`, `~/.profile` |
 | interactive, not login | new desktop Ubuntu terminal; VS Code's terminal on Linux/WSL; `bash` typed in a shell | `~/.bashrc` |
 | not interactive (a script) | `bash script.sh`, `./script.sh`, a job script | neither (unless the variable `BASH_ENV` names a file) |
-| a command over SSH | `ssh host command` | often `~/.bashrc` (bash's special case for remote commands) |
+| a command over SSH | `ssh host command` | often `~/.bashrc` (bash's special case for remote commands; Nova and Ceres do) |
 
 ::: {#fig-startup-files}
 {{< svg ../figures/startup-files.svg >}}
@@ -1155,6 +1200,14 @@ a command; if you pressed {{< kbd Ctrl-Z >}}, finish with `fg` or
 `kill %1`.
 :::
 
+Some clusters switch {{< kbd Ctrl-Z >}} off (SCINet's Ceres leaves it
+on). On Nova, a site startup
+file (`/etc/profile.d/disable-control-z.sh`) runs `stty susp undef`,
+so the key does nothing and the command keeps running: no paused jobs
+are left holding memory on a shared login node. `stty -a` shows
+`susp = <undef>` when the key is off, and `susp = ^Z` when it works.
+Press {{< kbd Ctrl-C >}} instead, which still works there.
+
 **Watching the machine: `top`.** `top` shows the busiest processes,
 updated every few seconds; `q` quits. Here two busy test processes run
 alongside everything else (Linux `top`, sorted by CPU):
@@ -1195,7 +1248,11 @@ has the rules). For work that must keep running, use the site's
 persistent sessions (`tmux`, @sec-working-remotely), or submit it to the
 scheduler as a job, whose life does not depend on your window at all
 (@sec-hpc-slurm). On a login node, `ps -u "$USER"` or `top -u "$USER"`
-lists only your own processes, so you can find and end leftovers.
+lists only your own processes, so you can find and end leftovers. You
+need the `-u`: on Nova, `top`'s header showed 41 users and 1,714
+processes on one login node, and on Ceres 62 users and 1,165. (`top`
+cuts long user names to eight characters, so `first.last` shows as
+`first.+`; `-u` still takes the full name.)
 Heavy work belongs in a job, not on the login node (@sec-orientation).
 
 ::: {.callout-caution .misconception}
@@ -1287,19 +1344,39 @@ than it looks:
 
 | Question | Command | Read | On a cluster |
 |:---------|:--------|:-----|:-------------|
-| How full is the disk this folder is on? | `df -h folder` | `Avail`, `Use%` | shows the whole shared system, not your share |
+| How full is the disk this folder is on? | `df -h folder` | `Avail`, `Use%` | often the whole shared system, not your share |
 | What is big in here? | `du -sh * .[!.]* \| sort -h` | the last lines | run it on the folder you suspect, not on `/` |
 | How big is one folder? | `du -sh folder` | the one total | slow on huge trees |
-| What is my limit? | the site's quota command | used vs limit | @sec-hpc-slurm, @sec-cluster-sites |
+| What is my limit? | the site's quota command or usage file | used vs limit | @sec-hpc-slurm, @sec-cluster-sites |
 
 (In the second row, `.[!.]*` matches hidden names such as `.pixi`
 without matching `..`, @sec-shell-basics.)
 
-**On a cluster** `df` on shared storage shows the whole system, often
-petabytes, not your share. Your real limit is a **quota** for your user
-or project, read with the site's own command (@sec-hpc-slurm,
-@sec-cluster-sites). Quotas can also count files, not just bytes; `df
--i` shows a whole filesystem's file slots (inodes), which is likewise
+**On a cluster** `df` on shared storage often shows the whole system,
+many terabytes or petabytes, not your share. On Nova, `df -h ~` gives
+`172.16.7.238:/stor014/home  14T  7.5T  5.9T  56% /home`: the home
+folders of everyone, on another machine (the `address:/path` form
+means network storage). Your real limit is a **quota** for your user
+or project, which each site reports its own way (@sec-hpc-slurm,
+@sec-cluster-sites). @tbl-cluster-quotas compares two clusters.
+
+: Checking storage limits on two clusters (captured November 2026).
+{#tbl-cluster-quotas}
+
+| | Nova (ISU) | Ceres (SCINet) |
+|:--|:--|:--|
+| Quota command | none (`quota -s` prints nothing) | `my_quotas`: home and every project you belong to, usage vs quota in GB |
+| Home limit | 10 GB; check with `du -sh ~` | about 30 GB; `my_quotas` or `quota -s` |
+| Group storage | `/work/<group>`; usage and quota in the file `/work/<group>/group_storage_usage`, updated hourly | `/project/<name>`; in `my_quotas` |
+| `df -h` on group storage | shows the group's share | shows the project's quota as the size |
+
+So `df` can mislead in both directions: on one folder it shows the
+disk everyone shares, on another just your group's allowance. Trust the
+site's own command or file ([ISU file
+storage](https://research.it.iastate.edu/file-storage), [SCINet
+project management](https://scinet.usda.gov/guides/data/project-management)).
+
+Quotas can also count files, not just bytes; `df -i` shows a whole filesystem's file slots (inodes), which is likewise
 not your file-count quota. And `du` on a huge tree is slow and loads
 storage that everyone shares, so point it at the folder you suspect.
 `ncdu`, where installed, lets you browse sizes interactively.
@@ -1313,14 +1390,14 @@ as it is, @sec-shell-basics.)
 :::
 
 ::: {.check}
-**Check yourself.** `df -h /project` says `2.1P` available, but your
+**Check yourself.** `df -h` on a shared folder says `2.1P` available, but your
 job fails with `Disk quota exceeded`. Why?
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Answer
-`df` describes the whole shared filesystem. Your group's quota is a
-separate, much smaller limit; check it with the site's quota command
-(@sec-cluster-sites). It may also be a limit on the number of files.
+There `df` describes the whole shared filesystem. Your group's quota is a
+separate, much smaller limit; check it the way your site says, with a
+quota command or a usage file (@sec-cluster-sites). It may also be a limit on the number of files.
 :::
 :::
 
@@ -1532,20 +1609,21 @@ chmod u+x crlf.sh
 ```
 
 (The second line is `env` guessing at a different problem; ignore it.
-Ubuntu 26.04's `env` writes the first line as `env: $'bash\r': No such
-file or directory`; on a Mac it is `env: bash\r: No such file or
-directory`. With `#!/bin/bash` instead, bash 5.2 says only `cannot
-execute: required file not found`, and bash 5.3 says `/bin/bash^M: bad
-interpreter: No such file or directory`, with status 126 instead of
-127: the `^M` is the carriage return.)
+Older `env`, such as Nova's, prints only the first line. Ubuntu 26.04's
+`env` writes it as `env: $'bash\r': No such file or directory`; on a
+Mac it is `env: bash\r: No such file or directory`. With `#!/bin/bash`
+instead, bash 5.1 (Nova) and 5.3 say `/bin/bash^M: bad interpreter: No
+such file or directory`, with status 126 instead of 127: the `^M` is
+the carriage return. Bash 5.2 says only `cannot execute: required file
+not found`, which is even less helpful.)
 
 **How to detect it.** Look with `cat -A` (for `^M`), and count with
 `grep -c $'\r' file`, which prints how many lines contain a carriage
 return: `7` for the CSV, `0` for the TSV. Do not rely on `file`: it
 reports `with CRLF line terminators` for some text (`file crlf.sh`
 does), but once it recognises a CSV it says only `CSV ASCII text`, with
-or without carriage returns (Ubuntu's `file` 5.45; macOS's says `CSV
-text`). On a two-line CSV saved by Excel, `file` did mention CRLF; on
+or without carriage returns (Ubuntu's `file` 5.45; macOS's and Nova's
+5.39 say `CSV text`). On a two-line CSV saved by Excel, `file` did mention CRLF; on
 the seven-line sheet it did not, so its answer depends on the file.
 
 **Now name it.** Linux and macOS end each line with one character, a

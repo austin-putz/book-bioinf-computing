@@ -431,7 +431,8 @@ echo "$HOME"
 type ls
 ```
 
-On Nova (captured November 2026; `<user>` is your user name):
+On Nova and on SCINet's Ceres (both captured November 2026; `<user>` is
+your user name):
 
 ```{.console}
 /home/<user>
@@ -1457,7 +1458,7 @@ BBBBBFFFFFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFBFFFBFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
 One read, four lines (@sec-fasta-fastq explains them). `zless` opens
 the same file in `less`; quit with `q`. On some Linux systems plain
 `less` also opens `.gz` files, because of a helper set up for it (Ubuntu,
-WSL, and Nova have one); on others, including a Mac, it shows noise. Do not rely on it.
+WSL, Nova, and Ceres have one); on others, including a Mac, it shows noise. Do not rely on it.
 
 ::: {.callout-warning}
 ## Pitfall: `cat` on a compressed or binary file

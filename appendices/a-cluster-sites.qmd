@@ -19,6 +19,28 @@ by @sec-orientation, @sec-working-remotely, and @sec-hpc-slurm.
 - Data transfer nodes: Nova `novadtn.its.iastate.edu`; SCINet
   `ceres-dtn.scinet.usda.gov`, `atlas-dtn.hpc.msstate.edu`; Globus
 - Storage areas, quotas, and what is backed up (home, project, scratch)
+- Nova quotas (checked 2026-11-20): no quota command (`quota -s`
+  prints nothing; the documented `cdw` is missing; `my_workdir`
+  lower-cases the group and fails for `/work/ABG`). Home 10 GB, check
+  with `du -sh ~`. Group: `cat /work/<group>/group_storage_usage`
+  (group `NAME AVAIL USED`, fraction used, then per user `TYPE NAME
+  USED QUOTA OBJUSED OBJQUOTA`, where OBJ counts files); `df -h
+  /work/<group>` shows the same group share
+- Ceres quotas (checked 2026-11-20): `my_quotas` (`/usr/local/bin`)
+  lists home, each `/project/<name>`, and Juno `/LTS/project/<name>`,
+  with columns `Path`, `Usage (GB)`, `Quota (GB)`, `Availible (GB)`
+  (sic), `Consumed (%)`, `Status`; home about 30 GB (`quota -s` also
+  works for home: `30518M` quota, `50545M` limit, no file limit);
+  `/90daydata` has no quota but deletes data 90 days after last access;
+  `df -h /project/<name>` shows the project's quota as the size
+- Shared group folders: Nova `/work/<group>` is `drwxrws--T`, owned by
+  `root` and the lab's group (setgid on, sticky, closed to others); new
+  files take the lab's group and, with Nova's umask `0002`, are
+  group-writable (captured 2026-11-20). Ceres `/project/<name>` is also
+  `drwxrws--T` (`root`, group `proj-<name>`); new files take
+  `proj-<name>` but, with SCINet's umask `0027`, are `-rw-r-----`
+  (group reads, cannot edit); your primary group is a personal one
+  (captured 2026-11-20)
 - Ceres vs Atlas: one comparison table (login, DTN, and OnDemand hosts;
   separate storage and quotas for the same projects; OnDemand apps;
   hardware and partitions; location), checked against SCINet's pages

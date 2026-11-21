@@ -1260,3 +1260,41 @@ status 126), the missing `cannot access` line from `ls -l` in §2, and
 `-bash:` in login shells. Chapter 6 notes WSL's `C.UTF-8` sorts like
 `C`. Not done: telling readers to switch to GNU coreutils (needs
 `--allow-remove-essential`): Austin decided 2026-11-20 to keep Ubuntu's default (book `CLAUDE.md`).
+
+**Nova checks (2026-11-20, Blocks A and B; AlmaLinux 9.6, GNU coreutils
+8.32, bash 5.1.8).** Added to the chapter: Nova's umask `0002` (files
+`664`, folders `775`); `which ls` shows the alias there; Nova's
+`df -h ~` (NFS, 14T) as the cluster example; older `env` prints only one
+CRLF line; bash 5.1 and 5.3 both say `bad interpreter` (status 126),
+5.2 is the odd one; Nova's `file` 5.39 says `CSV text`. Locale
+`en_US.UTF-8`, so Chapter 6's sort output matches.
+
+**Nova group check (2026-11-20, checks 2.3).** `/work/<group>` is
+`drwxrws--T` (root, lab group); the lab folder is `drwxrwsr-x`; a new
+file gets the lab group, not `domain users`, and is `664` under umask
+`0002`. Added to §2 as a captured example (names replaced), with one
+sentence each on the capital `T` and the trailing `.` (SELinux).
+Open question 1 still needs Atlas/Ceres.
+
+**Nova checks, rest of Part 2 (2026-11-20).** Block C: Ctrl-C gives
+130; `top` showed 41 users and 1,714 processes (now quoted as the reason
+for `-u`); Ctrl-Z does nothing because `/etc/profile.d/disable-control-z.sh`
+runs `stty susp undef` (new paragraph after the Ctrl-Z pitfall).
+`type which` → a function wrapping `/usr/bin/which` (§4 sentence).
+2.2: `ssh host command` reads `~/.bashrc` on Nova (startup table row
+says "Nova does"). 2.4: no quota command; `group_storage_usage` file,
+`df -h /work/<group>` shows the group share, home 10 GB via `du -sh ~`
+(§8 paragraph and table, Appendix A bullet). 2.5: Exercise 4 works over
+SSH. Austin's own `rm -i` alias is personal, not Nova's.
+
+**Ceres checks (2026-11-20, Part 3; RHEL 9.6, same tool versions as
+Nova).** Main SCINet machine for the checks (Atlas optional). Added to
+the chapter: umask `0027` site-wide (§2 umask paragraph; files `640`,
+folders `750`); a Ceres `/project/<name>` paragraph after the Nova
+group example (personal primary group, `-rw-r-----`, `drwxr-s---`,
+`chmod g+w`); Ctrl-Z left on (§7); Ceres's `top` counts and `first.+`
+name truncation; a Nova-vs-Ceres quota table (`tbl-cluster-quotas`:
+`my_quotas`, home limits, what `df` shows); startup table "Nova and
+Ceres do" read `~/.bashrc` for remote commands. Chapter 5: Ceres
+added to the cluster capture and the `less`-opens-`.gz` list.
+Appendix A: Ceres shared-folder and quota bullets.

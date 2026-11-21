@@ -255,8 +255,8 @@ All of Part 2 is done: Blocks A–C, 2.2 (remote command reads
 `~/.bashrc`), 2.3 (setgid group folders), 2.4 (no quota command; a
 usage file), 2.5 (Exercise 4). Findings that changed the book: Ctrl-Z
 switched off site-wide, `which` is a function, umask `0002`, `top`
-counts, NFS `df`, quotas. Left: links (Part 5); Atlas and Apple
-silicon optional.
+counts, NFS `df`, quotas. Links (Part 5) done 2026-11-21. Left:
+Atlas and Apple silicon, both optional.
 :::
 
 ::: {.callout-tip}
@@ -949,7 +949,7 @@ Also note the **year** on the coreutils manual's front page.
 from the findutils entry, not checked.
 
 ::: {.callout-note}
-## Result, 2026-11-20: partly done (gnu.org went down mid-check)
+## Result, 2026-11-21: complete (all 11 links open)
 `curl` from the Mac: first pass returned **200** for the bash manual,
 `Bash-Startup-Files`, `Shell-Expansions`, the coreutils manual,
 `File-permissions`, findutils, grep, sed, and gawk manuals. `Signals`
@@ -957,6 +957,15 @@ and `Bourne-Shell-Builtins` (also linked from Chapter 7) timed out, and
 then gnu.org stopped answering altogether; Austin's Edge could not load
 the pages either, so it is a gnu.org outage, not bad links. **To do:**
 retry those two pages and read the coreutils manual's year later.
+
+**Update 2026-11-21:** Austin's home IP appears blocked by
+`www.gnu.org` (DNS fine, `ftp.gnu.org`/`savannah`/`fsf.org` load,
+www times out; it loads over his phone's cellular). On the phone:
+`Signals` opens; the coreutils manual says "This manual documents
+version 9.12" and "Copyright © 1994–2026". **Changed:** the bib entry
+is now `gnu2026coreutils` (`year = {2026}`, `edition = {Version
+9.12}`, `urldate` 2026-11-21); Chapter 7's Further reading cites the
+new key. `Bourne-Shell-Builtins` opens. **Part 5 complete.**
 :::
 
 ---

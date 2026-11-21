@@ -1990,7 +1990,7 @@ and environments go on project storage on a cluster (@sec-book-setup).
   Startup Files*, *Environment*, and *Job Control* --- the exact rules
   behind @tbl-startup-files and @fig-process-states, short and
   authoritative.
-- @gnu2025coreutils, the [GNU coreutils
+- @gnu2026coreutils, the [GNU coreutils
   manual](https://www.gnu.org/software/coreutils/manual/), chapter *File
   permissions* --- everything about `chmod`, including setgid, the
   sticky bit, and capital `X`; also `df`, `du`, and `stat`.

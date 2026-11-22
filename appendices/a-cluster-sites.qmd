@@ -3,65 +3,438 @@
 ::: {.callout-important icon=false}
 ## Under construction
 
-This appendix is a placeholder. The topics below are the current plan and
-will change as it is written.
+Drafted and checked against the sites' pages and by logging in
+(November 2026). Still to check: Atlas's VSCode start form, and
+whether `pixi install` works through Atlas's proxy.
 :::
 
-**Optional.** Reference for readers who use one of these clusters. Shared
-by @sec-orientation, @sec-working-remotely, and @sec-hpc-slurm.
+**Optional.** Reference for readers who use SCINet's Ceres or Atlas, or
+Iowa State's Nova. The chapters stay site-neutral and point here for
+the site-specific steps (@sec-orientation, @sec-book-setup,
+@sec-organizing-projects, @sec-getting-help, @sec-linux-system,
+@sec-working-remotely, @sec-hpc-slurm).
 
-## Planned topics
+How to read it:
 
-- Who can get an account, and how to apply (SCINet for USDA-affiliated
-  users; ISU Nova for Iowa State users); how long approval takes
-- Logging in: host names, multi-factor authentication, first login,
-  published host-key fingerprints
-- Data transfer nodes: Nova `novadtn.its.iastate.edu`; SCINet
-  `ceres-dtn.scinet.usda.gov`, `atlas-dtn.hpc.msstate.edu`; Globus
-- Storage areas, quotas, and what is backed up (home, project, scratch)
-- Nova quotas (checked 2026-11-20): no quota command (`quota -s`
-  prints nothing; the documented `cdw` is missing; `my_workdir`
-  lower-cases the group and fails for `/work/ABG`). Home 10 GB, check
-  with `du -sh ~`. Group: `cat /work/<group>/group_storage_usage`
-  (group `NAME AVAIL USED`, fraction used, then per user `TYPE NAME
-  USED QUOTA OBJUSED OBJQUOTA`, where OBJ counts files); `df -h
-  /work/<group>` shows the same group share
-- Ceres quotas (checked 2026-11-20): `my_quotas` (`/usr/local/bin`)
-  lists home, each `/project/<name>`, and Juno `/LTS/project/<name>`,
-  with columns `Path`, `Usage (GB)`, `Quota (GB)`, `Availible (GB)`
-  (sic), `Consumed (%)`, `Status`; home about 30 GB (`quota -s` also
-  works for home: `30518M` quota, `50545M` limit, no file limit);
-  `/90daydata` has no quota but deletes data 90 days after last access;
-  `df -h /project/<name>` shows the project's quota as the size
-- Atlas (checked 2026-11-21): Rocky Linux 9.6, bash 5.1.8, umask
-  `0027`, Ctrl-Z on. `my_quotas` is `/apps/bin/my_quotas` (same
-  columns, spelled `Available`; sections Atlas home directory, Atlas
-  working project space; no Juno), home 30 GB; projects have separate,
-  smaller allocations from Ceres. `df -h ~` shows the whole
-  `/atlas/home` (6.8P), not your share; `quota -s` fails with
-  `Operation not permitted` on `/atlas/90daydata`. Atlas `/project/<name>`
-  is `drwxrws---` (`root`, `proj-<name>`; setgid, no sticky, no SELinux
-  label); new files `-rw-r-----` with the project group; `df -h
-  /project/<name>` shows the project quota (1.1T for a 1,000 GB
-  allocation)
-- Shared group folders: Nova `/work/<group>` is `drwxrws--T`, owned by
-  `root` and the lab's group (setgid on, sticky, closed to others); new
-  files take the lab's group and, with Nova's umask `0002`, are
-  group-writable (captured 2026-11-20). Ceres `/project/<name>` is also
-  `drwxrws--T` (`root`, group `proj-<name>`); new files take
-  `proj-<name>` but, with SCINet's umask `0027`, are `-rw-r-----`
-  (group reads, cannot edit); your primary group is a personal one
-  (captured 2026-11-20)
-- Ceres vs Atlas: one comparison table (login, DTN, and OnDemand hosts;
-  separate storage and quotas for the same projects; OnDemand apps;
-  hardware and partitions; location), checked against SCINet's pages
-- Software on the site: modules, containers, and where pixi fits
-- VS Code on each site: the supported route (Nova: VS Code Tunnel app or
-  VS Code Server in Open OnDemand, Remote-SSH only to compute nodes;
-  SCINet: VS Code Server in Open OnDemand or a registered tunnel to Ceres
-  compute nodes), what each needs (VPN; Microsoft or GitHub account),
-  ending a session to release its resources, and moving the code-server
-  folder from `$HOME` to project storage
-- Sources: [ISU: Using VS Code on the cluster](https://research.it.iastate.edu/using-vs-code-cluster),
-  [SCINet: VS Code guide](https://scinet.usda.gov/guides/ide/vscode)
-- Where to get help: each site's own documentation and support contacts
+- **The sites' own pages are the authority.** Sites change their
+  systems; each section says when it was checked, and links the pages.
+- **"Observed"** marks something seen by logging in (November 2026),
+  not read on a site page.
+- **"Not stated"** means the site's pages do not say.
+- `<user>`, `<netid>`, `<project>`, and `<group>` stand for your own
+  names.
+
+@tbl-sites-glance is the one-table summary. If you use another
+cluster, the checklist in
+@sec-cluster-sites-other lists what to look up in its documentation.
+
+## Which site, and who can use it {#sec-cluster-sites-which}
+
+::: {.wide-table}
+: The three clusters in this appendix (checked 2026-11-21).
+{#tbl-sites-who}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Run by | SCINet (USDA Agricultural Research Service) | SCINet with Mississippi State University | Iowa State University Research IT |
+| Who can use it | ARS employees, and non-ARS collaborators sponsored by an ARS employee | same SCINet account; "approved for USDA-ARS use only" | anyone affiliated with Iowa State |
+| Documentation | [scinet.usda.gov](https://scinet.usda.gov/guides/) | SCINet's pages and [MSU's Atlas docs](https://docs.hpc.msstate.edu/) | [research.it.iastate.edu](https://research.it.iastate.edu/nova) |
+| Operating system (observed) | Red Hat Enterprise Linux 9.6 | Rocky Linux 9.6 | AlmaLinux 9.6 |
+:::
+
+Ceres and Atlas share accounts but **not storage**: the same project
+has a separate folder, with a separate quota, on each, and files made on
+one are not on the other (observed). Install the book environment on
+the cluster you will use.
+
+## Accounts {#sec-cluster-sites-accounts}
+
+Checked 2026-11-21 against [SCINet's signup
+page](https://scinet.usda.gov/about/signup) and ISU's [Nova
+page](https://research.it.iastate.edu/nova) and
+[FAQ](https://research.it.iastate.edu/faqs).
+
+**SCINet (Ceres and Atlas):**
+
+1. ARS employees fill in the online form on the signup page (sign in
+   with eAuthentication; be signed in to USDA Office 365 first).
+   Contractors name their contracting officer's representative as
+   supervisor.
+2. A non-ARS collaborator needs an ARS employee **sponsor**, who submits
+   the form on their behalf, with the collaborator's details and the
+   agreement that links them to ARS.
+3. The supervisor (the sponsor's supervisor, for non-ARS users) approves.
+   "It may take up to five business days to create an account after the
+   request is approved."
+4. You sign in through eAuthentication: with a LincPass, or, for
+   non-USDA users, with [Login.gov](https://login.gov) using the same
+   e-mail address as the SCINet account
+   ([alternative logins](https://scinet.usda.gov/guides/access/login/alt-login)).
+5. A new account has no project: your Slurm account is `sandbox`, for
+   jobs of up to 2 hours (Atlas lists `sandbox` jobs as 2 hours; on
+   Ceres, observed). A project is requested by its principal
+   investigator, who must be a full-time ARS employee; its managers add
+   members ([project
+   management](https://scinet.usda.gov/guides/data/project-management)).
+   Membership can take a while to reach every system.
+6. On Atlas, your home folder may appear only a day after the welcome
+   e-mail ([accessing SCINet](https://scinet.usda.gov/guides/access/)).
+
+**Nova:**
+
+1. Your user name is your ISU NetID.
+2. **Community** access: anyone affiliated with Iowa State can ask for
+   lower-priority access with no hardware purchase, through the *HPC
+   Cluster Access Request* form linked from the Nova page. A community
+   group gets 1 TB of group working space.
+3. **Sponsored** access: groups that bought nodes get higher priority
+   and larger limits; the group's owner adds members.
+4. **Instructional** access: an instructor requests it for a class, with
+   the same request form.
+5. How long approval takes: not stated. Access for collaborators outside
+   Iowa State: not stated.
+
+## Logging in {#sec-cluster-sites-login}
+
+@sec-book-setup-ssh teaches `ssh`; this is each site's version.
+Checked 2026-11-21 against [SCINet's SSH
+page](https://scinet.usda.gov/guides/access/ssh-login), [MSU's connect
+page](https://docs.hpc.msstate.edu/getting-started/connect.html), and
+ISU's [Nova SSH page](https://research.it.iastate.edu/login-nova-ssh-client).
+
+::: {.wide-table}
+: Logging in with SSH. {#tbl-sites-login}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Login host | `ceres.scinet.usda.gov` | `atlas-login.hpc.msstate.edu` | `nova.its.iastate.edu` |
+| User name | your SCINet user name (`first.last`) | same | your NetID |
+| Network | no VPN | no VPN (observed) | on campus, eduroam, or the [ISU VPN](https://vpn.iastate.edu) |
+| Sign-in | browser sign-in through `step`, "once for the day (or every 16 hours)" | as Ceres (observed: `step` opens a Login.gov sign-in in the browser, with an authenticator-app code; MSU's password-and-Duo page did not apply to a SCINet account) | authenticator code, then password |
+| One-time setup | install SmallStep's `step` and run the two commands on SCINet's SSH page (copy the fingerprint from that page) | same as Ceres, if `step` is used | none; the authenticator key is made the first time you sign in to Nova OnDemand (recover it under *MFA Recovery*) |
+| Host-key question on first login | no: `step` supplies the host keys | no (observed), as Ceres | yes; compare with ISU's [published fingerprints](https://research.it.iastate.edu/nova-ssh-host-key-fingerprints) |
+| Banner (observed) | SCINet logo and an authorized-use notice | same | storage reminders and the next maintenance date |
+:::
+
+SCINet's own advice is that "for most use cases, you do *not* need"
+SSH: its Open OnDemand portal in a browser is simpler
+(@sec-cluster-sites-vscode).
+
+Observed on all three (November 2026): an SSH login is a login shell,
+the site's `~/.bash_profile` reads `~/.bashrc`, and a command sent with
+`ssh host 'command'` reads `~/.bashrc` too (@sec-linux-system-startup).
+SCINet's banner is printed by SSH on its error output, so it does not
+disturb `scp` or `rsync`.
+
+## Moving files: transfer nodes and Globus {#sec-cluster-sites-transfer}
+
+Hosts and site rules only; the commands are in @sec-working-remotely.
+Checked 2026-11-21 against SCINet's [transfer
+guide](https://scinet.usda.gov/guides/data/transfer/) and
+[Globus page](https://scinet.usda.gov/guides/data/transfer/globus), MSU's
+[file transfer page](https://docs.hpc.msstate.edu/getting-started/file-transfer.html),
+and ISU's [transfer](https://research.it.iastate.edu/transferring-files)
+and [Globus](https://research.it.iastate.edu/globus) pages.
+
+::: {.wide-table}
+: Moving files in and out. {#tbl-sites-transfer}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Data transfer node (for `scp`, `rsync`) | `ceres-dtn.scinet.usda.gov` | `atlas-dtn.hpc.msstate.edu` | `novadtn.its.iastate.edu` |
+| Globus collection | `SCINet-Ceres` | `SCINet-Atlas` | `Nova DTN` |
+| Globus sign-in | organization "SCINet - ARS/USDA" | same | ISU credentials |
+| Upload in Open OnDemand | files under 1 GB | not stated | files of 20 MB or less |
+| Site advice | Globus for anything over 1 GB; it also moves data among Ceres, Atlas, and Juno | as Ceres | use the transfer node, not the login node; Globus "highly recommended" for large transfers; `/lss` is reachable only from the transfer node |
+:::
+
+## Storage, quotas, and backups {#sec-cluster-sites-storage}
+
+The full version of @tbl-storage-backup. Checked 2026-11-21 against
+SCINet's [storage guide](https://scinet.usda.gov/guides/data/storage)
+and [project-management
+page](https://scinet.usda.gov/guides/data/project-management), MSU's
+[storage page](https://docs.hpc.msstate.edu/storage/index.html), and
+ISU's [file storage page](https://research.it.iastate.edu/file-storage).
+
+::: {.wide-table}
+: Storage areas at each site. {#tbl-sites-storage}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Home | `/home/<user>`, 30 GB, fixed | same, separate | `/home/<netid>`, 10 GB |
+| Project or group | `/project/<project>`, quota per project | `/project/<project>`, separate allocation (default 1 TB) | `/work/<group>`, bought per terabyte for five years (1 TB for community groups) |
+| Short-term | `/90daydata/<project>`: no quota; "files older than 90 days will be automatically deleted", permanently | same | `/ptmp`: free, for "short periods of 6 to 8 weeks"; the login banner says files unused for 60 days are deleted |
+| Long-term | Juno, `/LTS/project/<project>`, at the National Agricultural Library, reached with Globus | Juno, with Globus | `/lss/research/<group>`, bought per terabyte per year; not visible on compute nodes |
+| On the compute node | `$TMPDIR`, 1.5 TB or more, deleted when the job ends | not stated | `$TMPDIR`, 1–1.5 TB, deleted when the job ends |
+| Backed up? | "Cluster storage is not backed up"; copy data that "cannot be easily reproduced" to Juno | no (MSU's table) | `/work`: daily snapshots; `/lss` is the backed-up system (login banner) |
+:::
+
+::: {.wide-table}
+: Checking how much you use (observed 2026-11-20 and 21, plus the
+pages above). {#tbl-sites-quotas}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Quota command | `my_quotas`: home, each project, and Juno | `my_quotas`: home and each project | none: `quota -s` prints nothing |
+| Group storage | in `my_quotas` | in `my_quotas` | `cat /work/<group>/group_storage_usage` (updated hourly; also shown at login) |
+| Home | in `my_quotas`; `quota -s` also works | in `my_quotas` | `du -sh ~` |
+| `df -h` on group storage | shows the project's quota as the size | same | shows the group's share |
+| `df -h ~` | the whole home system | same | same |
+| File-count limit | not stated | not stated | not stated |
+| Going over | 14 days to get back under; until then, writes only up to 10% (or 10 TB) over | as Ceres | ISU e-mails the group's PI at 70% |
+| More space | the project's PI or manager uses SCINet's [request form](https://scinet.usda.gov/support/request) | same | the group buys more (file storage page) |
+:::
+
+Two Nova notes (observed 2026-11-20): `group_storage_usage` lists every
+member's use and file count (`OBJUSED`); and ISU's helper commands
+`my_workdir` and `cdw` did not work then, so use your folder's path.
+Deleting files on Nova's `/work` frees space only after about five days,
+when the snapshots that hold them expire.
+
+**Permissions on shared folders** (@sec-linux-system-permissions;
+observed 2026-11-20 and 21):
+
+::: {.wide-table}
+: New files and shared folders at each site. {#tbl-sites-permissions}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| `umask` (set by the site) | `0027` | `0027` | `0002` |
+| New file, new folder | `-rw-r-----`, `drwxr-x---` | same | `-rw-rw-r--`, `drwxrwxr-x` |
+| Your lab can edit your files? | no, until you `chmod g+w` them | no, as Ceres | yes |
+| Your primary group | a personal group named after you | same | `domain users` |
+| Project or group folder | `drwxrws--T.`, `root`, group `proj-<project>` | `drwxrws---`, same owner and group | `drwxrws--T.`, `root`, group `its-hpc-nova-<group>` |
+| New files get | the project's group (setgid) | same | the group's group (setgid) |
+| {{< kbd Ctrl-Z >}} | works | works | switched off by the site |
+:::
+
+**Where to put the book environment** (@sec-book-setup-pixi): in your
+project or group folder, never in home, with pixi's cache on the same
+storage. For example, `/project/<project>/<user>/bioinf-computing` on
+Ceres or Atlas and `/work/<group>/<netid>/bioinf-computing` on Nova,
+with `PIXI_CACHE_DIR` set to a folder beside it. One book environment
+is about 1.3 GB and 15,500 files (less on Nova's compressed `/work`).
+
+## Interactive sessions {#sec-cluster-sites-interactive}
+
+Checked 2026-11-21 against the pages linked below and by starting a
+session on each cluster. @sec-orientation's first session uses
+`srun --cpus-per-task=1 --mem=4G --time=01:00:00 --pty bash -l`; each
+site adds its own options. Full SLURM teaching is @sec-hpc-slurm.
+
+- **Ceres:** `salloc -A <project>` gives one core, about 6 GB, and a
+  shell for 2 hours ([SLURM guide](https://scinet.usda.gov/guides/use/slurm)).
+  Partition `ceres` (default 2 hours, at most 3 weeks); `scavenger` runs
+  longer but can be stopped. `sinfo -s` (observed) lists only these two,
+  with partition limits of 60 and 21 days; the 3-week limit on `ceres`
+  comes from its QOS, not the partition.
+
+  Observed: `srun -A <project> --cpus-per-task=1 --mem=4G
+  --time=00:30:00 --pty bash -l` works and gives a shell on a compute
+  node. `sacctmgr -n show assoc user=$USER format=account%30` lists the
+  accounts you may use. On arrival the node prints its settings:
+  `TMPDIR` and Apptainer's cache are set to the node's `/tmp`, and
+  `TMOUT=5400` logs an idle shell out after 90 minutes.
+- **Atlas:** `-A <project>` is required. `salloc -A <project>` only
+  reserves the node; `srun --pty --preserve-env bash` then puts you on
+  it, or use `srun -A <project> --pty --preserve-env bash` in one step
+  ([Ceres and Atlas differences](https://scinet.usda.gov/guides/resources/CeresAtlasDifferences)).
+  Default partition `atlas`; others for large memory and GPUs, listed
+  in MSU's [Atlas
+  specifications](https://docs.hpc.msstate.edu/cluster/specifications/atlas.html).
+  `sinfo -s` (observed) shows `atlas`, `bigmem`, four GPU partitions,
+  `development`, and `service`, all with no time limit, so the limits
+  come from the QOS.
+
+  Observed: the same `srun -A <project> ... --pty bash -l` line as on
+  Ceres works in one step, and nothing is printed on arrival.
+- **Nova:** ISU's examples have no account option, e.g. `salloc -N 1 -n
+  8 -t 4:00:00` ([SLURM page](https://research.it.iastate.edu/slurm));
+  default partition `nova`. ISU's pages say jobs run up to two weeks;
+  the OnDemand form showed a 31-day limit for `nova` (observed).
+
+  Observed: `srun --cpus-per-task=1 --mem=4G --time=00:30:00 --pty bash
+  -l` works with no `-A`; SLURM charges your default account (list
+  yours with the `sacctmgr` line above). On arrival the node prints its
+  settings, as Ceres does: `TMPDIR` and Apptainer's cache on the node's
+  `/tmp`, `TMOUT=5400` (90 idle minutes), and Apptainer set to make
+  `/work`, `/ptmp`, and the other shared file systems visible inside
+  containers. `sinfo -s` (observed) shows `nova` (31 days),
+  `interactive` (8 hours; the one ISU's VS Code page says to pick),
+  `instruction` (2 days), `scavenger`, `reserved`, `nova-arm`, and a
+  one-minute `allnodes`.
+- **End the session** with `exit`. After `srun ... --pty`, `exit` ends
+  the job too (`squeue -u $USER` showed nothing left on all three,
+  observed); a reservation from `salloc` may need `scancel <jobid>` as
+  well.
+- **Internet from compute nodes:** not stated by any of the three.
+  Observed on Ceres: yes (`curl -sI https://pixi.sh` answered). On
+  Atlas: yes, through a web proxy (the reply begins `HTTP/1.1 200
+  Connection established`, which is the proxy speaking). Tools that
+  read the standard `https_proxy` setting, as `curl` does, work
+  without changes. The node sets `https_proxy`, `http_proxy`, and `no_proxy` for you
+  (observed). On Nova: yes, directly (observed). So on Ceres and Nova
+  downloads work inside an interactive session; on Atlas, whether
+  `pixi install` uses the proxy is still to be checked.
+
+## VS Code {#sec-cluster-sites-vscode}
+
+@sec-book-setup-vscode explains the routes. Checked 2026-11-21 against
+[SCINet's VS Code guide](https://scinet.usda.gov/guides/ide/vscode),
+MSU's [connect
+page](https://docs.hpc.msstate.edu/getting-started/connect.html), and
+[ISU's VS Code page](https://research.it.iastate.edu/using-vs-code-cluster).
+
+::: {.wide-table}
+: VS Code routes each site supports. {#tbl-sites-vscode}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Open OnDemand portal | [ceres-ondemand.scinet.usda.gov](https://ceres-ondemand.scinet.usda.gov/) | [atlas-ood.hpc.msstate.edu](https://atlas-ood.hpc.msstate.edu/) | [nova-ondemand.its.iastate.edu](https://nova-ondemand.its.iastate.edu/) (campus or VPN) |
+| VS Code Server app (in the browser) | yes; code-server 4.17 (observed), old enough that some current extensions may not install | yes: *VSCode* under *Servers* (observed), beside JupyterLab and RStudio Server | yes; code-server 4.97 (observed); ISU says to pick the interactive partition |
+| VS Code Tunnel app (desktop VS Code) | yes; a Microsoft or GitHub account ("USDA employees should use a Microsoft account") | no (observed: not in the app list) | yes (ISU's recommended route); at most ten connections |
+| Remote-SSH to a compute node | not documented | not stated | documented; needs SSH keys (@sec-working-remotely) |
+| Remote-SSH to a login node | no | not stated | no |
+:::
+
+**The OnDemand start form** asks the same things under different names
+(observed on Ceres and Nova; Atlas from MSU's page):
+
+::: {.wide-table}
+: The VS Code Server start form. {#tbl-sites-ood-form}
+
+| What it asks | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Who pays | Account (avoid `sandbox`: 2 hours) | Slurm Account | Account |
+| Where it runs | Queue `ceres`, and QOS | Partition, and QOS | Slurm Partition |
+| How long | Number of hours | Duration | Number of hours |
+| CPUs | Number of cores | Nodes and processors | Number of Tasks Per node |
+| Memory | Memory required (e.g. `8G`) | not stated | Memory Required (no unit means MB) |
+| Starting folder | Working Directory (default: home) | not stated | Working Directory (default: the last one used) |
+:::
+
+Set the starting folder to your project or group folder. End a session
+with **Cancel** on its card under *My Interactive Sessions*: closing the
+browser tab does not end it, and it keeps its node until cancelled or
+out of time (observed on both).
+
+**Extensions fill home.** Both SCINet and ISU say to move the extensions
+folder to project storage and leave a link in its place, once:
+
+```{.bash filename="Terminal (cluster)"}
+mkdir -p /project/<project>/<user>/.local/share # <1>
+mv ~/.local/share/code-server /project/<project>/<user>/.local/share/
+ln -s /project/<project>/<user>/.local/share/code-server ~/.local/share/code-server
+```
+1. On Nova, use `/work/<group>/<netid>` instead of
+   `/project/<project>/<user>`. Do this with no VS Code session running.
+
+## Software on the site {#sec-cluster-sites-software}
+
+Checked 2026-11-21 against SCINet's
+[modules](https://scinet.usda.gov/guides/software/modules) and
+[Apptainer](https://scinet.usda.gov/guides/software/singularity) guides
+and ISU's [modules page](https://research.it.iastate.edu/getting-started-with-modules).
+
+- **Modules** on all three: `module avail` (or `module spider`), `module
+  load <name>`, `module list`. On Atlas some modules appear only after a
+  `gcc` module is loaded.
+- **Containers:** Apptainer on SCINet (on Atlas, `module load apptainer`
+  first; run it on a compute node). Nova: not documented on the pages
+  read, but `module avail apptainer` lists versions 1.1.5 to 1.4.0
+  (observed), from three dated software trees.
+- **Asking for software:** SCINet's [software request
+  form](https://scinet.usda.gov/support/request); new system-wide
+  software needs a security review that "takes a few weeks". Nova: ISU
+  Research IT (@sec-cluster-sites-help).
+- **The book's way:** the book environment with pixi in your project
+  storage, for everything it covers; site modules only for what it does
+  not.
+
+## Shared reference data {#sec-cluster-sites-reference}
+
+- **Ceres** has a shared `/reference` area, including ready-made
+  containers in `/reference/containers`. Its main folders (observed):
+  `data`, `containers`, `llms`, `workshops`, and `workbook`, plus
+  site-admin folders.
+- **Atlas** has `/reference`, copied from Ceres's `/reference/data`
+  every night. Observed: `data`, `containers`, `llms`, `models`,
+  `workshops`, `workbook`, and a `README` that says the folder is "for
+  reference datasets", "read only on atlas", and "sync'd nightly from"
+  Ceres's `/reference/data`.
+- **Nova:** not stated, and none seen: the top-level `/shared` folder
+  holds the site's own configuration (SLURM, OnDemand, module files),
+  not reference data (observed).
+
+**What `/reference/data` holds** (observed; the same on Ceres and
+Atlas): mostly the large databases that annotation and classification
+tools need, one folder per tool, e.g. `alphafold`, `BUSCO`,
+`eggnogdb`, `gtdbtk`, `kaiju`, `humann`, and `Dfam`, plus a `Genome`
+folder. Before downloading a tool's database, look here first; some
+of these databases are very large.
+
+If your site has none, keep references once in a lab-shared
+folder (@sec-organizing-projects-shared).
+
+## Getting help {#sec-cluster-sites-help}
+
+::: {.wide-table}
+: Where to ask about each cluster (checked 2026-11-21). {#tbl-sites-help}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Help desk | SCINet's VRSC: [contact page](https://scinet.usda.gov/support/contact) | for login problems, the VRSC; for questions about the cluster itself, MSU's help address on the same contact page | ISU Research IT: [contact page](https://research.it.iastate.edu/contact-us); the [FAQ](https://research.it.iastate.edu/faqs) gives a separate address for software installs |
+| Other | the [SCINet forum](https://forum.scinet.usda.gov) (needs a SCINet account) | same | maintenance is scheduled between terms; the login banner gives the date |
+:::
+
+Whatever the site, say which cluster, node, and job ID; give the exact
+command, the folder you ran it in, and the complete message; and say
+what you already checked (@sec-getting-help). Writing to ISU from a
+non-ISU address, include your NetID.
+
+## The three at a glance {#sec-cluster-sites-glance}
+
+The short version of the tables above (checked 2026-11-21); follow the
+section links for details and sources.
+
+::: {.wide-table}
+: Ceres, Atlas, and Nova side by side. {#tbl-sites-glance}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| Run by | SCINet (USDA-ARS) | SCINet with Mississippi State | Iowa State Research IT |
+| Login host | `ceres.scinet.usda.gov` | `atlas-login.hpc.msstate.edu` | `nova.its.iastate.edu` |
+| Sign-in | `step`, browser | `step`, browser | authenticator code, then password; campus or VPN |
+| Transfer node | `ceres-dtn.scinet.usda.gov` | `atlas-dtn.hpc.msstate.edu` | `novadtn.its.iastate.edu` |
+| Home | 30 GB | 30 GB | 10 GB |
+| Your work | `/project/<project>` | `/project/<project>` | `/work/<group>` |
+| Scratch, auto-deleted | `/90daydata` (90 days) | `/90daydata` (90 days) | `/ptmp` (60 days unused) |
+| Backups | none; copy to Juno | none; copy to Juno | `/work` snapshots; `/lss` |
+| Quota command | `my_quotas` | `my_quotas` | `group_storage_usage` file |
+| New files readable by the lab | yes; editable after `chmod g+w` | same | yes, and editable |
+| Interactive session | `srun -A <project> ... --pty bash -l` | same | `srun ... --pty bash -l` (no `-A`) |
+| Internet on compute nodes | yes | yes, through a proxy | yes |
+| VS Code | OnDemand: VS Code Server or Tunnel | OnDemand: VSCode | OnDemand: Tunnel (recommended) or VS Code Server; Remote-SSH to a compute node |
+| Help | SCINet VRSC | VRSC; MSU for the cluster | ISU Research IT |
+:::
+
+## If your cluster is neither {#sec-cluster-sites-other}
+
+Find these in your cluster's documentation, in this order, and note
+them in your project notebook (@sec-organizing-projects-records):
+
+: What to look up for your own cluster. {#tbl-sites-other}
+
+| Topic | Find out |
+|:--|:--|
+| Account | who can apply, who sponsors or approves, how long it takes |
+| Logging in | login host, VPN, sign-in method, published host-key fingerprints |
+| Moving files | transfer node and Globus collection |
+| Storage | home, project, and scratch areas: size, purge rule, backups |
+| Quota | the command or file that shows your use; any file-count limit |
+| Defaults | `umask`, and whether group folders have setgid |
+| Jobs | required `srun` options (account, partition); internet from compute nodes |
+| Editing | the supported VS Code route (Open OnDemand, tunnel, Remote-SSH to a compute node) |
+| Software | modules, containers, how to ask for software |
+| Help | the help desk, and where maintenance is announced |

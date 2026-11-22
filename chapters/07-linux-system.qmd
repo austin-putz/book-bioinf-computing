@@ -1356,7 +1356,8 @@ without matching `..`, @sec-shell-basics.)
 
 **On a cluster** `df` on shared storage often shows the whole system,
 many terabytes or petabytes, not your share. On Nova, `df -h ~` gives
-`172.16.7.238:/stor014/home  14T  7.5T  5.9T  56% /home`: the home
+`<server>:/<path>/home  14T  7.5T  5.9T  56% /home` (server address
+replaced): the home
 folders of everyone, on another machine (the `address:/path` form
 means network storage). Your real limit is a **quota** for your user
 or project, which each site reports its own way (@sec-hpc-slurm,

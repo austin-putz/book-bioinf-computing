@@ -2,6 +2,7 @@
 title: "Appendix A — Cluster sites: SCINet and Nova"
 subtitle: "Appendix plan · optional · tracking list"
 date: 2026-11-17
+date-modified: 2026-11-21
 ---
 
 **Status:** tracking list (2026-11-17). Collects everything Chapters 1–4
@@ -109,6 +110,12 @@ look up.
   MSU (*recorded*).
 - To decide: whether Chapter 9's SSH keys and `ProxyJump` need a
   per-site note here (SCINet's `step` replaces keys for login).
+- Observed 2026-11-20: SCINet prints a login banner (logo and USDA
+  authorized-use notice) on every `ssh`, including `ssh host command`;
+  it goes to stderr, so `scp`/`rsync` are unaffected. On all three
+  sites an SSH login is a login shell whose `~/.bash_profile` reads
+  `~/.bashrc`, and `ssh host command` reads `~/.bashrc` too. Nova's
+  `which` is a shell function that shows aliases.
 
 ### 4. Data transfer nodes and moving files
 
@@ -137,6 +144,36 @@ look up.
   -s` prints nothing, usage in `/work/<group>/group_storage_usage`
   (*recorded*). Add the pitfall: `df -h` shows the shared filesystem's
   size, not your limit.
+- **Observed 2026-11-20/21 (checks Parts 2–3; Chapter 7 now has the
+  Nova-vs-Ceres table `tbl-cluster-quotas`):**
+  - `my_quotas`: Ceres `/usr/local/bin/my_quotas` (home, each
+    `/project/<project>`, Juno `/LTS/project/<project>`; header spelled
+    `Availible`); Atlas `/apps/bin/my_quotas` (home and project only;
+    `Available`). Columns `Path`, `Usage (GB)`, `Quota (GB)`,
+    `Available (GB)`, `Consumed (%)`, `Status`. Home 30 GB on both
+    (Ceres `quota -s`: 30518M quota, 50545M limit, no file limit).
+    Atlas `quota -s` errors (`Operation not permitted` on
+    `/atlas/90daydata`). Ceres and Atlas project allocations are
+    separate and differ in size.
+  - `df -h`: on home, the whole system (Nova 14T, Ceres 91T, Atlas
+    6.8P); on group storage, the group's or project's own quota
+    (Nova `/work/<group>`, Ceres and Atlas `/project/<project>`).
+  - Nova `group_storage_usage`: group line `NAME AVAIL USED`, fraction
+    used, then per member `TYPE NAME USED QUOTA OBJUSED OBJQUOTA`
+    (`OBJ` = files). Lists every member's use, so show only headers.
+  - Nova helpers from ISU's pages: `my_workdir` lower-cases the group
+    name and fails for upper-case folder names; `cdw` not found.
+    Reported to ISU (hpc-help) 2026-11-20.
+- **Permissions and shared folders (observed; Chapter 7 §2 has them):**
+
+  | | Ceres | Atlas | Nova |
+  |:--|:--|:--|:--|
+  | OS | RHEL 9.6 | Rocky Linux 9.6 | AlmaLinux 9.6 |
+  | umask (site-wide) | `0027` | `0027` | `0002` |
+  | primary group | personal (`<user>`) | personal | `domain users` |
+  | group folder | `drwxrws--T.` `root`:`proj-<project>` | `drwxrws---` (no sticky, no SELinux label) | `drwxrws--T.` `root`:`its-hpc-nova-<group>` |
+  | new file | `-rw-r-----`, project group | same | `-rw-rw-r--`, lab group |
+  | Ctrl-Z | on | on | **off** (`/etc/profile.d/disable-control-z.sh`) |
 - Where to put the book environment and the pixi cache on each site
   (Chapter 2's pitfall): `PIXI_CACHE_DIR` in the same project storage;
   example paths with placeholders.
@@ -209,6 +246,9 @@ look up.
   address, so it does not go stale.
 - Nova: ISU Research IT,
   [research.it.iastate.edu/contact-us](https://research.it.iastate.edu/contact-us).
+  ISU's FAQ gives `hpc-help@iastate.edu` for Nova requests; other pages
+  say `researchit@iastate.edu` (checked 2026-11-20). Per the rule above,
+  link the contact page rather than print an address.
 - What to include (from Chapter 4 §7): cluster, node, job ID, the exact
   command, the complete message, what you checked. Maintenance windows
   and status pages for each site (Nova's banner announces maintenance;
@@ -244,8 +284,10 @@ so far are only the hosts):
 
 - Signup differences, if any (SCINet account covers both?).
 - Login: `step` or another method on `atlas-login.hpc.msstate.edu`.
-- Storage: home size, project quota, `/90daydata` equivalent and purge,
-  backups ("not backed up" applies to both?); Juno is Ceres only.
+- Storage: ~~home size, project quota~~ (home 30 GB, own project
+  allocations, `my_quotas` in `/apps/bin`; observed 2026-11-21);
+  `/90daydata` purge and backups ("not backed up" applies to both?);
+  Juno is Ceres only (`my_quotas` on Atlas has no Juno section).
 - Partitions and required `srun` options (from `sinfo` and MSU's docs).
 - OnDemand form fields and whether a VS Code app exists on
   atlas-ood.hpc.msstate.edu; tunnel route.
@@ -281,6 +323,79 @@ Not needed for Chapters 1–4, but keep the slots:
 2. **Other sites:** yes, add the checklist (section 12).
 3. **Observed facts:** allowed, labelled "observed" with a date. Applied
    in the rules.
+
+## Status update (2026-11-21)
+
+The Chapter 5–7 checks (WSL, Nova, Ceres, Atlas) filled most of
+section 5 and parts of 3; `appendices/a-cluster-sites.qmd` has their
+results as dated bullets under *Planned topics*, to be turned into the
+section-5 tables when the appendix is written. Private details were
+removed from the book text (an internal Nova server address in Chapter
+7, a group name in the appendix stub).
+
+## Draft written (2026-11-21)
+
+`appendices/a-cluster-sites.qmd` now holds a full draft of sections
+1–5, 7, 8, 10, and 12, plus partial 6 (from the pages) and 9; the
+"Under construction" callout stays until 6, 9, and 11 are done. Every
+table has Ceres, Atlas, and Nova columns. Facts come from web lookups
+on 2026-11-21 (SCINet pages last updated 2024-09 to 2026-01; MSU's
+Atlas docs footer 2025; ISU pages undated) and the Chapter 2 and
+Chapter 5–7 checks (marked "observed"). E-mail addresses are not
+printed; contact pages are linked.
+
+**Conflicts found in the sources (resolved in the draft as shown):**
+
+- Atlas sign-in: SCINet's SSH page sets up Atlas with `step`; MSU's
+  connect page says password + Duo. Draft shows both, *to confirm*.
+- Nova job length: ISU's pages say two weeks; the OnDemand form showed
+  31 days for `nova`. Draft gives both.
+- Nova `/ptmp`: "6 to 8 weeks" (page) vs 60 days unused (banner). Both.
+- Nova snapshots: "7 daily snapshots" vs "deleted … after 5 days".
+  Draft says "daily snapshots" and "frees space after about five days".
+- Ceres `salloc` length: 2 hours (SLURM guide) vs 2 days with a
+  1.5-hour idle timeout (Apptainer guide). Draft uses the SLURM guide.
+- Atlas quota command: MSU says `my_quota`; observed `my_quotas`
+  works. Draft uses the observed one.
+- ISU's VS Code page says SSH to `nova-vscode` is no longer available;
+  the SSH page still lists it. Not used in the draft.
+
+## Login checks needed (step 2)
+
+For Austin, on each cluster (results go in the checks file):
+
+1. **Atlas sign-in:** how does `ssh atlas-login.hpc.msstate.edu`
+   ask for sign-in: browser (`step`), or password + Duo? Host-key
+   question on first login?
+2. **Atlas OnDemand:** the Interactive Apps list; is there a VS Code
+   Server or Tunnel app? Start-form field names.
+3. **Interactive session, each cluster:** run the site's command from
+   §6, then on the node `hostname`, `curl -sI https://pixi.sh | head
+   -n 1` (internet from compute nodes?), `exit` (and `scancel` if
+   needed). On Nova, check whether `-A` is needed.
+4. **`sinfo -s`** on each cluster (partition names and limits).
+5. **Reference folders:** `ls /reference` on Ceres and Atlas; anything
+   similar on Nova?
+6. **Nova containers:** `module avail apptainer` (or `which apptainer`).
+
+### Step 2 results (2026-11-21)
+
+- Done, in the appendix: 1 (Atlas uses `step` with a Login.gov
+  sign-in; no host-key prompt), 2 (Atlas OnDemand has a *VSCode*
+  server app, no Tunnel app; form fields not yet seen), 4 (Ceres and
+  Atlas; partition limits are 60/21 days and unlimited, so QOS sets
+  the real limits), 5 (Ceres and Atlas folder lists), 6 (Nova
+  Apptainer 1.1.5 to 1.4.0 as modules).
+- Later the same day: 3 done on all three (`srun ... --pty bash -l`
+  works; Ceres and Atlas need `-A`, Nova does not; internet on every
+  compute node, Atlas through a proxy with `https_proxy` set); 4 on
+  Nova (`interactive` partition is 8 h); Atlas `/reference/README`.
+  Section 11 (`tbl-sites-glance`) written. Fixed: wide-table captions
+  sat outside the div, so no appendix table was numbered.
+- Done: Nova `/shared` is site configuration, not reference data;
+  `/reference/data` (same on Ceres and Atlas) is tool databases.
+- Still to do: Atlas VSCode form fields (screenshot), and whether `pixi install` works
+  through Atlas's proxy (when the book environment is installed there).
 
 ## Open questions
 

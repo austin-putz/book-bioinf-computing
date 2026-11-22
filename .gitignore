@@ -6,8 +6,9 @@
 # Rendered planning docs: local viewing only
 /plans/*.html
 
-# Private: Austin's SCINet account email (local only)
-/plans/scinet_welcome_email.md
-
 # pixi environments (e.g., from testing setup/)
 .pixi/
+
+# Private, local only: Austin's account names and paths (read by Claude)
+# and the SCINet welcome email
+/_private/

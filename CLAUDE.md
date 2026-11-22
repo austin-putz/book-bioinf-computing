@@ -75,6 +75,17 @@ tools.
 - Developing code (reusable functions, debuggers, tests), performance, GPUs,
   and cloud are optional and come last (Part VIII in `plans/PLAN_CHAPTERS.md`).
 
+## Private local notes
+
+`_private/` is git-ignored and exists only on Austin's machine. Read
+`_private/cluster-accounts.md` (Austin's user names, project and group
+names, folders) before giving Austin commands to run, and fill those in
+so they are ready to paste. Never copy its contents into a tracked
+file or commit message; use placeholders there. If the folder is
+missing (another clone), carry on without it.
+
+@_private/cluster-accounts.md
+
 ## Files in this folder
 
 - `CLAUDE.md`: this file. `AGENTS.md` only points here, so other agents

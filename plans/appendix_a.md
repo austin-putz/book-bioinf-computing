@@ -32,7 +32,7 @@ the sites' support pages directly as a stopgap.
   details (see next rule).
 - **Nothing private:** no user names, project or group names, internal
   host addresses, or anything from the SCINet welcome email
-  (`plans/scinet_welcome_email.md`, git-ignored) beyond what SCINet
+  (`_private/scinet_welcome_email.md`, git-ignored) beyond what SCINet
   publishes. Use `<netid>`, `<user>`, `<project>`, `<group>`.
 - **Atlas gets its own column in every table** (decided 2026-11-17),
   as in a Ceres | Atlas | Nova layout, not notes under Ceres. Merge a

@@ -5,7 +5,8 @@ date: 2026-11-19
 ---
 
 **Part:** II — The Linux command line · **Label:** core · **Status:**
-draft plan, 2026-11-19. Outputs marked *captured* were recorded on
+agreed 2026-11-22 (first draft 2026-11-19); all hands-on checks done
+(*Examples and data*), ready to draft. Outputs marked *captured* were recorded on
 2026-11-19 on macOS 15 (Intel) in a scratch copy of Chapter 5's
 practice tree, with Homebrew bash 5.3.15, GNU coreutils/sed/grep first
 on `PATH` (as after Chapter 1), **Apple gzip 457.140.3** (GNU gzip not
@@ -19,9 +20,9 @@ everything that needs the real project was then captured on Linux:
 seqkit 2.14.0 from its GitHub release, the book's files from the pinned
 commit with MD5s matching `data/README.md`, run as an ordinary user, not
 root). Without pixi: scripts ran with `bash src/…` and seqkit on `PATH`.
-Still *to capture*: real terminals on WSL, clusters, and runs through
-`pixi run` (`chapter_08_checks.md`). Open questions settled the same
-day (see *Decisions*). **Revised 2026-11-22** after the Codex review
+Runs through `pixi run` on the Mac and the three clusters were checked
+on 2026-11-22 (`chapter_08_checks.md`); WSL was not needed. Open
+questions settled the same day (see *Decisions*). **Revised 2026-11-22** after the Codex review
 (`chapter_08_codex_review.md`): exercise 2 scaffold, temporary-output
 promise, `grep`/`head` handling, sitting order, git `restore` source,
 logging in `02`/`run_all.sh`, colour roles. Its bash claims were
@@ -150,7 +151,7 @@ logging.
      `… 0` for sample C and for a missing file and exits 0
      (*captured*): the reader sees the difference their edits made.
   2. **Project** (*captured (Linux)*, without pixi; through `pixi
-     run` *to capture*). From
+     run` on the Mac, *captured 2026-11-22*). From
      `~/bioinf-computing`, `pixi run bash src/run_all.sh` runs
      `01_count_reads.sh` then `02_gtf_summary.sh` and leaves
      `results/gtf_feature_counts.tsv` with the five counts from
@@ -339,8 +340,7 @@ review). Error handling still comes after variables and loops.
    done with `awk`, Chapter 6). This matters as soon as a script must
    **remember** something across rows, e.g. "did any row fail?": with
    `bad=0; tail -n +2 … | while …; do bad=1; done; exit "$bad"` the
-   script exits 0 even with a missing folder (*captured (Codex,
-   2026-11-22)*). The repair, supplied ready-made for exercise 2 (after
+   script exits 0 even with a missing folder (*captured 2026-11-22*). The repair, supplied ready-made for exercise 2 (after
    §7), feeds the file to a `{ … }` group with `<` instead of a pipe,
    so the loop runs in the script's own shell and `bad` survives:
 
@@ -611,8 +611,8 @@ review). Error handling still comes after variables and loops.
     from `run_all.sh` below. The awk that prints two
     TSV columns is supplied (`awk -v OFS='\t' '{print $2, $1}'` after
     `uniq -c`; Chapter 6 taught `-v OFS`). Draft script (ShellCheck
-    clean, *captured (Linux)* before the two MD5 lines were added;
-    *to recapture*), with the guard and `log`/`die` from §8:
+    0.11.0 clean, *captured 2026-11-22* on the Mac through `pixi run`),
+    with the guard and `log`/`die` from §8:
 
     ```bash
     #!/usr/bin/env bash
@@ -739,11 +739,14 @@ review). Error handling still comes after variables and loops.
     commit their scripts, then break and recover one. One-time setup:
     check `git --version` (Xcode Command Line Tools on a Mac, from
     Homebrew's install in Chapter 1; preinstalled on Ubuntu/WSL and
-    clusters; *to check* minimum versions, since `git restore` needs
-    2.23), `git config --global user.name` / `user.email` and
+    clusters; `git restore` needs 2.23, and every machine checked has
+    more: Mac 2.50.1, Ubuntu 24.04 2.43.0, Nova and Atlas 2.47.3, Ceres
+    2.52.0), `git config --global user.name` / `user.email` and
     `git config --global init.defaultBranch main` **before** `git init`
-    (without it, git 2.43 prints an 11-line `hint: Using 'master'…`
-    block, *captured (Linux)*). Supplied `.gitignore` (`data/`,
+    (without it, git prints a several-line `hint: Using 'master'…`
+    block; its wording changes between versions, so the text describes
+    it rather than quoting it; *captured* on Linux and all three
+    clusters). Supplied `.gitignore` (`data/`,
     `results/`, `logs/`, `.pixi/`), explained in one sentence each and
     taught properly in Chapter 21. Then the routine (*captured*):
     `git init`; `git status --short` (`?? src/`); `git add .gitignore
@@ -775,8 +778,7 @@ review). Error handling still comes after variables and loops.
     (branches, undoing commits, remotes, `core.autocrlf`) is Chapter
     21. Link VS Code's Source Control view in one sentence.
     [`fig-git-routine`, `tbl-git-routine`; misconception
-    `git-is-backup` (or reuse Chapter 3's `sync-is-backup`, see
-    *Misconceptions*); self-check]
+    `git-is-backup`; self-check]
 13. **Summary, exercises, further reading.** Summary as five bullets
     matching the learning goals, plus a one-screen "script template"
     readers can copy (no unconditional `|| true` in it; shebang, header comment, `set -euo pipefail`,
@@ -851,8 +853,10 @@ Pipe tables, caption above, `tbl-` label, cited by label.
 - `rm -rf` with a variable appears only as text in the §3 pitfall,
   never in a runnable block.
 - Every script in the chapter passes ShellCheck with no warnings
-  (except the deliberately broken ones in §4 and §11), checked while
-  drafting.
+  (except the deliberately broken ones: §4's first loop, §11's script,
+  and exercise 1's skeleton), checked while drafting with the book
+  environment's ShellCheck 0.11.0. §11's quoted findings were captured
+  with 0.9.0: recapture them with 0.11.0 when drafting.
 - Supplied files (`args.sh`, `count.sh`, the broken §11 script,
   `count_reads.sh` skeleton, `.gitignore`, `02_gtf_summary.sh`) are
   shown as code blocks with a `filename=` label; readers open the file
@@ -955,10 +959,11 @@ supplied material):
    the supplied `check_samples.sh TABLE`: §4's redirected `{ … } <
    "$table"` loop with the argument and file checks, header handling,
    and the `bad` flag already working, plus a scaffold comment where
-   the R1 check goes. Readers add: for each row of `meta/samples.tsv`,
-   whether its run folder holds an R1 file (only when the folder
-   exists), problems to stderr, exit 1 if any row has a problem, and
-   every bad row reported, not just the first. Then a
+   the R1 check goes. The scaffold already sends problems to stderr,
+   keeps going after a bad row, and exits 1 if any row failed. Readers
+   add, for each row of `meta/samples.tsv`, whether its run folder holds
+   an R1 file (only when the folder exists), reported the same way, and
+   a line on stdout for each sample that passes. Then a
    separate prediction: a copy with `IFS=,` reading
    `samples_from_excel.csv`, which also tests the `reads` column
    numerically (`(( reads > 0 ))`), as in §4's example. Folder and R1
@@ -1012,9 +1017,11 @@ supplied material):
    is not a positive number: 12` (the `\r` is invisible, which is the
    puzzle); the folder and R1 lines are the same as for the TSV; exit
    1. The error does not stop the script, because it sits in an `if`.
-   After `tr -d '\r'`, the CSV gives the TSV's result. Error wording
-   differs by bash version (bash 5.1 on the clusters says `syntax
-   error: invalid arithmetic operator`); the text says so.
+   After `tr -d '\r'`, the CSV gives the TSV's result. The error's
+   wording differs between bash versions (bash 5.3 says `arithmetic
+   syntax error`; older versions, such as the clusters' 5.1, are
+   expected to say `syntax error: invalid arithmetic operator`, not
+   captured), so the text says messages vary.
 3. **What strict mode misses.** A supplied script counts reads in a
    file and then reports "OK". Three supplied bad inputs: a missing
    file, a truncated `.gz`, and a valid gzip stream with **no content**
@@ -1031,12 +1038,33 @@ supplied material):
    the check here. The count is lines ÷ 4, which holds only for these
    plain four-line toy records; it is not a FASTQ validator (Chapter
    15's tools are).
-4. **Add a step to the project.** Write `src/02_gtf_summary.sh` from
-   the supplied skeleton (header, strict mode, `log`, `.tmp` + `mv`),
-   add it to `run_all.sh`, run the whole pipeline through pixi, and
-   compare `results/gtf_feature_counts.tsv` with Chapter 6's check.
-   Then commit both scripts with a message saying what they do (one
-   commit for both is fine; check with `git show --stat HEAD`).
+4. **Add a third step to the project** (revised 2026-11-22: the old
+   version, "write `02` from a skeleton", repeated §10). Write
+   `src/03_transcript_biotypes.sh`, which counts the transcripts of
+   each biotype, following `02`'s pattern: header comment, strict mode,
+   the guard, `log`/`die`, input check, `.tmp` + `mv`, MD5 log lines.
+   The skeleton supplies only the extraction line, since `grep -o` is
+   new:
+
+   ```bash
+   gunzip -c "$gtf" | awk -F'\t' '$3 == "transcript"' \
+     | grep -o 'transcript_biotype "[^"]*"' | cut -d'"' -f2 \
+     | sort | uniq -c | sort -k1,1nr | awk -v OFS='\t' '{print $2, $1}'
+   ```
+
+   Add it to `run_all.sh`, run the whole pipeline through pixi, check
+   that the counts add up to Chapter 6's 124 transcripts, and commit
+   with a message saying what the step does (`git show --stat HEAD`
+   should list both changed files). *Answer, captured 2026-11-22* (Mac,
+   through `pixi run`, ShellCheck 0.11.0 clean):
+   `results/transcript_biotypes.tsv` is `biotype`/`count`, then
+   `protein_coding 116`, `tRNA 4`, `pseudogene 2`, `ncRNA 1`, `snoRNA
+   1`; the log says `wrote results/transcript_biotypes.tsv (5
+   biotypes)`; exit 0; output MD5 `06f05e65…`, the same under
+   `LC_ALL=C`, so the order of the two tied rows does not depend on the
+   locale. A follow-up question for the answer: `02` and `03` both
+   read only the GTF, so they could run at the same time, which is one
+   of §10's limits of `run_all.sh`.
 5. **Break, see, recover.** In the project, make a deliberate change to
    `src/02_gtf_summary.sh` (e.g. drop the header line), commit it (so
    at least two commits exist), then use `git log --oneline --
@@ -1061,7 +1089,9 @@ supplied material):
   `src/01_count_reads.sh`, `data/raw/SRR6357070_{1,2}.fastq.gz`,
   `data/raw/checksums.md5`, `data/ref/genes.gtf.gz`. New files the
   reader adds: `src/02_gtf_summary.sh`, `src/run_all.sh`,
-  `.gitignore`, `.git/`, `results/gtf_feature_counts.tsv`. Nothing new
+  `.gitignore`, `.git/`, `results/gtf_feature_counts.tsv`, and in
+  exercise 4 `src/03_transcript_biotypes.sh` and
+  `results/transcript_biotypes.tsv`. Nothing new
   to download, so no new rows in `data/README.md`.
 - **Captured** (2026-11-19, macOS 15 Intel, Homebrew bash 5.3.15, GNU
   coreutils/sed/grep, Apple gzip 457.140.3, Apple git 2.50.1):
@@ -1143,7 +1173,7 @@ supplied material):
   table): Mac through `pixi run` (`run_all.sh`, ShellCheck 0.11.0,
   failed rerun, VS Code extension); Nova, Atlas, Ceres (git, bash
   5.1.8, no ShellCheck outside pixi, strict `gunzip | head` 141 ×3,
-  glob order); exercise 2's full answer (§ Exercises). **Still to
+  glob order); exercise 2's and exercise 4's answers (§ Exercises). **Still to
   capture (optional):** `run_all.sh` through pixi on a cluster; nothing
   cluster-specific was found.
 - Where commands run: laptop only. A one-paragraph note in §1 says the
@@ -1152,12 +1182,12 @@ supplied material):
 
 ## Misconceptions
 
-New entries for the book's `misconceptions.yml`, to add when this plan
-is agreed. Existing entries revisited here get `08-shell-scripts` added
-to `chapters` where missing: `relative-to-script` (already lists it),
-`pipe-stops-on-error` (already lists it), `no-error-means-correct`,
-`script-needs-bash` (already lists it), `csv-is-csv`,
-`program-sees-wildcard`, `sort-is-numeric`.
+New entries, **added to `misconceptions.yml` on 2026-11-22** (that
+file is now the source; the summaries below are kept for reference).
+Revisited entries all list `08-shell-scripts`: `relative-to-script`,
+`pipe-stops-on-error`, `no-error-means-correct`, `script-needs-bash`,
+`program-sees-wildcard` (already did), and `csv-is-csv`,
+`sort-is-numeric` (added 2026-11-22).
 
 - `script-stops-on-error`: "If a command in my script fails, the script
   stops." By default bash moves on to the next line, so later steps
@@ -1168,7 +1198,8 @@ to `chapters` where missing: `relative-to-script` (already lists it),
   `fig-strict-mode`, §7; first raised as Chapter 1's pitfall]
 - `strict-mode-catches-all`: "With `set -euo pipefail` my script stops
   on every error." It stops on a nonzero exit status, except in
-  conditions, some function calls, and masked assignments, and it
+  conditions, functions called from conditions, all but the last
+  command of an `&&`/`||` list, and masked assignments, and it
   cannot see a tool that reports success on bad input; it can also stop
   on harmless statuses (`grep` no match, `head` closing a pipe). Probe:
   which stops a strict script: `grep -c XYZ file` with no match, or
@@ -1192,9 +1223,9 @@ to `chapters` where missing: `relative-to-script` (already lists it),
 - `git-is-backup` (decided: a new entry, decision 10): "My scripts are in git, so they are backed
   up." A repository on the same disk is not an off-machine backup; a
   local `.git/` is lost with the disk (pushing to another machine is
-  one way to make an independent copy). **Check first** whether Chapter 3's `sync-is-backup`
-  or its git sentence already covers this; if so, extend that entry's
-  `chapters` instead of adding a new id. [background callout, §12]
+  one way to make an independent copy). Chapter 3's `sync-is-backup`
+  is about sync services, so this is a separate id; it also lists
+  Chapters 21 and 22. [background callout, §12]
 
 ## Links to other chapters and books
 
@@ -1277,8 +1308,10 @@ Austin's choices, all as recommended:
    machine this plan was written on, and editing `pixi.toml` without
    the lock would break `pixi install --locked` for readers, since
    `setup-url` points at `main`). Listed in `chapter_08_checks.md`.
-   Still not in `setup/pixi.toml` (checked 2026-11-22): a drafting
-   dependency. The chapter also needs a short upgrade step for readers
+   **Done 2026-11-22:** `pixi add shellcheck` gave ShellCheck 0.11.0
+   (spec `>=0.11.0,<0.12`), committed with the regenerated lock
+   (`5ee4ad4`) and pushed, so `setup-url` serves it. The chapter also
+   needs a short upgrade step for readers
    who downloaded the Chapter 2 environment earlier (download the new
    `pixi.toml`/`pixi.lock` into `~/bioinf-computing`, then `pixi
    install --locked`; or `pixi add shellcheck` in the project).
@@ -1295,7 +1328,8 @@ Austin's choices, all as recommended:
    `.gitignore`. Chapter 21 starts from that repository.
 6. **git version: check clusters first.** Austin runs `git --version`
    on Nova, Ceres, and Atlas; if any is older than 2.23, add a
-   one-line `git checkout -- file` fallback (see *Open questions*).
+   one-line `git checkout -- file` fallback. **Resolved 2026-11-22:**
+   all are 2.47 or newer, so no fallback (*Open questions* 1).
 7. **Runner: `run_all.sh`**, steps listed by name; `make` gets one
    sentence; Chapter 25 keeps "Make basics".
 8. **Checks file: written now** (`chapter_08_checks.md`).
@@ -1311,6 +1345,8 @@ Austin's choices, all as recommended:
     `misconceptions.yml`, and `08-shell-scripts` was added to
     `csv-is-csv` and `sort-is-numeric`. The other revisited entries
     already listed it.
+12. **Exercise 4 adds a third step**, `03_transcript_biotypes.sh`,
+    instead of rewriting `02` (final review, 2026-11-22).
 
 ## Open questions
 

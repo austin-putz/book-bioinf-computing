@@ -269,8 +269,10 @@ site adds its own options. Full SLURM teaching is @sec-hpc-slurm.
   (observed). On Nova: yes, directly (observed). So on all three,
   downloads work inside an interactive session. On Atlas both the pixi
   installer and `pixi install --locked` worked through the proxy with
-  no changes (observed 2026-11-22; the book environment installed in
-  29 seconds).
+  no changes (observed 2026-11-22). The book environment took 29
+  seconds to install on Atlas, 54 on Ceres, and 10 on Nova; it used
+  about 1.3 GB on SCINet and 0.8 GB on Nova's compressed `/work`, with
+  the cache's files shared rather than copied on all three.
 
 ## VS Code {#sec-cluster-sites-vscode}
 

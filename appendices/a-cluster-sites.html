@@ -26,6 +26,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -52,6 +87,8 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-b4f194da33962df49b6ccd01f8f087cc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
+<link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -642,7 +679,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#planned-topics" id="toc-planned-topics" class="nav-link active" data-scroll-target="#planned-topics"><span class="header-section-number">A.1</span> Planned topics</a></li>
+  <li><a href="#sec-cluster-sites-which" id="toc-sec-cluster-sites-which" class="nav-link active" data-scroll-target="#sec-cluster-sites-which"><span class="header-section-number">A.1</span> Which site, and who can use it</a></li>
+  <li><a href="#sec-cluster-sites-accounts" id="toc-sec-cluster-sites-accounts" class="nav-link" data-scroll-target="#sec-cluster-sites-accounts"><span class="header-section-number">A.2</span> Accounts</a></li>
+  <li><a href="#sec-cluster-sites-login" id="toc-sec-cluster-sites-login" class="nav-link" data-scroll-target="#sec-cluster-sites-login"><span class="header-section-number">A.3</span> Logging in</a></li>
+  <li><a href="#sec-cluster-sites-transfer" id="toc-sec-cluster-sites-transfer" class="nav-link" data-scroll-target="#sec-cluster-sites-transfer"><span class="header-section-number">A.4</span> Moving files: transfer nodes and Globus</a></li>
+  <li><a href="#sec-cluster-sites-storage" id="toc-sec-cluster-sites-storage" class="nav-link" data-scroll-target="#sec-cluster-sites-storage"><span class="header-section-number">A.5</span> Storage, quotas, and backups</a></li>
+  <li><a href="#sec-cluster-sites-interactive" id="toc-sec-cluster-sites-interactive" class="nav-link" data-scroll-target="#sec-cluster-sites-interactive"><span class="header-section-number">A.6</span> Interactive sessions</a></li>
+  <li><a href="#sec-cluster-sites-vscode" id="toc-sec-cluster-sites-vscode" class="nav-link" data-scroll-target="#sec-cluster-sites-vscode"><span class="header-section-number">A.7</span> VS Code</a></li>
+  <li><a href="#sec-cluster-sites-software" id="toc-sec-cluster-sites-software" class="nav-link" data-scroll-target="#sec-cluster-sites-software"><span class="header-section-number">A.8</span> Software on the site</a></li>
+  <li><a href="#sec-cluster-sites-reference" id="toc-sec-cluster-sites-reference" class="nav-link" data-scroll-target="#sec-cluster-sites-reference"><span class="header-section-number">A.9</span> Shared reference data</a></li>
+  <li><a href="#sec-cluster-sites-help" id="toc-sec-cluster-sites-help" class="nav-link" data-scroll-target="#sec-cluster-sites-help"><span class="header-section-number">A.10</span> Getting help</a></li>
+  <li><a href="#sec-cluster-sites-glance" id="toc-sec-cluster-sites-glance" class="nav-link" data-scroll-target="#sec-cluster-sites-glance"><span class="header-section-number">A.11</span> The three at a glance</a></li>
+  <li><a href="#sec-cluster-sites-other" id="toc-sec-cluster-sites-other" class="nav-link" data-scroll-target="#sec-cluster-sites-other"><span class="header-section-number">A.12</span> If your cluster is neither</a></li>
   </ul>
 </nav>
     </div>
@@ -679,27 +727,833 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This appendix is a placeholder. The topics below are the current plan and will change as it is written.</p>
+<p>Drafted and checked against the sites’ pages and by logging in (November 2026). Still to check: Atlas’s VSCode start form, and whether <code>pixi install</code> works through Atlas’s proxy.</p>
 </div>
 </div>
-<p><strong>Optional.</strong> Reference for readers who use one of these clusters. Shared by <a href="../chapters/01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, <a href="../chapters/09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>, and <a href="../chapters/10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>.</p>
-<section id="planned-topics" class="level2" data-number="A.1">
-<h2 data-number="A.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">A.1</span> Planned topics</h2>
+<p><strong>Optional.</strong> Reference for readers who use SCINet’s Ceres or Atlas, or Iowa State’s Nova. The chapters stay site-neutral and point here for the site-specific steps (<a href="../chapters/01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, <a href="../chapters/02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>, <a href="../chapters/03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>, <a href="../chapters/04-getting-help.html" class="quarto-xref"><span>Chapter 4</span></a>, <a href="../chapters/07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a>, <a href="../chapters/09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>, <a href="../chapters/10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>).</p>
+<p>How to read it:</p>
 <ul>
-<li>Who can get an account, and how to apply (SCINet for USDA-affiliated users; ISU Nova for Iowa State users); how long approval takes</li>
-<li>Logging in: host names, multi-factor authentication, first login, published host-key fingerprints</li>
-<li>Data transfer nodes: Nova <code>novadtn.its.iastate.edu</code>; SCINet <code>ceres-dtn.scinet.usda.gov</code>, <code>atlas-dtn.hpc.msstate.edu</code>; Globus</li>
-<li>Storage areas, quotas, and what is backed up (home, project, scratch)</li>
-<li>Nova quotas (checked 2026-11-20): no quota command (<code>quota -s</code> prints nothing; the documented <code>cdw</code> is missing; <code>my_workdir</code> lower-cases the group and fails for <code>/work/ABG</code>). Home 10 GB, check with <code>du -sh ~</code>. Group: <code>cat /work/&lt;group&gt;/group_storage_usage</code> (group <code>NAME AVAIL USED</code>, fraction used, then per user <code>TYPE NAME USED QUOTA OBJUSED OBJQUOTA</code>, where OBJ counts files); <code>df -h /work/&lt;group&gt;</code> shows the same group share</li>
-<li>Ceres quotas (checked 2026-11-20): <code>my_quotas</code> (<code>/usr/local/bin</code>) lists home, each <code>/project/&lt;name&gt;</code>, and Juno <code>/LTS/project/&lt;name&gt;</code>, with columns <code>Path</code>, <code>Usage (GB)</code>, <code>Quota (GB)</code>, <code>Availible (GB)</code> (sic), <code>Consumed (%)</code>, <code>Status</code>; home about 30 GB (<code>quota -s</code> also works for home: <code>30518M</code> quota, <code>50545M</code> limit, no file limit); <code>/90daydata</code> has no quota but deletes data 90 days after last access; <code>df -h /project/&lt;name&gt;</code> shows the project’s quota as the size</li>
-<li>Atlas (checked 2026-11-21): Rocky Linux 9.6, bash 5.1.8, umask <code>0027</code>, Ctrl-Z on. <code>my_quotas</code> is <code>/apps/bin/my_quotas</code> (same columns, spelled <code>Available</code>; sections Atlas home directory, Atlas working project space; no Juno), home 30 GB; projects have separate, smaller allocations from Ceres. <code>df -h ~</code> shows the whole <code>/atlas/home</code> (6.8P), not your share; <code>quota -s</code> fails with <code>Operation not permitted</code> on <code>/atlas/90daydata</code>. Atlas <code>/project/&lt;name&gt;</code> is <code>drwxrws---</code> (<code>root</code>, <code>proj-&lt;name&gt;</code>; setgid, no sticky, no SELinux label); new files <code>-rw-r-----</code> with the project group; <code>df -h /project/&lt;name&gt;</code> shows the project quota (1.1T for a 1,000 GB allocation)</li>
-<li>Shared group folders: Nova <code>/work/&lt;group&gt;</code> is <code>drwxrws--T</code>, owned by <code>root</code> and the lab’s group (setgid on, sticky, closed to others); new files take the lab’s group and, with Nova’s umask <code>0002</code>, are group-writable (captured 2026-11-20). Ceres <code>/project/&lt;name&gt;</code> is also <code>drwxrws--T</code> (<code>root</code>, group <code>proj-&lt;name&gt;</code>); new files take <code>proj-&lt;name&gt;</code> but, with SCINet’s umask <code>0027</code>, are <code>-rw-r-----</code> (group reads, cannot edit); your primary group is a personal one (captured 2026-11-20)</li>
-<li>Ceres vs Atlas: one comparison table (login, DTN, and OnDemand hosts; separate storage and quotas for the same projects; OnDemand apps; hardware and partitions; location), checked against SCINet’s pages</li>
-<li>Software on the site: modules, containers, and where pixi fits</li>
-<li>VS Code on each site: the supported route (Nova: VS Code Tunnel app or VS Code Server in Open OnDemand, Remote-SSH only to compute nodes; SCINet: VS Code Server in Open OnDemand or a registered tunnel to Ceres compute nodes), what each needs (VPN; Microsoft or GitHub account), ending a session to release its resources, and moving the code-server folder from <code>$HOME</code> to project storage</li>
-<li>Sources: <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU: Using VS Code on the cluster</a>, <a href="https://scinet.usda.gov/guides/ide/vscode">SCINet: VS Code guide</a></li>
-<li>Where to get help: each site’s own documentation and support contacts</li>
+<li><strong>The sites’ own pages are the authority.</strong> Sites change their systems; each section says when it was checked, and links the pages.</li>
+<li><strong>“Observed”</strong> marks something seen by logging in (November 2026), not read on a site page.</li>
+<li><strong>“Not stated”</strong> means the site’s pages do not say.</li>
+<li><code>&lt;user&gt;</code>, <code>&lt;netid&gt;</code>, <code>&lt;project&gt;</code>, and <code>&lt;group&gt;</code> stand for your own names.</li>
 </ul>
+<p><a href="#tbl-sites-glance" class="quarto-xref">Table&nbsp;<span>A.10</span></a> is the one-table summary. If you use another cluster, the checklist in <a href="#sec-cluster-sites-other" class="quarto-xref"><span>Section A.12</span></a> lists what to look up in its documentation.</p>
+<section id="sec-cluster-sites-which" class="level2" data-number="A.1">
+<h2 data-number="A.1" class="anchored" data-anchor-id="sec-cluster-sites-which"><span class="header-section-number">A.1</span> Which site, and who can use it</h2>
+<div class="wide-table">
+<div id="tbl-sites-who" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-who-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.1: The three clusters in this appendix (checked 2026-11-21).
+</figcaption>
+<div aria-describedby="tbl-sites-who-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Run by</td>
+<td style="text-align: left;">SCINet (USDA Agricultural Research Service)</td>
+<td style="text-align: left;">SCINet with Mississippi State University</td>
+<td style="text-align: left;">Iowa State University Research IT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Who can use it</td>
+<td style="text-align: left;">ARS employees, and non-ARS collaborators sponsored by an ARS employee</td>
+<td style="text-align: left;">same SCINet account; “approved for USDA-ARS use only”</td>
+<td style="text-align: left;">anyone affiliated with Iowa State</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Documentation</td>
+<td style="text-align: left;"><a href="https://scinet.usda.gov/guides/">scinet.usda.gov</a></td>
+<td style="text-align: left;">SCINet’s pages and <a href="https://docs.hpc.msstate.edu/">MSU’s Atlas docs</a></td>
+<td style="text-align: left;"><a href="https://research.it.iastate.edu/nova">research.it.iastate.edu</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Operating system (observed)</td>
+<td style="text-align: left;">Red Hat Enterprise Linux 9.6</td>
+<td style="text-align: left;">Rocky Linux 9.6</td>
+<td style="text-align: left;">AlmaLinux 9.6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Ceres and Atlas share accounts but <strong>not storage</strong>: the same project has a separate folder, with a separate quota, on each, and files made on one are not on the other (observed). Install the book environment on the cluster you will use.</p>
+</section>
+<section id="sec-cluster-sites-accounts" class="level2" data-number="A.2">
+<h2 data-number="A.2" class="anchored" data-anchor-id="sec-cluster-sites-accounts"><span class="header-section-number">A.2</span> Accounts</h2>
+<p>Checked 2026-11-21 against <a href="https://scinet.usda.gov/about/signup">SCINet’s signup page</a> and ISU’s <a href="https://research.it.iastate.edu/nova">Nova page</a> and <a href="https://research.it.iastate.edu/faqs">FAQ</a>.</p>
+<p><strong>SCINet (Ceres and Atlas):</strong></p>
+<ol type="1">
+<li>ARS employees fill in the online form on the signup page (sign in with eAuthentication; be signed in to USDA Office 365 first). Contractors name their contracting officer’s representative as supervisor.</li>
+<li>A non-ARS collaborator needs an ARS employee <strong>sponsor</strong>, who submits the form on their behalf, with the collaborator’s details and the agreement that links them to ARS.</li>
+<li>The supervisor (the sponsor’s supervisor, for non-ARS users) approves. “It may take up to five business days to create an account after the request is approved.”</li>
+<li>You sign in through eAuthentication: with a LincPass, or, for non-USDA users, with <a href="https://login.gov">Login.gov</a> using the same e-mail address as the SCINet account (<a href="https://scinet.usda.gov/guides/access/login/alt-login">alternative logins</a>).</li>
+<li>A new account has no project: your Slurm account is <code>sandbox</code>, for jobs of up to 2 hours (Atlas lists <code>sandbox</code> jobs as 2 hours; on Ceres, observed). A project is requested by its principal investigator, who must be a full-time ARS employee; its managers add members (<a href="https://scinet.usda.gov/guides/data/project-management">project management</a>). Membership can take a while to reach every system.</li>
+<li>On Atlas, your home folder may appear only a day after the welcome e-mail (<a href="https://scinet.usda.gov/guides/access/">accessing SCINet</a>).</li>
+</ol>
+<p><strong>Nova:</strong></p>
+<ol type="1">
+<li>Your user name is your ISU NetID.</li>
+<li><strong>Community</strong> access: anyone affiliated with Iowa State can ask for lower-priority access with no hardware purchase, through the <em>HPC Cluster Access Request</em> form linked from the Nova page. A community group gets 1 TB of group working space.</li>
+<li><strong>Sponsored</strong> access: groups that bought nodes get higher priority and larger limits; the group’s owner adds members.</li>
+<li><strong>Instructional</strong> access: an instructor requests it for a class, with the same request form.</li>
+<li>How long approval takes: not stated. Access for collaborators outside Iowa State: not stated.</li>
+</ol>
+</section>
+<section id="sec-cluster-sites-login" class="level2" data-number="A.3">
+<h2 data-number="A.3" class="anchored" data-anchor-id="sec-cluster-sites-login"><span class="header-section-number">A.3</span> Logging in</h2>
+<p><a href="../chapters/02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> teaches <code>ssh</code>; this is each site’s version. Checked 2026-11-21 against <a href="https://scinet.usda.gov/guides/access/ssh-login">SCINet’s SSH page</a>, <a href="https://docs.hpc.msstate.edu/getting-started/connect.html">MSU’s connect page</a>, and ISU’s <a href="https://research.it.iastate.edu/login-nova-ssh-client">Nova SSH page</a>.</p>
+<div class="wide-table">
+<div id="tbl-sites-login" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-login-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.2: Logging in with SSH.
+</figcaption>
+<div aria-describedby="tbl-sites-login-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Login host</td>
+<td style="text-align: left;"><code>ceres.scinet.usda.gov</code></td>
+<td style="text-align: left;"><code>atlas-login.hpc.msstate.edu</code></td>
+<td style="text-align: left;"><code>nova.its.iastate.edu</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">User name</td>
+<td style="text-align: left;">your SCINet user name (<code>first.last</code>)</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">your NetID</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Network</td>
+<td style="text-align: left;">no VPN</td>
+<td style="text-align: left;">no VPN (observed)</td>
+<td style="text-align: left;">on campus, eduroam, or the <a href="https://vpn.iastate.edu">ISU VPN</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Sign-in</td>
+<td style="text-align: left;">browser sign-in through <code>step</code>, “once for the day (or every 16 hours)”</td>
+<td style="text-align: left;">as Ceres (observed: <code>step</code> opens a Login.gov sign-in in the browser, with an authenticator-app code; MSU’s password-and-Duo page did not apply to a SCINet account)</td>
+<td style="text-align: left;">authenticator code, then password</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">One-time setup</td>
+<td style="text-align: left;">install SmallStep’s <code>step</code> and run the two commands on SCINet’s SSH page (copy the fingerprint from that page)</td>
+<td style="text-align: left;">same as Ceres, if <code>step</code> is used</td>
+<td style="text-align: left;">none; the authenticator key is made the first time you sign in to Nova OnDemand (recover it under <em>MFA Recovery</em>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Host-key question on first login</td>
+<td style="text-align: left;">no: <code>step</code> supplies the host keys</td>
+<td style="text-align: left;">no (observed), as Ceres</td>
+<td style="text-align: left;">yes; compare with ISU’s <a href="https://research.it.iastate.edu/nova-ssh-host-key-fingerprints">published fingerprints</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Banner (observed)</td>
+<td style="text-align: left;">SCINet logo and an authorized-use notice</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">storage reminders and the next maintenance date</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>SCINet’s own advice is that “for most use cases, you do <em>not</em> need” SSH: its Open OnDemand portal in a browser is simpler (<a href="#sec-cluster-sites-vscode" class="quarto-xref"><span>Section A.7</span></a>).</p>
+<p>Observed on all three (November 2026): an SSH login is a login shell, the site’s <code>~/.bash_profile</code> reads <code>~/.bashrc</code>, and a command sent with <code>ssh host 'command'</code> reads <code>~/.bashrc</code> too (<a href="../chapters/07-linux-system.html#sec-linux-system-startup" class="quarto-xref"><span>Section 7.6</span></a>). SCINet’s banner is printed by SSH on its error output, so it does not disturb <code>scp</code> or <code>rsync</code>.</p>
+</section>
+<section id="sec-cluster-sites-transfer" class="level2" data-number="A.4">
+<h2 data-number="A.4" class="anchored" data-anchor-id="sec-cluster-sites-transfer"><span class="header-section-number">A.4</span> Moving files: transfer nodes and Globus</h2>
+<p>Hosts and site rules only; the commands are in <a href="../chapters/09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>. Checked 2026-11-21 against SCINet’s <a href="https://scinet.usda.gov/guides/data/transfer/">transfer guide</a> and <a href="https://scinet.usda.gov/guides/data/transfer/globus">Globus page</a>, MSU’s <a href="https://docs.hpc.msstate.edu/getting-started/file-transfer.html">file transfer page</a>, and ISU’s <a href="https://research.it.iastate.edu/transferring-files">transfer</a> and <a href="https://research.it.iastate.edu/globus">Globus</a> pages.</p>
+<div class="wide-table">
+<div id="tbl-sites-transfer" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-transfer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.3: Moving files in and out.
+</figcaption>
+<div aria-describedby="tbl-sites-transfer-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Data transfer node (for <code>scp</code>, <code>rsync</code>)</td>
+<td style="text-align: left;"><code>ceres-dtn.scinet.usda.gov</code></td>
+<td style="text-align: left;"><code>atlas-dtn.hpc.msstate.edu</code></td>
+<td style="text-align: left;"><code>novadtn.its.iastate.edu</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Globus collection</td>
+<td style="text-align: left;"><code>SCINet-Ceres</code></td>
+<td style="text-align: left;"><code>SCINet-Atlas</code></td>
+<td style="text-align: left;"><code>Nova DTN</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Globus sign-in</td>
+<td style="text-align: left;">organization “SCINet - ARS/USDA”</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">ISU credentials</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Upload in Open OnDemand</td>
+<td style="text-align: left;">files under 1 GB</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">files of 20 MB or less</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Site advice</td>
+<td style="text-align: left;">Globus for anything over 1 GB; it also moves data among Ceres, Atlas, and Juno</td>
+<td style="text-align: left;">as Ceres</td>
+<td style="text-align: left;">use the transfer node, not the login node; Globus “highly recommended” for large transfers; <code>/lss</code> is reachable only from the transfer node</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="sec-cluster-sites-storage" class="level2" data-number="A.5">
+<h2 data-number="A.5" class="anchored" data-anchor-id="sec-cluster-sites-storage"><span class="header-section-number">A.5</span> Storage, quotas, and backups</h2>
+<p>The full version of <a href="../chapters/03-organizing-projects.html#tbl-storage-backup" class="quarto-xref">Table&nbsp;<span>3.3</span></a>. Checked 2026-11-21 against SCINet’s <a href="https://scinet.usda.gov/guides/data/storage">storage guide</a> and <a href="https://scinet.usda.gov/guides/data/project-management">project-management page</a>, MSU’s <a href="https://docs.hpc.msstate.edu/storage/index.html">storage page</a>, and ISU’s <a href="https://research.it.iastate.edu/file-storage">file storage page</a>.</p>
+<div class="wide-table">
+<div id="tbl-sites-storage" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-storage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.4: Storage areas at each site.
+</figcaption>
+<div aria-describedby="tbl-sites-storage-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Home</td>
+<td style="text-align: left;"><code>/home/&lt;user&gt;</code>, 30 GB, fixed</td>
+<td style="text-align: left;">same, separate</td>
+<td style="text-align: left;"><code>/home/&lt;netid&gt;</code>, 10 GB</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Project or group</td>
+<td style="text-align: left;"><code>/project/&lt;project&gt;</code>, quota per project</td>
+<td style="text-align: left;"><code>/project/&lt;project&gt;</code>, separate allocation (default 1 TB)</td>
+<td style="text-align: left;"><code>/work/&lt;group&gt;</code>, bought per terabyte for five years (1 TB for community groups)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Short-term</td>
+<td style="text-align: left;"><code>/90daydata/&lt;project&gt;</code>: no quota; “files older than 90 days will be automatically deleted”, permanently</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;"><code>/ptmp</code>: free, for “short periods of 6 to 8 weeks”; the login banner says files unused for 60 days are deleted</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Long-term</td>
+<td style="text-align: left;">Juno, <code>/LTS/project/&lt;project&gt;</code>, at the National Agricultural Library, reached with Globus</td>
+<td style="text-align: left;">Juno, with Globus</td>
+<td style="text-align: left;"><code>/lss/research/&lt;group&gt;</code>, bought per terabyte per year; not visible on compute nodes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">On the compute node</td>
+<td style="text-align: left;"><code>$TMPDIR</code>, 1.5 TB or more, deleted when the job ends</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;"><code>$TMPDIR</code>, 1–1.5 TB, deleted when the job ends</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Backed up?</td>
+<td style="text-align: left;">“Cluster storage is not backed up”; copy data that “cannot be easily reproduced” to Juno</td>
+<td style="text-align: left;">no (MSU’s table)</td>
+<td style="text-align: left;"><code>/work</code>: daily snapshots; <code>/lss</code> is the backed-up system (login banner)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<div class="wide-table">
+<div id="tbl-sites-quotas" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-quotas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.5: Checking how much you use (observed 2026-11-20 and 21, plus the pages above).
+</figcaption>
+<div aria-describedby="tbl-sites-quotas-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Quota command</td>
+<td style="text-align: left;"><code>my_quotas</code>: home, each project, and Juno</td>
+<td style="text-align: left;"><code>my_quotas</code>: home and each project</td>
+<td style="text-align: left;">none: <code>quota -s</code> prints nothing</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Group storage</td>
+<td style="text-align: left;">in <code>my_quotas</code></td>
+<td style="text-align: left;">in <code>my_quotas</code></td>
+<td style="text-align: left;"><code>cat /work/&lt;group&gt;/group_storage_usage</code> (updated hourly; also shown at login)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Home</td>
+<td style="text-align: left;">in <code>my_quotas</code>; <code>quota -s</code> also works</td>
+<td style="text-align: left;">in <code>my_quotas</code></td>
+<td style="text-align: left;"><code>du -sh ~</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>df -h</code> on group storage</td>
+<td style="text-align: left;">shows the project’s quota as the size</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">shows the group’s share</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>df -h ~</code></td>
+<td style="text-align: left;">the whole home system</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">same</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">File-count limit</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">not stated</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Going over</td>
+<td style="text-align: left;">14 days to get back under; until then, writes only up to 10% (or 10 TB) over</td>
+<td style="text-align: left;">as Ceres</td>
+<td style="text-align: left;">ISU e-mails the group’s PI at 70%</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">More space</td>
+<td style="text-align: left;">the project’s PI or manager uses SCINet’s <a href="https://scinet.usda.gov/support/request">request form</a></td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">the group buys more (file storage page)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Two Nova notes (observed 2026-11-20): <code>group_storage_usage</code> lists every member’s use and file count (<code>OBJUSED</code>); and ISU’s helper commands <code>my_workdir</code> and <code>cdw</code> did not work then, so use your folder’s path. Deleting files on Nova’s <code>/work</code> frees space only after about five days, when the snapshots that hold them expire.</p>
+<p><strong>Permissions on shared folders</strong> (<a href="../chapters/07-linux-system.html#sec-linux-system-permissions" class="quarto-xref"><span>Section 7.2</span></a>; observed 2026-11-20 and 21):</p>
+<div class="wide-table">
+<div id="tbl-sites-permissions" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-permissions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.6: New files and shared folders at each site.
+</figcaption>
+<div aria-describedby="tbl-sites-permissions-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>umask</code> (set by the site)</td>
+<td style="text-align: left;"><code>0027</code></td>
+<td style="text-align: left;"><code>0027</code></td>
+<td style="text-align: left;"><code>0002</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New file, new folder</td>
+<td style="text-align: left;"><code>-rw-r-----</code>, <code>drwxr-x---</code></td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;"><code>-rw-rw-r--</code>, <code>drwxrwxr-x</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Your lab can edit your files?</td>
+<td style="text-align: left;">no, until you <code>chmod g+w</code> them</td>
+<td style="text-align: left;">no, as Ceres</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Your primary group</td>
+<td style="text-align: left;">a personal group named after you</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;"><code>domain users</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Project or group folder</td>
+<td style="text-align: left;"><code>drwxrws--T.</code>, <code>root</code>, group <code>proj-&lt;project&gt;</code></td>
+<td style="text-align: left;"><code>drwxrws---</code>, same owner and group</td>
+<td style="text-align: left;"><code>drwxrws--T.</code>, <code>root</code>, group <code>its-hpc-nova-&lt;group&gt;</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New files get</td>
+<td style="text-align: left;">the project’s group (setgid)</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">the group’s group (setgid)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><p><kbd title="Ctrl-Z" aria-hidden="true">Ctrl-Z</kbd><span class="visually-hidden">Ctrl-Z</span></p></td>
+<td style="text-align: left;">works</td>
+<td style="text-align: left;">works</td>
+<td style="text-align: left;">switched off by the site</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>Where to put the book environment</strong> (<a href="../chapters/02-book-setup.html#sec-book-setup-pixi" class="quarto-xref"><span>Section 2.2</span></a>): in your project or group folder, never in home, with pixi’s cache on the same storage. For example, <code>/project/&lt;project&gt;/&lt;user&gt;/bioinf-computing</code> on Ceres or Atlas and <code>/work/&lt;group&gt;/&lt;netid&gt;/bioinf-computing</code> on Nova, with <code>PIXI_CACHE_DIR</code> set to a folder beside it. One book environment is about 1.3 GB and 15,500 files (less on Nova’s compressed <code>/work</code>).</p>
+</section>
+<section id="sec-cluster-sites-interactive" class="level2" data-number="A.6">
+<h2 data-number="A.6" class="anchored" data-anchor-id="sec-cluster-sites-interactive"><span class="header-section-number">A.6</span> Interactive sessions</h2>
+<p>Checked 2026-11-21 against the pages linked below and by starting a session on each cluster. <a href="../chapters/01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>’s first session uses <code>srun --cpus-per-task=1 --mem=4G --time=01:00:00 --pty bash -l</code>; each site adds its own options. Full SLURM teaching is <a href="../chapters/10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>.</p>
+<ul>
+<li><p><strong>Ceres:</strong> <code>salloc -A &lt;project&gt;</code> gives one core, about 6 GB, and a shell for 2 hours (<a href="https://scinet.usda.gov/guides/use/slurm">SLURM guide</a>). Partition <code>ceres</code> (default 2 hours, at most 3 weeks); <code>scavenger</code> runs longer but can be stopped. <code>sinfo -s</code> (observed) lists only these two, with partition limits of 60 and 21 days; the 3-week limit on <code>ceres</code> comes from its QOS, not the partition.</p>
+<p>Observed: <code>srun -A &lt;project&gt; --cpus-per-task=1 --mem=4G --time=00:30:00 --pty bash -l</code> works and gives a shell on a compute node. <code>sacctmgr -n show assoc user=$USER format=account%30</code> lists the accounts you may use. On arrival the node prints its settings: <code>TMPDIR</code> and Apptainer’s cache are set to the node’s <code>/tmp</code>, and <code>TMOUT=5400</code> logs an idle shell out after 90 minutes.</p></li>
+<li><p><strong>Atlas:</strong> <code>-A &lt;project&gt;</code> is required. <code>salloc -A &lt;project&gt;</code> only reserves the node; <code>srun --pty --preserve-env bash</code> then puts you on it, or use <code>srun -A &lt;project&gt; --pty --preserve-env bash</code> in one step (<a href="https://scinet.usda.gov/guides/resources/CeresAtlasDifferences">Ceres and Atlas differences</a>). Default partition <code>atlas</code>; others for large memory and GPUs, listed in MSU’s <a href="https://docs.hpc.msstate.edu/cluster/specifications/atlas.html">Atlas specifications</a>. <code>sinfo -s</code> (observed) shows <code>atlas</code>, <code>bigmem</code>, four GPU partitions, <code>development</code>, and <code>service</code>, all with no time limit, so the limits come from the QOS.</p>
+<p>Observed: the same <code>srun -A &lt;project&gt; ... --pty bash -l</code> line as on Ceres works in one step, and nothing is printed on arrival.</p></li>
+<li><p><strong>Nova:</strong> ISU’s examples have no account option, e.g.&nbsp;<code>salloc -N 1 -n 8 -t 4:00:00</code> (<a href="https://research.it.iastate.edu/slurm">SLURM page</a>); default partition <code>nova</code>. ISU’s pages say jobs run up to two weeks; the OnDemand form showed a 31-day limit for <code>nova</code> (observed).</p>
+<p>Observed: <code>srun --cpus-per-task=1 --mem=4G --time=00:30:00 --pty bash -l</code> works with no <code>-A</code>; SLURM charges your default account (list yours with the <code>sacctmgr</code> line above). On arrival the node prints its settings, as Ceres does: <code>TMPDIR</code> and Apptainer’s cache on the node’s <code>/tmp</code>, <code>TMOUT=5400</code> (90 idle minutes), and Apptainer set to make <code>/work</code>, <code>/ptmp</code>, and the other shared file systems visible inside containers. <code>sinfo -s</code> (observed) shows <code>nova</code> (31 days), <code>interactive</code> (8 hours; the one ISU’s VS Code page says to pick), <code>instruction</code> (2 days), <code>scavenger</code>, <code>reserved</code>, <code>nova-arm</code>, and a one-minute <code>allnodes</code>.</p></li>
+<li><p><strong>End the session</strong> with <code>exit</code>. After <code>srun ... --pty</code>, <code>exit</code> ends the job too (<code>squeue -u $USER</code> showed nothing left on all three, observed); a reservation from <code>salloc</code> may need <code>scancel &lt;jobid&gt;</code> as well.</p></li>
+<li><p><strong>Internet from compute nodes:</strong> not stated by any of the three. Observed on Ceres: yes (<code>curl -sI https://pixi.sh</code> answered). On Atlas: yes, through a web proxy (the reply begins <code>HTTP/1.1 200 Connection established</code>, which is the proxy speaking). Tools that read the standard <code>https_proxy</code> setting, as <code>curl</code> does, work without changes. The node sets <code>https_proxy</code>, <code>http_proxy</code>, and <code>no_proxy</code> for you (observed). On Nova: yes, directly (observed). So on Ceres and Nova downloads work inside an interactive session; on Atlas, whether <code>pixi install</code> uses the proxy is still to be checked.</p></li>
+</ul>
+</section>
+<section id="sec-cluster-sites-vscode" class="level2" data-number="A.7">
+<h2 data-number="A.7" class="anchored" data-anchor-id="sec-cluster-sites-vscode"><span class="header-section-number">A.7</span> VS Code</h2>
+<p><a href="../chapters/02-book-setup.html#sec-book-setup-vscode" class="quarto-xref"><span>Section 2.3</span></a> explains the routes. Checked 2026-11-21 against <a href="https://scinet.usda.gov/guides/ide/vscode">SCINet’s VS Code guide</a>, MSU’s <a href="https://docs.hpc.msstate.edu/getting-started/connect.html">connect page</a>, and <a href="https://research.it.iastate.edu/using-vs-code-cluster">ISU’s VS Code page</a>.</p>
+<div class="wide-table">
+<div id="tbl-sites-vscode" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-vscode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.7: VS Code routes each site supports.
+</figcaption>
+<div aria-describedby="tbl-sites-vscode-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Open OnDemand portal</td>
+<td style="text-align: left;"><a href="https://ceres-ondemand.scinet.usda.gov/">ceres-ondemand.scinet.usda.gov</a></td>
+<td style="text-align: left;"><a href="https://atlas-ood.hpc.msstate.edu/">atlas-ood.hpc.msstate.edu</a></td>
+<td style="text-align: left;"><a href="https://nova-ondemand.its.iastate.edu/">nova-ondemand.its.iastate.edu</a> (campus or VPN)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">VS Code Server app (in the browser)</td>
+<td style="text-align: left;">yes; code-server 4.17 (observed), old enough that some current extensions may not install</td>
+<td style="text-align: left;">yes: <em>VSCode</em> under <em>Servers</em> (observed), beside JupyterLab and RStudio Server</td>
+<td style="text-align: left;">yes; code-server 4.97 (observed); ISU says to pick the interactive partition</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">VS Code Tunnel app (desktop VS Code)</td>
+<td style="text-align: left;">yes; a Microsoft or GitHub account (“USDA employees should use a Microsoft account”)</td>
+<td style="text-align: left;">no (observed: not in the app list)</td>
+<td style="text-align: left;">yes (ISU’s recommended route); at most ten connections</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Remote-SSH to a compute node</td>
+<td style="text-align: left;">not documented</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">documented; needs SSH keys (<a href="../chapters/09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remote-SSH to a login node</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">no</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p><strong>The OnDemand start form</strong> asks the same things under different names (observed on Ceres and Nova; Atlas from MSU’s page):</p>
+<div class="wide-table">
+<div id="tbl-sites-ood-form" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-ood-form-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.8: The VS Code Server start form.
+</figcaption>
+<div aria-describedby="tbl-sites-ood-form-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">What it asks</th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Who pays</td>
+<td style="text-align: left;">Account (avoid <code>sandbox</code>: 2 hours)</td>
+<td style="text-align: left;">Slurm Account</td>
+<td style="text-align: left;">Account</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Where it runs</td>
+<td style="text-align: left;">Queue <code>ceres</code>, and QOS</td>
+<td style="text-align: left;">Partition, and QOS</td>
+<td style="text-align: left;">Slurm Partition</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">How long</td>
+<td style="text-align: left;">Number of hours</td>
+<td style="text-align: left;">Duration</td>
+<td style="text-align: left;">Number of hours</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">CPUs</td>
+<td style="text-align: left;">Number of cores</td>
+<td style="text-align: left;">Nodes and processors</td>
+<td style="text-align: left;">Number of Tasks Per node</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Memory</td>
+<td style="text-align: left;">Memory required (e.g.&nbsp;<code>8G</code>)</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">Memory Required (no unit means MB)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Starting folder</td>
+<td style="text-align: left;">Working Directory (default: home)</td>
+<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">Working Directory (default: the last one used)</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Set the starting folder to your project or group folder. End a session with <strong>Cancel</strong> on its card under <em>My Interactive Sessions</em>: closing the browser tab does not end it, and it keeps its node until cancelled or out of time (observed on both).</p>
+<p><strong>Extensions fill home.</strong> Both SCINet and ISU say to move the extensions folder to project storage and leave a link in its place, once:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (cluster)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="annotated-cell-1" data-filename="Terminal (cluster)"><pre class="sourceCode bash code-annotation-code code-with-copy code-annotated"><code class="sourceCode bash"><a class="code-annotation-anchor" data-target-cell="annotated-cell-1" data-target-annotation="1" onclick="event.preventDefault();">1</a><span id="annotated-cell-1-1" class="code-annotation-target"><a href="#annotated-cell-1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> /project/<span class="op">&lt;</span>project<span class="op">&gt;</span>/<span class="op">&lt;</span>user<span class="op">&gt;</span>/.local/share</span>
+<span id="annotated-cell-1-2"><a href="#annotated-cell-1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mv</span> ~/.local/share/code-server /project/<span class="op">&lt;</span>project<span class="op">&gt;</span>/<span class="op">&lt;</span>user<span class="op">&gt;</span>/.local/share/</span>
+<span id="annotated-cell-1-3"><a href="#annotated-cell-1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /project/<span class="op">&lt;</span>project<span class="op">&gt;</span>/<span class="op">&lt;</span>user<span class="op">&gt;</span>/.local/share/code-server ~/.local/share/code-server</span><div class="code-annotation-gutter-bg"></div><div class="code-annotation-gutter"></div></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<dl class="code-annotation-container-grid">
+<dt data-target-cell="annotated-cell-1" data-target-annotation="1">1</dt>
+<dd>
+<span data-code-cell="annotated-cell-1" data-code-lines="1" data-code-annotation="1">On Nova, use <code>/work/&lt;group&gt;/&lt;netid&gt;</code> instead of <code>/project/&lt;project&gt;/&lt;user&gt;</code>. Do this with no VS Code session running.</span>
+</dd>
+</dl>
+</section>
+<section id="sec-cluster-sites-software" class="level2" data-number="A.8">
+<h2 data-number="A.8" class="anchored" data-anchor-id="sec-cluster-sites-software"><span class="header-section-number">A.8</span> Software on the site</h2>
+<p>Checked 2026-11-21 against SCINet’s <a href="https://scinet.usda.gov/guides/software/modules">modules</a> and <a href="https://scinet.usda.gov/guides/software/singularity">Apptainer</a> guides and ISU’s <a href="https://research.it.iastate.edu/getting-started-with-modules">modules page</a>.</p>
+<ul>
+<li><strong>Modules</strong> on all three: <code>module avail</code> (or <code>module spider</code>), <code>module load &lt;name&gt;</code>, <code>module list</code>. On Atlas some modules appear only after a <code>gcc</code> module is loaded.</li>
+<li><strong>Containers:</strong> Apptainer on SCINet (on Atlas, <code>module load apptainer</code> first; run it on a compute node). Nova: not documented on the pages read, but <code>module avail apptainer</code> lists versions 1.1.5 to 1.4.0 (observed), from three dated software trees.</li>
+<li><strong>Asking for software:</strong> SCINet’s <a href="https://scinet.usda.gov/support/request">software request form</a>; new system-wide software needs a security review that “takes a few weeks”. Nova: ISU Research IT (<a href="#sec-cluster-sites-help" class="quarto-xref"><span>Section A.10</span></a>).</li>
+<li><strong>The book’s way:</strong> the book environment with pixi in your project storage, for everything it covers; site modules only for what it does not.</li>
+</ul>
+</section>
+<section id="sec-cluster-sites-reference" class="level2" data-number="A.9">
+<h2 data-number="A.9" class="anchored" data-anchor-id="sec-cluster-sites-reference"><span class="header-section-number">A.9</span> Shared reference data</h2>
+<ul>
+<li><strong>Ceres</strong> has a shared <code>/reference</code> area, including ready-made containers in <code>/reference/containers</code>. Its main folders (observed): <code>data</code>, <code>containers</code>, <code>llms</code>, <code>workshops</code>, and <code>workbook</code>, plus site-admin folders.</li>
+<li><strong>Atlas</strong> has <code>/reference</code>, copied from Ceres’s <code>/reference/data</code> every night. Observed: <code>data</code>, <code>containers</code>, <code>llms</code>, <code>models</code>, <code>workshops</code>, <code>workbook</code>, and a <code>README</code> that says the folder is “for reference datasets”, “read only on atlas”, and “sync’d nightly from” Ceres’s <code>/reference/data</code>.</li>
+<li><strong>Nova:</strong> not stated, and none seen: the top-level <code>/shared</code> folder holds the site’s own configuration (SLURM, OnDemand, module files), not reference data (observed).</li>
+</ul>
+<p><strong>What <code>/reference/data</code> holds</strong> (observed; the same on Ceres and Atlas): mostly the large databases that annotation and classification tools need, one folder per tool, e.g.&nbsp;<code>alphafold</code>, <code>BUSCO</code>, <code>eggnogdb</code>, <code>gtdbtk</code>, <code>kaiju</code>, <code>humann</code>, and <code>Dfam</code>, plus a <code>Genome</code> folder. Before downloading a tool’s database, look here first; some of these databases are very large.</p>
+<p>If your site has none, keep references once in a lab-shared folder (<a href="../chapters/03-organizing-projects.html#sec-organizing-projects-shared" class="quarto-xref"><span>Section 3.5</span></a>).</p>
+</section>
+<section id="sec-cluster-sites-help" class="level2" data-number="A.10">
+<h2 data-number="A.10" class="anchored" data-anchor-id="sec-cluster-sites-help"><span class="header-section-number">A.10</span> Getting help</h2>
+<div class="wide-table">
+<div id="tbl-sites-help" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-help-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.9: Where to ask about each cluster (checked 2026-11-21).
+</figcaption>
+<div aria-describedby="tbl-sites-help-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Help desk</td>
+<td style="text-align: left;">SCINet’s VRSC: <a href="https://scinet.usda.gov/support/contact">contact page</a></td>
+<td style="text-align: left;">for login problems, the VRSC; for questions about the cluster itself, MSU’s help address on the same contact page</td>
+<td style="text-align: left;">ISU Research IT: <a href="https://research.it.iastate.edu/contact-us">contact page</a>; the <a href="https://research.it.iastate.edu/faqs">FAQ</a> gives a separate address for software installs</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Other</td>
+<td style="text-align: left;">the <a href="https://forum.scinet.usda.gov">SCINet forum</a> (needs a SCINet account)</td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">maintenance is scheduled between terms; the login banner gives the date</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+<p>Whatever the site, say which cluster, node, and job ID; give the exact command, the folder you ran it in, and the complete message; and say what you already checked (<a href="../chapters/04-getting-help.html" class="quarto-xref"><span>Chapter 4</span></a>). Writing to ISU from a non-ISU address, include your NetID.</p>
+</section>
+<section id="sec-cluster-sites-glance" class="level2" data-number="A.11">
+<h2 data-number="A.11" class="anchored" data-anchor-id="sec-cluster-sites-glance"><span class="header-section-number">A.11</span> The three at a glance</h2>
+<p>The short version of the tables above (checked 2026-11-21); follow the section links for details and sources.</p>
+<div class="wide-table">
+<div id="tbl-sites-glance" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-glance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.10: Ceres, Atlas, and Nova side by side.
+</figcaption>
+<div aria-describedby="tbl-sites-glance-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Ceres</th>
+<th style="text-align: left;">Atlas</th>
+<th style="text-align: left;">Nova</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Run by</td>
+<td style="text-align: left;">SCINet (USDA-ARS)</td>
+<td style="text-align: left;">SCINet with Mississippi State</td>
+<td style="text-align: left;">Iowa State Research IT</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Login host</td>
+<td style="text-align: left;"><code>ceres.scinet.usda.gov</code></td>
+<td style="text-align: left;"><code>atlas-login.hpc.msstate.edu</code></td>
+<td style="text-align: left;"><code>nova.its.iastate.edu</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Sign-in</td>
+<td style="text-align: left;"><code>step</code>, browser</td>
+<td style="text-align: left;"><code>step</code>, browser</td>
+<td style="text-align: left;">authenticator code, then password; campus or VPN</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Transfer node</td>
+<td style="text-align: left;"><code>ceres-dtn.scinet.usda.gov</code></td>
+<td style="text-align: left;"><code>atlas-dtn.hpc.msstate.edu</code></td>
+<td style="text-align: left;"><code>novadtn.its.iastate.edu</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Home</td>
+<td style="text-align: left;">30 GB</td>
+<td style="text-align: left;">30 GB</td>
+<td style="text-align: left;">10 GB</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Your work</td>
+<td style="text-align: left;"><code>/project/&lt;project&gt;</code></td>
+<td style="text-align: left;"><code>/project/&lt;project&gt;</code></td>
+<td style="text-align: left;"><code>/work/&lt;group&gt;</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Scratch, auto-deleted</td>
+<td style="text-align: left;"><code>/90daydata</code> (90 days)</td>
+<td style="text-align: left;"><code>/90daydata</code> (90 days)</td>
+<td style="text-align: left;"><code>/ptmp</code> (60 days unused)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Backups</td>
+<td style="text-align: left;">none; copy to Juno</td>
+<td style="text-align: left;">none; copy to Juno</td>
+<td style="text-align: left;"><code>/work</code> snapshots; <code>/lss</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Quota command</td>
+<td style="text-align: left;"><code>my_quotas</code></td>
+<td style="text-align: left;"><code>my_quotas</code></td>
+<td style="text-align: left;"><code>group_storage_usage</code> file</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">New files readable by the lab</td>
+<td style="text-align: left;">yes; editable after <code>chmod g+w</code></td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;">yes, and editable</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Interactive session</td>
+<td style="text-align: left;"><code>srun -A &lt;project&gt; ... --pty bash -l</code></td>
+<td style="text-align: left;">same</td>
+<td style="text-align: left;"><code>srun ... --pty bash -l</code> (no <code>-A</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Internet on compute nodes</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">yes, through a proxy</td>
+<td style="text-align: left;">yes</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">VS Code</td>
+<td style="text-align: left;">OnDemand: VS Code Server or Tunnel</td>
+<td style="text-align: left;">OnDemand: VSCode</td>
+<td style="text-align: left;">OnDemand: Tunnel (recommended) or VS Code Server; Remote-SSH to a compute node</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Help</td>
+<td style="text-align: left;">SCINet VRSC</td>
+<td style="text-align: left;">VRSC; MSU for the cluster</td>
+<td style="text-align: left;">ISU Research IT</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</div>
+</section>
+<section id="sec-cluster-sites-other" class="level2" data-number="A.12">
+<h2 data-number="A.12" class="anchored" data-anchor-id="sec-cluster-sites-other"><span class="header-section-number">A.12</span> If your cluster is neither</h2>
+<p>Find these in your cluster’s documentation, in this order, and note them in your project notebook (<a href="../chapters/03-organizing-projects.html#sec-organizing-projects-records" class="quarto-xref"><span>Section 3.9</span></a>):</p>
+<div id="tbl-sites-other" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-sites-other-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;A.11: What to look up for your own cluster.
+</figcaption>
+<div aria-describedby="tbl-sites-other-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Topic</th>
+<th style="text-align: left;">Find out</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Account</td>
+<td style="text-align: left;">who can apply, who sponsors or approves, how long it takes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Logging in</td>
+<td style="text-align: left;">login host, VPN, sign-in method, published host-key fingerprints</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Moving files</td>
+<td style="text-align: left;">transfer node and Globus collection</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Storage</td>
+<td style="text-align: left;">home, project, and scratch areas: size, purge rule, backups</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Quota</td>
+<td style="text-align: left;">the command or file that shows your use; any file-count limit</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Defaults</td>
+<td style="text-align: left;"><code>umask</code>, and whether group folders have setgid</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Jobs</td>
+<td style="text-align: left;">required <code>srun</code> options (account, partition); internet from compute nodes</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Editing</td>
+<td style="text-align: left;">the supported VS Code route (Open OnDemand, tunnel, Remote-SSH to a compute node)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Software</td>
+<td style="text-align: left;">modules, containers, how to ask for software</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Help</td>
+<td style="text-align: left;">the help desk, and where maintenance is announced</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
 
 
 </section>

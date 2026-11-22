@@ -394,8 +394,12 @@ For Austin, on each cluster (results go in the checks file):
   sat outside the div, so no appendix table was numbered.
 - Done: Nova `/shared` is site configuration, not reference data;
   `/reference/data` (same on Ceres and Atlas) is tool databases.
-- Still to do: Atlas VSCode form fields (screenshot), and whether `pixi install` works
-  through Atlas's proxy (when the book environment is installed there).
+- 2026-11-22: Atlas VSCode form recorded; pixi installer and
+  `pixi install --locked` worked through Atlas's proxy (29 s; cache
+  and `.pixi/` share files: `du --total` 1.4G vs 1.3G). "Under
+  construction" removed; Chapter 1 and 2 pointers now present tense.
+  Appendix complete; recheck the sites' pages when a chapter cites
+  them.
 
 ## Open questions
 

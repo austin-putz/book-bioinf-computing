@@ -152,7 +152,7 @@ in the bottom-left corner. In VS Code's terminal:
 $ echo "$BASH_VERSION"
 5.3.9(1)-release
 $ pwd
-/home/austinputz/vscode-test
+/home/<you>/vscode-test
 ```
 
 Meanings for the chapter: the VS Code terminal is the Ubuntu bash (5.3,
@@ -233,7 +233,7 @@ PS> ssh -V
 OpenSSH_for_Windows_9.5p2, LibreSSL 3.8.2
 
 $ ls -la ~/.ssh
-ls: cannot access '/home/austinputz/.ssh': No such file or directory
+ls: cannot access '/home/<you>/.ssh': No such file or directory
 ```
 
 Meanings for the chapter: Windows uses its built-in OpenSSH client
@@ -273,7 +273,7 @@ SRR6357070_1.fastq.gz  FASTQ   DNA     50,000  5,050,000      101      101      
 
 --- sizes
 1.3G    .pixi
-132M    /home/austinputz/pixi-trial/cache
+132M    /home/<you>/pixi-trial/cache
 files in .pixi:  15524
 files in cache:  19858
 x86_64
@@ -376,7 +376,7 @@ Release Date: 2026-09-25T19:43:47Z
 The root certificate has been saved in /Users/<you>/.step/certs/root_ca.crt.
 The authority configuration has been saved in /Users/<you>/.step/config/defaults.json.
 
-~ $ step ssh config --set Provisioner=keycloak --set User=austin.putz
+~ $ step ssh config --set Provisioner=keycloak --set User=<user>
 ✔ /Users/<you>/.ssh/config
 ✔ /Users/<you>/.step/ssh/includes
 ✔ /Users/<you>/.step/ssh/config
@@ -397,24 +397,24 @@ Host *
 
 ```
 Match exec "step ssh check-host %h"
-    User austin.putz
+    User <user>
     UserKnownHostsFile "/Users/<you>/.step/ssh/known_hosts"
     ProxyCommand step ssh proxycommand --provisioner keycloak %r %h %p
 ```
 
-Login: `ssh austin.putz@ceres.scinet.usda.gov` opened the default
+Login: `ssh <user>@ceres.scinet.usda.gov` opened the default
 browser (Edge); Austin was already signed in to Login.gov, so it
 connected without further pages.
 
 ```
-[austin.putz@ceres-login-1 ~]$ hostname
+[<user>@ceres-login-1 ~]$ hostname
 ceres-login-1.ceres.scinet.usda.gov
-[austin.putz@ceres-login-1 ~]$ exit
+[<user>@ceres-login-1 ~]$ exit
 logout
 Connection to ceres.scinet.usda.gov closed.
 ```
 
-(SSH lands in home: `pwd` on the login node printed `/home/austin.putz`.)
+(SSH lands in home: `pwd` on the login node printed `/home/<user>`.)
 
 Meanings for the chapter:
 
@@ -445,14 +445,14 @@ nano --version | head -n 1
 ## Result (2026-11-14, Atlas)
 
 ```
-[austin.putz@atlas-login-1 ~]$ hostname
+[<user>@atlas-login-1 ~]$ hostname
 atlas-login-1.hpc.msstate.edu
-[austin.putz@atlas-login-1 ~]$ echo "$SHELL"
+[<user>@atlas-login-1 ~]$ echo "$SHELL"
 /bin/bash
-[austin.putz@atlas-login-1 ~]$ which nano vim
+[<user>@atlas-login-1 ~]$ which nano vim
 /usr/bin/nano
 /usr/bin/vim
-[austin.putz@atlas-login-1 ~]$ nano --version | head -n 1
+[<user>@atlas-login-1 ~]$ nano --version | head -n 1
  GNU nano, version 5.6.1
 ```
 
@@ -481,8 +481,8 @@ Record the output for home and project (bytes, and files if shown).
 Project names replaced with placeholders (this file is in the public repo).
 
 ```
-[austin.putz@atlas-login-2 project]$ my_quotas
-Live quotas for austin.putz
+[<user>@atlas-login-2 project]$ my_quotas
+Live quotas for <user>
 
 Loading Quotas...
 Note: All home directory quotas are of fixed size and cannot be increased. Temporary space on
@@ -491,7 +491,7 @@ Note: All home directory quotas are of fixed size and cannot be increased. Tempo
 Path                          Usage (GB)  Quota (GB)  Available (GB)  Consumed (%)  Status
 
 Atlas home directory
-          /home/austin.putz          <1          30              29             0  OK
+          /home/<user>          <1          30              29             0  OK
 
 Atlas working project space
       /project/<project_a>           <1        1000             999             0  OK
@@ -516,12 +516,12 @@ Project names replaced with placeholders, matching the Atlas result
 (`<project_a>` is the same project on both clusters).
 
 ```
-[austin.putz@ceres-login-1 project]$ my_quotas
-Live Quotas for  austin.putz
+[<user>@ceres-login-1 project]$ my_quotas
+Live Quotas for  <user>
 Note: All home directory quotas are of fixed size and cannot be increased. ...
                                 Path  Usage (GB)  Quota (GB)  Availible (GB)  Consumed (%)  Status
  Ceres Home Directory
-                   /home/austin.putz         0.0        29.8            29.8           0.0      OK
+                   /home/<user>         0.0        29.8            29.8           0.0      OK
  Ceres working project storage
                 /project/<project_b>      8058.0     10240.0          2182.0          78.7      OK
                 /project/<project_a>      2532.8      5120.0          2587.2          49.5      OK
@@ -573,7 +573,7 @@ storage, and whether you did.
 VS Code Server started from Ceres Open OnDemand; in its terminal:
 
 ```
-[austin.putz@ceres20-compute-2 4a88d91a-2c2b-4d99-96d3-650c4475a96b]$ hostname
+[<user>@ceres20-compute-2 <session-id>]$ hostname
 ceres20-compute-2
 ```
 
@@ -618,8 +618,8 @@ defers it is open.
 **Extensions folder, with no extensions installed:**
 
 ```
-[austin.putz@ceres20-compute-2 ~]$ du -sh ~/.local/share/code-server 2>/dev/null || echo "not there"
-976K    /home/austin.putz/.local/share/code-server
+[<user>@ceres20-compute-2 ~]$ du -sh ~/.local/share/code-server 2>/dev/null || echo "not there"
+976K    /home/<user>/.local/share/code-server
 ```
 
 Under 1 MB after one session, so it is not a quota problem in Chapter 2;
@@ -630,8 +630,8 @@ hundreds of MB).
 Directory set to the project folder (path shortened):
 
 ```
-[austin.putz@ceres20-compute-10 Austin]$ pwd
-/project/<project>/Austin
+[<user>@ceres20-compute-10 <user>]$ pwd
+/project/<project>/<user>
 ```
 
 From the screenshot: the Explorer opened on that folder, and the
@@ -695,8 +695,8 @@ the window and stops what the terminal was running.
 **Reinstall from the cache** (same session, nothing downloaded):
 
 ```
-[austin.putz@ceres20-compute-2 book]$ rm -rf .pixi
-[austin.putz@ceres20-compute-2 book]$ time pixi install
+[<user>@ceres20-compute-2 book]$ rm -rf .pixi
+[<user>@ceres20-compute-2 book]$ time pixi install
 The default environment has been installed.
 
 real    0m57.127s
@@ -754,8 +754,8 @@ ED25519 key fingerprint is SHA256:DRxKEui9nnf4BSBeLSN4mZ5Il3eHjsoiN74EvzSlmxE.
 This key is not known by any other names.
 Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
 Warning: Permanently added 'nova.its.iastate.edu' (ED25519) to the list of known hosts.
-(aputz@nova.its.iastate.edu) Verification code:
-(aputz@nova.its.iastate.edu) Password:
+(<netid>@nova.its.iastate.edu) Verification code:
+(<netid>@nova.its.iastate.edu) Password:
 ############################################################################
 #                                                                          #
 # User guides are available at https://research.it.iastate.edu/            #
@@ -802,7 +802,7 @@ Mon Nov 16 : ~ $  which nano vim
 Mon Nov 16 : ~ $  nano --version | head -n 1
  GNU nano, version 5.6.1
 Mon Nov 16 : ~ $  pwd
-/home/aputz
+/home/<netid>
 ```
 
 Meanings: same as Atlas: bash, nano 5.6.1 and vim present, SSH lands
@@ -827,10 +827,10 @@ GitHub) and no keys under `Host *`. A pitfall for Chapter 9.
 In the VS Code terminal (group name replaced):
 
 ```
-Mon Nov 16 : /work/<group>/aputz $  hostname
+Mon Nov 16 : /work/<group>/<netid> $  hostname
 nova18-69
-Mon Nov 16 : /work/<group>/aputz $  pwd
-/work/<group>/aputz
+Mon Nov 16 : /work/<group>/<netid> $  pwd
+/work/<group>/<netid>
 ```
 
 Meanings: a compute node (`nova18-69`, not `nova-login-*`), opened in
@@ -959,7 +959,7 @@ Filesystem                  Size  Used Avail Use% Mounted on
 <server>:/stor014/home       14T  7.5T  6.1T  56% /home
 $ df -h /work/<group>/
 Filesystem                Size  Used Avail Use% Mounted on
-novastor017:/stor017/<group>  143T   97T   47T  68% /work/<group>
+<server>:/stor017/<group>  143T   97T   47T  68% /work/<group>
 ```
 
 Meanings: `quota -s` prints nothing, so Nova reports no per-user quota

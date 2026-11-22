@@ -502,7 +502,7 @@ What Nova settles:
 
 ::: {.callout-warning}
 ## Nova result, 2026-11-20: Part 2 complete (Blocks A–C, 2.2–2.5)
-SSH login, from home (`/home/aputz`):
+SSH login, from home (`/home/<netid>`):
 
 | Line | Nova output | Same as the chapter? |
 |:--|:--|:--|
@@ -516,7 +516,7 @@ SSH login, from home (`/home/aputz`):
 | `locale` | `en_US.UTF-8` throughout | yes (Chapter 6's order) |
 | `LESSOPEN`, `zless` | `\|\|/usr/bin/lesspipe.sh %s`; `/usr/bin/zless` | (known) |
 | `umask` | **`0002`** | **no**: chapter shows `0022` |
-| `df -h ~` | `172.16.7.238:/stor014/home 14T 7.5T 5.9T 56% /home` | NFS, whole shared home |
+| `df -h ~` | `<server>:/stor014/home 14T 7.5T 5.9T 56% /home` | NFS, whole shared home |
 
 **Changed in the book (Chapter 7):** umask paragraph names Nova's
 `0002` (new files `664`, folders `775`); `which` sentence notes Nova
@@ -593,7 +593,7 @@ Run from the Mac in iTerm2 (Duo code, then password):
 the `ll` alias comes from `/etc/profile.d/colorls.sh`, which skips
 shells without a terminal. Whether `~/.bashrc` is read is decided by
 the after-2.5 run (`EDITOR=[nano]` → read). **After 2.5:** `ssh
-aputz@nova.its.iastate.edu 'echo "EDITOR=[$EDITOR]"'` printed
+<netid>@nova.its.iastate.edu 'echo "EDITOR=[$EDITOR]"'` printed
 `EDITOR=[nano]`, so a remote command on Nova reads `~/.bashrc`.
 **Changed in the book:** Chapter 7's `tbl-startup-files` row adds
 "Nova does".
@@ -630,10 +630,10 @@ Chapter 7 §2's cluster paragraph and Appendix A are written from this.
 
 | Item | Nova output |
 |:--|:--|
-| primary group | `domain users` (gid 101); the lab group `its-hpc-nova-abg` is one of the extra groups |
-| `/work/ABG` | `drwxrws--T.`, `root` : `its-hpc-nova-abg`: setgid **on**, sticky with no `x` for other (capital `T`) |
-| lab folder | `drwxrwsr-x.`, `aputz` : `its-hpc-nova-abg`: setgid **on** |
-| test file | `-rw-rw-r--.`, group **`its-hpc-nova-abg`**: took the folder's group (setgid works) |
+| primary group | `domain users` (gid 101); the lab group `its-hpc-nova-<group>` is one of the extra groups |
+| `/work/<group>` | `drwxrws--T.`, `root` : `its-hpc-nova-<group>`: setgid **on**, sticky with no `x` for other (capital `T`) |
+| lab folder | `drwxrwsr-x.`, `<netid>` : `its-hpc-nova-<group>`: setgid **on** |
+| test file | `-rw-rw-r--.`, group **`its-hpc-nova-<group>`**: took the folder's group (setgid works) |
 | `umask` | `0002`, as in Block A |
 | `rm ch07_group_test` | asked `rm: remove regular empty file …?`, so `rm` is `rm -i` in that shell. Confirmed 2026-11-20: Austin's own `~/.bashrc` alias, not a Nova default; no book change |
 
@@ -661,11 +661,11 @@ names never recorded):
 
 | Command | Result |
 |:--|:--|
-| `cat /work/ABG/group_storage_usage` | group line `NAME AVAIL USED` (`stor017/abg`), then the fraction used (`0.70…`), then one row per member: `TYPE NAME USED QUOTA OBJUSED OBJQUOTA` (`POSIX User`, `QUOTA none`; `OBJ` = file counts) |
-| `df -h /work/ABG` | `novastor017:/stor017/abg 143T 101T 43T 71% /work/ABG`: the group's own filesystem, same numbers as the file |
+| `cat /work/<group>/group_storage_usage` | group line `NAME AVAIL USED` (`stor017/<group>`), then the fraction used (`0.70…`), then one row per member: `TYPE NAME USED QUOTA OBJUSED OBJQUOTA` (`POSIX User`, `QUOTA none`; `OBJ` = file counts) |
+| `df -h /work/<group>` | `<server>:/stor017/<group> 143T 101T 43T 71% /work/<group>`: the group's own filesystem, same numbers as the file |
 | `quota -s` | prints nothing |
 | `type my_workdir my_primary_group cdw` | first two are `/usr/local/bin` programs; `cdw: not found` (ISU's page is out of date) |
-| `my_workdir` | **bug:** tries `mkdir /work/abg/aputz` (lower case), fails, prints `ERROR: could not create workdir`. Worth reporting to ISU |
+| `my_workdir` | **bug:** tries `mkdir /work/<group, lower case>/<netid>` (lower case), fails, prints `ERROR: could not create workdir`. Worth reporting to ISU |
 | `du -sh ~` | `4.9G` of the 10 GB home limit |
 
 **Changed in the book:** Chapter 7 §8: `df` table cell "often the
@@ -708,7 +708,7 @@ followed Chapter 1 has that line, so the exercise works for them; the
 answer's last paragraph and §6's check-yourself already cover this
 case. No book change. **Confirmed:** after adding Chapter 1's
 `if [ -f ~/.bashrc ]; then . ~/.bashrc; fi` to `~/.bash_profile`, a
-new iTerm2 tab printed `nano`. (Austin then removed `EDITOR=nano`; he
+new iTerm2 tab printed `nano`. (Austin then removed `EDITOR=nano` and
 uses vim.)
 :::
 
@@ -788,7 +788,7 @@ Same as Nova, Part 2.1.
 | locale | `en_US.UTF-8` | same as Nova; Chapter 6's sort matches |
 | `LESSOPEN`, `zless` | `lesspipe.sh`; `/usr/bin/zless` | same |
 | **`umask`** | **`0027`** | **differs:** new files `640`, folders `750`: the group can read but not write, others get nothing. Nova `0002`, the book's laptops `0022` |
-| `df -h ~` | `vast-vip1.vast.scinet.usda.gov:/home 91T 14T 78T 16% /home` | network storage, like Nova's |
+| `df -h ~` | `<server>:/home 91T 14T 78T 16% /home` | network storage, like Nova's |
 
 **Confirmed site-wide:** the `grep` found `umask 027` in `/etc/profile`
 (line 79) and `/etc/bashrc` (line 90), and `umask 0027` in
@@ -839,12 +839,12 @@ banner (the ASCII "SCINet" logo and the USDA authorized-use notice),
 then `not login`, `not interactive`, `EDITOR=[]` (expected: Exercise 4
 not done yet), `no ll alias` (does not settle it, as on Nova). The
 banner is the SSH server's pre-login banner, on stderr: `ssh
-austin.putz@ceres.scinet.usda.gov true 2>/dev/null | wc -c` printed
+<user>@ceres.scinet.usda.gov true 2>/dev/null | wc -c` printed
 `0` (confirmed). It is not output from a startup file and does not
 break `rsync` or `scp`. For Chapter 9 (other session): readers will
 see this banner on every Ceres `ssh`, `scp`, and `rsync`; it is
 harmless. **After 3.6:**
-`ssh austin.putz@ceres.scinet.usda.gov 'echo "EDITOR=[$EDITOR]"'`
+`ssh <user>@ceres.scinet.usda.gov 'echo "EDITOR=[$EDITOR]"'`
 printed the banner, then `EDITOR=[nano]`: a remote command on Ceres
 reads `~/.bashrc`. **Changed in the book:** the `tbl-startup-files`
 row now says "Nova and Ceres do".
@@ -860,10 +860,10 @@ touch test. Record the same items.
 ## Ceres result, 2026-11-20: complete
 | Item | Ceres output |
 |:--|:--|
-| primary group | `austin.putz` (a personal group, same name and number as the user); project group `proj-ibdru_bioinformatics` is an extra group |
-| `/project/ibdru_bioinformatics` | `drwxrws--T.`, `root` : `proj-ibdru_bioinformatics`: setgid on, sticky, closed to others (same as Nova's `/work/ABG`) |
-| `…/Austin` | `drwxr-s---.`, `austin.putz` : `proj-…`: setgid on, but **group cannot write** (made under umask `0027`) |
-| test file | `-rw-r-----.`, group **`proj-ibdru_bioinformatics`**: setgid works; group reads only |
+| primary group | `<user>` (a personal group, same name and number as the user); project group `proj-<project>` is an extra group |
+| `/project/<project>` | `drwxrws--T.`, `root` : `proj-<project>`: setgid on, sticky, closed to others (same as Nova's `/work/<group>`) |
+| `…/<user>` | `drwxr-s---.`, `<user>` : `proj-…`: setgid on, but **group cannot write** (made under umask `0027`) |
+| test file | `-rw-r-----.`, group **`proj-<project>`**: setgid works; group reads only |
 | `umask` | `0027` (site-wide) |
 | `rm` | no prompt (no `rm -i` alias on Ceres) |
 
@@ -887,7 +887,7 @@ guide): **`my_quotas`**. On Ceres:
 |:--|:--|
 | `type my_quotas` | `/usr/local/bin/my_quotas` |
 | `my_quotas` | "Live Quotas for <user>", a note (home quotas fixed; `/90daydata` no quota, removed 90 days after last access; links to request and project-management pages), then `Path  Usage (GB)  Quota (GB)  Availible (GB)  Consumed (%)  Status` in three sections: Ceres Home Directory, Ceres working project storage, Juno long-term project storage (`/LTS/project/…`). Home quota 29.8 GB |
-| `df -h /project/ibdru_bioinformatics` | `vast-vip1.vast.scinet.usda.gov:/project 5.6T 2.5T 3.1T 45% /project`: the **project's** 5 TB quota as the size, though "Mounted on" says `/project` |
+| `df -h /project/<project>` | `<server>:/project 5.6T 2.5T 3.1T 45% /project`: the **project's** 5 TB quota as the size, though "Mounted on" says `/project` |
 | `quota -s` | works for home: `space 4320K, quota 30518M, limit 50545M`, files with no limit |
 
 **Changed in the book:** Chapter 7 §8: the Nova-only paragraph became
@@ -926,12 +926,12 @@ After the four lines, a new SSH login printed `nano`: Ceres's
 "Ceres and Atlas"; quota table column "Ceres (SCINet; Atlas the
 same)". Appendix A: an Atlas bullet.
 
-**Group check:** `df -h /project/ibdru_bioinformatics` →
+**Group check:** `df -h /project/<project>` →
 `atlas-vast-c1.hpc.msstate.edu:/atlas/project 1.1T 798M 1.0T 1%
 /project`: the project's 1,000 GB quota, so the quota table's "Atlas
 the same" holds. Project folder `drwxrws---` (`root`,
-`proj-ibdru_bioinformatics`): setgid, **no sticky**, **no SELinux
-`.`** (and no `context=` in `id`); `…/Austin` `drwxr-s---`; test file
+`proj-<project>`): setgid, **no sticky**, **no SELinux
+`.`** (and no `context=` in `id`); `…/<user>` `drwxr-s---`; test file
 `-rw-r-----`, project group. Same personal primary group.
 **Changed in the book:** Chapter 7 §2's Ceres paragraph adds that
 Atlas gives the same results, its project folder `drwxrws---` without
@@ -1049,7 +1049,7 @@ Fill in, or paste outputs into the chat and I'll fill it in.
 | Ctrl-C status | 130 | 130 | | 130 | 7 §7 |
 | Ctrl-Z (`stty -a` susp) | `^Z`, stops | `<undef>`: off site-wide | | works, stops | 7 §7 |
 | `top` header | matches | matches (41 users) | | matches (62 users; names cut to `austin.+`) | 7 §7 |
-| `df -h ~` first column | `/dev/sdd` | NFS `…:/stor014/home`, 14T | | NFS `vast-vip1…:/home`, 91T | 7 §8 |
+| `df -h ~` first column | `/dev/sdd` | NFS `…:/stor014/home`, 14T | | NFS `<server>:/home`, 91T | 7 §8 |
 | Quota command | — | none; `group_storage_usage` file, `df -h /work/<group>`, home `du -sh ~` | | `my_quotas`; `df -h /project/<name>` shows the project quota; `quota -s` for home | 7 §8, App. A |
 | Folder group, setgid, umask | — | setgid on (`drwxrws--T` / `drwxrwsr-x`); file gets lab group; `0002` | | setgid on (`drwxrws--T` / `drwxr-s---`); file gets project group; umask **`0027`** → `640` | 7 §2, Appendix A |
 | `less` opens `.gz` | yes | done | | yes | 5 §9 |

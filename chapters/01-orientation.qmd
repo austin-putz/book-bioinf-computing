@@ -259,10 +259,12 @@ login node.
 
 Many sites need more options, such as an account (`-A`) or a partition
 (`-p`); SCINet, for example, requires `-A`. Your site's documentation
-lists them, and @sec-cluster-sites will collect them for Nova and SCINet;
-until then, ask your PI or your site's support which to use. If `curl` cannot connect from a compute node, your
-site may block the internet there; ask your research computing office
-where to download. @sec-hpc-slurm explains all of this properly.
+lists them, and @sec-cluster-sites-interactive gives them for Nova and
+SCINet (Ceres and Atlas need `-A <project>`; Nova needs nothing extra).
+Elsewhere, ask your PI or your site's support which to use. If `curl`
+cannot connect from a compute node, your site may block the internet
+there (Ceres, Atlas, and Nova do not); ask your research computing
+office where to download. @sec-hpc-slurm explains all of this properly.
 :::
 
 **Step 1. Make a scratch folder and move into it.**

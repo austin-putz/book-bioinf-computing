@@ -749,7 +749,7 @@ even from a WSL window. For the VS Code tunnel route and Nova's
 Remote-SSH to a compute node, follow
 [ISU's](https://research.it.iastate.edu/using-vs-code-cluster) or
 [SCINet's](https://scinet.usda.gov/guides/ide/vscode) VS Code guide;
-@sec-cluster-sites will collect these recipes.
+@sec-cluster-sites-vscode compares the routes each site supports.
 
 **Now the idea** (@fig-remote-ssh). Whichever route you use, the window
 you look at is on your laptop. The files, the terminal, and the programs

@@ -1,13 +1,5 @@
 # Cluster sites: SCINet and Nova {#sec-cluster-sites}
 
-::: {.callout-important icon=false}
-## Under construction
-
-Drafted and checked against the sites' pages and by logging in
-(November 2026). Still to check: Atlas's VSCode start form, and
-whether `pixi install` works through Atlas's proxy.
-:::
-
 **Optional.** Reference for readers who use SCINet's Ceres or Atlas, or
 Iowa State's Nova. The chapters stay site-neutral and point here for
 the site-specific steps (@sec-orientation, @sec-book-setup,
@@ -274,9 +266,11 @@ site adds its own options. Full SLURM teaching is @sec-hpc-slurm.
   Connection established`, which is the proxy speaking). Tools that
   read the standard `https_proxy` setting, as `curl` does, work
   without changes. The node sets `https_proxy`, `http_proxy`, and `no_proxy` for you
-  (observed). On Nova: yes, directly (observed). So on Ceres and Nova
-  downloads work inside an interactive session; on Atlas, whether
-  `pixi install` uses the proxy is still to be checked.
+  (observed). On Nova: yes, directly (observed). So on all three,
+  downloads work inside an interactive session. On Atlas both the pixi
+  installer and `pixi install --locked` worked through the proxy with
+  no changes (observed 2026-11-22; the book environment installed in
+  29 seconds).
 
 ## VS Code {#sec-cluster-sites-vscode}
 
@@ -299,19 +293,19 @@ page](https://docs.hpc.msstate.edu/getting-started/connect.html), and
 :::
 
 **The OnDemand start form** asks the same things under different names
-(observed on Ceres and Nova; Atlas from MSU's page):
+(observed on all three):
 
 ::: {.wide-table}
 : The VS Code Server start form. {#tbl-sites-ood-form}
 
 | What it asks | Ceres | Atlas | Nova |
 |:--|:--|:--|:--|
-| Who pays | Account (avoid `sandbox`: 2 hours) | Slurm Account | Account |
-| Where it runs | Queue `ceres`, and QOS | Partition, and QOS | Slurm Partition |
-| How long | Number of hours | Duration | Number of hours |
-| CPUs | Number of cores | Nodes and processors | Number of Tasks Per node |
-| Memory | Memory required (e.g. `8G`) | not stated | Memory Required (no unit means MB) |
-| Starting folder | Working Directory (default: home) | not stated | Working Directory (default: the last one used) |
+| Who pays | Account (avoid `sandbox`: 2 hours) | Account | Account |
+| Where it runs | Queue `ceres`, and QOS | Partition (`atlas`), and QoS (default `debug`) | Slurm Partition |
+| How long | Number of hours | Number of hours | Number of hours |
+| CPUs | Number of cores | Number of nodes, Number of tasks | Number of Tasks Per node |
+| Memory | Memory required (e.g. `8G`) | no field: type `--mem=8G` under *Additional Slurm Parameters* | Memory Required (no unit means MB) |
+| Starting folder | Working Directory (default: home) | Working Directory (default: home) | Working Directory (default: the last one used) |
 :::
 
 Set the starting folder to your project or group folder. End a session

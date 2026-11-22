@@ -423,7 +423,7 @@
   probe: >
     The practice table's read counts sort as `105 12 30 30 8 9`. What
     went wrong? (Correct: text order; use `sort -t$'\t' -k4,4n`.)
-  chapters: [06-text-tools, 14-tabular-data]
+  chapters: [06-text-tools, 08-shell-scripts, 14-tabular-data]
 
 - id: grep-at-counts-reads
   claim: "`grep -c '^@'` counts the reads in a FASTQ file."
@@ -516,4 +516,75 @@
     A sample sheet looks right in `cat`, but `grep -c ',30$'` finds 0
     rows you can see. What do you check first? (Correct: `cat -A` for
     `^M`, or `grep -c $'\r'`.)
-  chapters: [07-linux-system, 14-tabular-data]
+  chapters: [07-linux-system, 08-shell-scripts, 14-tabular-data]
+
+# Chapter 8 -----------------------------------------------------------------
+
+- id: script-stops-on-error
+  claim: "If a command in my script fails, the script stops."
+  reality: >
+    By default bash moves on to the next line, so later steps run on
+    missing or partial results and the script can still exit 0.
+    `set -e` changes that.
+  probe: >
+    A script without `set -e` runs `gunzip -c missing.gz | wc -l`, then
+    `echo done`. What prints, and what is the exit status? (Correct: an
+    error, `0`, `done`; exit 0.)
+  chapters: [08-shell-scripts, 01-orientation]
+
+- id: strict-mode-catches-all
+  claim: "With `set -euo pipefail` my script stops on every error."
+  reality: >
+    It stops on a nonzero exit status, except in conditions, functions
+    called from conditions, all but the last command of an `&&`/`||`
+    list, and masked assignments such as `local x=$(…)`. It cannot see a
+    tool that reports success on bad input, and it can stop on harmless
+    statuses (`grep` with no match, `head` closing a pipe).
+  probe: >
+    Which stops a strict script: `grep -c XYZ file` with no match, or
+    seqkit 2.14.0 on a truncated file? (Correct: the `grep`; seqkit
+    exits 0.)
+  chapters: [08-shell-scripts]
+
+- id: quotes-are-style
+  claim: "Quotes around variables are just style; the script works without them."
+  reality: >
+    In a command's arguments, an unquoted value is split at spaces, tabs,
+    and newlines and each piece is matched as a wildcard, so a name with
+    a space becomes several arguments.
+  probe: >
+    `f="Run 3 final/a.fq.gz"; ls $f`: how many names does `ls` get?
+    (Correct: three.)
+  chapters: [08-shell-scripts]
+
+- id: typo-variable-errors
+  claim: "If I misspell a variable, bash gives an error."
+  reality: >
+    An unset variable expands to nothing, silently, unless `set -u` is
+    on. Quoting keeps the result as one argument but does not check it.
+  probe: >
+    What argument does `rm -rf "$outdri/"` receive if `outdri` is unset?
+    (Correct: `/`.)
+  chapters: [08-shell-scripts]
+
+- id: for-reads-lines
+  claim: "`for line in $(cat file)` goes through a file line by line."
+  reality: >
+    It goes word by word, split at spaces and tabs, and matches
+    wildcards. Read lines with `while IFS= read -r line`.
+  probe: >
+    How many passes for a two-line file whose first line is
+    `sample_C Run 3 final`? (Correct: more than two, one per word.)
+  chapters: [08-shell-scripts]
+
+- id: git-is-backup
+  claim: "My scripts are in git, so they are backed up."
+  reality: >
+    A repository on the same disk is not an off-machine backup: a local
+    `.git/` folder is lost with the disk. Pushing to another machine is
+    one way to make an independent copy.
+  probe: >
+    Your laptop's disk fails. Your scripts were committed but never
+    pushed. Are they safe? (Correct: no; the history was on the same
+    disk.)
+  chapters: [08-shell-scripts, 21-git, 22-github]

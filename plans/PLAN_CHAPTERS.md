@@ -20,7 +20,12 @@ Revised 2026-11-13: number types made explicit in Chapters 12–15 and 36
 (integer vs float, booleans from conditions, `0.1 + 0.2 == 0.3`).
 Revised 2026-11-17: running-dataset description corrected (Chapter 3
 plan): original study, nf-core test fixture, and the book's own files
-kept apart.
+kept apart. Revised 2026-11-19 (Chapter 8 plan): Chapter 8 adds reading
+a supplied script line by line and a short debugging section (`bash -x`,
+ShellCheck); Chapter 34 keeps debugging and linting in depth.
+Revised 2026-11-19 (Chapter 9 plan): Chapter 9 adds `ssh host command`
+and the host-key warning, connection sharing (`ControlMaster`), and
+moving the project to the cluster.
 
 **Guiding idea:** most readers will work on a Linux HPC cluster (SCINet
 Ceres/Atlas, ISU Nova, and similar), with a laptop for editing, small
@@ -188,17 +193,25 @@ Short: get readers to a first successful command quickly.
 - `set -euo pipefail`: what it catches and what it does not
 - Logging output and errors
 - Numbered scripts as a simple pipeline
+- Reading a supplied script line by line (Chapter 3's); finding bugs
+  with `bash -x` and ShellCheck (more in Chapter 34)
 - Minimal git routine for saved scripts: check changes, commit, recover a
   previous version (full treatment in Chapter 21)
 
 ### 9. Working remotely [core]
 
+- Running one command over SSH (`ssh host command`); the "host key
+  changed" warning
 - SSH and SSH keys; `~/.ssh/config`; jump hosts (`ProxyJump`)
+- Connection sharing (`ControlMaster`) so one sign-in serves many
+  connections
 - tmux / screen so work survives a dropped connection
 - Moving data: `scp`, `rsync`, Globus, through the site's data transfer
   node (DTN), not the login node (Nova `novadtn`; SCINet `ceres-dtn`,
   `atlas-dtn`)
 - Checksums to confirm a transfer
+- Moving the project to the cluster: copy files, reinstall the
+  environment, recreate links (Chapter 3's three steps)
 
 ### 10. HPC and SLURM [core]
 

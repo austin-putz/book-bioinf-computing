@@ -11,7 +11,10 @@ will change as the chapter is written.
 
 ## Planned topics
 
+- Running one command over SSH (`ssh host command`); the "host key changed" warning
 - SSH and SSH keys; `~/.ssh/config`; jump hosts (`ProxyJump`)
+- Connection sharing (`ControlMaster`) so one sign-in serves many connections
 - tmux / screen so work survives a dropped connection
 - Moving data: `scp`, `rsync`, Globus, through the site's data transfer node (DTN), not the login node
 - Checksums to confirm a transfer
+- Moving the project to the cluster: copy files, reinstall the environment, recreate links

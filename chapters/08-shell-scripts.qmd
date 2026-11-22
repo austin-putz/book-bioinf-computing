@@ -16,4 +16,5 @@ will change as the chapter is written.
 - `set -euo pipefail`: what it catches and what it does not
 - Logging output and errors
 - Numbered scripts as a simple pipeline
+- Reading a supplied script line by line; finding bugs with `bash -x` and ShellCheck (more in Chapter 34)
 - Minimal git routine for saved scripts: check changes, commit, recover a previous version (full treatment in Chapter 21)

@@ -15,6 +15,7 @@ r-base = "4.4.*"
 seqkit = "*"
 nano = "*"                 # fallback editor: pixi run nano
 tree = "*"                 # show folder layouts: pixi run tree (Chapter 3 on)
+shellcheck = ">=0.11.0,<0.12" # finds bugs in shell scripts (Chapter 8)
 
 [tasks]
 check = "python --version && Rscript --version && seqkit version"

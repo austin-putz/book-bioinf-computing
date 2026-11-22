@@ -717,19 +717,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div class="callout callout-style-default callout-important no-icon callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon no-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Under construction
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>Drafted and checked against the sites’ pages and by logging in (November 2026). Still to check: Atlas’s VSCode start form, and whether <code>pixi install</code> works through Atlas’s proxy.</p>
-</div>
-</div>
 <p><strong>Optional.</strong> Reference for readers who use SCINet’s Ceres or Atlas, or Iowa State’s Nova. The chapters stay site-neutral and point here for the site-specific steps (<a href="../chapters/01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>, <a href="../chapters/02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>, <a href="../chapters/03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a>, <a href="../chapters/04-getting-help.html" class="quarto-xref"><span>Chapter 4</span></a>, <a href="../chapters/07-linux-system.html" class="quarto-xref"><span>Chapter 7</span></a>, <a href="../chapters/09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>, <a href="../chapters/10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>).</p>
 <p>How to read it:</p>
 <ul>
@@ -1170,7 +1157,7 @@ Table&nbsp;A.6: New files and shared folders at each site.
 <li><p><strong>Nova:</strong> ISU’s examples have no account option, e.g.&nbsp;<code>salloc -N 1 -n 8 -t 4:00:00</code> (<a href="https://research.it.iastate.edu/slurm">SLURM page</a>); default partition <code>nova</code>. ISU’s pages say jobs run up to two weeks; the OnDemand form showed a 31-day limit for <code>nova</code> (observed).</p>
 <p>Observed: <code>srun --cpus-per-task=1 --mem=4G --time=00:30:00 --pty bash -l</code> works with no <code>-A</code>; SLURM charges your default account (list yours with the <code>sacctmgr</code> line above). On arrival the node prints its settings, as Ceres does: <code>TMPDIR</code> and Apptainer’s cache on the node’s <code>/tmp</code>, <code>TMOUT=5400</code> (90 idle minutes), and Apptainer set to make <code>/work</code>, <code>/ptmp</code>, and the other shared file systems visible inside containers. <code>sinfo -s</code> (observed) shows <code>nova</code> (31 days), <code>interactive</code> (8 hours; the one ISU’s VS Code page says to pick), <code>instruction</code> (2 days), <code>scavenger</code>, <code>reserved</code>, <code>nova-arm</code>, and a one-minute <code>allnodes</code>.</p></li>
 <li><p><strong>End the session</strong> with <code>exit</code>. After <code>srun ... --pty</code>, <code>exit</code> ends the job too (<code>squeue -u $USER</code> showed nothing left on all three, observed); a reservation from <code>salloc</code> may need <code>scancel &lt;jobid&gt;</code> as well.</p></li>
-<li><p><strong>Internet from compute nodes:</strong> not stated by any of the three. Observed on Ceres: yes (<code>curl -sI https://pixi.sh</code> answered). On Atlas: yes, through a web proxy (the reply begins <code>HTTP/1.1 200 Connection established</code>, which is the proxy speaking). Tools that read the standard <code>https_proxy</code> setting, as <code>curl</code> does, work without changes. The node sets <code>https_proxy</code>, <code>http_proxy</code>, and <code>no_proxy</code> for you (observed). On Nova: yes, directly (observed). So on Ceres and Nova downloads work inside an interactive session; on Atlas, whether <code>pixi install</code> uses the proxy is still to be checked.</p></li>
+<li><p><strong>Internet from compute nodes:</strong> not stated by any of the three. Observed on Ceres: yes (<code>curl -sI https://pixi.sh</code> answered). On Atlas: yes, through a web proxy (the reply begins <code>HTTP/1.1 200 Connection established</code>, which is the proxy speaking). Tools that read the standard <code>https_proxy</code> setting, as <code>curl</code> does, work without changes. The node sets <code>https_proxy</code>, <code>http_proxy</code>, and <code>no_proxy</code> for you (observed). On Nova: yes, directly (observed). So on all three, downloads work inside an interactive session. On Atlas both the pixi installer and <code>pixi install --locked</code> worked through the proxy with no changes (observed 2026-11-22; the book environment installed in 29 seconds).</p></li>
 </ul>
 </section>
 <section id="sec-cluster-sites-vscode" class="level2" data-number="A.7">
@@ -1229,7 +1216,7 @@ Table&nbsp;A.7: VS Code routes each site supports.
 </figure>
 </div>
 </div>
-<p><strong>The OnDemand start form</strong> asks the same things under different names (observed on Ceres and Nova; Atlas from MSU’s page):</p>
+<p><strong>The OnDemand start form</strong> asks the same things under different names (observed on all three):</p>
 <div class="wide-table">
 <div id="tbl-sites-ood-form" class="quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -1256,37 +1243,37 @@ Table&nbsp;A.8: The VS Code Server start form.
 <tr class="odd">
 <td style="text-align: left;">Who pays</td>
 <td style="text-align: left;">Account (avoid <code>sandbox</code>: 2 hours)</td>
-<td style="text-align: left;">Slurm Account</td>
+<td style="text-align: left;">Account</td>
 <td style="text-align: left;">Account</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Where it runs</td>
 <td style="text-align: left;">Queue <code>ceres</code>, and QOS</td>
-<td style="text-align: left;">Partition, and QOS</td>
+<td style="text-align: left;">Partition (<code>atlas</code>), and QoS (default <code>debug</code>)</td>
 <td style="text-align: left;">Slurm Partition</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">How long</td>
 <td style="text-align: left;">Number of hours</td>
-<td style="text-align: left;">Duration</td>
+<td style="text-align: left;">Number of hours</td>
 <td style="text-align: left;">Number of hours</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">CPUs</td>
 <td style="text-align: left;">Number of cores</td>
-<td style="text-align: left;">Nodes and processors</td>
+<td style="text-align: left;">Number of nodes, Number of tasks</td>
 <td style="text-align: left;">Number of Tasks Per node</td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Memory</td>
 <td style="text-align: left;">Memory required (e.g.&nbsp;<code>8G</code>)</td>
-<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">no field: type <code>--mem=8G</code> under <em>Additional Slurm Parameters</em></td>
 <td style="text-align: left;">Memory Required (no unit means MB)</td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Starting folder</td>
 <td style="text-align: left;">Working Directory (default: home)</td>
-<td style="text-align: left;">not stated</td>
+<td style="text-align: left;">Working Directory (default: home)</td>
 <td style="text-align: left;">Working Directory (default: the last one used)</td>
 </tr>
 </tbody>

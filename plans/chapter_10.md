@@ -85,16 +85,27 @@ forward link in the written text):
   files"; `ps -u "$USER"` on a login node; `closed-window-decides` ("or
   as a scheduler job"); `tbl-cluster-quotas` and "your real limit is a
   quota".
-- **Chapter 8 (planned):** "`sbatch` scripts … are shell scripts with
+- **Chapter 8 (drafted, `chapters/08-shell-scripts.qmd`):** "`sbatch` scripts … are shell scripts with
   `#SBATCH` lines on top: this chapter's scripts are what Chapter 10
   submits"; job arrays replace the `for` loop over samples; `SLURM_*`
   variables as inputs; `set -euo pipefail`; `src/01_count_reads.sh`
   (run from the project root; writes `results/read_counts.tsv` and its
   own log in `logs/`), `src/02_gtf_summary.sh`, `src/run_all.sh`.
+  In the draft: `01` first checks `data/raw/checksums.md5`, writes
+  `results/read_counts.tsv` through a `.tmp` name, and keeps a dated
+  log `logs/01_count_reads_<date>_XXXX.log`; `02` writes
+  `results/gtf_feature_counts.tsv`; `run_all.sh` runs the steps by
+  name, stops at the first failure, and keeps
+  `logs/run_all_<date>_XXXX.log`. Exercise 4 adds
+  `src/03_transcript_biotypes.sh` (`results/transcript_biotypes.tsv`)
+  and says `02` and `03` "could run at the same time"; the pipeline
+  section lists "runs one step at a time" as a limit. Its two forward
+  links: scripts handed to a cluster as a job (opening) and "running
+  each step as a cluster job" (pipeline section).
   (Chapter 8's practice `samples.tsv` in `~/bioinf-computing-ch05/` is a
   deliberately imperfect fixture, not a project file; it is not used
   here.)
-- **Chapter 9 (planned):** tmux keeps a **shell** alive on a login
+- **Chapter 9 (drafted, `chapters/09-working-remotely.qmd`):** tmux keeps a **shell** alive on a login
   node; "heavy work goes to a job, which survives without tmux";
   `.pixi` not copied because of file-count quotas; storage tiers
   deferred here. **ProxyJump** (Chapter 9 decision 11, 2026-11-22):
@@ -106,6 +117,22 @@ forward link in the written text):
   `nova`/`nova-dtn` aliases are reused, not redrawn. Chapter 2's
   `tbl-where-to-edit` row "Remote-SSH to a compute node: SSH keys, a
   held compute node" is also kept here.
+  The draft's forward links (11), each kept here: jobs on compute
+  nodes (§4–§6); what the storage areas are and why the project lives
+  in `/work/<group>/<netid>` or `/project/<project>/<you>` (§3); how to
+  get a node, connect with `ssh -J nova <allocated-node>`, and give it
+  back (§5); ISU's `ForwardAgent yes` and `StrictHostKeyChecking no`
+  (§5); heavy work in a job, which needs no tmux (§5, §6); the file
+  limits that keep `.pixi/` from being copied (§3); `pixi install
+  --locked` in an interactive job when it is slow (§5); VS Code
+  Remote-SSH on a compute node (§5). Its project move ends with the
+  project at `/work/<group>/<netid>/bioinf-computing` (no `results/`
+  or `logs/` copied), the reference at
+  `/work/<group>/<netid>/bioinf-shared/references/yeast_R64-1-1_test`
+  with `data/ref` linked to it, and `pixi run bash src/run_all.sh` run
+  **on the login node** as the test (exit 0, same checksums as the
+  laptop). Its aliases: `nova`, `nova-dtn`, `ceres`, `ceres-dtn`,
+  `atlas`, `atlas-dtn`.
 
 **Boundaries.** Appendix A owns per-site recipes and numbers (hosts,
 quota commands, partition lists); the chapter shows the general idea
@@ -280,7 +307,8 @@ aids*.
    two numbers need not match. *Then name it:* four tiers in
    `fig-storage-tiers`: **home** (small; config and the `pixi` program
    only), **project/group** (your work, shared with the lab, quota per
-   project), **scratch** (big, purged: `/90daydata` 90 days on SCINet,
+   project; also the `bioinf-shared/references` folder Chapter 9 made,
+   which `data/ref` links to), **scratch** (big, purged: `/90daydata` 90 days on SCINet,
    `/ptmp` 60 days unused on Nova; never backed up), **node-local
    temporary space** (on the compute node itself; SCINet's scratch guide
    and ISU's storage page say it is deleted when the job ends; often
@@ -435,7 +463,11 @@ aids*.
    with a web page in front (`closing-tab-ends-session`). Settings the
    site prints on arrival (*observed* on Ceres and Nova: `TMPDIR`,
    Apptainer cache, `TMOUT=5400`, so an idle shell logs out after 90
-   minutes). Use interactive jobs for trying commands and short tests.
+   minutes). Use interactive jobs for trying commands and short tests,
+   and for setup work too slow for a login node: Chapter 9 promised
+   `pixi install --locked` here (25 to 40 minutes on Nova in November
+   2026), so the worked example is `srun … --pty bash -l`, `cd` to the
+   project, `pixi install --locked`, `exit`.
    *Pitfall (observed 2026-11-22):* lines pasted together with `srun`
    wait in the terminal and run **on the login node after the session
    ends**. *Then the comparison* the outline calls "a running process
@@ -448,11 +480,22 @@ aids*.
    batch jobs are built to run without one. [`tbl-process-vs-job`;
    pitfall callout; self-check]
 
-6. **Your first batch job.** *Start hands-on:* readers save the
+6. **Your first batch job.** One sentence first: Chapter 9 ran
+   `run_all.sh` on the login node to test the move, which was fine
+   because it takes seconds; anything longer is a job, starting now.
+   *Start hands-on:* readers save the
    supplied `jobs/01_count_reads.sbatch` into the project, read it, and
    **test it inside an interactive job** (§5) with `bash
-   jobs/01_count_reads.sbatch`: it runs, says "job local", and rewrites
-   `results/read_counts.tsv`. Then on the login node, from the project
+   jobs/01_count_reads.sbatch`: it runs and rewrites
+   `results/read_counts.tsv`. It does **not** say "job local": an
+   interactive job is a job, so Slurm has set `SLURM_JOB_ID`, and the
+   first line names the interactive job (Nova, *observed* 2026-11-23:
+   `job 17719911 on nova18-72`, the same ID the `srun` banner printed
+   as `APPTAINERENV_SLURM_JOB_ID`; Chapter 8's log lines followed, both
+   checksums `OK`, exit 0, `read_counts.tsv` MD5 the same as the
+   laptop's). "job local" appears only outside any job (laptop, login
+   node). Worth one sentence: the `SLURM_*` variables are there in
+   every job, interactive or batch. Then on the login node, from the project
    folder: `mkdir -p logs` (Slurm opens the log file before the script
    starts, so its folder must already exist), `sbatch
    jobs/01_count_reads.sbatch` → `Submitted batch job 1234567`; `squeue
@@ -519,7 +562,13 @@ aids*.
    `--nodes=1 --ntasks=1 --cpus-per-task=N`; `--ntasks` counts
    separate tasks (copies of a program), which the book's tools do not
    need. A Slurm "CPU" may be a core or a hardware thread, depending on
-   the site. `--mem` (per node) vs `--mem-per-cpu` in one sentence; use
+   the site. Nova, *observed* 2026-11-23: the §6 job asks for
+   `--cpus-per-task=1` and `sacct` shows `AllocCPUS 2` (`seff`: `Cores
+   per node: 2`), because `SelectTypeParameters = CR_CORE_MEMORY`
+   allocates whole cores and the nodes have `ThreadsPerCore=2`; so
+   odd requests round up, and `seff`'s efficiency is measured against
+   the 2. One sentence and a `sacct` line in the text: "check
+   `AllocCPUS`, not only what you asked for". `--mem` (per node) vs `--mem-per-cpu` in one sentence; use
    `--mem`. Time format `D-HH:MM:SS`. What you get if you leave
    `--time` or `--mem` out is the partition's default, not "as much as
    needed" (Ceres: 2 hours and 2,000 MB per CPU; Nova: 4 hours and 3,800 MB
@@ -674,7 +723,17 @@ aids*.
     line `<id>_[1-4] … PD (None)`; logs `array_<id>_1.out` … `_4.out`;
     `sacct` lists `<id>_1`, `<id>_1.batch`, `<id>_1.extern` per task, so
     array JobIDs need `JobID%20`; dry run printed `runA`–`runD`, then
-    `no row 5 in reads_test.tsv`). Why the
+    `no row 5 in reads_test.tsv`). The real array, Nova, *observed*
+    2026-11-23 with the four fixture runs: the dry run on the login node
+    printed SRR6357070, 071, 072, 076 (`1 threads`, no Slurm), then `no
+    row 5 in data/meta/reads.tsv`; `sbatch --array=1-4` → `squeue`
+    `<id>_[1-4] … PD (None)`; logs `02_stats_array_<id>_1.out` …
+    `_4.out`, each `task N: run …, 2 threads, on <node>`; four
+    `results/stats_<run>.tsv`, 50,000 reads each; `sacct` all
+    `COMPLETED 0:0`, `AllocCPUS 2`, `MaxRSS` 72–88 MB, `Elapsed` 0–1 s,
+    and the tasks ran on **three different nodes** (`nova18-69`,
+    `nova18-wide-10`, `nova18-wide-21` twice): the "one node or
+    several" point, seen. Why the
     checks matter: `awk` prints nothing and exits 0 for a row past the
     end, so `set -e` alone would not catch `--array=1-5` with four rows.
     Site maximum array size (`scontrol show config | grep -i
@@ -702,15 +761,21 @@ aids*.
     to `CANCELLED` with no `scancel`). This is the site difference the
     chapter names: "check `squeue`; on some sites the job waits forever,
     on others it is cancelled". Say that here the two steps have independent inputs:
-    `afterok` imposes the order you chose, it does not pass data. One
+    `afterok` imposes the order you chose, it does not pass data.
+    Tie back to Chapter 8: the simplest route is one job that runs
+    `src/run_all.sh` (its order and stop-at-first-failure unchanged);
+    separate jobs earn their keep when steps need different resources
+    or can run side by side, as Chapter 8 said `02` and `03` could
+    (readers who did its Exercise 4 can submit `03` with no
+    dependency and see both run at once). One
     paragraph on the limit: this is where a workflow manager (Part VI)
     takes over; nf-core submits its own jobs (Chapter 26). Exercise 5
     (optional). [self-check]
 
 12. **GPU partitions (overview, brief).** What a GPU request looks like:
     `--partition=<gpu partition> --gres=gpu:1`; the exact `--gres`
-    form is site-specific (Atlas's OnDemand form gives
-    `--gres=gpu:a100_1g.10gb:1`, *observed*); `nvidia-smi` inside the
+    form is site-specific (Atlas's OnDemand form shows
+    `gpu:a100_1g.10gb`, which `sbatch` refuses; see below); `nvidia-smi` inside the
     job shows the card. Only tools built for GPUs use one (deep-learning
     tools, Parabricks, some basecallers); an ordinary tool on a GPU node
     leaves it idle. Sites: Atlas `gpu-v100`, `gpu-a100`,
@@ -966,9 +1031,25 @@ between the two misconceptions of §7).
     `data/raw/`, so its `results/read_counts.tsv` grows from 2 to 8 rows
     after this step; the chapter's check (§6, Outcome) is run **before**
     the download, or its expected output says 8 rows.
-  Accessions, file names, sizes, and read counts *to verify* against
-  `samplesheet_test.csv` at the pinned commit before drafting
-  (*Decisions* 3).
+  **Verified 2026-11-23** against `samplesheet/v3.10/samplesheet_test.csv`
+  at the pinned commit: the fixture's other paired-end runs are
+  SRR6357071 (label `WT_REP1`, the same label as SRR6357070: a second
+  run, which is why runs are the key), SRR6357072 (`WT_REP2`), and
+  SRR6357076 (`RAP1_IAA_30M_REP1`); SRR6357073–75 are single-end in the
+  samplesheet. Downloaded from `testdata-url` + `/testdata/GSE110004/`;
+  every file has 50,000 reads and read 1 and 2 names match:
+
+  | File | Bytes | MD5 |
+  |:-----|------:|:----|
+  | `SRR6357071_1.fastq.gz` | 2,189,243 | `fd11dc240712f88f1f800656fc59b6ab` |
+  | `SRR6357071_2.fastq.gz` | 2,183,711 | `3325feca06747fa80e34daed0dc57de4` |
+  | `SRR6357072_1.fastq.gz` | 2,148,269 | `63534a634de5efa0273fa812932b0ed1` |
+  | `SRR6357072_2.fastq.gz` | 2,167,239 | `4c7fb08dc831bc372bb6e827182f6ff7` |
+  | `SRR6357076_1.fastq.gz` | 2,268,588 | `e026fe5743035e52b7b40606b4c05fba` |
+  | `SRR6357076_2.fastq.gz` | 2,250,281 | `00377e768cfd005fb8556d17fd2ee239` |
+
+  SHA-256 values (the book's record) go into `data/README.md` with
+  these rows when the chapter is drafted.
 - **Where commands run:** laptop (only `ssh`, and the no-cluster path);
   login node (`sinfo`, `sbatch`, `squeue`, `sacct`, `seff`, `module`,
   quotas, editing job scripts); compute node (everything inside a job
@@ -1087,6 +1168,20 @@ To verify with scite and fetch BibTeX from the DOI before adding:
   from. *DOI to fetch.*
 - Lmod paper (*to find*; only if a citable one exists).
 - Your site's own SLURM page (Appendix A): the authority for limits.
+
+## Consistency with the Chapter 8 and 9 drafts (2026-11-23)
+
+Both drafts read against this plan after the cluster checks. The file
+and script names match (`src/01_count_reads.sh`,
+`src/02_gtf_summary.sh`, `src/run_all.sh`, `results/read_counts.tsv`,
+`logs/`), and every forward link has a home here (listed under *What
+this chapter builds on*). Changes made: the two "(planned)" entries
+now describe the drafts; §3 names the `bioinf-shared/references`
+folder; §5 shows `pixi install --locked` in an interactive job, as
+Chapter 9 promised; §6 opens by noting that Chapter 9's test ran on
+the login node; §11 links back to `run_all.sh` and to `02`/`03`
+running side by side; §12 no longer calls the OnDemand `--gres` name
+correct. Nothing needs changing in the drafts.
 
 ## Site differences observed (2026-11-23)
 
@@ -1210,8 +1305,8 @@ All six open questions answered; each took the proposed option.
    until Chapter 8's script is settled.
 3. **Three more paired-end fixture runs** for the array (pinned,
    checksummed, a few MB), added as the supplied project step in
-   *Examples and data*. Accessions still to verify against
-   `samplesheet_test.csv` at the pinned commit.
+   *Examples and data*. Accessions verified 2026-11-23:
+   SRR6357071, SRR6357072, SRR6357076 (*Examples and data*).
 4. **§11 (chains) and §12 (GPUs) stay** as short sections labelled
    overview inline; the chain exercise is optional. Chains stay here
    because Chapter 8 promised them.

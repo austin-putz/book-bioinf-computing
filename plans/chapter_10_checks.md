@@ -910,9 +910,10 @@ the book folder, the pixi cache, and an unrelated older folder.
 ::: {.callout-note}
 ## Nova and Atlas, 2026-11-23: cleaned up
 Atlas: `squeue` empty, checks folder and the stray `~/slurm-<id>.out`
-deleted. Nova: cleanup block given (step 21); output not pasted, to
-confirm on the next Nova login (`ls -d /work/<group>/<netid>/bioinf-computing-ch10-checks`
-should fail).
+deleted. Nova: confirmed on the next login (step 29): `squeue` empty, and
+`ls -d …/bioinf-computing-ch10-checks` says `No such file or
+directory`, so step 21 had already deleted it; the folder lists
+`bioinf-computing` and `pixi-cache`.
 :::
 
 ---
@@ -932,6 +933,103 @@ verify).
   `results/stats_<run>.tsv`, `sacct`.
 - **A dated log name** for exercise 2: `sbatch
   --output="logs/%x_%j_$(date +%F).out" jobs/01_count_reads.sbatch`.
+
+::: {.callout-note}
+## Part 4 setup, 2026-11-23
+- Chapters 8 and 9 are drafted, so Part 4 runs now, on Nova (the
+  chapter's worked example).
+- Nova's `bioinf-computing` held only the environment (`pixi.toml`,
+  `pixi.lock`, `.pixi`), so Chapter 9's move is redone from the
+  laptop. The laptop project is a test copy (no `.git`, `data/ref` a
+  plain folder with `genes.gtf.gz`); its `pixi.toml` and `pixi.lock`
+  are identical to `setup/`.
+- Extra fixture runs verified: SRR6357071, SRR6357072, SRR6357076
+  (sizes and MD5s in the plan's *Examples and data*).
+- Written on the laptop: `jobs/01_count_reads.sbatch` (13 lines, the
+  plan's script without the `--account` line, as for Nova),
+  `jobs/02_stats_array.sbatch` (24 lines, with `--dry-run` and a `.tmp`
+  name), and Chapter 3's one-row `data/meta/reads.tsv`.
+- **No-cluster path, laptop:** `bash jobs/01_count_reads.sbatch`
+  printed `job local on <laptop>`, then Chapter 8's own log lines
+  (both checksums `OK`, `seqkit v2.14.0`), and exit 0;
+  `results/read_counts.tsv` has two rows of 50,000 reads, MD5
+  `e1d81de7…`, the same as before. The array dry run printed task 1
+  (`SRR6357070`), and task 2 stopped with `no row 2 in
+  data/meta/reads.tsv`, exit 1.
+- **Chapter 9's move (step 30):** the dry run listed `jobs/`, `src/`,
+  `data/raw/`, `data/ref/`, `data/meta/`, and nothing from `.pixi`,
+  `results`, or `logs`; it also listed `pixi.lock` and `pixi.toml`,
+  identical in content but with other times (rsync compares size and
+  time). After the copy, `md5sum -c` on Nova: both `OK`.
+- **Test inside an interactive job (step 31, Nova):** `srun` banner as
+  before (`TMOUT=5400`, `TMPDIR=/tmp`, `APPTAINERENV_SLURM_JOB_ID=<id>`);
+  node `nova18-72`. `time pixi install --locked`: `✔ The default
+  environment has been installed.`, **0.9 s** (environment already
+  there and the lock unchanged; Chapter 9's 25–40 minutes was a rebuild).
+  `bash jobs/01_count_reads.sbatch` printed `job <id> on nova18-72`, **not
+  "job local"**: inside an interactive job `SLURM_JOB_ID` is set. Then
+  Chapter 8's log lines (both `OK`, `seqkit v2.14.0`), output MD5
+  `e1d81de7…` (same as the laptop), exit 0. Plan §6 corrected.
+- **The real first job (step 32, Nova) [check 7]:** `sbatch` →
+  `Submitted batch job <id>`; `squeue` showed it `PD … (None)` in
+  partition `nova`. A few seconds later `logs/` held Slurm's
+  `01_count_reads_<id>.out` plus **two** Chapter 8 logs, one from the
+  interactive test and one from the batch job
+  (`01_count_reads_2026-11-23T151244_8Z0Y.log`: GNU `mktemp` filled in
+  the `XXXX`). The `.out` file: `job <id> on nova18-wide-33`, Chapter
+  8's lines, output MD5 `e1d81de7…`, `finished`. `sacct`: job,
+  `.batch`, `.extern` all `COMPLETED 0:0`, `Elapsed 00:00:02`, `ReqMem
+  2G`, `MaxRSS 116244K` on `.batch`, `TotalCPU 00:00.403`, and
+  **`AllocCPUS 2`** although the script asks for `--cpus-per-task=1`.
+  `seff`: `Cores per node: 2`, `CPU Efficiency: 0.00% of 00:00:04
+  core-walltime` (0.4 s rounds to zero), `Memory Utilized: 113.52 MB`,
+  `Memory Efficiency: 5.54% of 2.00 GB`. The `User/Group` line shows
+  `domain users`, not the lab group.
+- **Why 2 CPUs (step 33, Nova):** `SelectTypeParameters =
+  CR_CORE_MEMORY` (Slurm allocates whole cores) and the node shows
+  `CPUTot=72`, `ThreadsPerCore=2`: a Slurm CPU is a hardware thread, so
+  1 CPU rounds up to one core, 2 CPUs. Same pattern as Ceres's
+  `billing=1` for 2 CPUs (step 2.1).
+- **Submitting from the wrong folder (step 33, by accident):** after a
+  fresh login in `~`, `sbatch jobs/01_count_reads.sbatch` →
+  `sbatch: error: Unable to open file jobs/01_count_reads.sbatch`;
+  nothing submitted.
+- **Dated log name (exercise 2):** from the project folder, `sbatch
+  --output="logs/%x_%j_$(date +%F).out" jobs/01_count_reads.sbatch`
+  wrote `logs/01_count_reads_<id>_2026-11-23.out` (the shell fills in
+  the date before `sbatch` runs; `%x` and `%j` are Slurm's), beside a
+  third Chapter 8 log.
+- **Data step, laptop (for the array):** copied the three verified runs
+  into `data/raw/`, appended their MD5s to `checksums.md5` (all 8 `OK`),
+  added 3 rows to `data/meta/reads.tsv` (`WT_REP1 SRR6357071`,
+  `WT_REP2 SRR6357072`, `RAP1_IAA_30M_REP1 SRR6357076`). Dry run of
+  tasks 1–5: tasks 1–4 print runs SRR6357070, 071, 072, 076; task 5
+  `no row 5 in data/meta/reads.tsv`.
+- **The real array (steps 34–35, Nova) [check 9]:** rsync sent the new
+  files; `md5sum -c` on Nova: all 8 `OK`. Dry run on the login node:
+  tasks 1–4 `… 1 threads, on nova-login-1` (no Slurm variables there),
+  task 5 `no row 5 in data/meta/reads.tsv`. `sbatch --array=1-4` →
+  `squeue` one line `<id>_[1-4] nova 02_stats … PD 0:00 1 (None)`.
+  Afterwards `logs/02_stats_array_<id>_1.out` … `_4.out`; task 2's log:
+  `task 2: run SRR6357071, file data/raw/SRR6357071_1.fastq.gz, 2
+  threads, on nova18-wide-10`, then `task 2 finished …`;
+  `results/stats_SRR6357070.tsv` … `_076.tsv`, the 071 table `50000`
+  reads, `5050000` bases, length 101. `sacct`: three lines per task
+  (`_N`, `_N.batch`, `_N.extern`), all `COMPLETED 0:0`, `AllocCPUS 2`
+  (2 asked, no rounding), `MaxRSS` 73,768K / 72,864K / 88,156K /
+  72,420K, `Elapsed` 0–1 s, nodes `nova18-69`, `nova18-wide-10`,
+  `nova18-wide-21`, `nova18-wide-21`.
+:::
+
+::: {.callout-note}
+## Part 4 status (2026-11-23): complete on Nova
+First job (interactive test, then `sbatch`), dated log, and the real
+array all ran as planned. Left in place on Nova: the project, with
+`jobs/`, `data/meta/reads.tsv`, the eight FASTQ files, `logs/`, and
+`results/` (it is the book project, not a checks folder). Not run on
+SCINet: there the job script needs the `--account` line; Part 3
+already showed `-A` working on Ceres and Atlas.
+:::
 
 ---
 

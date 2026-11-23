@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 350" role="img" aria-labelledby="rsync-slash-title">
+  <title id="rsync-slash-title">The trailing slash on rsync's source. Left: rsync -a src dst1, with no slash, copies the folder itself, so dst1 holds a folder src, which holds a.txt and the folder sub with b.txt. Right: rsync -a src/ dst2, with a slash, copies what is inside src, so dst2 holds a.txt and sub with b.txt directly. Below: a second run of rsync -av src/ dst3 after adding c.txt sends only c.txt; a.txt and sub/b.txt are already there and are skipped.</title>
+
+  <!-- Left panel: no slash -->
+  <rect x="10" y="10" width="340" height="226" rx="12" class="fill-surface stroke-line"/>
+  <text x="26" y="40" font-size="14" class="mono">rsync -a src dst1</text>
+  <text x="26" y="62" font-size="12" class="fill-muted">no slash: the folder itself</text>
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <path d="M44,96 V118 H62 M74,130 V196 M74,167 H92 M74,196 H92 M110,206 V219 H136"/>
+  </g>
+  <g font-size="13" class="mono">
+    <text x="30" y="90" font-weight="700">dst1/</text>
+    <rect x="62" y="106" width="64" height="24" rx="5" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="70" y="123" font-weight="700">src/</text>
+    <rect x="92" y="156" width="70" height="22" rx="5" class="fill-given-soft stroke-given"/>
+    <text x="100" y="172" class="fill-given">a.txt</text>
+    <text x="96" y="201">sub/</text>
+    <rect x="136" y="208" width="70" height="22" rx="5" class="fill-given-soft stroke-given"/>
+    <text x="144" y="224" class="fill-given">b.txt</text>
+  </g>
+  <text x="200" y="123" font-size="12" class="fill-muted">an extra level</text>
+
+  <!-- Right panel: slash -->
+  <rect x="370" y="10" width="340" height="226" rx="12" class="fill-surface stroke-line"/>
+  <text x="386" y="40" font-size="14" class="mono">rsync -a src<tspan font-weight="700" font-size="20">/</tspan> dst2</text>
+  <text x="386" y="62" font-size="12" class="fill-muted">with the slash: what is inside</text>
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <path d="M404,96 V172 M404,119 H422 M404,172 H422 M440,178 V195 H466"/>
+  </g>
+  <g font-size="13" class="mono">
+    <text x="390" y="90" font-weight="700">dst2/</text>
+    <rect x="422" y="108" width="70" height="22" rx="5" class="fill-given-soft stroke-given"/>
+    <text x="430" y="124" class="fill-given">a.txt</text>
+    <text x="426" y="177">sub/</text>
+    <rect x="466" y="184" width="70" height="22" rx="5" class="fill-given-soft stroke-given"/>
+    <text x="474" y="200" class="fill-given">b.txt</text>
+  </g>
+
+  <!-- Second run strip -->
+  <rect x="10" y="252" width="700" height="86" rx="12" class="fill-surface stroke-line"/>
+  <text x="26" y="278" font-size="13" class="mono">rsync -av src/ dst3</text>
+  <text x="206" y="278" font-size="12" class="fill-muted">a second time, after adding c.txt</text>
+  <g font-size="13" class="mono">
+    <rect x="26" y="294" width="80" height="26" rx="5" class="fill-muted-soft stroke-muted"/>
+    <text x="38" y="312" class="fill-muted">a.txt</text>
+    <rect x="118" y="294" width="104" height="26" rx="5" class="fill-muted-soft stroke-muted"/>
+    <text x="130" y="312" class="fill-muted">sub/b.txt</text>
+    <text x="236" y="312" font-size="12" class="fill-muted">already there: skipped</text>
+    <rect x="430" y="294" width="80" height="26" rx="5" class="fill-given-soft stroke-given" stroke-width="1.5"/>
+    <text x="442" y="312" font-weight="700" class="fill-given">c.txt</text>
+    <text x="524" y="312" font-size="12">sent: the only change</text>
+  </g>
+</svg>

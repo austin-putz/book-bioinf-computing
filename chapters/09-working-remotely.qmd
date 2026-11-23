@@ -1,20 +1,1815 @@
 # Working remotely {#sec-working-remotely}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- Running one command over SSH (`ssh host command`); the "host key changed" warning
-- SSH and SSH keys; `~/.ssh/config`; jump hosts (`ProxyJump`)
-- Connection sharing (`ControlMaster`) so one sign-in serves many connections
-- tmux / screen so work survives a dropped connection
-- Moving data: `scp`, `rsync`, Globus, through the site's data transfer node (DTN), not the login node
-- Checksums to confirm a transfer
-- Moving the project to the cluster: copy files, reinstall the environment, recreate links
+By the end of this chapter you should be able to:
+
+1. Log in to a cluster with an SSH key protected by a passphrase (or
+   your site's certificate), and explain what the public and private
+   halves are for and which one never leaves your laptop.
+2. Write `~/.ssh/config` entries that give hosts short names, keep
+   connections alive, and share one sign-in across connections, check
+   them with `ssh -G`, and recognise a jump-host (`ProxyJump`) entry.
+3. Start, detach from, and reattach to a tmux session, so work survives
+   a dropped connection, and find the login node it lives on.
+4. Copy files and folders between laptop and cluster through the data
+   transfer node with `rsync` and `scp`, keeping files in the
+   project's group, and choose Globus for large or many files.
+5. Prove that a transfer arrived intact with `md5sum -c` on the
+   receiving machine, and move the project (files, environment,
+   reference link) so its pipeline runs on the cluster.
+:::
+
+## What this chapter does {#sec-working-remotely-intro}
+
+In @sec-book-setup-ssh you logged in to a cluster once, typed
+`hostname`, and logged out. Daily work is different: many logins a day,
+commands that run longer than your connection lasts, and files moving
+both ways. This chapter makes those three things routine. Everything
+before it ran on your laptop (@sec-orientation); from here on, the main
+path **assumes a cluster account**. If you do not have one yet, every
+section says which steps work on the laptop alone, and the cluster
+steps are shown as captured sessions you can read.
+
+Three machines matter from now on (@fig-three-machines):
+
+- your **laptop**, where you type `ssh`, `rsync`, and `scp`;
+- the cluster's **login node**, where you log in, edit, and submit work;
+- the cluster's **data transfer node (DTN)**, where files go in and out.
+
+The login node and the DTN sit on the same shared storage, so a file
+copied to the DTN appears in the same `/work` or `/project` folder you
+see from the login node. We start every transfer **from the laptop**,
+in both directions: a laptop behind a home or campus firewall usually
+cannot accept an incoming SSH connection, so the cluster cannot start
+a copy to it. Who starts the connection is separate from which way the
+data flows. A "pull" typed on the laptop still moves files from the
+cluster to the laptop.
+
+::: {#fig-three-machines}
+{{< svg ../figures/three-machines.svg >}}
+
+The three machines of this chapter. You type `ssh` on the laptop to
+reach the login node, and `rsync` or `scp` to reach the data transfer
+node (DTN). The laptop starts every connection; files then flow in
+either direction. The login node and the DTN share the cluster's
+storage, so files sent to the DTN appear in your folder on the login
+node. Jobs on compute nodes are @sec-hpc-slurm.
+:::
+
+Practice happens in a scratch folder on the laptop. Make it now:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch09 && cd ~/bioinf-computing-ch09
+```
+
+The cluster steps use your own cluster folder: `/work/<group>/<netid>`
+on Nova, `/project/<project>/<you>` on SCINet. What those storage
+areas are, and why this is the right place, comes in @sec-hpc-slurm.
+Two things outside the scratch folder change: your `~/.ssh` folder
+(keys and config, in @sec-working-remotely-keys and
+@sec-working-remotely-config) and, at the end, a copy of your project
+on the cluster.
+
+**Two laptop tools.** This chapter needs a current `rsync` and `tmux`
+on the laptop. A Mac's own `/usr/bin/rsync` is an older replacement
+(openrsync, "rsync version 2.6.9 compatible") that lacks options used
+here, and macOS has no tmux. Install both with Homebrew, then check
+that Homebrew's rsync comes first on your `PATH` (@sec-linux-system-path):
+
+```{.bash filename="Terminal (laptop, macOS)"}
+brew install rsync tmux
+type -a rsync
+rsync --version | head -n 1
+```
+
+```{.console}
+rsync is /usr/local/bin/rsync
+rsync is /usr/bin/rsync
+rsync  version 3.5.0  protocol version 32
+```
+
+(On an Apple-silicon Mac the first path is `/opt/homebrew/bin/rsync`.)
+Ubuntu, including Ubuntu under WSL, already has both: Ubuntu 26.04
+ships rsync 3.4.1, tmux 3.6, screen, and OpenSSH 10.2. If `type -a
+rsync` or `type -a tmux` finds nothing on your Linux machine, `sudo apt
+install rsync tmux` adds them.
+
+**Without a cluster**, these parts work on the laptop alone: the
+broken-transfer demonstration in @sec-working-remotely-command, making
+a key in @sec-working-remotely-keys, checking a config file with `ssh
+-G` in @sec-working-remotely-config, all of tmux on the laptop in
+@sec-working-remotely-tmux, and the local `rsync` and checksum steps in
+@sec-working-remotely-transfer and @sec-working-remotely-move.
+
+The outputs shown were captured in November 2026: on a Mac (macOS 15,
+Homebrew bash, rsync 3.5.0, OpenSSH 9.9, tmux 3.7), on Windows 11 with
+Ubuntu 26.04 under WSL (OpenSSH 10.2), and by logging in to Nova,
+Atlas, and Ceres. User names, groups, and addresses are replaced by
+placeholders such as `<netid>`, `<group>`, and `<project>`.
+
+## One command on another machine {#sec-working-remotely-command}
+
+You do not have to log in to run something on the cluster. Give `ssh` a
+command after the host name, and it logs in, runs that command, prints
+its output on your laptop, and logs out. From the laptop, using the
+short name `nova` you set up in @sec-book-setup-ssh (SCINet readers
+use `ceres.scinet.usda.gov` or `atlas-login.hpc.msstate.edu`):
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova hostname
+ssh nova 'pwd; ls'
+```
+
+```{.console}
+nova-login-2
+/home/<netid>
+…
+```
+
+(the `…` is the list of files in your cluster home). There was no prompt on the cluster and no `exit`: the command ran on
+the login node and the connection closed when it finished. This is the
+`ssh host command` row of @tbl-startup-files: bash on the cluster
+starts without your interactive settings, runs the command, and quits.
+
+**Quotes decide where expansion happens.** The laptop's shell reads
+your command line first, then `ssh` sends what is left to the cluster.
+In double quotes, the laptop expands `$HOME` before `ssh` ever runs; in
+single quotes, the text travels unchanged and the cluster's shell
+expands it (@sec-shell-basics):
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova "echo double: $HOME"
+ssh nova 'echo single: $HOME'
+ssh nova 'exit 3'; echo "status $?"
+```
+
+```{.console}
+double: /Users/you
+single: /home/<netid>
+status 3
+```
+
+The last line shows that the remote command's exit status comes back to
+your laptop, so `&&` and `if` (@sec-shell-scripts-conditionals) work
+across the connection too.
+
+**Why this matters for copying files.** `ssh host command` is exactly
+how `rsync` works: it runs `rsync` on the cluster through `ssh` and the
+two copies talk to each other over the connection, byte by byte. If the
+cluster's shell prints anything on standard output while it starts, a
+welcome line from `~/.bashrc`, say, that text lands in the middle of
+rsync's conversation and corrupts it. @sec-linux-system-startup warned
+that nothing in `~/.bashrc` should print; here is what happens when
+something does.
+
+You can see it without a cluster. Make a stand-in for `ssh` that prints
+one welcome line and then runs the command on your own laptop, and a
+quiet version that does not print:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch09
+printf '%s\n' '#!/usr/bin/env bash' \
+  '# fakessh: stands in for ssh in a local demo. rsync runs it as' \
+  '#   fakessh HOST COMMAND ...; it skips HOST and runs COMMAND here.' \
+  'echo "Welcome to the cluster!"   # what a chatty startup file does' \
+  'shift' 'exec "$@"' > fakessh
+printf '%s\n' '#!/usr/bin/env bash' '# quietssh: the same, without the welcome line.' \
+  'shift' 'exec "$@"' > quietssh
+chmod u+x fakessh quietssh
+mkdir -p src/sub && printf 'A\n' > src/a.txt && printf 'B\n' > src/sub/b.txt
+```
+
+The last line makes a small folder, `src/`, with two files; you will use
+it again later. `rsync -e` names the program rsync uses instead of
+`ssh`, and `localhost:` makes rsync treat the destination as "remote":
+
+```{.bash filename="Terminal (laptop)"}
+rsync -av -e ./fakessh src/ localhost:dst-fake/; echo "exit $?"
+rsync -av -e ./quietssh src/ localhost:dst-fake/; echo "exit $?"
+```
+
+```{.console}
+protocol version mismatch -- is your shell clean?
+(see the rsync manpage for an explanation)
+rsync error: protocol incompatibility (code 2) at compat.c(625) [sender=3.5.0]
+exit 2
+sending incremental file list
+created directory dst-fake
+./
+a.txt
+sub/
+sub/b.txt
+
+sent 234 bytes  received 100 bytes  222.67 bytes/sec
+total size is 4  speedup is 0.01
+exit 0
+```
+
+The one welcome line broke the transfer; without it, the same copy
+worked. rsync's own message, "is your shell clean?", is the clue to
+remember. (Current versions of `scp` copy over a different channel,
+SFTP, and are less sensitive; older `scp` broke the same way.)
+
+Test your real cluster the same way. `wc -c` counts the bytes that came
+back; `PIPESTATUS[0]` (@sec-shell-scripts-strict) is the exit status of
+`ssh` itself, because zero bytes from a connection that failed prove
+nothing:
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova true | wc -c; echo "ssh status ${PIPESTATUS[0]}"
+```
+
+```{.console}
+0
+ssh status 0
+```
+
+`0` and status `0` mean a clean shell. This was the result on Nova,
+Atlas, and Ceres, even with a heavily customised `~/.bashrc` on Nova.
+Atlas prints a long legal notice on every connection, but on standard
+error, which goes to your screen and not into the pipe, so it is
+harmless. If you see a number above 0, look for an `echo` or other
+output in your cluster startup files (@sec-linux-system-startup);
+occasionally a site's own login scripts print, and then the site has to
+fix it.
+
+::: {.callout-warning}
+## Pitfall: a startup file that prints breaks file transfers
+Text printed on standard output when the remote shell starts breaks
+`rsync` (and older `scp`) with "protocol version mismatch -- is your
+shell clean?". `ssh host true | wc -c` must print `0`, with ssh's own
+exit status 0.
+:::
+
+**The host key, again.** In @sec-book-setup-ssh you answered `yes` to
+a host-key question, and ssh saved the machine's key in
+`~/.ssh/known_hosts`. Every later login checks that key. If it ever
+differs, ssh stops with a warning you should never ignore. Here it is,
+made safely by pointing ssh at a fake `known_hosts` file:
+
+```{.console}
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ED25519 key sent by the remote host is
+SHA256:DRxKEui9nnf4BSBeLSN4mZ5Il3eHjsoiN74EvzSlmxE.
+Please contact your system administrator.
+Add correct host key in ./fake_known_hosts to get rid of this message.
+Offending ED25519 key in ./fake_known_hosts:1
+Host key for nova-login-1.its.iastate.edu has changed and you have requested strict checking.
+Host key verification failed.
+```
+
+ssh refused to connect (exit status 255). There are two possible
+reasons: the site really changed its keys, which sites announce (check
+its news, or its published fingerprints, such as [Nova's
+list](https://research.it.iastate.edu/nova-ssh-host-key-fingerprints)),
+or something between you and the cluster is pretending to be it. Do not
+"fix" the warning by deleting `known_hosts`. Once the site confirms a
+change, remove that one entry and connect again:
+
+```{.bash filename="Terminal (laptop)"}
+ssh-keygen -R nova-login-1.its.iastate.edu
+```
+
+A **harmless** cousin of this message appears the first time you use a
+new name for a machine you already know, such as `nova-login-1` after
+`nova`:
+
+```{.console}
+The authenticity of host 'nova-login-1.its.iastate.edu (10.94.0.3)' can't be established.
+ED25519 key fingerprint is SHA256:DRxKEui9nnf4BSBeLSN4mZ5Il3eHjsoiN74EvzSlmxE.
+This host key is known by the following other names/addresses:
+    ~/.ssh/known_hosts:8: nova.its.iastate.edu
+Are you sure you want to continue connecting (yes/no/[fingerprint])?
+```
+
+This is the ordinary question, and ssh even tells you it has seen this
+key under another name: all of Nova's login names share one key. Type
+`yes`.
+
+::: {.check}
+**Check yourself.** `ssh nova "echo $USER"` and `ssh nova 'echo
+$USER'` print different names on a laptop where your user name differs
+from your cluster name. Which one is the cluster's?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The single-quoted one. In double quotes, the laptop's shell replaces
+`$USER` with your laptop user name before `ssh` sends the command; in
+single quotes, `$USER` travels to the cluster and its shell expands it.
+:::
+:::
+
+## SSH keys: logging in without retyping a password {#sec-working-remotely-keys}
+
+Typing a code and a password for every connection gets tiring fast, and
+on Nova it is worse than it sounds: an authenticator code cannot be
+used twice, so two connections in the same 30 seconds fail on the
+second and ask again. An **SSH key** replaces both with something you
+hold.
+
+**Make a key** (laptop; no cluster needed):
+
+```{.bash filename="Terminal (laptop)"}
+ssh-keygen -t ed25519 -C "laptop-2026"
+```
+
+`-t ed25519` picks the key type (the modern, short, recommended one);
+`-C` adds a comment, a label so you can tell your keys apart later. Press
+{{< kbd Enter >}} to accept the suggested file, `~/.ssh/id_ed25519`.
+**If it asks `Overwrite (y/n)?`, answer `n`**: you already have a key
+with that name, and overwriting it would lock you out of everywhere it
+is installed. Then **set a passphrase**: a phrase you will remember,
+typed twice. Nothing appears as you type.
+
+```{.console}
+Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/you/.ssh/id_ed25519):
+Enter passphrase for "/home/you/.ssh/id_ed25519" (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/you/.ssh/id_ed25519
+Your public key has been saved in /home/you/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:/s+YthFDm8UJK3tgWIr5BkzCct90X9txEF/qLboNueA laptop-2026
+The key's randomart image is:
++--[ED25519 256]--+
+…
++----[SHA256]-----+
+```
+
+That is OpenSSH 10's wording; older versions ask `Enter passphrase
+(empty for no passphrase):`. If the two passphrases differ, it says
+`Passphrases do not match.  Try again.` and asks again. (The key shown
+throughout this chapter is a throwaway made for the book.)
+
+Look at what you made:
+
+```{.bash filename="Terminal (laptop)"}
+ls -l ~/.ssh/id_ed25519*
+cat ~/.ssh/id_ed25519.pub
+ssh-keygen -lf ~/.ssh/id_ed25519.pub
+```
+
+```{.console}
+-rw------- 1 you you 464 Nov 23 10:16 /home/you/.ssh/id_ed25519
+-rw-r--r-- 1 you you  96 Nov 23 10:16 /home/you/.ssh/id_ed25519.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA… laptop-2026
+256 SHA256:/s+YthFDm8UJK3tgWIr5BkzCct90X9txEF/qLboNueA laptop-2026 (ED25519)
+```
+
+A key is **two files** (@fig-ssh-key-login):
+
+- the **public key**, `id_ed25519.pub`: one line, safe to share. You
+  give a copy to every machine you want to log in to, which keeps it in
+  a list called `~/.ssh/authorized_keys`;
+- the **private key**, `id_ed25519` (no `.pub`): it stays on your
+  laptop. At login, the server sends a challenge, your laptop signs it
+  with the private key, and the server checks the signature with the
+  public key. The private key itself is never sent.
+
+The **passphrase** encrypts the private key on disk, so a copy of the
+file is useless without it.
+
+::: {#fig-ssh-key-login}
+{{< svg ../figures/ssh-key-login.svg >}}
+
+How key login works. `ssh-keygen` makes a pair of keys on your laptop;
+the public key is copied once to `~/.ssh/authorized_keys` on the
+cluster; at each login the server sends a challenge, the laptop signs it
+with the private key, and the server checks the signature with the
+public key. The private key never crosses to the cluster.
+:::
+
+::: {.callout-important}
+## Key idea
+The public key is a lock you can give to any machine; the private key
+is the only key that fits it, and it stays on your laptop, protected by
+a passphrase.
+:::
+
+**Permissions.** ssh refuses a private key that others could read
+(@tbl-chmod-recipes: `~/.ssh` at `700`, the private key at `600`;
+`ssh-keygen` sets both). If a copy goes wrong, you will see:
+
+```{.console}
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0644 for 'id_ed25519' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "id_ed25519": bad permissions
+```
+
+`chmod 600 ~/.ssh/id_ed25519` fixes it.
+
+**Type the passphrase once: the agent.** An **ssh-agent** is a small
+program that holds your unlocked key in memory, so you type the
+passphrase once per session instead of at every login. `ssh-add` hands
+it a key, and `ssh-add -l` lists the keys it holds.
+
+- **macOS** runs an agent for you. Add these lines at the **end** of
+  `~/.ssh/config` (@sec-working-remotely-config explains the file):
+
+  ```{.default filename="~/.ssh/config (laptop, macOS)"}
+  Host *
+      AddKeysToAgent yes
+      UseKeychain yes
+  ```
+
+  The first login then asks for the passphrase once, loads the key
+  into the agent, and saves the passphrase in your Keychain; after that,
+  logins ask nothing, even after a restart. You do not need `ssh-add`.
+  (`UseKeychain` exists only in Apple's ssh.)
+- **Ubuntu under WSL** has no agent in a new terminal. Start one, then
+  add your key:
+
+  ```{.bash filename="Terminal (Ubuntu)"}
+  echo "SSH_AUTH_SOCK=[$SSH_AUTH_SOCK]"
+  ssh-add -l
+  eval "$(ssh-agent -s)"
+  ssh-add ~/.ssh/id_ed25519
+  ssh-add -l
+  ```
+
+  ```{.console}
+  SSH_AUTH_SOCK=[]
+  Could not open a connection to your authentication agent.
+  Agent pid 649
+  Enter passphrase for /home/you/.ssh/id_ed25519:
+  Identity added: /home/you/.ssh/id_ed25519 (laptop-2026)
+  256 SHA256:/s+YthFDm8UJK3tgWIr5BkzCct90X9txEF/qLboNueA laptop-2026 (ED25519)
+  ```
+
+  This terminal now knows how to reach the agent; a new terminal
+  normally does not, so you repeat these lines there. The agent itself
+  runs in the background and can keep running after you close the
+  terminal, so before you close it, stop the agent you started:
+
+  ```{.bash filename="Terminal (Ubuntu)"}
+  eval "$(ssh-agent -k)"
+  ```
+
+  (This is only for an agent you started by hand like this; the Mac's
+  own agent needs nothing. OpenSSH 10 keeps the agent's connection
+  point in `~/.ssh/agent/`, so starting the agent creates `~/.ssh` if
+  you did not have one yet.)
+
+**Install the public key, by site.** How a cluster learns your public
+key depends on the site, so check its page first (@tbl-site-login).
+
+- **Nova.** ISU allows key login as an alternative to the
+  authenticator code: "Public key authentication does not use TOTP
+  keys" ([ISU: login to Nova with an SSH
+  client](https://research.it.iastate.edu/login-nova-ssh-client)). Keys
+  work only over the **ISU VPN**, "regardless of whether you are on or
+  off campus", and go to a **named** login node, because
+  `nova.its.iastate.edu` "is not a single server". Connect the VPN,
+  then send your public key with one last code-and-password login:
+
+  ```{.bash filename="Terminal (laptop)"}
+  ssh-copy-id -i ~/.ssh/id_ed25519.pub <netid>@nova-login-1.its.iastate.edu
+  ```
+
+  ```{.console}
+  /usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/you/.ssh/id_ed25519.pub"
+  /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+  /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+  (<netid>@nova-login-1.its.iastate.edu) Verification code:
+  (<netid>@nova-login-1.its.iastate.edu) Password:
+
+  Number of key(s) added:        1
+  ```
+
+  `ssh-copy-id` adds your public key to the end of `authorized_keys`
+  on Nova and leaves anything already there alone. Try it:
+
+  ```{.bash filename="Terminal (laptop)"}
+  ssh <netid>@nova-login-1.its.iastate.edu hostname
+  ```
+
+  ```{.console}
+  Enter passphrase for key '/home/you/.ssh/id_ed25519':
+  nova-login-1
+  ```
+
+  The key's passphrase, and nothing else: no code, no ISU password.
+  With the agent holding the key, not even that. The same key also
+  works on `nova-login-2` and on the transfer node, `novadtn`.
+- **SCINet.** Use SCINet's certificate route from @sec-book-setup-ssh
+  and skip `ssh-copy-id`: SCINet's [SSH
+  page](https://scinet.usda.gov/guides/access/ssh-login) documents the
+  SmallStep `step` setup, not personal keys in `authorized_keys`. A
+  **certificate** is your public key plus your identity, signed by
+  SCINet for the day after you sign in through the browser ("once for
+  the day (or every 16 hours)"). The matching private key still stays on
+  your laptop and still does the proving. Read this section for the
+  idea; you will use the same kind of key for GitHub in @sec-github.
+- **Other sites.** Many allow keys; some forbid them, and some require a
+  second factor as well. The site's own page is the authority
+  (@sec-cluster-sites).
+
+::: {.callout-warning}
+## Pitfall: never share the private key
+Never copy, email, paste, or upload `id_ed25519` (the file **without**
+`.pub`): not to a cluster, not to a USB stick, not into a chat or an
+issue. If it leaks, make a new pair and remove the old public key from
+every `authorized_keys` where you installed it.
+:::
+
+**Windows: two SSH programs.** On Windows, the Ubuntu terminal and
+Windows' own ssh (the one VS Code's Remote-SSH uses,
+@sec-book-setup-remote) are separate programs with separate `~/.ssh`
+folders. Each one needs its own setup:
+
+- **Keys (Nova):** make one key pair in the Ubuntu terminal and another
+  in PowerShell (`ssh-keygen -t ed25519 -C "windows-2026"`), and install
+  both public keys. Do not share one private key between the two.
+- **SCINet:** `step` sets up only the ssh program it is run from, so a
+  setup in Ubuntu does nothing for VS Code on Windows. Windows' `step`
+  also needs the Windows `ssh-agent` service running ("If it is not
+  running, SmallStepCLI will not work", says SCINet's page), and on a
+  standard Windows 11 that service is `Stopped` and `Disabled`, which
+  only an administrator can change. Unless you have admin rights, use
+  Open OnDemand for VS Code on SCINet (@sec-book-setup-remote).
+
+A Windows home folder can contain a space (`C:\Users\Jane Doe`). Paths
+under it must be quoted in ssh options, or ssh reads the second half as
+an extra word ("extra arguments at end of line").
+
+: How you prove who you are at the two example sites. Observed
+2026-11-22/23; your site's own pages are the authority
+(@sec-cluster-sites). {#tbl-site-login}
+
+| | Nova (Iowa State) | SCINet (Ceres, Atlas) |
+|:--|:--|:--|
+| Sign-in without a key | authenticator code, then password, for every connection | a browser sign-in about once a day (`step`) |
+| Keys | allowed, over the ISU VPN; `ssh-copy-id` to `nova-login-1` or `-2` | not documented; use the `step` certificate |
+| What a login asks once set up | the key's passphrase once, then nothing (agent) | nothing until the certificate expires |
+| Windows | one key in Ubuntu, another in PowerShell | `step` in each ssh program; Windows needs the `ssh-agent` service (admin), or use Open OnDemand |
+| Quick connections in a row | a code cannot be reused, so expect to wait for a new code without a key | no effect |
+
+::: {.callout-caution .misconception}
+## Misconception: "My public key is the secret one, and the private key is what I give to servers"
+**Reality.** It is the other way round. The public key (`.pub`) is
+meant to be shared and goes on every server; the private key never
+leaves your laptop.
+:::
+
+::: {.check}
+**Check yourself.** A labmate asks for "your SSH key" so they can give
+you access to a server. Which file do you send?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`~/.ssh/id_ed25519.pub`, the public key. Never the file without `.pub`.
+:::
+:::
+
+## `~/.ssh/config`: names, keep-alives, one sign-in, jump hosts {#sec-working-remotely-config}
+
+In @sec-book-setup-ssh you wrote a three-line entry so that `ssh nova`
+meant `ssh <netid>@nova.its.iastate.edu`. The same file can hold
+everything else you would otherwise type each time. Before changing
+your real one, back it up under a dated name:
+
+```{.bash filename="Terminal (laptop)"}
+cp ~/.ssh/config ~/.ssh/config.bak-$(date +%F)
+ls -l ~/.ssh
+```
+
+(If `cp` says there is no such file, you have no config yet; carry on.)
+**No cluster account?** Do the same work in a practice file instead, so
+your real config gets no made-up hosts: `code
+~/bioinf-computing-ch09/sample-config`, and add `-F sample-config` to
+every `ssh -G` below.
+
+**Ask ssh what it will do.** `ssh -G host` prints the settings ssh would
+use for that host, after reading your config, **without connecting**.
+It is the way to check every change in this section. With the entry
+from @sec-book-setup-ssh plus a second one for the transfer node:
+
+```{.default filename="~/.ssh/config (laptop)"}
+Host nova
+    HostName nova-login-1.its.iastate.edu
+
+Host nova-dtn
+    HostName novadtn.its.iastate.edu
+
+Host nova nova-dtn
+    User <netid>
+```
+
+```{.bash filename="Terminal (laptop)"}
+ssh -G nova-dtn | grep -E '^(hostname|user|serveraliveinterval|controlmaster) '
+```
+
+```{.console}
+user <netid>
+hostname novadtn.its.iastate.edu
+controlmaster false
+serveraliveinterval 0
+```
+
+Note the first change from @sec-book-setup-ssh: `HostName` is now the
+**named** login node `nova-login-1` rather than `nova.its.iastate.edu`.
+Keys need a named node on Nova, and so does tmux
+(@sec-working-remotely-tmux).
+
+A `Host` line can list several names, and every block whose names match
+is read. For most options, **the first value found wins**, so specific
+blocks go first and shared ones after; a `Host *` block, which matches
+everything, goes last (the same "first match" idea as `PATH`,
+@sec-linux-system-path). Here is the book's full Nova block, one
+option at a time:
+
+```{.default filename="~/.ssh/config (laptop)"}
+Host nova
+    HostName nova-login-1.its.iastate.edu
+
+Host nova-dtn
+    HostName novadtn.its.iastate.edu
+
+Host nova nova-dtn
+    User <netid>
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+    ServerAliveInterval 60
+    ControlMaster auto
+    ControlPath ~/.ssh/cm-%C
+    ControlPersist 10h
+```
+
+- `IdentityFile` names your private key, and `IdentitiesOnly yes` tells
+  ssh to offer **only** that one. Without it, ssh offers every key the
+  agent holds (a GitHub key, a SCINet certificate, …) one after another,
+  and servers give up after a few wrong ones.
+- `ServerAliveInterval 60` sends a small "still here" message every 60
+  seconds. It stops a firewall or VPN from dropping a connection that
+  sits idle (ISU recommends it in its
+  [FAQ](https://research.it.iastate.edu/faqs)). It cannot bring back a
+  VPN or a network that has failed.
+- `ControlMaster`, `ControlPath`, `ControlPersist`: **connection
+  sharing**, below.
+
+Check it:
+
+```{.bash filename="Terminal (laptop)"}
+ssh -G nova-dtn | grep -E '^(user|hostname|identitiesonly|serveraliveinterval|control)'
+```
+
+```{.console}
+user <netid>
+hostname novadtn.its.iastate.edu
+controlmaster auto
+identitiesonly yes
+serveraliveinterval 60
+controlpath /home/you/.ssh/cm-3631c01c705606618c1a8ba73b84c46359830ac2
+controlpersist 36000
+```
+
+`%C` became a long hash of your user, host, and port, and `10h` became
+36,000 seconds.
+
+::: {.callout-tip}
+## Tip
+`ssh -G <host>` shows what ssh will do with your config, without
+connecting. Run it after every change.
+:::
+
+**Connection sharing.** With `ControlMaster auto`, the first connection
+to a host signs in and becomes the **master**; later connections to the
+**same host** (a second terminal, an `rsync`, an `scp`) travel inside it
+and sign in to nothing. ISU's FAQ recommends this for exactly "having
+to authenticate so often". It matters most if you sign in with a code;
+with a key in the agent, logins ask nothing anyway. On Nova, the first
+`ssh nova` asked for the code and password once, a second `ssh nova`
+asked nothing, and you can see the master:
+
+```{.bash filename="Terminal (laptop)"}
+ssh -O check nova
+ssh -O check nova-dtn
+ssh -O exit nova
+```
+
+```{.console}
+Master running (pid=27640)
+Master running (pid=28661)
+Exit request sent.
+```
+
+Four details:
+
+- It is **one master per host**. The master to `nova` does not serve
+  `nova-dtn`; the transfer node needed its own sign-in, and after that,
+  `rsync` and `scp` to it asked nothing. That is why the shared block
+  names both.
+- `ControlPersist 10h` keeps the master open for up to 10 hours **after
+  the last connection using it closes**. It is an idle timeout, not a
+  promise of 10 hours: the site or the network can end it sooner.
+  `ssh -O exit` closes it now.
+- `ControlPath` is where the master's connection point lives. Use
+  `~/.ssh/cm-%C`: the longer `cm-%r@%h:%p` form found in many guides
+  failed on a Mac when the path grew too long (`unix_listener: path
+  "…" too long for Unix domain socket`).
+- While a master is open, anyone using your laptop account can use the
+  connection. Lock your screen.
+
+**Windows: no sharing.** Windows' own OpenSSH cannot do connection
+sharing. With these three lines in `C:\Users\<you>\.ssh\config`, the
+connection fails:
+
+```{.console}
+getsockname failed: Not a socket
+Read from remote host nova-login-1.its.iastate.edu: Unknown error
+```
+
+Put `ControlMaster`, `ControlPath`, and `ControlPersist` only in the
+Ubuntu (WSL) config. The other lines work in both.
+
+**SCINet: `step` wrote yours.** SCINet's `step` setup added an
+`Include` line to your `~/.ssh/config`; do not edit what it points to.
+It is worth reading once:
+
+```{.bash filename="Terminal (laptop)"}
+grep -n Include ~/.ssh/config
+cat ~/.step/ssh/config
+```
+
+```{.console}
+22:	Include "/home/you/.step/ssh/includes"
+Match exec "step ssh check-host %h"
+	User <first.last>
+	UserKnownHostsFile "/home/you/.step/ssh/known_hosts"
+	ProxyCommand step ssh proxycommand --provisioner keycloak %r %h %p
+```
+
+`Match exec` applies these settings only to hosts that `step` knows are
+SCINet's. `User` is why you never type your SCINet user name.
+`UserKnownHostsFile` keeps SCINet's host keys in step's own file, which
+trusts any host certificate SCINet signs; that is why SCINet's login
+nodes never ask the host-key question. `ProxyCommand` runs every SCINet
+connection through `step`, which opens the browser for a new
+certificate when the old one has expired. Two visible side effects:
+connections to `atlas-dtn` print `Certificate invalid: name is not a
+listed principal` and ask one ordinary host-key question, because that
+node's certificate does not list the shared name. It is harmless.
+
+If you want short names on SCINet, add your own entries **before** the
+two lines `step` wrote, `Host *` and the `Include` under it. Keep those
+two lines together: `Include` reads its file only for the hosts named
+by the `Host` line above it, so an alias slipped in between them would
+leave your other aliases without SCINet's user name, host keys, and
+`step`. The end of the file should look like this (keep the `Include`
+path your setup wrote):
+
+```{.default filename="~/.ssh/config (laptop)"}
+Host atlas
+    HostName atlas-login.hpc.msstate.edu
+
+Host atlas-dtn
+    HostName atlas-dtn.hpc.msstate.edu
+
+Host ceres
+    HostName ceres.scinet.usda.gov
+
+Host ceres-dtn
+    HostName ceres-dtn.scinet.usda.gov
+
+# Keep the block step wrote after your aliases.
+Host *
+	Include "/home/you/.step/ssh/includes"
+```
+
+Check a login alias and a transfer alias: both should show your SCINet
+user name and step's `proxycommand`.
+
+```{.bash filename="Terminal (laptop)"}
+ssh -G atlas | grep -E '^(user|hostname|userknownhostsfile|proxycommand) '
+ssh -G atlas-dtn | grep -E '^(user|hostname|userknownhostsfile|proxycommand) '
+```
+
+The rest of this chapter uses `atlas-dtn` and `ceres-dtn` only in that
+sense: short names you defined.
+
+**Jump hosts: recognising `ProxyJump`.** Some machines can be reached
+only through another one: a compute node only through the login node, a
+cluster only through a gateway (@fig-proxyjump). `ProxyJump` tells ssh
+to go through the first machine to reach the second:
+
+```{.default filename="~/.ssh/config (laptop)"}
+Host <allocated-node>
+    ProxyJump nova
+```
+
+or, once, `ssh -J nova <allocated-node>`. The placeholder must be a
+compute node **you currently hold** (@sec-hpc-slurm teaches how to get
+one, connect to it this way, and give it back), so there is nothing to
+run yet; recognise the entry when you see it. ISU's own recipe for
+editors on compute nodes adds `ForwardAgent yes` and
+`StrictHostKeyChecking no` to that one entry; those are ISU's choices,
+explained in @sec-hpc-slurm, and do not belong in a `Host *` block. On
+Windows, a jump-host entry must be in the Windows config for VS Code to
+use it.
+
+::: {#fig-proxyjump}
+{{< svg ../figures/proxyjump.svg >}}
+
+A jump host. Your laptop cannot reach a compute node directly; with
+`ProxyJump nova`, ssh connects to the login node first and goes on from
+there to a node you hold. @sec-hpc-slurm shows the whole route, from
+holding a node to giving it back.
+:::
+
+: The `~/.ssh/config` options in this chapter. Full list:
+[`ssh_config(5)`](https://man.openbsd.org/ssh_config.5). {#tbl-ssh-config-options}
+
+| Option | What it does | Example |
+|:-------|:-------------|:--------|
+| `Host` | starts a block; the names you type | `Host nova nova-dtn` |
+| `HostName` | the real machine behind the name | `nova-login-1.its.iastate.edu` |
+| `User` | your user name there | `<netid>` |
+| `IdentityFile` | which private key to use | `~/.ssh/id_ed25519` |
+| `IdentitiesOnly` | offer only that key | `yes` |
+| `ServerAliveInterval` | keep an idle connection open | `60` |
+| `ControlMaster`, `ControlPath`, `ControlPersist` | share one sign-in per host (not in Windows' own ssh) | `auto`, `~/.ssh/cm-%C`, `10h` |
+| `ProxyJump` | go through another host first | `nova` (@sec-hpc-slurm) |
+| `AddKeysToAgent`, `UseKeychain` | load the key and remember its passphrase (macOS) | `yes` |
+| `Include` | read another config file | written by `step` on SCINet |
+
+::: {.check}
+**Check yourself.** Your config has `Host *` with `User guest` at the
+top, and `Host nova` with `User <netid>` below it. Which user does `ssh
+nova` use, and how do you check?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`guest`: for most options the first value found wins, and `Host *`
+matches first. `ssh -G nova | grep '^user '` shows it without
+connecting. Move the `Host *` block to the end.
+:::
+:::
+
+## tmux: work that survives a dropped connection {#sec-working-remotely-tmux}
+
+Close your laptop, lose Wi-Fi, or let the VPN time out, and an SSH
+session ends, taking the commands running in it along
+(@sec-linux-system-processes). **tmux** keeps a shell running on the
+machine itself, so you can leave and come back to it.
+
+Try it on the laptop first. Make a small script that prints the time
+every five seconds:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch09
+printf '%s\n' '#!/usr/bin/env bash' \
+  '# ticker.sh: print the time every 5 seconds until stopped (Ctrl-C).' \
+  'while true; do date +%T; sleep 5; done' > ticker.sh
+```
+
+Start a tmux session named `ch09`, and run the ticker inside it:
+
+```{.bash filename="Terminal (laptop)"}
+tmux new -s ch09
+bash ticker.sh
+```
+
+A green bar appears at the bottom: you are inside tmux. Now **detach**:
+press {{< kbd Ctrl-B >}}, let go, then press {{< kbd D >}}. You are back
+in your ordinary terminal, and tmux says:
+
+```{.console}
+[detached (from session ch09)]
+```
+
+Close the **whole terminal window**. Open a new one and look:
+
+```{.bash filename="Terminal (laptop)"}
+tmux ls
+tmux attach -t ch09
+```
+
+```{.console}
+ch09: 1 windows (created Sun Nov 22 15:30:08 2026)
+```
+
+The ticker is still running, with no gap in the times: it never
+noticed that you left. Stop it with {{< kbd Ctrl-C >}} and type `exit`
+to end the session.
+
+**The same on the cluster.** Log in, note where you are, and start the
+ticker in tmux:
+
+```{.bash filename="Terminal (login node)"}
+hostname
+tmux new -s ch09
+```
+
+Run the same `while true; do date +%T; sleep 5; done` line inside it
+(or copy `ticker.sh` over first; @sec-working-remotely-transfer shows
+how), detach, and this time **turn your Wi-Fi off for a minute**. The
+frozen terminal finally gives up:
+
+```{.console}
+Connection to nova.its.iastate.edu closed by remote host.
+Connection to nova.its.iastate.edu closed.
+client_loop: send disconnect: Broken pipe
+```
+
+Reconnect, `tmux attach -t ch09`, and the ticker is still counting,
+with no gap across the minute you were gone. This was the result on
+Nova and on Atlas. The green bar even shows the node's name
+(`"nova-login-1"`), a free reminder of where the session lives.
+
+**What happened** (@fig-tmux-detach). When you start tmux, it starts a
+**tmux server** on that machine, which owns the shell and everything
+running in it. Your terminal is only a **client** that shows the
+server's screen. A dropped connection kills the client, not the
+server, so the work goes on and you can attach a new client later.
+
+::: {.callout-important}
+## Key idea
+tmux keeps the shell on the remote machine; your connection only views
+it, so losing the connection loses the view, not the work.
+:::
+
+::: {#fig-tmux-detach}
+{{< svg ../figures/tmux-detach.svg >}}
+
+Why a tmux session survives, and how it seems to vanish. The tmux server
+runs on the login node where you started it; your terminal is only a
+client. A dropped connection ends the client, not the server. But a
+cluster can have several login nodes, and a session on one is invisible
+from another: reconnect to the node you started on. tmux survives
+disconnects, not reboots or a site's cleanup.
+:::
+
+**Where it lives.** A tmux session exists on **one** machine. Nova has
+two login nodes, and `nova.its.iastate.edu` sends each login to either
+at random (ISU's FAQ says so, and repeated logins landed on `-2`, `-2`,
+`-1`, `-2`). A session started on `nova-login-1` is invisible from
+`nova-login-2`:
+
+```{.console}
+$ ssh <netid>@nova.its.iastate.edu 'hostname; tmux ls'
+nova-login-2
+error connecting to /tmp/tmux-<uid>/default (No such file or directory)
+$ ssh <netid>@nova.its.iastate.edu 'hostname; tmux ls'
+nova-login-1
+ch09: 1 windows (created Sun Nov 22 21:17:25 2026)
+```
+
+The habit: run `hostname` before you detach, and put a named node in
+your config (`HostName nova-login-1`, as in
+@sec-working-remotely-config), so `ssh nova` always lands where your
+session is: `ssh -t nova tmux attach -t ch09` reconnects and
+reattaches in one go. To reach a node your config does not name, give
+your user name too, because a full host name does not match the `Host
+nova` block and ssh would use your laptop user name: `ssh -t
+<netid>@nova-login-2.its.iastate.edu tmux attach -t ch09`.
+
+On SCINet, Atlas's `atlas-login` name hands out two login nodes, and
+both can be reached by name (`atlas-login-1.hpc.msstate.edu`,
+`atlas-login-2.hpc.msstate.edu`) without any extra question. Ceres's
+name led to `ceres-login-1`. The same habit applies everywhere.
+
+The "nothing here" message has two forms in the tmux version on these
+clusters (3.2a): `error connecting to … (No such file or directory)`
+where tmux has never run, and `no server running on …` where a session
+used to be. Newer versions say `no server running on …`. Both mean no
+session on **this** machine.
+
+::: {.callout-warning}
+## Pitfall: a session on the other login node seems to vanish
+On a cluster with several login nodes, note `hostname` before you
+detach. If `tmux ls` finds nothing, check which node you are on before
+assuming the session is gone.
+:::
+
+**What tmux does not do.** tmux on a login node is still the login node:
+fine for editing, short commands, and watching something small, but
+heavy work belongs in a job (@sec-hpc-slurm), which keeps running
+without tmux, or you. A session also ends when its server ends: when
+the node reboots (Nova's login banner announces its next maintenance
+date), when you kill it, or when the site cleans up old processes. And
+transfers from your laptop are not login-node work at all: they run on
+the laptop (@sec-working-remotely-transfer). tmux on the **laptop**
+protects a transfer's terminal from a closed window, not from the laptop
+going to sleep, and nothing can copy from a laptop that is asleep.
+Globus helps in other ways (@sec-working-remotely-transfer): it carries
+on with a cluster-to-cluster transfer however your laptop is, and it
+resumes a laptop transfer when the laptop is back online.
+
+::: {.callout-caution .misconception}
+## Misconception: "If I close the window, the command stops; if I keep it open, it runs"
+**Reality.** A command in an ordinary SSH session usually stops when the
+connection drops, whether you closed the window or the network failed.
+Inside tmux, it keeps running on the remote machine whatever happens to
+your window, until the session itself ends. For long work, use tmux, or
+better, a scheduler job.
+:::
+
+**A handful of keys.** Every tmux shortcut starts with {{< kbd Ctrl-B >}}
+(press, let go, then the key). Scrolling is the one that surprises
+people: the mouse wheel does **not** scroll tmux by default. In iTerm2
+and similar terminals it sends arrow keys instead, which step through
+your command history at a prompt, or type `^[[A^[[B…` into a running
+program. Use {{< kbd Ctrl-B >}} {{< kbd [ >}}, then the arrow keys or
+Page Up, and {{< kbd q >}} to leave.
+
+: tmux in eight commands, with GNU `screen`, an older program that does
+the same, beside it. {#tbl-tmux-keys}
+
+| Task | tmux | screen |
+|:-----|:-----|:-------|
+| New named session | `tmux new -s name` | `screen -S name` |
+| Detach | {{< kbd Ctrl-B >}} {{< kbd D >}} | {{< kbd Ctrl-A >}} {{< kbd D >}} |
+| List sessions | `tmux ls` | `screen -ls` |
+| Attach | `tmux attach -t name` | `screen -r name` |
+| End a session | `exit` inside it, or `tmux kill-session -t name` | `exit` inside it |
+| Scroll back | {{< kbd Ctrl-B >}} {{< kbd [ >}}, arrows, {{< kbd q >}} | {{< kbd Ctrl-A >}} {{< kbd Esc >}}, arrows, {{< kbd Esc >}} |
+| New window, next window | {{< kbd Ctrl-B >}} {{< kbd C >}}, {{< kbd Ctrl-B >}} {{< kbd N >}} | {{< kbd Ctrl-A >}} {{< kbd C >}}, {{< kbd Ctrl-A >}} {{< kbd N >}} |
+| Split the screen | {{< kbd Ctrl-B >}} {{< kbd % >}} (side by side) | {{< kbd Ctrl-A >}} {{< kbd S >}} (top and bottom) |
+| On our clusters | Nova, Atlas, Ceres (3.2a; Atlas and Ceres also have newer versions as modules) | Ceres only |
+
+Use whichever your site has; the idea is the same.
+
+::: {.check}
+**Check yourself.** You detached from tmux on Nova yesterday; today
+`tmux ls` says `no server running` (or `error connecting to …`). Give
+two possible reasons.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+You landed on the other login node, or the session ended (the node
+rebooted, or the site cleaned it up). Check `hostname`, and try the
+other node by name.
+:::
+:::
+
+## Moving files: `rsync`, `scp`, and the DTN {#sec-working-remotely-transfer}
+
+`rsync` copies files and folders, locally or between machines, and
+sends only what changed. Learn it on the laptop, where mistakes cost
+nothing, using the `src/` folder from @sec-working-remotely-command.
+Delete the demo copy first:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch09
+rm -r dst-fake
+find src | sort
+```
+
+```{.console}
+src
+src/a.txt
+src/sub
+src/sub/b.txt
+```
+
+**Dry run first.** `-n` (or `--dry-run`) shows what rsync would do and
+does nothing:
+
+```{.bash filename="Terminal (laptop)"}
+rsync -av --dry-run src/ dst3
+```
+
+```{.console}
+sending incremental file list
+created directory dst3
+./
+a.txt
+sub/
+sub/b.txt
+
+sent 142 bytes  received 56 bytes  396.00 bytes/sec
+total size is 4  speedup is 0.02 (DRY RUN)
+```
+
+`(DRY RUN)` at the end, and `dst3` still does not exist. `-a`
+("archive") copies folders and keeps times, permissions, and links; `-v`
+lists each file. Now copy for real, then add a file and copy again:
+
+```{.bash filename="Terminal (laptop)"}
+rsync -av src/ dst3
+printf 'C\n' > src/c.txt
+rsync -av src/ dst3
+```
+
+```{.console}
+sending incremental file list
+created directory dst3
+./
+a.txt
+sub/
+sub/b.txt
+
+sent 234 bytes  received 96 bytes  660.00 bytes/sec
+total size is 4  speedup is 0.01
+sending incremental file list
+./
+c.txt
+
+sent 206 bytes  received 39 bytes  490.00 bytes/sec
+total size is 6  speedup is 0.02
+```
+
+The second run sent only `c.txt`. rsync compares the two sides and
+skips files that already match, so rerunning a large copy after an
+interruption costs little.
+
+**The trailing slash.** Whether the source ends in `/` changes what
+arrives (@fig-rsync-slash):
+
+```{.bash filename="Terminal (laptop)"}
+rsync -a src dst1
+rsync -a src/ dst2
+find dst1 dst2 | sort
+```
+
+```{.console}
+dst1
+dst1/src
+dst1/src/a.txt
+dst1/src/c.txt
+dst1/src/sub
+dst1/src/sub/b.txt
+dst2
+dst2/a.txt
+dst2/c.txt
+dst2/sub
+dst2/sub/b.txt
+```
+
+Without the slash, rsync copies the folder `src` itself into `dst1`;
+with it, it copies what is **inside** `src`. A slash on the destination
+makes no difference (`dst2` and `dst2/` give the same result).
+
+::: {.callout-important}
+## Key idea
+A slash at the end of the source means "the contents of": `rsync -a
+src/ dst` puts the files in `dst`; `rsync -a src dst` puts a folder
+`src` in `dst`.
+:::
+
+::: {#fig-rsync-slash}
+{{< svg ../figures/rsync-slash.svg >}}
+
+The trailing slash on the source. `rsync -a src dst1` copies the folder
+itself, so the files end up in `dst1/src/`; `rsync -a src/ dst2` copies
+its contents, so they end up directly in `dst2/`. Below: a second run
+sends only what changed, here the new file `c.txt`.
+:::
+
+**To and from the cluster.** The same command works between machines:
+put `host:path` on one side. Type it **on the laptop**, and send it to
+the **transfer node**, never the login node (@sec-book-setup-ssh). Upload
+raw data, download results:
+
+```{.bash filename="Terminal (laptop)"}
+rsync -av --no-p --no-g data/ nova-dtn:/work/<group>/<netid>/myproject/data/
+rsync -av nova-dtn:/work/<group>/<netid>/myproject/results/ results/
+```
+
+Three rules make this reliable.
+
+**1. Make the destination first.** rsync creates only the **last**
+folder of a destination path, not missing folders above it:
+
+```{.console}
+$ rsync -av src/ nova-dtn:/work/<group>/<netid>/missing/a/b/
+sending incremental file list
+rsync: [Receiver] mkdir "/work/<group>/<netid>/missing/a/b" failed: No such file or directory (2)
+rsync error: error in file IO (code 11) at main.c(780) [Receiver=3.2.5]
+```
+
+Make the folder on the cluster first, with `mkdir -p` sent through
+`ssh` (the login node and the DTN see the same storage, so either
+works): `ssh nova 'mkdir -p /work/<group>/<netid>/myproject/data'`.
+Newer rsyncs have a `--mkpath` option for this; the clusters have it,
+but older laptops do not, so this book does not rely on it.
+
+**2. Into a project folder, add `--no-p --no-g`.** Project folders are
+**group folders**: everything in them should belong to the project's
+group, so your labmates can use it. They are set up so that new files
+inherit that group (the `s` in `drwxrws---`, the setgid bit of
+@sec-linux-system-permissions). Plain `-a` gets in the way, because it
+copies the laptop's group and permission bits. On all three clusters,
+files copied with plain `-av` ended up in your **personal** group
+instead of the project's, and on Nova the folder also lost its `s`.
+`--no-p` (do not copy permission bits) and `--no-g` (do not copy the
+group) let the cluster's own rules decide: the files get the project's
+group and the site's default permissions. This is SCINet's own
+recommendation ([SCINet: local data
+transfer](https://scinet.usda.gov/guides/data/transfer/local)), which
+also adds `-z` (compress on the way):
+
+```{.bash filename="Terminal (laptop)"}
+rsync -avz --no-p --no-g data/ atlas-dtn:/project/<project>/<you>/myproject/data/
+```
+
+Files that are read-only on your laptop, like your `data/raw` from
+@sec-organizing-projects-raw, still arrive read-only. Use plain `-a`
+for copies on your laptop and for downloads to it.
+
+**3. Rerun to finish, `-P` for big files.** If a transfer stops, run the
+same command again: rsync skips what already arrived. For large files,
+`-P` shows progress and keeps a partly sent file, so the rerun resumes
+it instead of starting over. On Atlas and Ceres, a second run with
+`--no-p --no-g` sends nothing. Through Nova's `novadtn`, files copied
+this way currently get the time of the copy instead of the laptop's,
+so every rerun checks every file again; the result is still correct,
+only slower (observed November 2026; reported to ISU).
+
+::: {.callout-warning}
+## Pitfall: rsync does not make missing parent folders
+`rsync … host:/a/b/c/` fails with `mkdir … failed: No such file or
+directory` and code 11 when `/a/b` does not exist. Make the
+destination with `ssh host 'mkdir -p …'` first.
+:::
+
+You will see `rsync --delete` in other guides. It makes the destination
+an exact copy by **deleting** files that are not in the source, and with
+a missing slash or the two paths swapped it deletes real data. This
+book does not use it; if you ever do, dry-run (`-n`) first and read
+every line it lists.
+
+**`scp` for one file.** `scp` copies single files, with the same
+`host:path` form:
+
+```{.bash filename="Terminal (laptop)"}
+scp data/raw/checksums.md5 nova-dtn:/work/<group>/<netid>/
+```
+
+It is fine for a quick file. It does not skip what is already there or
+resume, and SCINet advises against `scp -r` for folders into
+`/project`, because the copies do not inherit the project's group. Use
+rsync for folders. @tbl-transfer-tools compares the options.
+
+**Why the DTN.** The login node is shared by everyone logged in; a big
+copy through it slows them all. The DTN is a machine built for moving
+data, on the same storage, so the files land in the same `/work` or
+`/project` folder. Your first connection to a DTN asks the host-key
+question: it is a different machine. If a transfer fails right after
+signing in with `connection unexpectedly closed` and code 255, rerun
+it once; if it keeps happening, tell the site. (In November 2026, one
+of Atlas's two transfer nodes did exactly that, and SCINet was told.)
+
+**Globus, for big or many files.** For hundreds of gigabytes, thousands
+of files, or a copy from one cluster to another (Ceres to Atlas, say),
+use the site's **Globus** collection in a web browser: "SCINet-Ceres",
+"SCINet-Atlas", or "SCINet-Juno"; "Nova DTN" at ISU
+([Globus documentation](https://docs.globus.org/), [SCINet: Globus
+data transfer](https://scinet.usda.gov/guides/data/transfer/globus)).
+You pick the two ends and the folders in a web page; Globus runs the
+transfer on its own, restarts it after failures, and can email you when
+it is done. You can close the browser. A transfer between two clusters
+needs no laptop at all, so it carries on while your laptop sleeps.
+Globus Connect Personal makes your laptop one end; then the files move
+directly from (or to) the laptop, so keep it awake and online with
+Globus Connect Personal running. If it does sleep, Globus resumes when
+it is back. Small files on SCINet can also go through Open
+OnDemand's file manager (SCINet suggests it for less than 1 GB). The
+recipes are in @sec-cluster-sites-transfer.
+
+: Ways to move files between your laptop and a cluster.
+{#tbl-transfer-tools}
+
+| Tool | Best for | Resumes? | Notes |
+|:-----|:---------|:---------|:------|
+| `rsync` | folders, repeat copies | yes (rerun; `-P` for big files) | into project folders: `-av --no-p --no-g` (SCINet adds `-z`) |
+| `scp` | one quick file | no | SCINet: not `scp -r` into `/project` |
+| `sftp`, Cyberduck | browsing, a few files | partly | graphical on the laptop |
+| FileZilla | a few files | partly | Nova only, one connection, or it asks for the code again and again; SCINet does not support it |
+| Globus | large or many files, cluster to cluster | yes, automatically | web browser; cluster to cluster runs while your laptop sleeps; a laptop end must stay awake |
+| Open OnDemand file manager | small files on SCINet | no | under 1 GB |
+| Rclone | cloud storage | yes | @sec-cloud |
+
+::: {.check}
+**Check yourself.** You run `rsync -a results
+nova-dtn:/work/<group>/<netid>/results`. Where do the files end up?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+In `/work/<group>/<netid>/results/results/`: without a slash on the
+source, rsync copies the folder `results` into the destination folder.
+Use `results/` to copy what is inside.
+:::
+:::
+
+## Proving the copy, and moving the project {#sec-working-remotely-move}
+
+A transfer that finished without an error is not yet a proven copy.
+@sec-organizing-projects-raw made a checksum list for your raw data and
+said to check it "after every download or transfer". Here is why, first
+on the laptop. Make a checksum list in `src/`, copy, and check the copy:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch09/src && md5sum a.txt sub/b.txt > checksums.md5 && cd ..
+rsync -a src/ dst3
+cd dst3 && md5sum -c checksums.md5; echo "status $?"
+```
+
+```{.console}
+a.txt: OK
+sub/b.txt: OK
+status 0
+```
+
+Now damage the copy by one byte and check again:
+
+```{.bash filename="Terminal (laptop)"}
+printf 'x' >> a.txt
+md5sum -c checksums.md5; echo "status $?"
+cd ..
+```
+
+```{.console}
+a.txt: FAILED
+sub/b.txt: OK
+md5sum: WARNING: 1 computed checksum did NOT match
+status 1
+```
+
+The rule from @sec-organizing-projects-raw: make the list on the
+**source**, check it on the **receiving** machine, and never recompute
+it from the copy (a list made from a damaged copy agrees with the
+damage).
+
+**This chapter's check.** Copy the book's raw reads and their checksum
+list from your laptop to your cluster folder, and verify them there.
+Four steps, all typed on the laptop:
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova 'mkdir -p /work/<group>/<netid>/bioinf-computing/data/raw'
+rsync -avn --no-p --no-g ~/bioinf-computing/data/raw/ nova-dtn:/work/<group>/<netid>/bioinf-computing/data/raw/
+rsync -av  --no-p --no-g ~/bioinf-computing/data/raw/ nova-dtn:/work/<group>/<netid>/bioinf-computing/data/raw/
+ssh nova 'cd /work/<group>/<netid>/bioinf-computing/data/raw && md5sum -c checksums.md5'
+```
+
+```{.console}
+sending incremental file list
+./
+SRR6357070_1.fastq.gz
+SRR6357070_2.fastq.gz
+checksums.md5
+
+sent 167 bytes  received 28 bytes  6.84 bytes/sec
+total size is 4,471,546  speedup is 22,931.01 (DRY RUN)
+sending incremental file list
+./
+SRR6357070_1.fastq.gz
+SRR6357070_2.fastq.gz
+checksums.md5
+
+sent 4,472,921 bytes  received 76 bytes  146,655.64 bytes/sec
+total size is 4,471,546  speedup is 1.00
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+```
+
+Make the folder, dry-run, copy, verify on the cluster: two `OK` lines,
+the same on Nova, Atlas, and Ceres. On SCINet, use `atlas-dtn` or
+`ceres-dtn` (your short names), `/project/<project>/<you>/…`, and
+`-avz`.
+
+**What the tools check already.** rsync checks each file it sends
+against a checksum of the whole file, so a file damaged on the way is
+sent again. But it decides **which** files to send by size and time
+alone: a file changed without its size or time changing is skipped
+(exercise 2 shows this trap). Globus can verify files after a transfer,
+but SCINet's own advice is to switch that off, because "Do NOT verify
+file integrity after transfer" "approximately doubles the effective
+transfer speed" ([SCINet: Globus](https://scinet.usda.gov/guides/data/transfer/globus)).
+Either way, `md5sum -c` on the receiving side is the check that does
+not depend on any tool's settings.
+
+**What a checksum proves depends on where the list came from.** A list
+you made from the source just before copying proves that the copy
+matches **that source**; it cannot show damage that was already there
+when you made the list. A list from the sequencing facility, from ENA,
+or from the original download (your `checksums.md5` from
+@sec-organizing-projects-raw) can also catch a file that changed
+earlier. That is why the book keeps the original list with the data.
+`rsync --checksum` makes rsync compare contents instead of size and
+time; it is slower, and it still compares against your source, not
+against the original list.
+
+::: {.callout-caution .misconception}
+## Misconception: "If the copy finished without an error, the files are fine"
+**Reality.** A finished transfer says nothing about a file that was
+already wrong at the source or damaged before this copy, and some tools
+let you turn their own check off. Check against the original checksum
+list, on the receiving machine.
+:::
+
+### Moving the project {#sec-working-remotely-move-project}
+
+@sec-organizing-projects ended with three steps for moving a project:
+copy the files, reinstall the environment, recreate the links. Now you
+have the commands. The reference genome adds a fourth piece, because it
+lives **outside** the project (@sec-organizing-projects-shared).
+
+**1. Files.** Make the destination, dry-run, then copy the project
+without its environment, results, and logs:
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova 'mkdir -p /work/<group>/<netid>/bioinf-computing'
+rsync -avn --no-p --no-g --exclude .pixi --exclude results --exclude logs \
+  ~/bioinf-computing/ nova-dtn:/work/<group>/<netid>/bioinf-computing/
+rsync -av  --no-p --no-g --exclude .pixi --exclude results --exclude logs \
+  ~/bioinf-computing/ nova-dtn:/work/<group>/<netid>/bioinf-computing/
+ssh nova 'cd /work/<group>/<netid>/bioinf-computing/data/raw && md5sum -c checksums.md5'
+```
+
+`.pixi/` stays behind because it is large, built for your laptop's
+system, and made of thousands of small files, which count against the
+cluster's file limits (@sec-hpc-slurm); step 2 rebuilds it. `results/`
+and `logs/` stay behind so that step 4 has to make them again, which is
+the point of the test. Your project's `.git/` (@sec-shell-scripts-git)
+comes along, so the cluster copy has the same history.
+@sec-github shows the usual route for code from then on: push to
+GitHub, clone on the cluster. Data still moves with rsync.
+
+**2. Environment.** On the cluster, in the copied project, rebuild the
+environment from `pixi.lock`, with pixi and its cache set up as in
+@sec-book-setup:
+
+```{.bash filename="Terminal (login node)"}
+cd /work/<group>/<netid>/bioinf-computing
+pixi install --locked
+```
+
+On Atlas this took 18 seconds and on Ceres 48. On Nova it took 25 to 40
+minutes in November 2026, much longer than the first install, for
+reasons the site is looking into. If it is slow for you, let it run, or
+run it in an interactive job (@sec-hpc-slurm).
+
+**3. Reference data, then the link.** rsync copies `data/ref` as a link,
+not as the files it points to, so on the cluster it points at a laptop
+folder that does not exist:
+
+```{.bash filename="Terminal (login node)"}
+ls -l data/ref
+ls data/ref/
+```
+
+```{.console}
+lrwxrwxrwx. 1 <netid> <group> 95 Nov 22 21:26 data/ref -> /home/you/bioinf-shared/references/yeast_R64-1-1_test
+ls: cannot access 'data/ref/': No such file or directory
+```
+
+The reference needs its own copy. If your lab or site already keeps
+this exact reference, you can link to theirs, **after** checking that
+its checksums match your `checksums.md5`. Otherwise copy your small
+folder through the DTN into a reference area in your own cluster folder,
+with the same name as on the laptop (not in your cluster home, which is
+small), and check it there:
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova 'mkdir -p /work/<group>/<netid>/bioinf-shared/references'
+rsync -av --no-p --no-g ~/bioinf-shared/references/yeast_R64-1-1_test \
+  nova-dtn:/work/<group>/<netid>/bioinf-shared/references/
+ssh nova 'cd /work/<group>/<netid>/bioinf-shared/references/yeast_R64-1-1_test && md5sum -c checksums.md5'
+```
+
+```{.console}
+genome.fa.gz: OK
+genes.gtf.gz: OK
+```
+
+(No slash on the source this time: you want the folder itself.) Then
+replace the link with the rule from @sec-organizing-projects-shared:
+look, `unlink` without a trailing slash, link, look again:
+
+```{.bash filename="Terminal (login node)"}
+cd /work/<group>/<netid>/bioinf-computing
+ls -l data/ref
+unlink data/ref
+ln -s /work/<group>/<netid>/bioinf-shared/references/yeast_R64-1-1_test data/ref
+ls data/ref/
+```
+
+```{.console}
+checksums.md5  genes.gtf.gz  genome.fa.gz  README.md
+```
+
+Why not just `ln -s` over the old link? It refuses:
+
+```{.console}
+ln: failed to create symbolic link 'data/ref': File exists
+```
+
+and if the old link had pointed at a folder that does exist, `ln -s`
+would quietly have made the new link **inside** that folder instead.
+
+**4. Prove it runs.** Run the pipeline from @sec-shell-scripts-pipeline
+on the cluster, check its exit status, and compare its results with the
+laptop's:
+
+```{.bash filename="Terminal (login node)"}
+pixi run bash src/run_all.sh; echo "run_all status $?"
+md5sum results/*.tsv
+```
+
+```{.console}
+…
+run_all status 0
+3b9c2b4c499d85a7e70aaf3faaef3c99  results/gtf_feature_counts.tsv
+e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+```
+
+Run `md5sum results/*.tsv` in the laptop's project too: the numbers
+should be the same, and they were, on Nova and on Atlas. Check the exit
+status, not only the files. On one try, the reference copy had failed
+without anyone noticing, `02_gtf_summary.sh` stopped with `ERROR:
+missing or empty: data/ref/genes.gtf.gz`, and yet an old
+`results/gtf_feature_counts.tsv`, copied over from the laptop, still
+matched. That is why step 1 leaves `results/` behind. The move is done
+when all of these pass: the destination exists, both checksum lists say
+`OK`, the new link lists the reference, the environment installed, and
+the pipeline exits 0 with the same results.
+
+: What happens to each part of the project in a move. {#tbl-move-project}
+
+| Part | Copy it? | How | Why |
+|:-----|:---------|:----|:----|
+| scripts, docs, `pixi.toml`, `pixi.lock` | yes | `rsync -av --no-p --no-g` | the project itself |
+| `data/raw/` | yes | same, then `md5sum -c` on the cluster | prove the data arrived intact |
+| `.pixi/` | no | `pixi install --locked` on the cluster | large, built for one system, many files |
+| reference folder (outside the project) | yes, or use a site copy | `rsync` through the DTN, `md5sum -c`; a site copy only if its checksums match | the link points to it |
+| `data/ref` link | it arrives broken | `unlink`, then `ln -s` to the cluster copy | it points at a laptop path |
+| `.git/` | comes along | (@sec-github: clone instead) | the history |
+| `results/`, `logs/` | no | `--exclude`; rerun the pipeline | the cluster run must make its own |
+
+::: {.check}
+**Check yourself.** `rsync` finished without errors. Do you still run
+`md5sum -c`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Yes. rsync may have skipped a file it judged unchanged by size and time,
+and the original checksum list (from the facility or the download) also
+catches a file damaged or mixed up before this copy, which a list made
+from the source just now cannot. For these files it costs seconds.
+:::
+:::
+
+## Summary {#sec-working-remotely-summary}
+
+- `ssh host command` runs one command on the cluster and brings back its
+  output and exit status. Quotes decide where `$` is expanded. rsync
+  uses the same mechanism, so a startup file that prints breaks it:
+  `ssh host true | wc -c` must print `0`. Never ignore "REMOTE HOST
+  IDENTIFICATION HAS CHANGED".
+- An SSH key is a pair: the public key goes on servers, the private key
+  stays on your laptop behind a passphrase, and the agent remembers the
+  unlocked key. On Nova a key replaces the code and password (over the
+  VPN, to a named login node); SCINet uses its daily `step` certificate.
+  Windows' Ubuntu and Windows' own ssh each need their own setup.
+- `~/.ssh/config` gives hosts short names and settings; for most options
+  the first value found wins, so specific blocks go first and `Host *`
+  last. Check every change with `ssh -G`. Connection sharing reuses one
+  sign-in per host (not in Windows' own ssh). `ProxyJump` reaches a
+  machine through another; @sec-hpc-slurm uses it.
+- tmux keeps a shell running on the machine where you started it;
+  detach with {{< kbd Ctrl-B >}} {{< kbd D >}}, reattach with `tmux
+  attach -t name`. A session lives on one login node, so note
+  `hostname`. It survives dropped connections, not reboots, and it does
+  not make the login node a place for heavy work.
+- Copy with rsync from the laptop, to the transfer node. Dry-run first;
+  a slash on the source means "the contents of"; make the destination
+  with `ssh host 'mkdir -p …'`; into project folders use `-av --no-p
+  --no-g`; rerun to finish. Use `scp` for one file and Globus for big
+  or many files.
+- Prove a copy with `md5sum -c` on the receiving machine, against the
+  original list. Move a project in four parts: files (without `.pixi`,
+  `results`, `logs`), environment (`pixi install --locked`), reference
+  data and a replaced link, and a pipeline run that exits 0 with the
+  same results.
+
+@tbl-ch09-commands collects the chapter's commands.
+
+: The chapter's commands on one page. {#tbl-ch09-commands}
+
+| Task | Command |
+|:-----|:--------|
+| Run one command remotely | `ssh nova hostname`, `ssh nova 'cd dir && ls'` |
+| Check for a clean shell | `ssh nova true \| wc -c` (must be `0`) |
+| Remove one changed host key | `ssh-keygen -R <host>` (after the site confirms) |
+| Make a key | `ssh-keygen -t ed25519 -C "label"` |
+| Use the agent | `eval "$(ssh-agent -s)"`, `ssh-add`, `ssh-add -l` |
+| Install a key (Nova) | `ssh-copy-id -i ~/.ssh/id_ed25519.pub <netid>@nova-login-1.its.iastate.edu` |
+| See what ssh will do | `ssh -G nova` |
+| Shared connection | `ssh -O check nova`, `ssh -O exit nova` |
+| tmux | `tmux new -s name`, {{< kbd Ctrl-B >}} {{< kbd D >}}, `tmux ls`, `tmux attach -t name`, `tmux kill-session -t name` |
+| Make a remote folder | `ssh nova 'mkdir -p /path/to/dir'` |
+| Copy a folder to a project folder | `rsync -av --no-p --no-g src/ nova-dtn:/path/dir/` (dry run: add `-n`) |
+| Copy back to the laptop | `rsync -av nova-dtn:/path/results/ results/` |
+| Copy one file | `scp file nova-dtn:/path/` |
+| Verify on the receiving side | `ssh nova 'cd /path && md5sum -c checksums.md5'` |
+| Replace a link | `ls -l data/ref`, `unlink data/ref`, `ln -s /new/target data/ref`, `ls data/ref/` |
+
+## Exercises {#sec-working-remotely-exercises}
+
+Exercises 1–4 work on the laptop alone (exercise 3 and 4 go further
+with a cluster); exercise 5 is the chapter's check on a cluster, with a
+laptop version; exercise 6 is optional. Practise in
+`~/bioinf-computing-ch09` and record what you did and saw in a
+`NOTEBOOK.md` there.
+
+::: {.check}
+**Exercise 1. The slash and the dry run (laptop).** After
+@sec-working-remotely-transfer.
+
+In a new folder, `~/bioinf-computing-ch09/ex1`, make a tree with
+`mkdir -p tree/sub && printf '1\n' > tree/one.txt && printf '2\n' >
+tree/sub/two.txt`. Before running each command, write down what you
+expect `find … | sort` to show: `rsync -a tree t1`, `rsync -a tree/ t2`,
+and `rsync -av -n tree/ t3`. Run them and compare. Then add
+`tree/three.txt` and show that a second `rsync -av tree/ t2` sends only
+the new file.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`t1` holds `t1/tree/one.txt` and `t1/tree/sub/two.txt` (the folder
+itself was copied); `t2` holds `t2/one.txt` and `t2/sub/two.txt` (its
+contents). The dry run lists `./`, `one.txt`, `sub/`, `sub/two.txt`,
+ends with `(DRY RUN)`, and `t3` does not exist afterwards. The second
+copy to `t2` lists only `./` and `three.txt`.
+:::
+:::
+
+::: {.check}
+**Exercise 2. Catch a damaged copy, and a stale one (laptop).** After
+@sec-working-remotely-move.
+
+In `~/bioinf-computing-ch09/ex2`, make `orig/s.txt` containing `AAAA`,
+make a checksum list in `orig/`, and copy with `rsync -a orig/ copy/`.
+
+1. Check the copy with `md5sum -c` inside `copy/`. Append one byte to
+   `copy/s.txt`, check again, then repair it with the same rsync and
+   check once more.
+2. The trap. Change one letter in `orig/s.txt` without changing its size
+   or time: `printf 'AAAB\n' > orig/s.txt.new && touch -r orig/s.txt
+   orig/s.txt.new && mv orig/s.txt.new orig/s.txt`. Run `rsync -av
+   orig/ copy/` and look at `copy/s.txt`. Then run `rsync -av
+   --checksum orig/ copy/` and look again.
+
+What does this tell you about rsync's quick check and about `md5sum -c`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+1. `OK`, then `FAILED` with the `WARNING` line and status 1; rsync
+   resends the file because its size changed, and the check says `OK`
+   again.
+2. The plain rsync sends nothing, and `copy/s.txt` still says `AAAA`:
+   same size, same time, so rsync's quick check thinks it is unchanged.
+   With `--checksum`, rsync compares contents, resends it, and the copy
+   says `AAAB`. rsync's quick check looks at size and time; `md5sum -c`
+   looks at the bytes. (The list in `orig/` still holds `AAAA`'s
+   checksum, so `md5sum -c` now reports `FAILED` in both folders: the
+   list describes the file as it was when you made it.)
+:::
+:::
+
+::: {.check}
+**Exercise 3. A key and a config (laptop; cluster optional).** After
+@sec-working-remotely-config.
+
+Make an ed25519 key with a passphrase (skip this if you already have
+one), and load it into the agent (`ssh-add`; on a Mac, the first login
+does it). Write config entries for your site's login node and transfer
+node with `User` and `ServerAliveInterval`: in your real
+`~/.ssh/config` after a dated backup if you have a cluster account,
+otherwise in `sample-config`. Prove them with `ssh -G` (add `-F
+sample-config` for the practice file).
+
+With a cluster account: on a site that allows keys, install your public
+key and record what a login asks now. If you sign in with a code, add
+connection sharing and record how many prompts two quick logins give
+with and without it, for the login node and for the transfer node
+(`ssh -O check` on each). On SCINet, read the file `step` wrote (`cat
+~/.step/ssh/config`) and explain each of its lines.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`ssh -G nova-dtn | grep -E '^(hostname|user|serveraliveinterval) '`
+should print your user name, the transfer node's full name, and
+`serveraliveinterval 60`. On Nova with a key (over the VPN), a login
+asks only the key's passphrase, once; with the agent, nothing. With a
+code and no sharing, quick logins can ask twice each (a code cannot be
+reused); with sharing, the second login to the same host asks nothing,
+but the transfer node needs its own first sign-in. On SCINet: `Match
+exec` limits the block to SCINet hosts, `User` supplies your name,
+`UserKnownHostsFile` holds SCINet's host certificate authority, and
+`ProxyCommand` runs `step`, which renews your certificate when needed.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Survive a disconnect (laptop; cluster preferred).** After
+@sec-working-remotely-tmux.
+
+Start a tmux session named `ex4`, run `bash ticker.sh` in it, detach,
+and close the terminal window (on a cluster: turn your Wi-Fi off for a
+minute). Reconnect, find the session, and reattach. Record `hostname`,
+the `tmux ls` line, and whether the times have a gap. End the session
+with `tmux kill-session -t ex4`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`tmux ls` shows `ex4: 1 windows (created …)`, and after `tmux attach -t
+ex4` the ticker's times run on with no gap. On a cluster, if `tmux ls`
+finds nothing, check `hostname`: you may be on the other login node; log
+in to the node you noted, by name.
+:::
+:::
+
+::: {.check}
+**Exercise 5. Move the project (cluster; the chapter's check).** After
+@sec-working-remotely-move.
+
+Move `~/bioinf-computing` to your cluster folder as in
+@sec-working-remotely-move-project: make the destination; dry-run, then
+copy through the transfer node with `--no-p --no-g`, leaving out
+`.pixi/`, `results/`, and `logs/`; verify `data/raw` with `md5sum -c`
+on the cluster; copy (or find and check) the reference folder and verify
+it; replace `data/ref`; run `pixi install --locked`; run `pixi run bash
+src/run_all.sh`, check that it exits 0, and compare `md5sum
+results/*.tsv` with your laptop's.
+
+**No cluster?** Do it in a **copy** on the laptop, never your real
+project: `rsync -a --exclude .pixi ~/bioinf-computing/
+~/bioinf-computing-ch09/fake-cluster/`. Its `data/ref` still points at
+your real reference, so it works and hides the problem. Point the copy's
+link at a folder that does not exist (`unlink data/ref && ln -s
+/no/such/folder data/ref` inside `fake-cluster`), see `ls data/ref/`
+fail, then replace it with the right one. Explain which step a laptop
+copy cannot really test.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+On the cluster: both `md5sum -c` runs print `OK` for every file, `ls
+data/ref/` lists `checksums.md5`, `genes.gtf.gz`, `genome.fa.gz`, and
+`README.md`, `run_all.sh` exits 0, and the two `md5sum results/*.tsv`
+lines match the laptop's (`3b9c2b4c…` and `e1d81de7…` for the book's
+data). On the laptop: `ls data/ref/` fails with `No such file or
+directory` while the link points at `/no/such/folder`, and lists the
+reference again after you replace it. A laptop copy cannot test the
+real problem, a link that points at another machine's file system,
+because the laptop's own reference folder is always there.
+:::
+:::
+
+::: {.check}
+**Exercise 6. Globus (optional; SCINet or Nova account).** After
+@sec-working-remotely-transfer.
+
+Install Globus Connect Personal on your laptop, and transfer the two
+FASTQ files to your site's collection ("SCINet-Ceres", "SCINet-Atlas",
+or "Nova DTN"), into a new folder. Check them with `md5sum -c` on the
+cluster. Keep the laptop awake, with Globus Connect Personal running,
+until the transfer finishes. Record whether file verification was on in
+the transfer settings. (SCINet suggests turning it off for speed; for this tiny
+transfer, leave it on.)
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Both files say `OK` when you run `md5sum -c` against the original list
+in the new folder (copy `checksums.md5` there too, or point `md5sum -c`
+at it). Whether verification was on by default depends on Globus's
+current settings page; whatever it was, your `md5sum -c` is the check
+that does not depend on it.
+:::
+:::
+
+## Further reading {#sec-working-remotely-reading}
+
+- @buffalo2015bioinformatics, *Bioinformatics Data Skills*, chapter 4
+  "Working with Remote Machines" and the part of chapter 6 on
+  transferring data --- SSH, keys, config files, tmux, `rsync`, and
+  checksums, written for the same readers as this chapter.
+- @shotts2025linux, *The Linux Command Line*, the networking chapter ---
+  `ssh`, `scp`, and `sftp` in a few pages, with more on the network
+  tools around them; free online.
+- @microsoft2026remotessh, *Remote Development using SSH* --- how VS
+  Code's Remote-SSH uses your keys and `~/.ssh/config`, including jump
+  hosts, for when you edit on a compute node in @sec-hpc-slurm.
+- The OpenSSH manual pages, [`ssh_config(5)`](https://man.openbsd.org/ssh_config.5)
+  and [`ssh(1)`](https://man.openbsd.org/ssh.1) --- every option in
+  @tbl-ssh-config-options, exactly; read `ControlPath` for the `%C`
+  token and `ProxyJump` for jump hosts.
+- The [rsync manual page](https://download.samba.org/pub/rsync/rsync.1),
+  section *USAGE* for the trailing-slash rule and *OPTIONS* for `--perms`,
+  `--group`, `--partial`, and `--checksum`; and the tmux wiki's
+  [*Getting Started*](https://github.com/tmux/tmux/wiki/Getting-Started)
+  for everything beyond @tbl-tmux-keys.

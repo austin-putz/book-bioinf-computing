@@ -246,7 +246,7 @@
   probe: >
     A facility mislabelled a file before computing its MD5. Does
     `md5sum -c` catch the mistake? (Correct: no; it prints OK.)
-  chapters: [03-organizing-projects, 20-reference-data]
+  chapters: [03-organizing-projects, 09-working-remotely, 20-reference-data]
 
 - id: symlink-is-copy
   claim: "A symbolic link is a copy, so editing or deleting through it is safe."
@@ -588,3 +588,62 @@
     pushed. Are they safe? (Correct: no; the history was on the same
     disk.)
   chapters: [08-shell-scripts, 21-git, 22-github]
+
+# Chapter 9 -----------------------------------------------------------------
+
+- id: public-key-is-secret
+  claim: "My SSH public key is a secret, and the private one is what I give to servers."
+  reality: >
+    It is the other way round. The public key (.pub) is meant to be
+    shared and goes into authorized_keys on every server; the private
+    key never leaves your laptop and is protected by a passphrase.
+  probe: >
+    Which file goes into ~/.ssh/authorized_keys on the cluster?
+    (Correct: id_ed25519.pub, the public key.)
+  chapters: [09-working-remotely, 22-github]
+
+- id: tmux-on-login-is-a-job
+  claim: "Inside tmux on the login node I can run heavy analysis, because it keeps running."
+  reality: >
+    tmux keeps a shell alive, but it is still the shared login node:
+    heavy work there slows everyone and may be stopped by the site.
+    Heavy work goes in a scheduler job, which runs without tmux.
+  probe: >
+    You start a six-hour alignment in tmux on the login node. What is
+    wrong? (Correct: it runs on the shared login node; it belongs in a
+    job.)
+  chapters: [09-working-remotely, 10-hpc-slurm]
+
+- id: rsync-slash-doesnt-matter
+  claim: "`rsync src dst` and `rsync src/ dst` do the same thing."
+  reality: >
+    Without the slash, rsync copies the folder itself into dst
+    (dst/src/...); with it, it copies the folder's contents (dst/...).
+  probe: >
+    Where do the files of `rsync -a results host:/data/results` end up?
+    (Correct: in /data/results/results/.)
+  chapters: [09-working-remotely]
+
+- id: transfer-finished-is-verified
+  claim: "If the copy finished without an error, the files are fine."
+  reality: >
+    A finished transfer says nothing about a file already wrong at the
+    source or damaged before this copy, and some tools let you turn
+    their check off. Check against the original checksum list on the
+    receiving machine; a list made from the source just before copying
+    proves agreement with that source only.
+  probe: >
+    rsync finished without errors. Do you still run md5sum -c? (Correct:
+    yes, against the original list, on the receiving machine.)
+  chapters: [09-working-remotely, 20-reference-data]
+
+- id: rsync-a-copies-it-right
+  claim: "`rsync -a` keeps everything as it was, so it is always the safest way to copy."
+  reality: >
+    Into a group project folder it keeps the wrong things: the laptop's
+    permission bits and your personal group, so the files do not get
+    the project's group. Add --no-p --no-g there.
+  probe: >
+    After `rsync -av` into /project/..., `ls -l` shows your own group on
+    the files. What option fixes it? (Correct: --no-p --no-g.)
+  chapters: [09-working-remotely, 10-hpc-slurm]

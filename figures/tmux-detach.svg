@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 340" role="img" aria-labelledby="tmux-detach-title"
+     data-step-labels="Attached|Dropped|Wrong node|Back">
+  <title id="tmux-detach-title">Why a tmux session survives, in four steps. On the right are two login nodes, nova-login-1 and nova-login-2. On nova-login-1, a tmux server holds session ch09 with the ticker running. Step 1: your laptop's terminal is attached to the session as a client. Step 2: the connection drops; the client is gone, but the session and the ticker keep running on nova-login-1. Step 3: you reconnect through the round-robin name and land on nova-login-2, where tmux ls finds no session. Step 4: you connect to nova-login-1 through your nova alias, which names that node, and run tmux attach -t ch09, and the ticker is still counting. tmux survives disconnects, not reboots or a site's cleanup.</title>
+  <desc data-caption="1">Your terminal is attached to tmux session ch09 on nova-login-1, where the ticker runs. The terminal is only a client.</desc>
+  <desc data-caption="2">The connection drops. The client is gone, but the tmux server, the session, and the ticker keep running on nova-login-1.</desc>
+  <desc data-caption="3">You reconnect through nova.its.iastate.edu and land on nova-login-2. tmux ls finds nothing there: the session lives on the other node.</desc>
+  <desc data-caption="4">Connect to nova-login-1 (your nova alias names it) and run tmux attach -t ch09: the ticker is still counting, with no gap.</desc>
+  <defs>
+    <marker id="tmux-detach-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Laptop -->
+  <rect x="10" y="70" width="210" height="170" rx="12" class="fill-surface stroke-line"/>
+  <text x="26" y="96" font-size="16" font-weight="700">Your laptop</text>
+  <rect x="26" y="108" width="178" height="116" rx="4" class="fill-muted-soft"/>
+  <g font-size="12" class="mono">
+    <g data-hide="2"><text x="34" y="130">21:21:08</text><text x="34" y="148">21:21:13</text><text x="34" y="166">21:21:18</text></g>
+    <g data-show="2" data-hide="3"><text x="34" y="130">client_loop: send</text><text x="34" y="148">disconnect:</text><text x="34" y="166">Broken pipe</text></g>
+    <g data-show="3" data-hide="4"><text x="34" y="130">$ tmux ls</text><text x="34" y="148" class="fill-warn">error connecting</text><text x="34" y="166" class="fill-warn">to /tmp/tmux-…</text></g>
+    <g data-show="4"><text x="34" y="130">21:22:58</text><text x="34" y="148">21:23:03</text><text x="34" y="166">21:23:08</text></g>
+  </g>
+  <text x="34" y="210" font-size="12" class="fill-muted">a client: it only shows</text>
+
+  <!-- nova-login-1 with the tmux server -->
+  <rect x="420" y="20" width="290" height="140" rx="12" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="436" y="46" font-size="15" font-weight="700" class="mono">nova-login-1</text>
+  <rect x="436" y="58" width="258" height="88" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="450" y="80" font-size="13" font-weight="700" class="fill-given">tmux server: session ch09</text>
+  <text x="450" y="102" font-size="13" class="fill-given">the ticker keeps running</text>
+  <text x="450" y="122" font-size="12" class="fill-given">whether or not a client</text>
+  <text x="450" y="138" font-size="12" class="fill-given">is attached</text>
+
+  <!-- nova-login-2 -->
+  <rect x="420" y="200" width="290" height="96" rx="12" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="436" y="226" font-size="15" font-weight="700" class="mono">nova-login-2</text>
+  <g data-show="3" data-hide="4">
+    <rect x="436" y="238" width="258" height="44" rx="8" class="fill-warn-soft stroke-warn" stroke-width="1.25"/>
+    <text x="450" y="265" font-size="13" class="fill-warn">tmux ls: no session here</text>
+  </g>
+
+  <!-- Step 1: attached -->
+  <g data-hide="2">
+    <line x1="220" y1="120" x2="418" y2="96" class="stroke-muted" stroke-width="1.75" marker-end="url(#tmux-detach-arrow)"/>
+    <text x="320" y="96" font-size="13" text-anchor="middle">attached</text>
+  </g>
+
+  <!-- Step 2: dropped -->
+  <g data-show="2" data-hide="3">
+    <line x1="220" y1="120" x2="300" y2="110" class="stroke-muted" stroke-width="1.75" stroke-dasharray="5 4"/>
+    <line x1="340" y1="105" x2="418" y2="96" class="stroke-muted" stroke-width="1.75" stroke-dasharray="5 4"/>
+    <text x="320" y="113" font-size="18" font-weight="700" text-anchor="middle" class="fill-warn">✕</text>
+    <text x="320" y="140" font-size="13" text-anchor="middle">connection dropped</text>
+  </g>
+
+  <!-- Step 3: wrong node -->
+  <g data-show="3" data-hide="4">
+    <line x1="220" y1="190" x2="418" y2="248" class="stroke-muted" stroke-width="1.75" marker-end="url(#tmux-detach-arrow)"/>
+    <text x="300" y="250" font-size="12" text-anchor="middle" class="mono">ssh nova.its…</text>
+  </g>
+
+  <!-- Step 4: back on the right node -->
+  <g data-show="4">
+    <line x1="220" y1="120" x2="418" y2="96" class="stroke-good" stroke-width="2" marker-end="url(#tmux-detach-arrow)"/>
+    <text x="320" y="82" font-size="12" text-anchor="middle" class="mono">ssh -t nova</text>
+    <text x="320" y="140" font-size="12" text-anchor="middle" class="mono">tmux attach -t ch09</text>
+  </g>
+
+  <text x="10" y="326" font-size="12" class="fill-muted">tmux survives a dropped connection, not a reboot of the node or a site's cleanup of old sessions.</text>
+</svg>

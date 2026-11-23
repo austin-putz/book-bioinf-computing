@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 380" role="img" aria-labelledby="three-machines-title">
+  <title id="three-machines-title">The three machines of this chapter. On the left, your laptop, where you type ssh, rsync, and scp; it sits behind a firewall and usually cannot accept incoming SSH connections, so it starts every connection. Inside the cluster: the login node, reached with ssh, for logging in, editing, and submitting; the data transfer node (DTN), reached with rsync or scp, for moving files, which then flow in either direction; compute nodes, which run jobs sent from the login node (Chapter 10); and shared storage holding your files in /work or /project, connected to both the login node and the DTN, so files sent to the DTN appear in your folder on the login node. Globus moves large transfers through the DTN from a web browser.</title>
+  <defs>
+    <marker id="three-machines-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+    <marker id="three-machines-data" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-given"/>
+    </marker>
+  </defs>
+
+  <!-- Laptop -->
+  <rect x="10" y="70" width="170" height="210" rx="12" class="fill-surface stroke-line"/>
+  <text x="26" y="98" font-size="16" font-weight="700">Your laptop</text>
+  <text x="26" y="120" font-size="13" class="fill-muted">you type here:</text>
+  <text x="26" y="142" font-size="13" class="mono">ssh</text>
+  <text x="26" y="162" font-size="13" class="mono">rsync, scp</text>
+  <text x="26" y="232" font-size="12" class="fill-muted">behind a firewall:</text>
+  <text x="26" y="248" font-size="12" class="fill-muted">usually cannot accept</text>
+  <text x="26" y="264" font-size="12" class="fill-muted">incoming SSH</text>
+
+  <!-- Cluster boundary -->
+  <rect x="226" y="10" width="484" height="330" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="242" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+
+  <!-- Login node -->
+  <rect x="300" y="52" width="170" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="314" y="78" font-size="16" font-weight="700">Login node</text>
+  <text x="314" y="98" font-size="13" class="fill-muted">log in, edit, submit</text>
+  <text x="314" y="116" font-size="13" class="fill-muted">shared by everyone</text>
+
+  <!-- DTN -->
+  <rect x="300" y="210" width="170" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="314" y="236" font-size="16" font-weight="700">Transfer node</text>
+  <text x="314" y="256" font-size="13" class="fill-muted">(DTN) files in</text>
+  <text x="314" y="274" font-size="13" class="fill-muted">and out</text>
+
+  <!-- Laptop to login node: ssh -->
+  <line x1="180" y1="100" x2="298" y2="92" class="stroke-muted" stroke-width="1.75" marker-end="url(#three-machines-arrow)"/>
+  <text x="238" y="84" font-size="13" text-anchor="middle" class="mono">ssh</text>
+
+  <!-- Laptop to DTN: connection started here, data both ways -->
+  <line x1="180" y1="236" x2="298" y2="236" class="stroke-muted" stroke-width="1.75" marker-end="url(#three-machines-arrow)"/>
+  <text x="238" y="226" font-size="13" text-anchor="middle" class="mono">rsync, scp</text>
+  <line x1="186" y1="262" x2="294" y2="262" class="stroke-given" stroke-width="2.5" marker-start="url(#three-machines-data)" marker-end="url(#three-machines-data)"/>
+  <text x="240" y="284" font-size="12" text-anchor="middle" class="fill-given">files go both ways</text>
+
+  <!-- Compute nodes -->
+  <rect x="512" y="52" width="180" height="78" rx="10" class="fill-surface stroke-line" stroke-dasharray="4 3"/>
+  <text x="526" y="78" font-size="16" font-weight="700" class="fill-muted">Compute nodes</text>
+  <text x="526" y="98" font-size="13" class="fill-muted">run jobs</text>
+  <text x="526" y="116" font-size="13" class="fill-muted">(Chapter 10)</text>
+  <line x1="470" y1="91" x2="510" y2="91" class="stroke-muted" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#three-machines-arrow)"/>
+
+  <!-- Shared storage -->
+  <rect x="512" y="186" width="180" height="126" rx="10" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="526" y="212" font-size="16" font-weight="700" class="fill-given">Shared storage</text>
+  <text x="526" y="234" font-size="13" class="fill-given">your files in</text>
+  <text x="526" y="252" font-size="13" class="mono fill-given">/work, /project</text>
+  <text x="526" y="276" font-size="12" class="fill-given">the same folders from</text>
+  <text x="526" y="292" font-size="12" class="fill-given">the login node and DTN</text>
+
+  <!-- Login node and DTN both on the storage -->
+  <path d="M470,118 C495,140 500,180 510,200" fill="none" class="stroke-given" stroke-width="1.75"/>
+  <line x1="470" y1="249" x2="510" y2="249" class="stroke-given" stroke-width="1.75"/>
+
+  <!-- Globus note -->
+  <text x="10" y="366" font-size="12" class="fill-muted">Globus: large transfers through the DTN, set up in a web browser (no laptop terminal needed).</text>
+</svg>

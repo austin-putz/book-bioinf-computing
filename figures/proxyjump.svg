@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 270" role="img" aria-labelledby="proxyjump-title">
+  <title id="proxyjump-title">A jump host. Your laptop connects with ssh to the login node, nova, and from there on to a compute node you hold, written allocated-node, a node in your own allocation (Chapter 10). A dashed line from the laptop straight to the compute node is marked not reachable directly. Above, the one-off command: ssh -J nova allocated-node. Below, the same as a config entry: Host allocated-node, ProxyJump nova.</title>
+  <defs>
+    <marker id="proxyjump-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- One-off command -->
+  <rect x="190" y="10" width="340" height="34" rx="6" class="fill-surface stroke-line"/>
+  <text x="360" y="32" font-size="13" text-anchor="middle" class="mono">ssh -J nova &lt;allocated-node&gt;</text>
+
+  <!-- Laptop -->
+  <rect x="10" y="80" width="150" height="70" rx="10" class="fill-surface stroke-line"/>
+  <text x="85" y="110" font-size="15" font-weight="700" text-anchor="middle">Your laptop</text>
+  <text x="85" y="130" font-size="12" text-anchor="middle" class="fill-muted">types the command</text>
+
+  <!-- Login node -->
+  <rect x="285" y="80" width="150" height="70" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="360" y="110" font-size="15" font-weight="700" text-anchor="middle">Login node</text>
+  <text x="360" y="130" font-size="13" text-anchor="middle" class="mono">nova</text>
+
+  <!-- Compute node -->
+  <rect x="560" y="80" width="150" height="70" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="635" y="106" font-size="15" font-weight="700" text-anchor="middle">Compute node</text>
+  <text x="635" y="124" font-size="12" text-anchor="middle" class="mono">&lt;allocated-node&gt;</text>
+  <text x="635" y="141" font-size="12" text-anchor="middle" class="fill-muted">one you hold (Ch. 10)</text>
+
+  <!-- The two hops -->
+  <line x1="160" y1="115" x2="283" y2="115" class="stroke-muted" stroke-width="1.75" marker-end="url(#proxyjump-arrow)"/>
+  <text x="222" y="106" font-size="12" text-anchor="middle" class="fill-muted">hop 1</text>
+  <line x1="435" y1="115" x2="558" y2="115" class="stroke-muted" stroke-width="1.75" marker-end="url(#proxyjump-arrow)"/>
+  <text x="497" y="106" font-size="12" text-anchor="middle" class="fill-muted">hop 2</text>
+
+  <!-- Not reachable directly -->
+  <path d="M85,150 C85,200 635,200 635,152" fill="none" class="stroke-warn" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="360" y="206" font-size="12" text-anchor="middle" class="fill-warn">not reachable directly from the laptop</text>
+
+  <!-- Config form -->
+  <rect x="220" y="222" width="280" height="40" rx="6" class="fill-surface stroke-line"/>
+  <text x="236" y="240" font-size="12" class="mono">Host &lt;allocated-node&gt;</text>
+  <text x="265" y="255" font-size="12" class="mono">ProxyJump nova</text>
+</svg>

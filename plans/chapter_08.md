@@ -27,7 +27,8 @@ questions settled the same day (see *Decisions*). **Revised 2026-11-22** after t
 promise, `grep`/`head` handling, sitting order, git `restore` source,
 logging in `02`/`run_all.sh`, colour roles. Its bash claims were
 re-checked on the Mac (Homebrew bash 5.3.15), marked *captured
-(2026-11-22)*.
+(2026-11-22)*. The draft chapter was then reviewed
+(`reviews/chapter_08_codex_review.md`); its four fixes are in decision 13.
 
 ## From `PLAN_CHAPTERS.md`
 
@@ -348,7 +349,7 @@ review). Error handling still comes after variables and loops.
    bad=0
    {
      IFS= read -r _   # skip the header line
-     while IFS=$'\t' read -r sample folder _; do
+     while IFS=$'\t' read -r sample folder rest || [[ -n "$sample$folder$rest" ]]; do
        if [[ ! -d "$folder" ]]; then
          printf '%s: missing folder %s\n' "$sample" "$folder" >&2
          bad=1
@@ -671,7 +672,7 @@ review). Error handling still comes after variables and loops.
     log as in Chapter 3 (script `76fa8eb6…`, output `e1d81de7…`); `02`'s
     three lines, output MD5 `3b9c2b4c…`; ShellCheck 0.11.0 clean on all
     three scripts; the whole run in `logs/run_all_…log`. With the §9
-    guard, `01`'s MD5 becomes `f2867b2a…`, and run from `~` it stops
+    guard and result check (decision 13), `01`'s MD5 becomes `f2857591…`, and run from `~` it stops
     with `run from the project folder`, exit 1, leaving no `~/results`
     or `~/logs`.)
     *A failed rerun* (keeps §8's narrower promise honest), in
@@ -739,7 +740,8 @@ review). Error handling still comes after variables and loops.
     commit their scripts, then break and recover one. One-time setup:
     check `git --version` (Xcode Command Line Tools on a Mac, from
     Homebrew's install in Chapter 1; preinstalled on Ubuntu/WSL and
-    clusters; `git restore` needs 2.23, and every machine checked has
+    clusters; `git restore` needs 2.23 and `init.defaultBranch` 2.28, so the
+    chapter asks for 2.28; every machine checked has
     more: Mac 2.50.1, Ubuntu 24.04 2.43.0, Nova and Atlas 2.47.3, Ceres
     2.52.0), `git config --global user.name` / `user.email` and
     `git config --global init.defaultBranch main` **before** `git init`
@@ -1164,7 +1166,7 @@ supplied material):
   `gunzip -c … | head` → 141, 6 of 6; corrupted copy → exit 1, no
   results; same without `pipefail` → exit 0; truncated R2 with
   regenerated checksums → seqkit `[ERRO]`, exit 0, header-only
-  results; ShellCheck 0.9.0 on the broken script (SC2086 info, SC2154
+  results (with decision 13's result check: exit 1, old table kept); ShellCheck 0.9.0 on the broken script (SC2086 info, SC2154
   warning), on the skeleton (SC2068 error for `$@`, SC2086 ×2), and
   no findings on `01`, `02`, `run_all.sh`, `count_reads.sh`; exercise
   3's three inputs; git 2.43.0 `init` hint, `status`, `diff`,
@@ -1347,6 +1349,28 @@ Austin's choices, all as recommended:
     already listed it.
 12. **Exercise 4 adds a third step**, `03_transcript_biotypes.sh`,
     instead of rewriting `02` (final review, 2026-11-22).
+
+## Decisions (2026-11-23, after the review of the draft chapter)
+
+13. **Four fixes from `reviews/chapter_08_codex_review.md`**, all made
+    in the chapter and checked on the Mac:
+    - **Result check in `01`** (§9), between `seqkit stats` and `mv`:
+      `[[ $(wc -l < results/read_counts.tsv.tmp) -eq 3 ]] || { echo
+      "read_counts: expected a header and 2 rows" >&2; exit 1; }`. The
+      3 belongs to this two-file project; a general script derives it
+      from its inputs. Truncated R2 with regenerated checksums: exit 1,
+      the old table (`e1d81de7…`) kept, and `run_all.sh` stops before
+      `02`. New script MD5 `f2857591…` (was `f2867b2a…`). §7 points
+      ahead to it.
+    - **Last line without a newline:** `read` skips it, so the table
+      checker passed a missing folder (exit 0). Both redirected loops
+      (§4 scaffold, exercise 2) now use `read -r sample folder rest ||
+      [[ -n "$sample$folder$rest" ]]`; "Limits of `read`" says so.
+      Same table now gives exit 1.
+    - **git minimum 2.28** for the setup shown (`git restore` itself
+      needs 2.23).
+    - **`gtf_types.sh` header:** `(from ~/bioinf-computing-ch08)`, not
+      "from any folder".
 
 ## Open questions
 

@@ -26,7 +26,61 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-</style>
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="../site_libs/quarto-nav/quarto-nav.js"></script>
@@ -53,6 +107,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
 <link href="../site_libs/bootstrap/bootstrap-dark-b4f194da33962df49b6ccd01f8f087cc.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-f33c49e5ff8856791a32eddf791b60d6.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<script src="../site_libs/quarto-contrib/bioinf-steps-0.1.0/steps.js"></script>
+<script src="../site_libs/quarto-contrib/kbd/kbd.js"></script>
+<link href="../site_libs/quarto-contrib/kbd/kbd.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -86,7 +143,7 @@ ul.task-list li input[type="checkbox"] {
 
 </head>
 
-<body class="nav-sidebar floating quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
+<body class="nav-sidebar floating slimcontent quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
     const toggleBodyColorMode = (bsSheetEl) => {
       const mode = bsSheetEl.getAttribute("data-mode");
       const bodyEl = window.document.querySelector("body");
@@ -643,12 +700,24 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-  <li><a href="#planned-topics" id="toc-planned-topics" class="nav-link active" data-scroll-target="#planned-topics"><span class="header-section-number">9.1</span> Planned topics</a></li>
+  <li><a href="#sec-working-remotely-intro" id="toc-sec-working-remotely-intro" class="nav-link active" data-scroll-target="#sec-working-remotely-intro"><span class="header-section-number">9.1</span> What this chapter does</a></li>
+  <li><a href="#sec-working-remotely-command" id="toc-sec-working-remotely-command" class="nav-link" data-scroll-target="#sec-working-remotely-command"><span class="header-section-number">9.2</span> One command on another machine</a></li>
+  <li><a href="#sec-working-remotely-keys" id="toc-sec-working-remotely-keys" class="nav-link" data-scroll-target="#sec-working-remotely-keys"><span class="header-section-number">9.3</span> SSH keys: logging in without retyping a password</a></li>
+  <li><a href="#sec-working-remotely-config" id="toc-sec-working-remotely-config" class="nav-link" data-scroll-target="#sec-working-remotely-config"><span class="header-section-number">9.4</span> <code>~/.ssh/config</code>: names, keep-alives, one sign-in, jump hosts</a></li>
+  <li><a href="#sec-working-remotely-tmux" id="toc-sec-working-remotely-tmux" class="nav-link" data-scroll-target="#sec-working-remotely-tmux"><span class="header-section-number">9.5</span> tmux: work that survives a dropped connection</a></li>
+  <li><a href="#sec-working-remotely-transfer" id="toc-sec-working-remotely-transfer" class="nav-link" data-scroll-target="#sec-working-remotely-transfer"><span class="header-section-number">9.6</span> Moving files: <code>rsync</code>, <code>scp</code>, and the DTN</a></li>
+  <li><a href="#sec-working-remotely-move" id="toc-sec-working-remotely-move" class="nav-link" data-scroll-target="#sec-working-remotely-move"><span class="header-section-number">9.7</span> Proving the copy, and moving the project</a>
+  <ul class="collapse">
+  <li><a href="#sec-working-remotely-move-project" id="toc-sec-working-remotely-move-project" class="nav-link" data-scroll-target="#sec-working-remotely-move-project"><span class="header-section-number">9.7.1</span> Moving the project</a></li>
+  </ul></li>
+  <li><a href="#sec-working-remotely-summary" id="toc-sec-working-remotely-summary" class="nav-link" data-scroll-target="#sec-working-remotely-summary"><span class="header-section-number">9.8</span> Summary</a></li>
+  <li><a href="#sec-working-remotely-exercises" id="toc-sec-working-remotely-exercises" class="nav-link" data-scroll-target="#sec-working-remotely-exercises"><span class="header-section-number">9.9</span> Exercises</a></li>
+  <li><a href="#sec-working-remotely-reading" id="toc-sec-working-remotely-reading" class="nav-link" data-scroll-target="#sec-working-remotely-reading"><span class="header-section-number">9.10</span> Further reading</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content" tabindex="-1">
+<main class="content page-columns page-full" id="quarto-document-content" tabindex="-1">
 
 
 <header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="Breadcrumbs"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../chapters/05-shell-basics.html">The Linux command line</a></li><li class="breadcrumb-item"><a href="../chapters/09-working-remotely.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Working remotely</span></a></li></ol></nav>
@@ -670,33 +739,1908 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="callout callout-style-default callout-important no-icon callout-titled">
+<p><strong>Core.</strong> Work through it, with the exercises.</p>
+<div class="goals callout callout-style-default callout-note no-icon callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon no-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>Under construction
+<span class="screen-reader-only">Note</span>Learning goals
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>This chapter is a placeholder. The topics below are the current plan and will change as the chapter is written.</p>
+<p>By the end of this chapter you should be able to:</p>
+<ol type="1">
+<li>Log in to a cluster with an SSH key protected by a passphrase (or your site’s certificate), and explain what the public and private halves are for and which one never leaves your laptop.</li>
+<li>Write <code>~/.ssh/config</code> entries that give hosts short names, keep connections alive, and share one sign-in across connections, check them with <code>ssh -G</code>, and recognise a jump-host (<code>ProxyJump</code>) entry.</li>
+<li>Start, detach from, and reattach to a tmux session, so work survives a dropped connection, and find the login node it lives on.</li>
+<li>Copy files and folders between laptop and cluster through the data transfer node with <code>rsync</code> and <code>scp</code>, keeping files in the project’s group, and choose Globus for large or many files.</li>
+<li>Prove that a transfer arrived intact with <code>md5sum -c</code> on the receiving machine, and move the project (files, environment, reference link) so its pipeline runs on the cluster.</li>
+</ol>
 </div>
 </div>
-<p><strong>Core.</strong> Work through it, with the exercises.</p>
-<section id="planned-topics" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">9.1</span> Planned topics</h2>
+<section id="sec-working-remotely-intro" class="level2" data-number="9.1">
+<h2 data-number="9.1" class="anchored" data-anchor-id="sec-working-remotely-intro"><span class="header-section-number">9.1</span> What this chapter does</h2>
+<p>In <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> you logged in to a cluster once, typed <code>hostname</code>, and logged out. Daily work is different: many logins a day, commands that run longer than your connection lasts, and files moving both ways. This chapter makes those three things routine. Everything before it ran on your laptop (<a href="01-orientation.html" class="quarto-xref"><span>Chapter 1</span></a>); from here on, the main path <strong>assumes a cluster account</strong>. If you do not have one yet, every section says which steps work on the laptop alone, and the cluster steps are shown as captured sessions you can read.</p>
+<p>Three machines matter from now on (<a href="#fig-three-machines" class="quarto-xref">Figure&nbsp;<span>9.1</span></a>):</p>
 <ul>
-<li>Running one command over SSH (<code>ssh host command</code>); the “host key changed” warning</li>
-<li>SSH and SSH keys; <code>~/.ssh/config</code>; jump hosts (<code>ProxyJump</code>)</li>
-<li>Connection sharing (<code>ControlMaster</code>) so one sign-in serves many connections</li>
-<li>tmux / screen so work survives a dropped connection</li>
-<li>Moving data: <code>scp</code>, <code>rsync</code>, Globus, through the site’s data transfer node (DTN), not the login node</li>
-<li>Checksums to confirm a transfer</li>
-<li>Moving the project to the cluster: copy files, reinstall the environment, recreate links</li>
+<li>your <strong>laptop</strong>, where you type <code>ssh</code>, <code>rsync</code>, and <code>scp</code>;</li>
+<li>the cluster’s <strong>login node</strong>, where you log in, edit, and submit work;</li>
+<li>the cluster’s <strong>data transfer node (DTN)</strong>, where files go in and out.</li>
+</ul>
+<p>The login node and the DTN sit on the same shared storage, so a file copied to the DTN appears in the same <code>/work</code> or <code>/project</code> folder you see from the login node. We start every transfer <strong>from the laptop</strong>, in both directions: a laptop behind a home or campus firewall usually cannot accept an incoming SSH connection, so the cluster cannot start a copy to it. Who starts the connection is separate from which way the data flows. A “pull” typed on the laptop still moves files from the cluster to the laptop.</p>
+<div id="fig-three-machines" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-three-machines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 380" role="img" aria-labelledby="three-machines-title">
+  <title id="three-machines-title">The three machines of this chapter. On the left, your laptop, where you type ssh, rsync, and scp; it sits behind a firewall and usually cannot accept incoming SSH connections, so it starts every connection. Inside the cluster: the login node, reached with ssh, for logging in, editing, and submitting; the data transfer node (DTN), reached with rsync or scp, for moving files, which then flow in either direction; compute nodes, which run jobs sent from the login node (Chapter 10); and shared storage holding your files in /work or /project, connected to both the login node and the DTN, so files sent to the DTN appear in your folder on the login node. Globus moves large transfers through the DTN from a web browser.</title>
+  <defs>
+    <marker id="three-machines-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+    <marker id="three-machines-data" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-given"></path>
+    </marker>
+  </defs>
+  <!-- Laptop -->
+  <rect x="10" y="70" width="170" height="210" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="26" y="98" font-size="16" font-weight="700">Your laptop</text>
+  <text x="26" y="120" font-size="13" class="fill-muted">you type here:</text>
+  <text x="26" y="142" font-size="13" class="mono">ssh</text>
+  <text x="26" y="162" font-size="13" class="mono">rsync, scp</text>
+  <text x="26" y="232" font-size="12" class="fill-muted">behind a firewall:</text>
+  <text x="26" y="248" font-size="12" class="fill-muted">usually cannot accept</text>
+  <text x="26" y="264" font-size="12" class="fill-muted">incoming SSH</text>
+  <!-- Cluster boundary -->
+  <rect x="226" y="10" width="484" height="330" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"></rect>
+  <text x="242" y="34" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+  <!-- Login node -->
+  <rect x="300" y="52" width="170" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="314" y="78" font-size="16" font-weight="700">Login node</text>
+  <text x="314" y="98" font-size="13" class="fill-muted">log in, edit, submit</text>
+  <text x="314" y="116" font-size="13" class="fill-muted">shared by everyone</text>
+  <!-- DTN -->
+  <rect x="300" y="210" width="170" height="78" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="314" y="236" font-size="16" font-weight="700">Transfer node</text>
+  <text x="314" y="256" font-size="13" class="fill-muted">(DTN) files in</text>
+  <text x="314" y="274" font-size="13" class="fill-muted">and out</text>
+  <!-- Laptop to login node: ssh -->
+  <line x1="180" y1="100" x2="298" y2="92" class="stroke-muted" stroke-width="1.75" marker-end="url(#three-machines-arrow)"></line>
+  <text x="238" y="84" font-size="13" text-anchor="middle" class="mono">ssh</text>
+  <!-- Laptop to DTN: connection started here, data both ways -->
+  <line x1="180" y1="236" x2="298" y2="236" class="stroke-muted" stroke-width="1.75" marker-end="url(#three-machines-arrow)"></line>
+  <text x="238" y="226" font-size="13" text-anchor="middle" class="mono">rsync, scp</text>
+  <line x1="186" y1="262" x2="294" y2="262" class="stroke-given" stroke-width="2.5" marker-start="url(#three-machines-data)" marker-end="url(#three-machines-data)"></line>
+  <text x="240" y="284" font-size="12" text-anchor="middle" class="fill-given">files go both ways</text>
+  <!-- Compute nodes -->
+  <rect x="512" y="52" width="180" height="78" rx="10" class="fill-surface stroke-line" stroke-dasharray="4 3"></rect>
+  <text x="526" y="78" font-size="16" font-weight="700" class="fill-muted">Compute nodes</text>
+  <text x="526" y="98" font-size="13" class="fill-muted">run jobs</text>
+  <text x="526" y="116" font-size="13" class="fill-muted">(Chapter 10)</text>
+  <line x1="470" y1="91" x2="510" y2="91" class="stroke-muted" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#three-machines-arrow)"></line>
+  <!-- Shared storage -->
+  <rect x="512" y="186" width="180" height="126" rx="10" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="526" y="212" font-size="16" font-weight="700" class="fill-given">Shared storage</text>
+  <text x="526" y="234" font-size="13" class="fill-given">your files in</text>
+  <text x="526" y="252" font-size="13" class="mono fill-given">/work, /project</text>
+  <text x="526" y="276" font-size="12" class="fill-given">the same folders from</text>
+  <text x="526" y="292" font-size="12" class="fill-given">the login node and DTN</text>
+  <!-- Login node and DTN both on the storage -->
+  <path d="M470,118 C495,140 500,180 510,200" fill="none" class="stroke-given" stroke-width="1.75"></path>
+  <line x1="470" y1="249" x2="510" y2="249" class="stroke-given" stroke-width="1.75"></line>
+  <!-- Globus note -->
+  <text x="10" y="366" font-size="12" class="fill-muted">Globus: large transfers through the DTN, set up in a web browser (no laptop terminal needed).</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-three-machines-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.1: The three machines of this chapter. You type <code>ssh</code> on the laptop to reach the login node, and <code>rsync</code> or <code>scp</code> to reach the data transfer node (DTN). The laptop starts every connection; files then flow in either direction. The login node and the DTN share the cluster’s storage, so files sent to the DTN appear in your folder on the login node. Jobs on compute nodes are <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>.
+</figcaption>
+</figure>
+</div>
+<p>Practice happens in a scratch folder on the laptop. Make it now:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/bioinf-computing-ch09 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ~/bioinf-computing-ch09</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The cluster steps use your own cluster folder: <code>/work/&lt;group&gt;/&lt;netid&gt;</code> on Nova, <code>/project/&lt;project&gt;/&lt;you&gt;</code> on SCINet. What those storage areas are, and why this is the right place, comes in <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>. Two things outside the scratch folder change: your <code>~/.ssh</code> folder (keys and config, in <a href="#sec-working-remotely-keys" class="quarto-xref"><span>Section 9.3</span></a> and <a href="#sec-working-remotely-config" class="quarto-xref"><span>Section 9.4</span></a>) and, at the end, a copy of your project on the cluster.</p>
+<p><strong>Two laptop tools.</strong> This chapter needs a current <code>rsync</code> and <code>tmux</code> on the laptop. A Mac’s own <code>/usr/bin/rsync</code> is an older replacement (openrsync, “rsync version 2.6.9 compatible”) that lacks options used here, and macOS has no tmux. Install both with Homebrew, then check that Homebrew’s rsync comes first on your <code>PATH</code> (<a href="07-linux-system.html#sec-linux-system-path" class="quarto-xref"><span>Section 7.4</span></a>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop, macOS)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2" data-filename="Terminal (laptop, macOS)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install rsync tmux</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">type</span> <span class="at">-a</span> rsync</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">--version</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-n</span> 1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>rsync is /usr/local/bin/rsync
+rsync is /usr/bin/rsync
+rsync  version 3.5.0  protocol version 32</code></pre>
+<p>(On an Apple-silicon Mac the first path is <code>/opt/homebrew/bin/rsync</code>.) Ubuntu, including Ubuntu under WSL, already has both: Ubuntu 26.04 ships rsync 3.4.1, tmux 3.6, screen, and OpenSSH 10.2. If <code>type -a rsync</code> or <code>type -a tmux</code> finds nothing on your Linux machine, <code>sudo apt install rsync tmux</code> adds them.</p>
+<p><strong>Without a cluster</strong>, these parts work on the laptop alone: the broken-transfer demonstration in <a href="#sec-working-remotely-command" class="quarto-xref"><span>Section 9.2</span></a>, making a key in <a href="#sec-working-remotely-keys" class="quarto-xref"><span>Section 9.3</span></a>, checking a config file with <code>ssh -G</code> in <a href="#sec-working-remotely-config" class="quarto-xref"><span>Section 9.4</span></a>, all of tmux on the laptop in <a href="#sec-working-remotely-tmux" class="quarto-xref"><span>Section 9.5</span></a>, and the local <code>rsync</code> and checksum steps in <a href="#sec-working-remotely-transfer" class="quarto-xref"><span>Section 9.6</span></a> and <a href="#sec-working-remotely-move" class="quarto-xref"><span>Section 9.7</span></a>.</p>
+<p>The outputs shown were captured in November 2026: on a Mac (macOS 15, Homebrew bash, rsync 3.5.0, OpenSSH 9.9, tmux 3.7), on Windows 11 with Ubuntu 26.04 under WSL (OpenSSH 10.2), and by logging in to Nova, Atlas, and Ceres. User names, groups, and addresses are replaced by placeholders such as <code>&lt;netid&gt;</code>, <code>&lt;group&gt;</code>, and <code>&lt;project&gt;</code>.</p>
+</section>
+<section id="sec-working-remotely-command" class="level2" data-number="9.2">
+<h2 data-number="9.2" class="anchored" data-anchor-id="sec-working-remotely-command"><span class="header-section-number">9.2</span> One command on another machine</h2>
+<p>You do not have to log in to run something on the cluster. Give <code>ssh</code> a command after the host name, and it logs in, runs that command, prints its output on your laptop, and logs out. From the laptop, using the short name <code>nova</code> you set up in <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> (SCINet readers use <code>ceres.scinet.usda.gov</code> or <code>atlas-login.hpc.msstate.edu</code>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova hostname</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'pwd; ls'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>nova-login-2
+/home/&lt;netid&gt;
+…</code></pre>
+<p>(the <code>…</code> is the list of files in your cluster home). There was no prompt on the cluster and no <code>exit</code>: the command ran on the login node and the connection closed when it finished. This is the <code>ssh host command</code> row of <a href="07-linux-system.html#tbl-startup-files" class="quarto-xref">Table&nbsp;<span>7.8</span></a>: bash on the cluster starts without your interactive settings, runs the command, and quits.</p>
+<p><strong>Quotes decide where expansion happens.</strong> The laptop’s shell reads your command line first, then <code>ssh</code> sends what is left to the cluster. In double quotes, the laptop expands <code>$HOME</code> before <code>ssh</code> ever runs; in single quotes, the text travels unchanged and the cluster’s shell expands it (<a href="05-shell-basics.html" class="quarto-xref"><span>Chapter 5</span></a>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">"echo double: </span><span class="va">$HOME</span><span class="st">"</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'echo single: $HOME'</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'exit 3'</span><span class="kw">;</span> <span class="bu">echo</span> <span class="st">"status </span><span class="va">$?</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>double: /Users/you
+single: /home/&lt;netid&gt;
+status 3</code></pre>
+<p>The last line shows that the remote command’s exit status comes back to your laptop, so <code>&amp;&amp;</code> and <code>if</code> (<a href="08-shell-scripts.html#sec-shell-scripts-conditionals" class="quarto-xref"><span>Section 8.5</span></a>) work across the connection too.</p>
+<p><strong>Why this matters for copying files.</strong> <code>ssh host command</code> is exactly how <code>rsync</code> works: it runs <code>rsync</code> on the cluster through <code>ssh</code> and the two copies talk to each other over the connection, byte by byte. If the cluster’s shell prints anything on standard output while it starts, a welcome line from <code>~/.bashrc</code>, say, that text lands in the middle of rsync’s conversation and corrupts it. <a href="07-linux-system.html#sec-linux-system-startup" class="quarto-xref"><span>Section 7.6</span></a> warned that nothing in <code>~/.bashrc</code> should print; here is what happens when something does.</p>
+<p>You can see it without a cluster. Make a stand-in for <code>ssh</code> that prints one welcome line and then runs the command on your own laptop, and a quiet version that does not print:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch09</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">'# fakessh: stands in for ssh in a local demo. rsync runs it as'</span> <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'#   fakessh HOST COMMAND ...; it skips HOST and runs COMMAND here.'</span> <span class="dt">\</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">'echo "Welcome to the cluster!"   # what a chatty startup file does'</span> <span class="dt">\</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">'shift'</span> <span class="st">'exec "$@"'</span> <span class="op">&gt;</span> fakessh</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="st">'# quietssh: the same, without the welcome line.'</span> <span class="dt">\</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">'shift'</span> <span class="st">'exec "$@"'</span> <span class="op">&gt;</span> quietssh</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">chmod</span> u+x fakessh quietssh</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> src/sub <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">'A\n'</span> <span class="op">&gt;</span> src/a.txt <span class="kw">&amp;&amp;</span> <span class="bu">printf</span> <span class="st">'B\n'</span> <span class="op">&gt;</span> src/sub/b.txt</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The last line makes a small folder, <code>src/</code>, with two files; you will use it again later. <code>rsync -e</code> names the program rsync uses instead of <code>ssh</code>, and <code>localhost:</code> makes rsync treat the destination as “remote”:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> <span class="at">-e</span> ./fakessh src/ localhost:dst-fake/<span class="kw">;</span> <span class="bu">echo</span> <span class="st">"exit </span><span class="va">$?</span><span class="st">"</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> <span class="at">-e</span> ./quietssh src/ localhost:dst-fake/<span class="kw">;</span> <span class="bu">echo</span> <span class="st">"exit </span><span class="va">$?</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>protocol version mismatch -- is your shell clean?
+(see the rsync manpage for an explanation)
+rsync error: protocol incompatibility (code 2) at compat.c(625) [sender=3.5.0]
+exit 2
+sending incremental file list
+created directory dst-fake
+./
+a.txt
+sub/
+sub/b.txt
+
+sent 234 bytes  received 100 bytes  222.67 bytes/sec
+total size is 4  speedup is 0.01
+exit 0</code></pre>
+<p>The one welcome line broke the transfer; without it, the same copy worked. rsync’s own message, “is your shell clean?”, is the clue to remember. (Current versions of <code>scp</code> copy over a different channel, SFTP, and are less sensitive; older <code>scp</code> broke the same way.)</p>
+<p>Test your real cluster the same way. <code>wc -c</code> counts the bytes that came back; <code>PIPESTATUS[0]</code> (<a href="08-shell-scripts.html#sec-shell-scripts-strict" class="quarto-xref"><span>Section 8.7</span></a>) is the exit status of <code>ssh</code> itself, because zero bytes from a connection that failed prove nothing:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova true <span class="kw">|</span> <span class="fu">wc</span> <span class="at">-c</span><span class="kw">;</span> <span class="bu">echo</span> <span class="st">"ssh status </span><span class="va">${PIPESTATUS</span><span class="op">[</span><span class="dv">0</span><span class="op">]</span><span class="va">}</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>0
+ssh status 0</code></pre>
+<p><code>0</code> and status <code>0</code> mean a clean shell. This was the result on Nova, Atlas, and Ceres, even with a heavily customised <code>~/.bashrc</code> on Nova. Atlas prints a long legal notice on every connection, but on standard error, which goes to your screen and not into the pipe, so it is harmless. If you see a number above 0, look for an <code>echo</code> or other output in your cluster startup files (<a href="07-linux-system.html#sec-linux-system-startup" class="quarto-xref"><span>Section 7.6</span></a>); occasionally a site’s own login scripts print, and then the site has to fix it.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: a startup file that prints breaks file transfers
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Text printed on standard output when the remote shell starts breaks <code>rsync</code> (and older <code>scp</code>) with “protocol version mismatch – is your shell clean?”. <code>ssh host true | wc -c</code> must print <code>0</code>, with ssh’s own exit status 0.</p>
+</div>
+</div>
+<p><strong>The host key, again.</strong> In <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> you answered <code>yes</code> to a host-key question, and ssh saved the machine’s key in <code>~/.ssh/known_hosts</code>. Every later login checks that key. If it ever differs, ssh stops with a warning you should never ignore. Here it is, made safely by pointing ssh at a fake <code>known_hosts</code> file:</p>
+<pre class="console"><code>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@    WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!     @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+IT IS POSSIBLE THAT SOMEONE IS DOING SOMETHING NASTY!
+Someone could be eavesdropping on you right now (man-in-the-middle attack)!
+It is also possible that a host key has just been changed.
+The fingerprint for the ED25519 key sent by the remote host is
+SHA256:DRxKEui9nnf4BSBeLSN4mZ5Il3eHjsoiN74EvzSlmxE.
+Please contact your system administrator.
+Add correct host key in ./fake_known_hosts to get rid of this message.
+Offending ED25519 key in ./fake_known_hosts:1
+Host key for nova-login-1.its.iastate.edu has changed and you have requested strict checking.
+Host key verification failed.</code></pre>
+<p>ssh refused to connect (exit status 255). There are two possible reasons: the site really changed its keys, which sites announce (check its news, or its published fingerprints, such as <a href="https://research.it.iastate.edu/nova-ssh-host-key-fingerprints">Nova’s list</a>), or something between you and the cluster is pretending to be it. Do not “fix” the warning by deleting <code>known_hosts</code>. Once the site confirms a change, remove that one entry and connect again:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-keygen</span> <span class="at">-R</span> nova-login-1.its.iastate.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A <strong>harmless</strong> cousin of this message appears the first time you use a new name for a machine you already know, such as <code>nova-login-1</code> after <code>nova</code>:</p>
+<pre class="console"><code>The authenticity of host 'nova-login-1.its.iastate.edu (10.94.0.3)' can't be established.
+ED25519 key fingerprint is SHA256:DRxKEui9nnf4BSBeLSN4mZ5Il3eHjsoiN74EvzSlmxE.
+This host key is known by the following other names/addresses:
+    ~/.ssh/known_hosts:8: nova.its.iastate.edu
+Are you sure you want to continue connecting (yes/no/[fingerprint])?</code></pre>
+<p>This is the ordinary question, and ssh even tells you it has seen this key under another name: all of Nova’s login names share one key. Type <code>yes</code>.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> <code>ssh nova "echo $USER"</code> and <code>ssh nova 'echo $USER'</code> print different names on a laptop where your user name differs from your cluster name. Which one is the cluster’s?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-3-contents" aria-controls="callout-3" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-3" class="callout-3-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>The single-quoted one. In double quotes, the laptop’s shell replaces <code>$USER</code> with your laptop user name before <code>ssh</code> sends the command; in single quotes, <code>$USER</code> travels to the cluster and its shell expands it.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-working-remotely-keys" class="level2" data-number="9.3">
+<h2 data-number="9.3" class="anchored" data-anchor-id="sec-working-remotely-keys"><span class="header-section-number">9.3</span> SSH keys: logging in without retyping a password</h2>
+<p>Typing a code and a password for every connection gets tiring fast, and on Nova it is worse than it sounds: an authenticator code cannot be used twice, so two connections in the same 30 seconds fail on the second and ask again. An <strong>SSH key</strong> replaces both with something you hold.</p>
+<p><strong>Make a key</strong> (laptop; no cluster needed):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-keygen</span> <span class="at">-t</span> ed25519 <span class="at">-C</span> <span class="st">"laptop-2026"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>-t ed25519</code> picks the key type (the modern, short, recommended one); <code>-C</code> adds a comment, a label so you can tell your keys apart later. Press <kbd title="Enter" aria-hidden="true">Enter</kbd><span class="visually-hidden">Enter</span> to accept the suggested file, <code>~/.ssh/id_ed25519</code>. <strong>If it asks <code>Overwrite (y/n)?</code>, answer <code>n</code></strong>: you already have a key with that name, and overwriting it would lock you out of everywhere it is installed. Then <strong>set a passphrase</strong>: a phrase you will remember, typed twice. Nothing appears as you type.</p>
+<pre class="console"><code>Generating public/private ed25519 key pair.
+Enter file in which to save the key (/home/you/.ssh/id_ed25519):
+Enter passphrase for "/home/you/.ssh/id_ed25519" (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/you/.ssh/id_ed25519
+Your public key has been saved in /home/you/.ssh/id_ed25519.pub
+The key fingerprint is:
+SHA256:/s+YthFDm8UJK3tgWIr5BkzCct90X9txEF/qLboNueA laptop-2026
+The key's randomart image is:
++--[ED25519 256]--+
+…
++----[SHA256]-----+</code></pre>
+<p>That is OpenSSH 10’s wording; older versions ask <code>Enter passphrase (empty for no passphrase):</code>. If the two passphrases differ, it says <code>Passphrases do not match.  Try again.</code> and asks again. (The key shown throughout this chapter is a throwaway made for the book.)</p>
+<p>Look at what you made:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> ~/.ssh/id_ed25519<span class="pp">*</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.ssh/id_ed25519.pub</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-keygen</span> <span class="at">-lf</span> ~/.ssh/id_ed25519.pub</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>-rw------- 1 you you 464 Nov 23 10:16 /home/you/.ssh/id_ed25519
+-rw-r--r-- 1 you you  96 Nov 23 10:16 /home/you/.ssh/id_ed25519.pub
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA… laptop-2026
+256 SHA256:/s+YthFDm8UJK3tgWIr5BkzCct90X9txEF/qLboNueA laptop-2026 (ED25519)</code></pre>
+<p>A key is <strong>two files</strong> (<a href="#fig-ssh-key-login" class="quarto-xref">Figure&nbsp;<span>9.2</span></a>):</p>
+<ul>
+<li>the <strong>public key</strong>, <code>id_ed25519.pub</code>: one line, safe to share. You give a copy to every machine you want to log in to, which keeps it in a list called <code>~/.ssh/authorized_keys</code>;</li>
+<li>the <strong>private key</strong>, <code>id_ed25519</code> (no <code>.pub</code>): it stays on your laptop. At login, the server sends a challenge, your laptop signs it with the private key, and the server checks the signature with the public key. The private key itself is never sent.</li>
+</ul>
+<p>The <strong>passphrase</strong> encrypts the private key on disk, so a copy of the file is useless without it.</p>
+<div id="fig-ssh-key-login" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-ssh-key-login-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 360" role="img" aria-labelledby="ssh-key-login-title" data-step-labels="Make a pair|Copy once|Challenge|Sign|Logged in">
+  <title id="ssh-key-login-title">How SSH key login works, in five steps. On your laptop, ssh-keygen makes a pair of keys: a private key, id_ed25519, locked by your passphrase, and a public key, id_ed25519.pub. Once, with an ordinary password login, ssh-copy-id copies the public key into ~/.ssh/authorized_keys on the cluster. At each login, the cluster sends a challenge, a random message. The laptop signs it with the private key, which the agent holds unlocked, and sends back only the signature; the cluster checks the signature with the public key. You are logged in with no code and no password. The private key never crosses the line between laptop and cluster. On SCINet, step gives you a certificate for the day instead.</title>
+  <desc data-caption="1">ssh-keygen makes a pair on your laptop: the private key, locked by your passphrase, and the public key.</desc>
+  <desc data-caption="2">Once, with an ordinary password login, ssh-copy-id copies the public key into ~/.ssh/authorized_keys on the cluster.</desc>
+  <desc data-caption="3">At each login, the cluster sends a challenge: a random message only the matching private key can sign.</desc>
+  <desc data-caption="4">The laptop signs it with the private key (the agent holds it unlocked) and sends back only the signature; the cluster checks it with the public key.</desc>
+  <desc data-caption="5">The signature fits, so you are logged in: no code, no password. The private key itself never left your laptop.</desc>
+  <defs>
+    <marker id="ssh-key-login-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Laptop -->
+  <rect x="10" y="20" width="260" height="290" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="26" y="46" font-size="16" font-weight="700">Your laptop</text>
+  <!-- Private key -->
+  <rect x="28" y="62" width="224" height="70" rx="8" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+  <text x="42" y="86" font-size="14" font-weight="700">private key</text>
+  <text x="42" y="106" font-size="13" class="mono">id_ed25519</text>
+  <text x="42" y="124" font-size="12" class="fill-muted">locked by your passphrase</text>
+  <text x="42" y="150" font-size="12" class="fill-muted" data-show="4">the agent holds it unlocked</text>
+  <!-- Public key on the laptop -->
+  <rect x="28" y="166" width="224" height="58" rx="8" class="fill-surface stroke-line" stroke-width="1.25"></rect>
+  <text x="42" y="190" font-size="14" font-weight="700">public key</text>
+  <text x="42" y="210" font-size="13" class="mono">id_ed25519.pub</text>
+  <!-- The boundary the private key never crosses -->
+  <line x1="320" y1="20" x2="320" y2="310" class="stroke-warn" stroke-width="1.75" stroke-dasharray="6 5"></line>
+  <text x="320" y="334" font-size="12" text-anchor="middle" class="fill-warn">the private key never crosses this line</text>
+  <!-- Cluster -->
+  <rect x="370" y="20" width="340" height="290" rx="12" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="386" y="46" font-size="16" font-weight="700">The cluster (login node)</text>
+  <!-- authorized_keys with the copied public key -->
+  <rect x="388" y="62" width="304" height="76" rx="8" class="fill-surface stroke-line" stroke-width="1.25" data-show="2"></rect>
+  <text x="402" y="84" font-size="13" class="mono" data-show="2">~/.ssh/authorized_keys</text>
+  <g data-show="2" data-move="2" style="--dx:-382px; --dy:110px">
+    <rect x="402" y="94" width="276" height="34" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+    <text x="414" y="116" font-size="13">a copy of your public key</text>
+  </g>
+  <text x="530" y="160" font-size="12" text-anchor="middle" class="fill-muted" data-show="2" data-hide="3">ssh-copy-id, once, with your password</text>
+  <!-- Step 3: challenge -->
+  <g data-show="3">
+    <line x1="386" y1="196" x2="256" y2="196" class="stroke-muted" stroke-width="1.75" marker-end="url(#ssh-key-login-arrow)"></line>
+    <text x="520" y="200" font-size="13" text-anchor="middle">challenge: a random message</text>
+  </g>
+  <!-- Step 4: signature, checked -->
+  <g data-show="4">
+    <line x1="256" y1="236" x2="386" y2="236" class="stroke-muted" stroke-width="1.75" marker-end="url(#ssh-key-login-arrow)"></line>
+    <text x="140" y="250" font-size="13" text-anchor="middle">signature only</text>
+    <text x="530" y="240" font-size="13" text-anchor="middle" class="fill-good">checked with the public key ✓</text>
+  </g>
+  <!-- Step 5: logged in -->
+  <g data-show="5">
+    <rect x="388" y="258" width="304" height="40" rx="8" class="fill-good-soft stroke-good" stroke-width="1.25"></rect>
+    <text x="540" y="283" font-size="14" font-weight="700" text-anchor="middle" class="fill-good">logged in: no code, no password</text>
+    <text x="28" y="290" font-size="12" class="fill-muted">SCINet: step gives you a</text>
+    <text x="28" y="304" font-size="12" class="fill-muted">certificate for the day instead</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-ssh-key-login-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.2: How key login works. <code>ssh-keygen</code> makes a pair of keys on your laptop; the public key is copied once to <code>~/.ssh/authorized_keys</code> on the cluster; at each login the server sends a challenge, the laptop signs it with the private key, and the server checks the signature with the public key. The private key never crosses to the cluster.
+</figcaption>
+</figure>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The public key is a lock you can give to any machine; the private key is the only key that fits it, and it stays on your laptop, protected by a passphrase.</p>
+</div>
+</div>
+<p><strong>Permissions.</strong> ssh refuses a private key that others could read (<a href="07-linux-system.html#tbl-chmod-recipes" class="quarto-xref">Table&nbsp;<span>7.2</span></a>: <code>~/.ssh</code> at <code>700</code>, the private key at <code>600</code>; <code>ssh-keygen</code> sets both). If a copy goes wrong, you will see:</p>
+<pre class="console"><code>@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@         WARNING: UNPROTECTED PRIVATE KEY FILE!          @
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+Permissions 0644 for 'id_ed25519' are too open.
+It is required that your private key files are NOT accessible by others.
+This private key will be ignored.
+Load key "id_ed25519": bad permissions</code></pre>
+<p><code>chmod 600 ~/.ssh/id_ed25519</code> fixes it.</p>
+<p><strong>Type the passphrase once: the agent.</strong> An <strong>ssh-agent</strong> is a small program that holds your unlocked key in memory, so you type the passphrase once per session instead of at every login. <code>ssh-add</code> hands it a key, and <code>ssh-add -l</code> lists the keys it holds.</p>
+<ul>
+<li><p><strong>macOS</strong> runs an agent for you. Add these lines at the <strong>end</strong> of <code>~/.ssh/config</code> (<a href="#sec-working-remotely-config" class="quarto-xref"><span>Section 9.4</span></a> explains the file):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config (laptop, macOS)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21" data-filename="~/.ssh/config (laptop, macOS)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Host *</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    AddKeysToAgent yes</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    UseKeychain yes</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The first login then asks for the passphrase once, loads the key into the agent, and saves the passphrase in your Keychain; after that, logins ask nothing, even after a restart. You do not need <code>ssh-add</code>. (<code>UseKeychain</code> exists only in Apple’s ssh.)</p></li>
+<li><p><strong>Ubuntu under WSL</strong> has no agent in a new terminal. Start one, then add your key:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (Ubuntu)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22" data-filename="Terminal (Ubuntu)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">"SSH_AUTH_SOCK=[</span><span class="va">$SSH_AUTH_SOCK</span><span class="st">]"</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> <span class="at">-l</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">"</span><span class="va">$(</span><span class="fu">ssh-agent</span> <span class="at">-s</span><span class="va">)</span><span class="st">"</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> ~/.ssh/id_ed25519</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh-add</span> <span class="at">-l</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>SSH_AUTH_SOCK=[]
+Could not open a connection to your authentication agent.
+Agent pid 649
+Enter passphrase for /home/you/.ssh/id_ed25519:
+Identity added: /home/you/.ssh/id_ed25519 (laptop-2026)
+256 SHA256:/s+YthFDm8UJK3tgWIr5BkzCct90X9txEF/qLboNueA laptop-2026 (ED25519)</code></pre>
+<p>This terminal now knows how to reach the agent; a new terminal normally does not, so you repeat these lines there. The agent itself runs in the background and can keep running after you close the terminal, so before you close it, stop the agent you started:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (Ubuntu)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24" data-filename="Terminal (Ubuntu)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">eval</span> <span class="st">"</span><span class="va">$(</span><span class="fu">ssh-agent</span> <span class="at">-k</span><span class="va">)</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>(This is only for an agent you started by hand like this; the Mac’s own agent needs nothing. OpenSSH 10 keeps the agent’s connection point in <code>~/.ssh/agent/</code>, so starting the agent creates <code>~/.ssh</code> if you did not have one yet.)</p></li>
+</ul>
+<p><strong>Install the public key, by site.</strong> How a cluster learns your public key depends on the site, so check its page first (<a href="#tbl-site-login" class="quarto-xref">Table&nbsp;<span>9.1</span></a>).</p>
+<ul>
+<li><p><strong>Nova.</strong> ISU allows key login as an alternative to the authenticator code: “Public key authentication does not use TOTP keys” (<a href="https://research.it.iastate.edu/login-nova-ssh-client">ISU: login to Nova with an SSH client</a>). Keys work only over the <strong>ISU VPN</strong>, “regardless of whether you are on or off campus”, and go to a <strong>named</strong> login node, because <code>nova.its.iastate.edu</code> “is not a single server”. Connect the VPN, then send your public key with one last code-and-password login:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ssh-copy-id</span> <span class="at">-i</span> ~/.ssh/id_ed25519.pub <span class="op">&lt;</span>netid<span class="op">&gt;</span>@nova-login-1.its.iastate.edu</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/you/.ssh/id_ed25519.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+(&lt;netid&gt;@nova-login-1.its.iastate.edu) Verification code:
+(&lt;netid&gt;@nova-login-1.its.iastate.edu) Password:
+
+Number of key(s) added:        1</code></pre>
+<p><code>ssh-copy-id</code> adds your public key to the end of <code>authorized_keys</code> on Nova and leaves anything already there alone. Try it:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="op">&lt;</span>netid<span class="op">&gt;</span>@nova-login-1.its.iastate.edu hostname</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Enter passphrase for key '/home/you/.ssh/id_ed25519':
+nova-login-1</code></pre>
+<p>The key’s passphrase, and nothing else: no code, no ISU password. With the agent holding the key, not even that. The same key also works on <code>nova-login-2</code> and on the transfer node, <code>novadtn</code>.</p></li>
+<li><p><strong>SCINet.</strong> Use SCINet’s certificate route from <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> and skip <code>ssh-copy-id</code>: SCINet’s <a href="https://scinet.usda.gov/guides/access/ssh-login">SSH page</a> documents the SmallStep <code>step</code> setup, not personal keys in <code>authorized_keys</code>. A <strong>certificate</strong> is your public key plus your identity, signed by SCINet for the day after you sign in through the browser (“once for the day (or every 16 hours)”). The matching private key still stays on your laptop and still does the proving. Read this section for the idea; you will use the same kind of key for GitHub in <a href="22-github.html" class="quarto-xref"><span>Chapter 22</span></a>.</p></li>
+<li><p><strong>Other sites.</strong> Many allow keys; some forbid them, and some require a second factor as well. The site’s own page is the authority (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>).</p></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: never share the private key
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Never copy, email, paste, or upload <code>id_ed25519</code> (the file <strong>without</strong> <code>.pub</code>): not to a cluster, not to a USB stick, not into a chat or an issue. If it leaks, make a new pair and remove the old public key from every <code>authorized_keys</code> where you installed it.</p>
+</div>
+</div>
+<p><strong>Windows: two SSH programs.</strong> On Windows, the Ubuntu terminal and Windows’ own ssh (the one VS Code’s Remote-SSH uses, <a href="02-book-setup.html#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>) are separate programs with separate <code>~/.ssh</code> folders. Each one needs its own setup:</p>
+<ul>
+<li><strong>Keys (Nova):</strong> make one key pair in the Ubuntu terminal and another in PowerShell (<code>ssh-keygen -t ed25519 -C "windows-2026"</code>), and install both public keys. Do not share one private key between the two.</li>
+<li><strong>SCINet:</strong> <code>step</code> sets up only the ssh program it is run from, so a setup in Ubuntu does nothing for VS Code on Windows. Windows’ <code>step</code> also needs the Windows <code>ssh-agent</code> service running (“If it is not running, SmallStepCLI will not work”, says SCINet’s page), and on a standard Windows 11 that service is <code>Stopped</code> and <code>Disabled</code>, which only an administrator can change. Unless you have admin rights, use Open OnDemand for VS Code on SCINet (<a href="02-book-setup.html#sec-book-setup-remote" class="quarto-xref"><span>Section 2.5</span></a>).</li>
+</ul>
+<p>A Windows home folder can contain a space (<code>C:\Users\Jane Doe</code>). Paths under it must be quoted in ssh options, or ssh reads the second half as an extra word (“extra arguments at end of line”).</p>
+<div id="tbl-site-login" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-site-login-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.1: How you prove who you are at the two example sites. Observed 2026-11-22/23; your site’s own pages are the authority (<a href="../appendices/a-cluster-sites.html" class="quarto-xref"><span>Appendix A</span></a>).
+</figcaption>
+<div aria-describedby="tbl-site-login-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: left;">Nova (Iowa State)</th>
+<th style="text-align: left;">SCINet (Ceres, Atlas)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Sign-in without a key</td>
+<td style="text-align: left;">authenticator code, then password, for every connection</td>
+<td style="text-align: left;">a browser sign-in about once a day (<code>step</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Keys</td>
+<td style="text-align: left;">allowed, over the ISU VPN; <code>ssh-copy-id</code> to <code>nova-login-1</code> or <code>-2</code></td>
+<td style="text-align: left;">not documented; use the <code>step</code> certificate</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">What a login asks once set up</td>
+<td style="text-align: left;">the key’s passphrase once, then nothing (agent)</td>
+<td style="text-align: left;">nothing until the certificate expires</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Windows</td>
+<td style="text-align: left;">one key in Ubuntu, another in PowerShell</td>
+<td style="text-align: left;"><code>step</code> in each ssh program; Windows needs the <code>ssh-agent</code> service (admin), or use Open OnDemand</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Quick connections in a row</td>
+<td style="text-align: left;">a code cannot be reused, so expect to wait for a new code without a key</td>
+<td style="text-align: left;">no effect</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “My public key is the secret one, and the private key is what I give to servers”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> It is the other way round. The public key (<code>.pub</code>) is meant to be shared and goes on every server; the private key never leaves your laptop.</p>
+</div>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> A labmate asks for “your SSH key” so they can give you access to a server. Which file do you send?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-7-contents" aria-controls="callout-7" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-7" class="callout-7-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>~/.ssh/id_ed25519.pub</code>, the public key. Never the file without <code>.pub</code>.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-working-remotely-config" class="level2" data-number="9.4">
+<h2 data-number="9.4" class="anchored" data-anchor-id="sec-working-remotely-config"><span class="header-section-number">9.4</span> <code>~/.ssh/config</code>: names, keep-alives, one sign-in, jump hosts</h2>
+<p>In <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> you wrote a three-line entry so that <code>ssh nova</code> meant <code>ssh &lt;netid&gt;@nova.its.iastate.edu</code>. The same file can hold everything else you would otherwise type each time. Before changing your real one, back it up under a dated name:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> ~/.ssh/config ~/.ssh/config.bak-<span class="va">$(</span><span class="fu">date</span> +%F<span class="va">)</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> ~/.ssh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>(If <code>cp</code> says there is no such file, you have no config yet; carry on.) <strong>No cluster account?</strong> Do the same work in a practice file instead, so your real config gets no made-up hosts: <code>code ~/bioinf-computing-ch09/sample-config</code>, and add <code>-F sample-config</code> to every <code>ssh -G</code> below.</p>
+<p><strong>Ask ssh what it will do.</strong> <code>ssh -G host</code> prints the settings ssh would use for that host, after reading your config, <strong>without connecting</strong>. It is the way to check every change in this section. With the entry from <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a> plus a second one for the transfer node:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30" data-filename="~/.ssh/config (laptop)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>Host nova</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    HostName nova-login-1.its.iastate.edu</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>Host nova-dtn</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    HostName novadtn.its.iastate.edu</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>Host nova nova-dtn</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    User &lt;netid&gt;</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-G</span> nova-dtn <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^(hostname|user|serveraliveinterval|controlmaster) '</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>user &lt;netid&gt;
+hostname novadtn.its.iastate.edu
+controlmaster false
+serveraliveinterval 0</code></pre>
+<p>Note the first change from <a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a>: <code>HostName</code> is now the <strong>named</strong> login node <code>nova-login-1</code> rather than <code>nova.its.iastate.edu</code>. Keys need a named node on Nova, and so does tmux (<a href="#sec-working-remotely-tmux" class="quarto-xref"><span>Section 9.5</span></a>).</p>
+<p>A <code>Host</code> line can list several names, and every block whose names match is read. For most options, <strong>the first value found wins</strong>, so specific blocks go first and shared ones after; a <code>Host *</code> block, which matches everything, goes last (the same “first match” idea as <code>PATH</code>, <a href="07-linux-system.html#sec-linux-system-path" class="quarto-xref"><span>Section 7.4</span></a>). Here is the book’s full Nova block, one option at a time:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33" data-filename="~/.ssh/config (laptop)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>Host nova</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    HostName nova-login-1.its.iastate.edu</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>Host nova-dtn</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    HostName novadtn.its.iastate.edu</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>Host nova nova-dtn</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>    User &lt;netid&gt;</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>    IdentityFile ~/.ssh/id_ed25519</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>    IdentitiesOnly yes</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>    ServerAliveInterval 60</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    ControlMaster auto</span>
+<span id="cb33-13"><a href="#cb33-13" aria-hidden="true" tabindex="-1"></a>    ControlPath ~/.ssh/cm-%C</span>
+<span id="cb33-14"><a href="#cb33-14" aria-hidden="true" tabindex="-1"></a>    ControlPersist 10h</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><code>IdentityFile</code> names your private key, and <code>IdentitiesOnly yes</code> tells ssh to offer <strong>only</strong> that one. Without it, ssh offers every key the agent holds (a GitHub key, a SCINet certificate, …) one after another, and servers give up after a few wrong ones.</li>
+<li><code>ServerAliveInterval 60</code> sends a small “still here” message every 60 seconds. It stops a firewall or VPN from dropping a connection that sits idle (ISU recommends it in its <a href="https://research.it.iastate.edu/faqs">FAQ</a>). It cannot bring back a VPN or a network that has failed.</li>
+<li><code>ControlMaster</code>, <code>ControlPath</code>, <code>ControlPersist</code>: <strong>connection sharing</strong>, below.</li>
+</ul>
+<p>Check it:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-G</span> nova-dtn <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^(user|hostname|identitiesonly|serveraliveinterval|control)'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>user &lt;netid&gt;
+hostname novadtn.its.iastate.edu
+controlmaster auto
+identitiesonly yes
+serveraliveinterval 60
+controlpath /home/you/.ssh/cm-3631c01c705606618c1a8ba73b84c46359830ac2
+controlpersist 36000</code></pre>
+<p><code>%C</code> became a long hash of your user, host, and port, and <code>10h</code> became 36,000 seconds.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>ssh -G &lt;host&gt;</code> shows what ssh will do with your config, without connecting. Run it after every change.</p>
+</div>
+</div>
+<p><strong>Connection sharing.</strong> With <code>ControlMaster auto</code>, the first connection to a host signs in and becomes the <strong>master</strong>; later connections to the <strong>same host</strong> (a second terminal, an <code>rsync</code>, an <code>scp</code>) travel inside it and sign in to nothing. ISU’s FAQ recommends this for exactly “having to authenticate so often”. It matters most if you sign in with a code; with a key in the agent, logins ask nothing anyway. On Nova, the first <code>ssh nova</code> asked for the code and password once, a second <code>ssh nova</code> asked nothing, and you can see the master:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-O</span> check nova</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-O</span> check nova-dtn</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-O</span> exit nova</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>Master running (pid=27640)
+Master running (pid=28661)
+Exit request sent.</code></pre>
+<p>Four details:</p>
+<ul>
+<li>It is <strong>one master per host</strong>. The master to <code>nova</code> does not serve <code>nova-dtn</code>; the transfer node needed its own sign-in, and after that, <code>rsync</code> and <code>scp</code> to it asked nothing. That is why the shared block names both.</li>
+<li><code>ControlPersist 10h</code> keeps the master open for up to 10 hours <strong>after the last connection using it closes</strong>. It is an idle timeout, not a promise of 10 hours: the site or the network can end it sooner. <code>ssh -O exit</code> closes it now.</li>
+<li><code>ControlPath</code> is where the master’s connection point lives. Use <code>~/.ssh/cm-%C</code>: the longer <code>cm-%r@%h:%p</code> form found in many guides failed on a Mac when the path grew too long (<code>unix_listener: path "…" too long for Unix domain socket</code>).</li>
+<li>While a master is open, anyone using your laptop account can use the connection. Lock your screen.</li>
+</ul>
+<p><strong>Windows: no sharing.</strong> Windows’ own OpenSSH cannot do connection sharing. With these three lines in <code>C:\Users\&lt;you&gt;\.ssh\config</code>, the connection fails:</p>
+<pre class="console"><code>getsockname failed: Not a socket
+Read from remote host nova-login-1.its.iastate.edu: Unknown error</code></pre>
+<p>Put <code>ControlMaster</code>, <code>ControlPath</code>, and <code>ControlPersist</code> only in the Ubuntu (WSL) config. The other lines work in both.</p>
+<p><strong>SCINet: <code>step</code> wrote yours.</strong> SCINet’s <code>step</code> setup added an <code>Include</code> line to your <code>~/.ssh/config</code>; do not edit what it points to. It is worth reading once:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> <span class="at">-n</span> Include ~/.ssh/config</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span> ~/.step/ssh/config</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>22: Include "/home/you/.step/ssh/includes"
+Match exec "step ssh check-host %h"
+    User &lt;first.last&gt;
+    UserKnownHostsFile "/home/you/.step/ssh/known_hosts"
+    ProxyCommand step ssh proxycommand --provisioner keycloak %r %h %p</code></pre>
+<p><code>Match exec</code> applies these settings only to hosts that <code>step</code> knows are SCINet’s. <code>User</code> is why you never type your SCINet user name. <code>UserKnownHostsFile</code> keeps SCINet’s host keys in step’s own file, which trusts any host certificate SCINet signs; that is why SCINet’s login nodes never ask the host-key question. <code>ProxyCommand</code> runs every SCINet connection through <code>step</code>, which opens the browser for a new certificate when the old one has expired. Two visible side effects: connections to <code>atlas-dtn</code> print <code>Certificate invalid: name is not a listed principal</code> and ask one ordinary host-key question, because that node’s certificate does not list the shared name. It is harmless.</p>
+<p>If you want short names on SCINet, add your own entries <strong>before</strong> the two lines <code>step</code> wrote, <code>Host *</code> and the <code>Include</code> under it. Keep those two lines together: <code>Include</code> reads its file only for the hosts named by the <code>Host</code> line above it, so an alias slipped in between them would leave your other aliases without SCINet’s user name, host keys, and <code>step</code>. The end of the file should look like this (keep the <code>Include</code> path your setup wrote):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41" data-filename="~/.ssh/config (laptop)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>Host atlas</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    HostName atlas-login.hpc.msstate.edu</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>Host atlas-dtn</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    HostName atlas-dtn.hpc.msstate.edu</span>
+<span id="cb41-6"><a href="#cb41-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-7"><a href="#cb41-7" aria-hidden="true" tabindex="-1"></a>Host ceres</span>
+<span id="cb41-8"><a href="#cb41-8" aria-hidden="true" tabindex="-1"></a>    HostName ceres.scinet.usda.gov</span>
+<span id="cb41-9"><a href="#cb41-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-10"><a href="#cb41-10" aria-hidden="true" tabindex="-1"></a>Host ceres-dtn</span>
+<span id="cb41-11"><a href="#cb41-11" aria-hidden="true" tabindex="-1"></a>    HostName ceres-dtn.scinet.usda.gov</span>
+<span id="cb41-12"><a href="#cb41-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb41-13"><a href="#cb41-13" aria-hidden="true" tabindex="-1"></a># Keep the block step wrote after your aliases.</span>
+<span id="cb41-14"><a href="#cb41-14" aria-hidden="true" tabindex="-1"></a>Host *</span>
+<span id="cb41-15"><a href="#cb41-15" aria-hidden="true" tabindex="-1"></a>    Include "/home/you/.step/ssh/includes"</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Check a login alias and a transfer alias: both should show your SCINet user name and step’s <code>proxycommand</code>.</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-G</span> atlas <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^(user|hostname|userknownhostsfile|proxycommand) '</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-G</span> atlas-dtn <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">'^(user|hostname|userknownhostsfile|proxycommand) '</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The rest of this chapter uses <code>atlas-dtn</code> and <code>ceres-dtn</code> only in that sense: short names you defined.</p>
+<p><strong>Jump hosts: recognising <code>ProxyJump</code>.</strong> Some machines can be reached only through another one: a compute node only through the login node, a cluster only through a gateway (<a href="#fig-proxyjump" class="quarto-xref">Figure&nbsp;<span>9.3</span></a>). <code>ProxyJump</code> tells ssh to go through the first machine to reach the second:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>~/.ssh/config (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43" data-filename="~/.ssh/config (laptop)"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>Host &lt;allocated-node&gt;</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    ProxyJump nova</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>or, once, <code>ssh -J nova &lt;allocated-node&gt;</code>. The placeholder must be a compute node <strong>you currently hold</strong> (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> teaches how to get one, connect to it this way, and give it back), so there is nothing to run yet; recognise the entry when you see it. ISU’s own recipe for editors on compute nodes adds <code>ForwardAgent yes</code> and <code>StrictHostKeyChecking no</code> to that one entry; those are ISU’s choices, explained in <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>, and do not belong in a <code>Host *</code> block. On Windows, a jump-host entry must be in the Windows config for VS Code to use it.</p>
+<div id="fig-proxyjump" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-proxyjump-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 270" role="img" aria-labelledby="proxyjump-title">
+  <title id="proxyjump-title">A jump host. Your laptop connects with ssh to the login node, nova, and from there on to a compute node you hold, written allocated-node, a node in your own allocation (Chapter 10). A dashed line from the laptop straight to the compute node is marked not reachable directly. Above, the one-off command: ssh -J nova allocated-node. Below, the same as a config entry: Host allocated-node, ProxyJump nova.</title>
+  <defs>
+    <marker id="proxyjump-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- One-off command -->
+  <rect x="190" y="10" width="340" height="34" rx="6" class="fill-surface stroke-line"></rect>
+  <text x="360" y="32" font-size="13" text-anchor="middle" class="mono">ssh -J nova &lt;allocated-node&gt;</text>
+  <!-- Laptop -->
+  <rect x="10" y="80" width="150" height="70" rx="10" class="fill-surface stroke-line"></rect>
+  <text x="85" y="110" font-size="15" font-weight="700" text-anchor="middle">Your laptop</text>
+  <text x="85" y="130" font-size="12" text-anchor="middle" class="fill-muted">types the command</text>
+  <!-- Login node -->
+  <rect x="285" y="80" width="150" height="70" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="360" y="110" font-size="15" font-weight="700" text-anchor="middle">Login node</text>
+  <text x="360" y="130" font-size="13" text-anchor="middle" class="mono">nova</text>
+  <!-- Compute node -->
+  <rect x="560" y="80" width="150" height="70" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="635" y="106" font-size="15" font-weight="700" text-anchor="middle">Compute node</text>
+  <text x="635" y="124" font-size="12" text-anchor="middle" class="mono">&lt;allocated-node&gt;</text>
+  <text x="635" y="141" font-size="12" text-anchor="middle" class="fill-muted">one you hold (Ch. 10)</text>
+  <!-- The two hops -->
+  <line x1="160" y1="115" x2="283" y2="115" class="stroke-muted" stroke-width="1.75" marker-end="url(#proxyjump-arrow)"></line>
+  <text x="222" y="106" font-size="12" text-anchor="middle" class="fill-muted">hop 1</text>
+  <line x1="435" y1="115" x2="558" y2="115" class="stroke-muted" stroke-width="1.75" marker-end="url(#proxyjump-arrow)"></line>
+  <text x="497" y="106" font-size="12" text-anchor="middle" class="fill-muted">hop 2</text>
+  <!-- Not reachable directly -->
+  <path d="M85,150 C85,200 635,200 635,152" fill="none" class="stroke-warn" stroke-width="1.5" stroke-dasharray="5 4"></path>
+  <text x="360" y="206" font-size="12" text-anchor="middle" class="fill-warn">not reachable directly from the laptop</text>
+  <!-- Config form -->
+  <rect x="220" y="222" width="280" height="40" rx="6" class="fill-surface stroke-line"></rect>
+  <text x="236" y="240" font-size="12" class="mono">Host &lt;allocated-node&gt;</text>
+  <text x="265" y="255" font-size="12" class="mono">ProxyJump nova</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-proxyjump-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.3: A jump host. Your laptop cannot reach a compute node directly; with <code>ProxyJump nova</code>, ssh connects to the login node first and goes on from there to a node you hold. <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> shows the whole route, from holding a node to giving it back.
+</figcaption>
+</figure>
+</div>
+<div id="tbl-ssh-config-options" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ssh-config-options-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.2: The <code>~/.ssh/config</code> options in this chapter. Full list: <a href="https://man.openbsd.org/ssh_config.5"><code>ssh_config(5)</code></a>.
+</figcaption>
+<div aria-describedby="tbl-ssh-config-options-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 45%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Option</th>
+<th style="text-align: left;">What it does</th>
+<th style="text-align: left;">Example</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>Host</code></td>
+<td style="text-align: left;">starts a block; the names you type</td>
+<td style="text-align: left;"><code>Host nova nova-dtn</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>HostName</code></td>
+<td style="text-align: left;">the real machine behind the name</td>
+<td style="text-align: left;"><code>nova-login-1.its.iastate.edu</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>User</code></td>
+<td style="text-align: left;">your user name there</td>
+<td style="text-align: left;"><code>&lt;netid&gt;</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>IdentityFile</code></td>
+<td style="text-align: left;">which private key to use</td>
+<td style="text-align: left;"><code>~/.ssh/id_ed25519</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>IdentitiesOnly</code></td>
+<td style="text-align: left;">offer only that key</td>
+<td style="text-align: left;"><code>yes</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ServerAliveInterval</code></td>
+<td style="text-align: left;">keep an idle connection open</td>
+<td style="text-align: left;"><code>60</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>ControlMaster</code>, <code>ControlPath</code>, <code>ControlPersist</code></td>
+<td style="text-align: left;">share one sign-in per host (not in Windows’ own ssh)</td>
+<td style="text-align: left;"><code>auto</code>, <code>~/.ssh/cm-%C</code>, <code>10h</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>ProxyJump</code></td>
+<td style="text-align: left;">go through another host first</td>
+<td style="text-align: left;"><code>nova</code> (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>AddKeysToAgent</code>, <code>UseKeychain</code></td>
+<td style="text-align: left;">load the key and remember its passphrase (macOS)</td>
+<td style="text-align: left;"><code>yes</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>Include</code></td>
+<td style="text-align: left;">read another config file</td>
+<td style="text-align: left;">written by <code>step</code> on SCINet</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> Your config has <code>Host *</code> with <code>User guest</code> at the top, and <code>Host nova</code> with <code>User &lt;netid&gt;</code> below it. Which user does <code>ssh nova</code> use, and how do you check?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-9-contents" aria-controls="callout-9" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-9" class="callout-9-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>guest</code>: for most options the first value found wins, and <code>Host *</code> matches first. <code>ssh -G nova | grep '^user '</code> shows it without connecting. Move the <code>Host *</code> block to the end.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-working-remotely-tmux" class="level2" data-number="9.5">
+<h2 data-number="9.5" class="anchored" data-anchor-id="sec-working-remotely-tmux"><span class="header-section-number">9.5</span> tmux: work that survives a dropped connection</h2>
+<p>Close your laptop, lose Wi-Fi, or let the VPN time out, and an SSH session ends, taking the commands running in it along (<a href="07-linux-system.html#sec-linux-system-processes" class="quarto-xref"><span>Section 7.7</span></a>). <strong>tmux</strong> keeps a shell running on the machine itself, so you can leave and come back to it.</p>
+<p>Try it on the laptop first. Make a small script that prints the time every five seconds:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch09</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'%s\n'</span> <span class="st">'#!/usr/bin/env bash'</span> <span class="dt">\</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">'# ticker.sh: print the time every 5 seconds until stopped (Ctrl-C).'</span> <span class="dt">\</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">'while true; do date +%T; sleep 5; done'</span> <span class="op">&gt;</span> ticker.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Start a tmux session named <code>ch09</code>, and run the ticker inside it:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="ex">tmux</span> new <span class="at">-s</span> ch09</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> ticker.sh</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>A green bar appears at the bottom: you are inside tmux. Now <strong>detach</strong>: press <kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span>, let go, then press <kbd title="D" aria-hidden="true">D</kbd><span class="visually-hidden">D</span>. You are back in your ordinary terminal, and tmux says:</p>
+<pre class="console"><code>[detached (from session ch09)]</code></pre>
+<p>Close the <strong>whole terminal window</strong>. Open a new one and look:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="ex">tmux</span> ls</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="ex">tmux</span> attach <span class="at">-t</span> ch09</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>ch09: 1 windows (created Sun Nov 22 15:30:08 2026)</code></pre>
+<p>The ticker is still running, with no gap in the times: it never noticed that you left. Stop it with <kbd title="Ctrl-C" aria-hidden="true">Ctrl-C</kbd><span class="visually-hidden">Ctrl-C</span> and type <code>exit</code> to end the session.</p>
+<p><strong>The same on the cluster.</strong> Log in, note where you are, and start the ticker in tmux:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">hostname</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="ex">tmux</span> new <span class="at">-s</span> ch09</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Run the same <code>while true; do date +%T; sleep 5; done</code> line inside it (or copy <code>ticker.sh</code> over first; <a href="#sec-working-remotely-transfer" class="quarto-xref"><span>Section 9.6</span></a> shows how), detach, and this time <strong>turn your Wi-Fi off for a minute</strong>. The frozen terminal finally gives up:</p>
+<pre class="console"><code>Connection to nova.its.iastate.edu closed by remote host.
+Connection to nova.its.iastate.edu closed.
+client_loop: send disconnect: Broken pipe</code></pre>
+<p>Reconnect, <code>tmux attach -t ch09</code>, and the ticker is still counting, with no gap across the minute you were gone. This was the result on Nova and on Atlas. The green bar even shows the node’s name (<code>"nova-login-1"</code>), a free reminder of where the session lives.</p>
+<p><strong>What happened</strong> (<a href="#fig-tmux-detach" class="quarto-xref">Figure&nbsp;<span>9.4</span></a>). When you start tmux, it starts a <strong>tmux server</strong> on that machine, which owns the shell and everything running in it. Your terminal is only a <strong>client</strong> that shows the server’s screen. A dropped connection kills the client, not the server, so the work goes on and you can attach a new client later.</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>tmux keeps the shell on the remote machine; your connection only views it, so losing the connection loses the view, not the work.</p>
+</div>
+</div>
+<div id="fig-tmux-detach" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-tmux-detach-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 340" role="img" aria-labelledby="tmux-detach-title" data-step-labels="Attached|Dropped|Wrong node|Back">
+  <title id="tmux-detach-title">Why a tmux session survives, in four steps. On the right are two login nodes, nova-login-1 and nova-login-2. On nova-login-1, a tmux server holds session ch09 with the ticker running. Step 1: your laptop's terminal is attached to the session as a client. Step 2: the connection drops; the client is gone, but the session and the ticker keep running on nova-login-1. Step 3: you reconnect through the round-robin name and land on nova-login-2, where tmux ls finds no session. Step 4: you connect to nova-login-1 through your nova alias, which names that node, and run tmux attach -t ch09, and the ticker is still counting. tmux survives disconnects, not reboots or a site's cleanup.</title>
+  <desc data-caption="1">Your terminal is attached to tmux session ch09 on nova-login-1, where the ticker runs. The terminal is only a client.</desc>
+  <desc data-caption="2">The connection drops. The client is gone, but the tmux server, the session, and the ticker keep running on nova-login-1.</desc>
+  <desc data-caption="3">You reconnect through nova.its.iastate.edu and land on nova-login-2. tmux ls finds nothing there: the session lives on the other node.</desc>
+  <desc data-caption="4">Connect to nova-login-1 (your nova alias names it) and run tmux attach -t ch09: the ticker is still counting, with no gap.</desc>
+  <defs>
+    <marker id="tmux-detach-arrow" viewbox="0 0 10 10" refx="9" refy="5" markerwidth="7" markerheight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"></path>
+    </marker>
+  </defs>
+  <!-- Laptop -->
+  <rect x="10" y="70" width="210" height="170" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="26" y="96" font-size="16" font-weight="700">Your laptop</text>
+  <rect x="26" y="108" width="178" height="116" rx="4" class="fill-muted-soft"></rect>
+  <g font-size="12" class="mono">
+    <g data-hide="2"><text x="34" y="130">21:21:08</text><text x="34" y="148">21:21:13</text><text x="34" y="166">21:21:18</text></g>
+    <g data-show="2" data-hide="3"><text x="34" y="130">client_loop: send</text><text x="34" y="148">disconnect:</text><text x="34" y="166">Broken pipe</text></g>
+    <g data-show="3" data-hide="4"><text x="34" y="130">$ tmux ls</text><text x="34" y="148" class="fill-warn">error connecting</text><text x="34" y="166" class="fill-warn">to /tmp/tmux-…</text></g>
+    <g data-show="4"><text x="34" y="130">21:22:58</text><text x="34" y="148">21:23:03</text><text x="34" y="166">21:23:08</text></g>
+  </g>
+  <text x="34" y="210" font-size="12" class="fill-muted">a client: it only shows</text>
+  <!-- nova-login-1 with the tmux server -->
+  <rect x="420" y="20" width="290" height="140" rx="12" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="436" y="46" font-size="15" font-weight="700" class="mono">nova-login-1</text>
+  <rect x="436" y="58" width="258" height="88" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"></rect>
+  <text x="450" y="80" font-size="13" font-weight="700" class="fill-given">tmux server: session ch09</text>
+  <text x="450" y="102" font-size="13" class="fill-given">the ticker keeps running</text>
+  <text x="450" y="122" font-size="12" class="fill-given">whether or not a client</text>
+  <text x="450" y="138" font-size="12" class="fill-given">is attached</text>
+  <!-- nova-login-2 -->
+  <rect x="420" y="200" width="290" height="96" rx="12" class="fill-surface stroke-ink" stroke-width="1.25"></rect>
+  <text x="436" y="226" font-size="15" font-weight="700" class="mono">nova-login-2</text>
+  <g data-show="3" data-hide="4">
+    <rect x="436" y="238" width="258" height="44" rx="8" class="fill-warn-soft stroke-warn" stroke-width="1.25"></rect>
+    <text x="450" y="265" font-size="13" class="fill-warn">tmux ls: no session here</text>
+  </g>
+  <!-- Step 1: attached -->
+  <g data-hide="2">
+    <line x1="220" y1="120" x2="418" y2="96" class="stroke-muted" stroke-width="1.75" marker-end="url(#tmux-detach-arrow)"></line>
+    <text x="320" y="96" font-size="13" text-anchor="middle">attached</text>
+  </g>
+  <!-- Step 2: dropped -->
+  <g data-show="2" data-hide="3">
+    <line x1="220" y1="120" x2="300" y2="110" class="stroke-muted" stroke-width="1.75" stroke-dasharray="5 4"></line>
+    <line x1="340" y1="105" x2="418" y2="96" class="stroke-muted" stroke-width="1.75" stroke-dasharray="5 4"></line>
+    <text x="320" y="113" font-size="18" font-weight="700" text-anchor="middle" class="fill-warn">✕</text>
+    <text x="320" y="140" font-size="13" text-anchor="middle">connection dropped</text>
+  </g>
+  <!-- Step 3: wrong node -->
+  <g data-show="3" data-hide="4">
+    <line x1="220" y1="190" x2="418" y2="248" class="stroke-muted" stroke-width="1.75" marker-end="url(#tmux-detach-arrow)"></line>
+    <text x="300" y="250" font-size="12" text-anchor="middle" class="mono">ssh nova.its…</text>
+  </g>
+  <!-- Step 4: back on the right node -->
+  <g data-show="4">
+    <line x1="220" y1="120" x2="418" y2="96" class="stroke-good" stroke-width="2" marker-end="url(#tmux-detach-arrow)"></line>
+    <text x="320" y="82" font-size="12" text-anchor="middle" class="mono">ssh -t nova</text>
+    <text x="320" y="140" font-size="12" text-anchor="middle" class="mono">tmux attach -t ch09</text>
+  </g>
+  <text x="10" y="326" font-size="12" class="fill-muted">tmux survives a dropped connection, not a reboot of the node or a site's cleanup of old sessions.</text>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-tmux-detach-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.4: Why a tmux session survives, and how it seems to vanish. The tmux server runs on the login node where you started it; your terminal is only a client. A dropped connection ends the client, not the server. But a cluster can have several login nodes, and a session on one is invisible from another: reconnect to the node you started on. tmux survives disconnects, not reboots or a site’s cleanup.
+</figcaption>
+</figure>
+</div>
+<p><strong>Where it lives.</strong> A tmux session exists on <strong>one</strong> machine. Nova has two login nodes, and <code>nova.its.iastate.edu</code> sends each login to either at random (ISU’s FAQ says so, and repeated logins landed on <code>-2</code>, <code>-2</code>, <code>-1</code>, <code>-2</code>). A session started on <code>nova-login-1</code> is invisible from <code>nova-login-2</code>:</p>
+<pre class="console"><code>$ ssh &lt;netid&gt;@nova.its.iastate.edu 'hostname; tmux ls'
+nova-login-2
+error connecting to /tmp/tmux-&lt;uid&gt;/default (No such file or directory)
+$ ssh &lt;netid&gt;@nova.its.iastate.edu 'hostname; tmux ls'
+nova-login-1
+ch09: 1 windows (created Sun Nov 22 21:17:25 2026)</code></pre>
+<p>The habit: run <code>hostname</code> before you detach, and put a named node in your config (<code>HostName nova-login-1</code>, as in <a href="#sec-working-remotely-config" class="quarto-xref"><span>Section 9.4</span></a>), so <code>ssh nova</code> always lands where your session is: <code>ssh -t nova tmux attach -t ch09</code> reconnects and reattaches in one go. To reach a node your config does not name, give your user name too, because a full host name does not match the <code>Host nova</code> block and ssh would use your laptop user name: <code>ssh -t &lt;netid&gt;@nova-login-2.its.iastate.edu tmux attach -t ch09</code>.</p>
+<p>On SCINet, Atlas’s <code>atlas-login</code> name hands out two login nodes, and both can be reached by name (<code>atlas-login-1.hpc.msstate.edu</code>, <code>atlas-login-2.hpc.msstate.edu</code>) without any extra question. Ceres’s name led to <code>ceres-login-1</code>. The same habit applies everywhere.</p>
+<p>The “nothing here” message has two forms in the tmux version on these clusters (3.2a): <code>error connecting to … (No such file or directory)</code> where tmux has never run, and <code>no server running on …</code> where a session used to be. Newer versions say <code>no server running on …</code>. Both mean no session on <strong>this</strong> machine.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: a session on the other login node seems to vanish
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>On a cluster with several login nodes, note <code>hostname</code> before you detach. If <code>tmux ls</code> finds nothing, check which node you are on before assuming the session is gone.</p>
+</div>
+</div>
+<p><strong>What tmux does not do.</strong> tmux on a login node is still the login node: fine for editing, short commands, and watching something small, but heavy work belongs in a job (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>), which keeps running without tmux, or you. A session also ends when its server ends: when the node reboots (Nova’s login banner announces its next maintenance date), when you kill it, or when the site cleans up old processes. And transfers from your laptop are not login-node work at all: they run on the laptop (<a href="#sec-working-remotely-transfer" class="quarto-xref"><span>Section 9.6</span></a>). tmux on the <strong>laptop</strong> protects a transfer’s terminal from a closed window, not from the laptop going to sleep, and nothing can copy from a laptop that is asleep. Globus helps in other ways (<a href="#sec-working-remotely-transfer" class="quarto-xref"><span>Section 9.6</span></a>): it carries on with a cluster-to-cluster transfer however your laptop is, and it resumes a laptop transfer when the laptop is back online.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “If I close the window, the command stops; if I keep it open, it runs”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> A command in an ordinary SSH session usually stops when the connection drops, whether you closed the window or the network failed. Inside tmux, it keeps running on the remote machine whatever happens to your window, until the session itself ends. For long work, use tmux, or better, a scheduler job.</p>
+</div>
+</div>
+<p><strong>A handful of keys.</strong> Every tmux shortcut starts with <kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> (press, let go, then the key). Scrolling is the one that surprises people: the mouse wheel does <strong>not</strong> scroll tmux by default. In iTerm2 and similar terminals it sends arrow keys instead, which step through your command history at a prompt, or type <code>^[[A^[[B…</code> into a running program. Use <kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> [<span class="quarto-shortcode__-param" data-is-shortcode="1" data-value="kbd" data-raw="kbd"></span> <span class="quarto-shortcode__-param" data-is-shortcode="1" data-value="[" data-raw="["></span> ]{.quarto-shortcode__ data-is-shortcode=“1” data-raw=“{{&lt; kbd [ &gt;}}”}, then the arrow keys or Page Up, and <kbd title="q" aria-hidden="true">q</kbd><span class="visually-hidden">q</span> to leave.</p>
+<div id="tbl-tmux-keys" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-tmux-keys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.3: tmux in eight commands, with GNU <code>screen</code>, an older program that does the same, beside it.
+</figcaption>
+<div aria-describedby="tbl-tmux-keys-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 40%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">tmux</th>
+<th style="text-align: left;">screen</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">New named session</td>
+<td style="text-align: left;"><code>tmux new -s name</code></td>
+<td style="text-align: left;"><code>screen -S name</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Detach</td>
+<td style="text-align: left;"><kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> <kbd title="D" aria-hidden="true">D</kbd><span class="visually-hidden">D</span></td>
+<td style="text-align: left;"><kbd title="Ctrl-A" aria-hidden="true">Ctrl-A</kbd><span class="visually-hidden">Ctrl-A</span> <kbd title="D" aria-hidden="true">D</kbd><span class="visually-hidden">D</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">List sessions</td>
+<td style="text-align: left;"><code>tmux ls</code></td>
+<td style="text-align: left;"><code>screen -ls</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Attach</td>
+<td style="text-align: left;"><code>tmux attach -t name</code></td>
+<td style="text-align: left;"><code>screen -r name</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">End a session</td>
+<td style="text-align: left;"><code>exit</code> inside it, or <code>tmux kill-session -t name</code></td>
+<td style="text-align: left;"><code>exit</code> inside it</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Scroll back</td>
+<td style="text-align: left;"><kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> [<span class="quarto-shortcode__-param" data-is-shortcode="1" data-value="kbd" data-raw="kbd"></span> <span class="quarto-shortcode__-param" data-is-shortcode="1" data-value="[" data-raw="["></span> ]{.quarto-shortcode__ data-is-shortcode=“1” data-raw=“{{&lt; kbd [ &gt;}}”}, arrows, <kbd title="q" aria-hidden="true">q</kbd><span class="visually-hidden">q</span></td>
+<td style="text-align: left;"><kbd title="Ctrl-A" aria-hidden="true">Ctrl-A</kbd><span class="visually-hidden">Ctrl-A</span> <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span>, arrows, <kbd title="Esc" aria-hidden="true">Esc</kbd><span class="visually-hidden">Esc</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">New window, next window</td>
+<td style="text-align: left;"><kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> <kbd title="C" aria-hidden="true">C</kbd><span class="visually-hidden">C</span>, <kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> <kbd title="N" aria-hidden="true">N</kbd><span class="visually-hidden">N</span></td>
+<td style="text-align: left;"><kbd title="Ctrl-A" aria-hidden="true">Ctrl-A</kbd><span class="visually-hidden">Ctrl-A</span> <kbd title="C" aria-hidden="true">C</kbd><span class="visually-hidden">C</span>, <kbd title="Ctrl-A" aria-hidden="true">Ctrl-A</kbd><span class="visually-hidden">Ctrl-A</span> <kbd title="N" aria-hidden="true">N</kbd><span class="visually-hidden">N</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Split the screen</td>
+<td style="text-align: left;"><kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> <kbd title="%" aria-hidden="true">%</kbd><span class="visually-hidden">%</span> (side by side)</td>
+<td style="text-align: left;"><kbd title="Ctrl-A" aria-hidden="true">Ctrl-A</kbd><span class="visually-hidden">Ctrl-A</span> <kbd title="S" aria-hidden="true">S</kbd><span class="visually-hidden">S</span> (top and bottom)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">On our clusters</td>
+<td style="text-align: left;">Nova, Atlas, Ceres (3.2a; Atlas and Ceres also have newer versions as modules)</td>
+<td style="text-align: left;">Ceres only</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<p>Use whichever your site has; the idea is the same.</p>
+<div class="check">
+<p><strong>Check yourself.</strong> You detached from tmux on Nova yesterday; today <code>tmux ls</code> says <code>no server running</code> (or <code>error connecting to …</code>). Give two possible reasons.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-13-contents" aria-controls="callout-13" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-13" class="callout-13-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>You landed on the other login node, or the session ended (the node rebooted, or the site cleaned it up). Check <code>hostname</code>, and try the other node by name.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-working-remotely-transfer" class="level2" data-number="9.6">
+<h2 data-number="9.6" class="anchored" data-anchor-id="sec-working-remotely-transfer"><span class="header-section-number">9.6</span> Moving files: <code>rsync</code>, <code>scp</code>, and the DTN</h2>
+<p><code>rsync</code> copies files and folders, locally or between machines, and sends only what changed. Learn it on the laptop, where mistakes cost nothing, using the <code>src/</code> folder from <a href="#sec-working-remotely-command" class="quarto-xref"><span>Section 9.2</span></a>. Delete the demo copy first:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch09</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-r</span> dst-fake</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> src <span class="kw">|</span> <span class="fu">sort</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>src
+src/a.txt
+src/sub
+src/sub/b.txt</code></pre>
+<p><strong>Dry run first.</strong> <code>-n</code> (or <code>--dry-run</code>) shows what rsync would do and does nothing:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> <span class="at">--dry-run</span> src/ dst3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>sending incremental file list
+created directory dst3
+./
+a.txt
+sub/
+sub/b.txt
+
+sent 142 bytes  received 56 bytes  396.00 bytes/sec
+total size is 4  speedup is 0.02 (DRY RUN)</code></pre>
+<p><code>(DRY RUN)</code> at the end, and <code>dst3</code> still does not exist. <code>-a</code> (“archive”) copies folders and keeps times, permissions, and links; <code>-v</code> lists each file. Now copy for real, then add a file and copy again:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> src/ dst3</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'C\n'</span> <span class="op">&gt;</span> src/c.txt</span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> src/ dst3</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>sending incremental file list
+created directory dst3
+./
+a.txt
+sub/
+sub/b.txt
+
+sent 234 bytes  received 96 bytes  660.00 bytes/sec
+total size is 4  speedup is 0.01
+sending incremental file list
+./
+c.txt
+
+sent 206 bytes  received 39 bytes  490.00 bytes/sec
+total size is 6  speedup is 0.02</code></pre>
+<p>The second run sent only <code>c.txt</code>. rsync compares the two sides and skips files that already match, so rerunning a large copy after an interruption costs little.</p>
+<p><strong>The trailing slash.</strong> Whether the source ends in <code>/</code> changes what arrives (<a href="#fig-rsync-slash" class="quarto-xref">Figure&nbsp;<span>9.5</span></a>):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> src dst1</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> src/ dst2</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> dst1 dst2 <span class="kw">|</span> <span class="fu">sort</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>dst1
+dst1/src
+dst1/src/a.txt
+dst1/src/c.txt
+dst1/src/sub
+dst1/src/sub/b.txt
+dst2
+dst2/a.txt
+dst2/c.txt
+dst2/sub
+dst2/sub/b.txt</code></pre>
+<p>Without the slash, rsync copies the folder <code>src</code> itself into <code>dst1</code>; with it, it copies what is <strong>inside</strong> <code>src</code>. A slash on the destination makes no difference (<code>dst2</code> and <code>dst2/</code> give the same result).</p>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Key idea
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A slash at the end of the source means “the contents of”: <code>rsync -a src/ dst</code> puts the files in <code>dst</code>; <code>rsync -a src dst</code> puts a folder <code>src</code> in <code>dst</code>.</p>
+</div>
+</div>
+<div id="fig-rsync-slash" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rsync-slash-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewbox="0 0 720 350" role="img" aria-labelledby="rsync-slash-title">
+  <title id="rsync-slash-title">The trailing slash on rsync's source. Left: rsync -a src dst1, with no slash, copies the folder itself, so dst1 holds a folder src, which holds a.txt and the folder sub with b.txt. Right: rsync -a src/ dst2, with a slash, copies what is inside src, so dst2 holds a.txt and sub with b.txt directly. Below: a second run of rsync -av src/ dst3 after adding c.txt sends only c.txt; a.txt and sub/b.txt are already there and are skipped.</title>
+  <!-- Left panel: no slash -->
+  <rect x="10" y="10" width="340" height="226" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="26" y="40" font-size="14" class="mono">rsync -a src dst1</text>
+  <text x="26" y="62" font-size="12" class="fill-muted">no slash: the folder itself</text>
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <path d="M44,96 V118 H62 M74,130 V196 M74,167 H92 M74,196 H92 M110,206 V219 H136"></path>
+  </g>
+  <g font-size="13" class="mono">
+    <text x="30" y="90" font-weight="700">dst1/</text>
+    <rect x="62" y="106" width="64" height="24" rx="5" class="fill-surface stroke-ink" stroke-width="1.5"></rect>
+    <text x="70" y="123" font-weight="700">src/</text>
+    <rect x="92" y="156" width="70" height="22" rx="5" class="fill-given-soft stroke-given"></rect>
+    <text x="100" y="172" class="fill-given">a.txt</text>
+    <text x="96" y="201">sub/</text>
+    <rect x="136" y="208" width="70" height="22" rx="5" class="fill-given-soft stroke-given"></rect>
+    <text x="144" y="224" class="fill-given">b.txt</text>
+  </g>
+  <text x="200" y="123" font-size="12" class="fill-muted">an extra level</text>
+  <!-- Right panel: slash -->
+  <rect x="370" y="10" width="340" height="226" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="386" y="40" font-size="14" class="mono">rsync -a src<tspan font-weight="700" font-size="20">/</tspan> dst2</text>
+  <text x="386" y="62" font-size="12" class="fill-muted">with the slash: what is inside</text>
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <path d="M404,96 V172 M404,119 H422 M404,172 H422 M440,178 V195 H466"></path>
+  </g>
+  <g font-size="13" class="mono">
+    <text x="390" y="90" font-weight="700">dst2/</text>
+    <rect x="422" y="108" width="70" height="22" rx="5" class="fill-given-soft stroke-given"></rect>
+    <text x="430" y="124" class="fill-given">a.txt</text>
+    <text x="426" y="177">sub/</text>
+    <rect x="466" y="184" width="70" height="22" rx="5" class="fill-given-soft stroke-given"></rect>
+    <text x="474" y="200" class="fill-given">b.txt</text>
+  </g>
+  <!-- Second run strip -->
+  <rect x="10" y="252" width="700" height="86" rx="12" class="fill-surface stroke-line"></rect>
+  <text x="26" y="278" font-size="13" class="mono">rsync -av src/ dst3</text>
+  <text x="206" y="278" font-size="12" class="fill-muted">a second time, after adding c.txt</text>
+  <g font-size="13" class="mono">
+    <rect x="26" y="294" width="80" height="26" rx="5" class="fill-muted-soft stroke-muted"></rect>
+    <text x="38" y="312" class="fill-muted">a.txt</text>
+    <rect x="118" y="294" width="104" height="26" rx="5" class="fill-muted-soft stroke-muted"></rect>
+    <text x="130" y="312" class="fill-muted">sub/b.txt</text>
+    <text x="236" y="312" font-size="12" class="fill-muted">already there: skipped</text>
+    <rect x="430" y="294" width="80" height="26" rx="5" class="fill-given-soft stroke-given" stroke-width="1.5"></rect>
+    <text x="442" y="312" font-weight="700" class="fill-given">c.txt</text>
+    <text x="524" y="312" font-size="12">sent: the only change</text>
+  </g>
+</svg>
+
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rsync-slash-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Figure&nbsp;9.5: The trailing slash on the source. <code>rsync -a src dst1</code> copies the folder itself, so the files end up in <code>dst1/src/</code>; <code>rsync -a src/ dst2</code> copies its contents, so they end up directly in <code>dst2/</code>. Below: a second run sends only what changed, here the new file <code>c.txt</code>.
+</figcaption>
+</figure>
+</div>
+<p><strong>To and from the cluster.</strong> The same command works between machines: put <code>host:path</code> on one side. Type it <strong>on the laptop</strong>, and send it to the <strong>transfer node</strong>, never the login node (<a href="02-book-setup.html#sec-book-setup-ssh" class="quarto-xref"><span>Section 2.4</span></a>). Upload raw data, download results:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb60" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> <span class="at">--no-p</span> <span class="at">--no-g</span> data/ nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/myproject/data/</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/myproject/results/ results/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Three rules make this reliable.</p>
+<p><strong>1. Make the destination first.</strong> rsync creates only the <strong>last</strong> folder of a destination path, not missing folders above it:</p>
+<pre class="console"><code>$ rsync -av src/ nova-dtn:/work/&lt;group&gt;/&lt;netid&gt;/missing/a/b/
+sending incremental file list
+rsync: [Receiver] mkdir "/work/&lt;group&gt;/&lt;netid&gt;/missing/a/b" failed: No such file or directory (2)
+rsync error: error in file IO (code 11) at main.c(780) [Receiver=3.2.5]</code></pre>
+<p>Make the folder on the cluster first, with <code>mkdir -p</code> sent through <code>ssh</code> (the login node and the DTN see the same storage, so either works): <code>ssh nova 'mkdir -p /work/&lt;group&gt;/&lt;netid&gt;/myproject/data'</code>. Newer rsyncs have a <code>--mkpath</code> option for this; the clusters have it, but older laptops do not, so this book does not rely on it.</p>
+<p><strong>2. Into a project folder, add <code>--no-p --no-g</code>.</strong> Project folders are <strong>group folders</strong>: everything in them should belong to the project’s group, so your labmates can use it. They are set up so that new files inherit that group (the <code>s</code> in <code>drwxrws---</code>, the setgid bit of <a href="07-linux-system.html#sec-linux-system-permissions" class="quarto-xref"><span>Section 7.2</span></a>). Plain <code>-a</code> gets in the way, because it copies the laptop’s group and permission bits. On all three clusters, files copied with plain <code>-av</code> ended up in your <strong>personal</strong> group instead of the project’s, and on Nova the folder also lost its <code>s</code>. <code>--no-p</code> (do not copy permission bits) and <code>--no-g</code> (do not copy the group) let the cluster’s own rules decide: the files get the project’s group and the site’s default permissions. This is SCINet’s own recommendation (<a href="https://scinet.usda.gov/guides/data/transfer/local">SCINet: local data transfer</a>), which also adds <code>-z</code> (compress on the way):</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb62" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-avz</span> <span class="at">--no-p</span> <span class="at">--no-g</span> data/ atlas-dtn:/project/<span class="op">&lt;</span>project<span class="op">&gt;</span>/<span class="op">&lt;</span>you<span class="op">&gt;</span>/myproject/data/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Files that are read-only on your laptop, like your <code>data/raw</code> from <a href="03-organizing-projects.html#sec-organizing-projects-raw" class="quarto-xref"><span>Section 3.4</span></a>, still arrive read-only. Use plain <code>-a</code> for copies on your laptop and for downloads to it.</p>
+<p><strong>3. Rerun to finish, <code>-P</code> for big files.</strong> If a transfer stops, run the same command again: rsync skips what already arrived. For large files, <code>-P</code> shows progress and keeps a partly sent file, so the rerun resumes it instead of starting over. On Atlas and Ceres, a second run with <code>--no-p --no-g</code> sends nothing. Through Nova’s <code>novadtn</code>, files copied this way currently get the time of the copy instead of the laptop’s, so every rerun checks every file again; the result is still correct, only slower (observed November 2026; reported to ISU).</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Pitfall: rsync does not make missing parent folders
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>rsync … host:/a/b/c/</code> fails with <code>mkdir … failed: No such file or directory</code> and code 11 when <code>/a/b</code> does not exist. Make the destination with <code>ssh host 'mkdir -p …'</code> first.</p>
+</div>
+</div>
+<p>You will see <code>rsync --delete</code> in other guides. It makes the destination an exact copy by <strong>deleting</strong> files that are not in the source, and with a missing slash or the two paths swapped it deletes real data. This book does not use it; if you ever do, dry-run (<code>-n</code>) first and read every line it lists.</p>
+<p><strong><code>scp</code> for one file.</strong> <code>scp</code> copies single files, with the same <code>host:path</code> form:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb63" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scp</span> data/raw/checksums.md5 nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>It is fine for a quick file. It does not skip what is already there or resume, and SCINet advises against <code>scp -r</code> for folders into <code>/project</code>, because the copies do not inherit the project’s group. Use rsync for folders. <a href="#tbl-transfer-tools" class="quarto-xref">Table&nbsp;<span>9.4</span></a> compares the options.</p>
+<p><strong>Why the DTN.</strong> The login node is shared by everyone logged in; a big copy through it slows them all. The DTN is a machine built for moving data, on the same storage, so the files land in the same <code>/work</code> or <code>/project</code> folder. Your first connection to a DTN asks the host-key question: it is a different machine. If a transfer fails right after signing in with <code>connection unexpectedly closed</code> and code 255, rerun it once; if it keeps happening, tell the site. (In November 2026, one of Atlas’s two transfer nodes did exactly that, and SCINet was told.)</p>
+<p><strong>Globus, for big or many files.</strong> For hundreds of gigabytes, thousands of files, or a copy from one cluster to another (Ceres to Atlas, say), use the site’s <strong>Globus</strong> collection in a web browser: “SCINet-Ceres”, “SCINet-Atlas”, or “SCINet-Juno”; “Nova DTN” at ISU (<a href="https://docs.globus.org/">Globus documentation</a>, <a href="https://scinet.usda.gov/guides/data/transfer/globus">SCINet: Globus data transfer</a>). You pick the two ends and the folders in a web page; Globus runs the transfer on its own, restarts it after failures, and can email you when it is done. You can close the browser. A transfer between two clusters needs no laptop at all, so it carries on while your laptop sleeps. Globus Connect Personal makes your laptop one end; then the files move directly from (or to) the laptop, so keep it awake and online with Globus Connect Personal running. If it does sleep, Globus resumes when it is back. Small files on SCINet can also go through Open OnDemand’s file manager (SCINet suggests it for less than 1 GB). The recipes are in <a href="../appendices/a-cluster-sites.html#sec-cluster-sites-transfer" class="quarto-xref"><span>Section A.4</span></a>.</p>
+<div id="tbl-transfer-tools" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-transfer-tools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.4: Ways to move files between your laptop and a cluster.
+</figcaption>
+<div aria-describedby="tbl-transfer-tools-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 18%">
+<col style="width: 30%">
+<col style="width: 30%">
+<col style="width: 21%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Tool</th>
+<th style="text-align: left;">Best for</th>
+<th style="text-align: left;">Resumes?</th>
+<th style="text-align: left;">Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>rsync</code></td>
+<td style="text-align: left;">folders, repeat copies</td>
+<td style="text-align: left;">yes (rerun; <code>-P</code> for big files)</td>
+<td style="text-align: left;">into project folders: <code>-av --no-p --no-g</code> (SCINet adds <code>-z</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>scp</code></td>
+<td style="text-align: left;">one quick file</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">SCINet: not <code>scp -r</code> into <code>/project</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>sftp</code>, Cyberduck</td>
+<td style="text-align: left;">browsing, a few files</td>
+<td style="text-align: left;">partly</td>
+<td style="text-align: left;">graphical on the laptop</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FileZilla</td>
+<td style="text-align: left;">a few files</td>
+<td style="text-align: left;">partly</td>
+<td style="text-align: left;">Nova only, one connection, or it asks for the code again and again; SCINet does not support it</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Globus</td>
+<td style="text-align: left;">large or many files, cluster to cluster</td>
+<td style="text-align: left;">yes, automatically</td>
+<td style="text-align: left;">web browser; cluster to cluster runs while your laptop sleeps; a laptop end must stay awake</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Open OnDemand file manager</td>
+<td style="text-align: left;">small files on SCINet</td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;">under 1 GB</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Rclone</td>
+<td style="text-align: left;">cloud storage</td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;"><a href="38-cloud.html" class="quarto-xref"><span>Chapter 38</span></a></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> You run <code>rsync -a results nova-dtn:/work/&lt;group&gt;/&lt;netid&gt;/results</code>. Where do the files end up?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-16-contents" aria-controls="callout-16" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-16" class="callout-16-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>In <code>/work/&lt;group&gt;/&lt;netid&gt;/results/results/</code>: without a slash on the source, rsync copies the folder <code>results</code> into the destination folder. Use <code>results/</code> to copy what is inside.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-working-remotely-move" class="level2" data-number="9.7">
+<h2 data-number="9.7" class="anchored" data-anchor-id="sec-working-remotely-move"><span class="header-section-number">9.7</span> Proving the copy, and moving the project</h2>
+<p>A transfer that finished without an error is not yet a proven copy. <a href="03-organizing-projects.html#sec-organizing-projects-raw" class="quarto-xref"><span>Section 3.4</span></a> made a checksum list for your raw data and said to check it “after every download or transfer”. Here is why, first on the laptop. Make a checksum list in <code>src/</code>, copy, and check the copy:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb64" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/bioinf-computing-ch09/src <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> a.txt sub/b.txt <span class="op">&gt;</span> checksums.md5 <span class="kw">&amp;&amp;</span> <span class="bu">cd</span> ..</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-a</span> src/ dst3</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> dst3 <span class="kw">&amp;&amp;</span> <span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5<span class="kw">;</span> <span class="bu">echo</span> <span class="st">"status </span><span class="va">$?</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>a.txt: OK
+sub/b.txt: OK
+status 0</code></pre>
+<p>Now damage the copy by one byte and check again:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb66" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="bu">printf</span> <span class="st">'x'</span> <span class="op">&gt;&gt;</span> a.txt</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> <span class="at">-c</span> checksums.md5<span class="kw">;</span> <span class="bu">echo</span> <span class="st">"status </span><span class="va">$?</span><span class="st">"</span></span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ..</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>a.txt: FAILED
+sub/b.txt: OK
+md5sum: WARNING: 1 computed checksum did NOT match
+status 1</code></pre>
+<p>The rule from <a href="03-organizing-projects.html#sec-organizing-projects-raw" class="quarto-xref"><span>Section 3.4</span></a>: make the list on the <strong>source</strong>, check it on the <strong>receiving</strong> machine, and never recompute it from the copy (a list made from a damaged copy agrees with the damage).</p>
+<p><strong>This chapter’s check.</strong> Copy the book’s raw reads and their checksum list from your laptop to your cluster folder, and verify them there. Four steps, all typed on the laptop:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb68" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'mkdir -p /work/&lt;group&gt;/&lt;netid&gt;/bioinf-computing/data/raw'</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-avn</span> <span class="at">--no-p</span> <span class="at">--no-g</span> ~/bioinf-computing/data/raw/ nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-computing/data/raw/</span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span>  <span class="at">--no-p</span> <span class="at">--no-g</span> ~/bioinf-computing/data/raw/ nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-computing/data/raw/</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'cd /work/&lt;group&gt;/&lt;netid&gt;/bioinf-computing/data/raw &amp;&amp; md5sum -c checksums.md5'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>sending incremental file list
+./
+SRR6357070_1.fastq.gz
+SRR6357070_2.fastq.gz
+checksums.md5
+
+sent 167 bytes  received 28 bytes  6.84 bytes/sec
+total size is 4,471,546  speedup is 22,931.01 (DRY RUN)
+sending incremental file list
+./
+SRR6357070_1.fastq.gz
+SRR6357070_2.fastq.gz
+checksums.md5
+
+sent 4,472,921 bytes  received 76 bytes  146,655.64 bytes/sec
+total size is 4,471,546  speedup is 1.00
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK</code></pre>
+<p>Make the folder, dry-run, copy, verify on the cluster: two <code>OK</code> lines, the same on Nova, Atlas, and Ceres. On SCINet, use <code>atlas-dtn</code> or <code>ceres-dtn</code> (your short names), <code>/project/&lt;project&gt;/&lt;you&gt;/…</code>, and <code>-avz</code>.</p>
+<p><strong>What the tools check already.</strong> rsync checks each file it sends against a checksum of the whole file, so a file damaged on the way is sent again. But it decides <strong>which</strong> files to send by size and time alone: a file changed without its size or time changing is skipped (exercise 2 shows this trap). Globus can verify files after a transfer, but SCINet’s own advice is to switch that off, because “Do NOT verify file integrity after transfer” “approximately doubles the effective transfer speed” (<a href="https://scinet.usda.gov/guides/data/transfer/globus">SCINet: Globus</a>). Either way, <code>md5sum -c</code> on the receiving side is the check that does not depend on any tool’s settings.</p>
+<p><strong>What a checksum proves depends on where the list came from.</strong> A list you made from the source just before copying proves that the copy matches <strong>that source</strong>; it cannot show damage that was already there when you made the list. A list from the sequencing facility, from ENA, or from the original download (your <code>checksums.md5</code> from <a href="03-organizing-projects.html#sec-organizing-projects-raw" class="quarto-xref"><span>Section 3.4</span></a>) can also catch a file that changed earlier. That is why the book keeps the original list with the data. <code>rsync --checksum</code> makes rsync compare contents instead of size and time; it is slower, and it still compares against your source, not against the original list.</p>
+<div class="misconception callout callout-style-default callout-caution callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Caution</span>Misconception: “If the copy finished without an error, the files are fine”
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Reality.</strong> A finished transfer says nothing about a file that was already wrong at the source or damaged before this copy, and some tools let you turn their own check off. Check against the original checksum list, on the receiving machine.</p>
+</div>
+</div>
+<section id="sec-working-remotely-move-project" class="level3" data-number="9.7.1">
+<h3 data-number="9.7.1" class="anchored" data-anchor-id="sec-working-remotely-move-project"><span class="header-section-number">9.7.1</span> Moving the project</h3>
+<p><a href="03-organizing-projects.html" class="quarto-xref"><span>Chapter 3</span></a> ended with three steps for moving a project: copy the files, reinstall the environment, recreate the links. Now you have the commands. The reference genome adds a fourth piece, because it lives <strong>outside</strong> the project (<a href="03-organizing-projects.html#sec-organizing-projects-shared" class="quarto-xref"><span>Section 3.5</span></a>).</p>
+<p><strong>1. Files.</strong> Make the destination, dry-run, then copy the project without its environment, results, and logs:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb70" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'mkdir -p /work/&lt;group&gt;/&lt;netid&gt;/bioinf-computing'</span></span>
+<span id="cb70-2"><a href="#cb70-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-avn</span> <span class="at">--no-p</span> <span class="at">--no-g</span> <span class="at">--exclude</span> .pixi <span class="at">--exclude</span> results <span class="at">--exclude</span> logs <span class="dt">\</span></span>
+<span id="cb70-3"><a href="#cb70-3" aria-hidden="true" tabindex="-1"></a>  ~/bioinf-computing/ nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-computing/</span>
+<span id="cb70-4"><a href="#cb70-4" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span>  <span class="at">--no-p</span> <span class="at">--no-g</span> <span class="at">--exclude</span> .pixi <span class="at">--exclude</span> results <span class="at">--exclude</span> logs <span class="dt">\</span></span>
+<span id="cb70-5"><a href="#cb70-5" aria-hidden="true" tabindex="-1"></a>  ~/bioinf-computing/ nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-computing/</span>
+<span id="cb70-6"><a href="#cb70-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'cd /work/&lt;group&gt;/&lt;netid&gt;/bioinf-computing/data/raw &amp;&amp; md5sum -c checksums.md5'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><code>.pixi/</code> stays behind because it is large, built for your laptop’s system, and made of thousands of small files, which count against the cluster’s file limits (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>); step 2 rebuilds it. <code>results/</code> and <code>logs/</code> stay behind so that step 4 has to make them again, which is the point of the test. Your project’s <code>.git/</code> (<a href="08-shell-scripts.html#sec-shell-scripts-git" class="quarto-xref"><span>Section 8.12</span></a>) comes along, so the cluster copy has the same history. <a href="22-github.html" class="quarto-xref"><span>Chapter 22</span></a> shows the usual route for code from then on: push to GitHub, clone on the cluster. Data still moves with rsync.</p>
+<p><strong>2. Environment.</strong> On the cluster, in the copied project, rebuild the environment from <code>pixi.lock</code>, with pixi and its cache set up as in <a href="02-book-setup.html" class="quarto-xref"><span>Chapter 2</span></a>:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb71" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-computing</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> install <span class="at">--locked</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>On Atlas this took 18 seconds and on Ceres 48. On Nova it took 25 to 40 minutes in November 2026, much longer than the first install, for reasons the site is looking into. If it is slow for you, let it run, or run it in an interactive job (<a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>).</p>
+<p><strong>3. Reference data, then the link.</strong> rsync copies <code>data/ref</code> as a link, not as the files it points to, so on the cluster it points at a laptop folder that does not exist:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb72" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/ref</span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/ref/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>lrwxrwxrwx. 1 &lt;netid&gt; &lt;group&gt; 95 Nov 22 21:26 data/ref -&gt; /home/you/bioinf-shared/references/yeast_R64-1-1_test
+ls: cannot access 'data/ref/': No such file or directory</code></pre>
+<p>The reference needs its own copy. If your lab or site already keeps this exact reference, you can link to theirs, <strong>after</strong> checking that its checksums match your <code>checksums.md5</code>. Otherwise copy your small folder through the DTN into a reference area in your own cluster folder, with the same name as on the laptop (not in your cluster home, which is small), and check it there:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (laptop)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb74" data-filename="Terminal (laptop)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'mkdir -p /work/&lt;group&gt;/&lt;netid&gt;/bioinf-shared/references'</span></span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="at">-av</span> <span class="at">--no-p</span> <span class="at">--no-g</span> ~/bioinf-shared/references/yeast_R64-1-1_test <span class="dt">\</span></span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>  nova-dtn:/work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-shared/references/</span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> nova <span class="st">'cd /work/&lt;group&gt;/&lt;netid&gt;/bioinf-shared/references/yeast_R64-1-1_test &amp;&amp; md5sum -c checksums.md5'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>genome.fa.gz: OK
+genes.gtf.gz: OK</code></pre>
+<p>(No slash on the source this time: you want the folder itself.) Then replace the link with the rule from <a href="03-organizing-projects.html#sec-organizing-projects-shared" class="quarto-xref"><span>Section 3.5</span></a>: look, <code>unlink</code> without a trailing slash, link, look again:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb76" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-computing</span>
+<span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-l</span> data/ref</span>
+<span id="cb76-3"><a href="#cb76-3" aria-hidden="true" tabindex="-1"></a><span class="fu">unlink</span> data/ref</span>
+<span id="cb76-4"><a href="#cb76-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ln</span> <span class="at">-s</span> /work/<span class="op">&lt;</span>group<span class="op">&gt;</span>/<span class="op">&lt;</span>netid<span class="op">&gt;</span>/bioinf-shared/references/yeast_R64-1-1_test data/ref</span>
+<span id="cb76-5"><a href="#cb76-5" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> data/ref/</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>checksums.md5  genes.gtf.gz  genome.fa.gz  README.md</code></pre>
+<p>Why not just <code>ln -s</code> over the old link? It refuses:</p>
+<pre class="console"><code>ln: failed to create symbolic link 'data/ref': File exists</code></pre>
+<p>and if the old link had pointed at a folder that does exist, <code>ln -s</code> would quietly have made the new link <strong>inside</strong> that folder instead.</p>
+<p><strong>4. Prove it runs.</strong> Run the pipeline from <a href="08-shell-scripts.html#sec-shell-scripts-pipeline" class="quarto-xref"><span>Section 8.10</span></a> on the cluster, check its exit status, and compare its results with the laptop’s:</p>
+<div class="code-with-filename">
+<div class="code-with-filename-file">
+<pre><strong>Terminal (login node)</strong></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb79" data-filename="Terminal (login node)"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pixi</span> run bash src/run_all.sh<span class="kw">;</span> <span class="bu">echo</span> <span class="st">"run_all status </span><span class="va">$?</span><span class="st">"</span></span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a><span class="fu">md5sum</span> results/<span class="pp">*</span>.tsv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<pre class="console"><code>…
+run_all status 0
+3b9c2b4c499d85a7e70aaf3faaef3c99  results/gtf_feature_counts.tsv
+e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv</code></pre>
+<p>Run <code>md5sum results/*.tsv</code> in the laptop’s project too: the numbers should be the same, and they were, on Nova and on Atlas. Check the exit status, not only the files. On one try, the reference copy had failed without anyone noticing, <code>02_gtf_summary.sh</code> stopped with <code>ERROR: missing or empty: data/ref/genes.gtf.gz</code>, and yet an old <code>results/gtf_feature_counts.tsv</code>, copied over from the laptop, still matched. That is why step 1 leaves <code>results/</code> behind. The move is done when all of these pass: the destination exists, both checksum lists say <code>OK</code>, the new link lists the reference, the environment installed, and the pipeline exits 0 with the same results.</p>
+<div id="tbl-move-project" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-move-project-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.5: What happens to each part of the project in a move.
+</figcaption>
+<div aria-describedby="tbl-move-project-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 23%">
+<col style="width: 38%">
+<col style="width: 19%">
+<col style="width: 19%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Part</th>
+<th style="text-align: left;">Copy it?</th>
+<th style="text-align: left;">How</th>
+<th style="text-align: left;">Why</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">scripts, docs, <code>pixi.toml</code>, <code>pixi.lock</code></td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;"><code>rsync -av --no-p --no-g</code></td>
+<td style="text-align: left;">the project itself</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>data/raw/</code></td>
+<td style="text-align: left;">yes</td>
+<td style="text-align: left;">same, then <code>md5sum -c</code> on the cluster</td>
+<td style="text-align: left;">prove the data arrived intact</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>.pixi/</code></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;"><code>pixi install --locked</code> on the cluster</td>
+<td style="text-align: left;">large, built for one system, many files</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">reference folder (outside the project)</td>
+<td style="text-align: left;">yes, or use a site copy</td>
+<td style="text-align: left;"><code>rsync</code> through the DTN, <code>md5sum -c</code>; a site copy only if its checksums match</td>
+<td style="text-align: left;">the link points to it</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>data/ref</code> link</td>
+<td style="text-align: left;">it arrives broken</td>
+<td style="text-align: left;"><code>unlink</code>, then <code>ln -s</code> to the cluster copy</td>
+<td style="text-align: left;">it points at a laptop path</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>.git/</code></td>
+<td style="text-align: left;">comes along</td>
+<td style="text-align: left;">(<a href="22-github.html" class="quarto-xref"><span>Chapter 22</span></a>: clone instead)</td>
+<td style="text-align: left;">the history</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>results/</code>, <code>logs/</code></td>
+<td style="text-align: left;">no</td>
+<td style="text-align: left;"><code>--exclude</code>; rerun the pipeline</td>
+<td style="text-align: left;">the cluster run must make its own</td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+<div class="check">
+<p><strong>Check yourself.</strong> <code>rsync</code> finished without errors. Do you still run <code>md5sum -c</code>?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-18-contents" aria-controls="callout-18" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-18" class="callout-18-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Yes. rsync may have skipped a file it judged unchanged by size and time, and the original checksum list (from the facility or the download) also catches a file damaged or mixed up before this copy, which a list made from the source just now cannot. For these files it costs seconds.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="sec-working-remotely-summary" class="level2" data-number="9.8">
+<h2 data-number="9.8" class="anchored" data-anchor-id="sec-working-remotely-summary"><span class="header-section-number">9.8</span> Summary</h2>
+<ul>
+<li><code>ssh host command</code> runs one command on the cluster and brings back its output and exit status. Quotes decide where <code>$</code> is expanded. rsync uses the same mechanism, so a startup file that prints breaks it: <code>ssh host true | wc -c</code> must print <code>0</code>. Never ignore “REMOTE HOST IDENTIFICATION HAS CHANGED”.</li>
+<li>An SSH key is a pair: the public key goes on servers, the private key stays on your laptop behind a passphrase, and the agent remembers the unlocked key. On Nova a key replaces the code and password (over the VPN, to a named login node); SCINet uses its daily <code>step</code> certificate. Windows’ Ubuntu and Windows’ own ssh each need their own setup.</li>
+<li><code>~/.ssh/config</code> gives hosts short names and settings; for most options the first value found wins, so specific blocks go first and <code>Host *</code> last. Check every change with <code>ssh -G</code>. Connection sharing reuses one sign-in per host (not in Windows’ own ssh). <code>ProxyJump</code> reaches a machine through another; <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a> uses it.</li>
+<li>tmux keeps a shell running on the machine where you started it; detach with <kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> <kbd title="D" aria-hidden="true">D</kbd><span class="visually-hidden">D</span>, reattach with <code>tmux attach -t name</code>. A session lives on one login node, so note <code>hostname</code>. It survives dropped connections, not reboots, and it does not make the login node a place for heavy work.</li>
+<li>Copy with rsync from the laptop, to the transfer node. Dry-run first; a slash on the source means “the contents of”; make the destination with <code>ssh host 'mkdir -p …'</code>; into project folders use <code>-av --no-p --no-g</code>; rerun to finish. Use <code>scp</code> for one file and Globus for big or many files.</li>
+<li>Prove a copy with <code>md5sum -c</code> on the receiving machine, against the original list. Move a project in four parts: files (without <code>.pixi</code>, <code>results</code>, <code>logs</code>), environment (<code>pixi install --locked</code>), reference data and a replaced link, and a pipeline run that exits 0 with the same results.</li>
+</ul>
+<p><a href="#tbl-ch09-commands" class="quarto-xref">Table&nbsp;<span>9.6</span></a> collects the chapter’s commands.</p>
+<div id="tbl-ch09-commands" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-ch09-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Table&nbsp;9.6: The chapter’s commands on one page.
+</figcaption>
+<div aria-describedby="tbl-ch09-commands-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<table class="caption-top table">
+<colgroup>
+<col style="width: 40%">
+<col style="width: 60%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Task</th>
+<th style="text-align: left;">Command</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Run one command remotely</td>
+<td style="text-align: left;"><code>ssh nova hostname</code>, <code>ssh nova 'cd dir &amp;&amp; ls'</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Check for a clean shell</td>
+<td style="text-align: left;"><code>ssh nova true \| wc -c</code> (must be <code>0</code>)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Remove one changed host key</td>
+<td style="text-align: left;"><code>ssh-keygen -R &lt;host&gt;</code> (after the site confirms)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Make a key</td>
+<td style="text-align: left;"><code>ssh-keygen -t ed25519 -C "label"</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Use the agent</td>
+<td style="text-align: left;"><code>eval "$(ssh-agent -s)"</code>, <code>ssh-add</code>, <code>ssh-add -l</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Install a key (Nova)</td>
+<td style="text-align: left;"><code>ssh-copy-id -i ~/.ssh/id_ed25519.pub &lt;netid&gt;@nova-login-1.its.iastate.edu</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">See what ssh will do</td>
+<td style="text-align: left;"><code>ssh -G nova</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shared connection</td>
+<td style="text-align: left;"><code>ssh -O check nova</code>, <code>ssh -O exit nova</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">tmux</td>
+<td style="text-align: left;"><code>tmux new -s name</code>, <kbd title="Ctrl-B" aria-hidden="true">Ctrl-B</kbd><span class="visually-hidden">Ctrl-B</span> <kbd title="D" aria-hidden="true">D</kbd><span class="visually-hidden">D</span>, <code>tmux ls</code>, <code>tmux attach -t name</code>, <code>tmux kill-session -t name</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Make a remote folder</td>
+<td style="text-align: left;"><code>ssh nova 'mkdir -p /path/to/dir'</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Copy a folder to a project folder</td>
+<td style="text-align: left;"><code>rsync -av --no-p --no-g src/ nova-dtn:/path/dir/</code> (dry run: add <code>-n</code>)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Copy back to the laptop</td>
+<td style="text-align: left;"><code>rsync -av nova-dtn:/path/results/ results/</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Copy one file</td>
+<td style="text-align: left;"><code>scp file nova-dtn:/path/</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Verify on the receiving side</td>
+<td style="text-align: left;"><code>ssh nova 'cd /path &amp;&amp; md5sum -c checksums.md5'</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Replace a link</td>
+<td style="text-align: left;"><code>ls -l data/ref</code>, <code>unlink data/ref</code>, <code>ln -s /new/target data/ref</code>, <code>ls data/ref/</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+</figure>
+</div>
+</section>
+<section id="sec-working-remotely-exercises" class="level2" data-number="9.9">
+<h2 data-number="9.9" class="anchored" data-anchor-id="sec-working-remotely-exercises"><span class="header-section-number">9.9</span> Exercises</h2>
+<p>Exercises 1–4 work on the laptop alone (exercise 3 and 4 go further with a cluster); exercise 5 is the chapter’s check on a cluster, with a laptop version; exercise 6 is optional. Practise in <code>~/bioinf-computing-ch09</code> and record what you did and saw in a <code>NOTEBOOK.md</code> there.</p>
+<div class="check">
+<p><strong>Exercise 1. The slash and the dry run (laptop).</strong> After <a href="#sec-working-remotely-transfer" class="quarto-xref"><span>Section 9.6</span></a>.</p>
+<p>In a new folder, <code>~/bioinf-computing-ch09/ex1</code>, make a tree with <code>mkdir -p tree/sub &amp;&amp; printf '1\n' &gt; tree/one.txt &amp;&amp; printf '2\n' &gt; tree/sub/two.txt</code>. Before running each command, write down what you expect <code>find … | sort</code> to show: <code>rsync -a tree t1</code>, <code>rsync -a tree/ t2</code>, and <code>rsync -av -n tree/ t3</code>. Run them and compare. Then add <code>tree/three.txt</code> and show that a second <code>rsync -av tree/ t2</code> sends only the new file.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-19-contents" aria-controls="callout-19" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-19" class="callout-19-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>t1</code> holds <code>t1/tree/one.txt</code> and <code>t1/tree/sub/two.txt</code> (the folder itself was copied); <code>t2</code> holds <code>t2/one.txt</code> and <code>t2/sub/two.txt</code> (its contents). The dry run lists <code>./</code>, <code>one.txt</code>, <code>sub/</code>, <code>sub/two.txt</code>, ends with <code>(DRY RUN)</code>, and <code>t3</code> does not exist afterwards. The second copy to <code>t2</code> lists only <code>./</code> and <code>three.txt</code>.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 2. Catch a damaged copy, and a stale one (laptop).</strong> After <a href="#sec-working-remotely-move" class="quarto-xref"><span>Section 9.7</span></a>.</p>
+<p>In <code>~/bioinf-computing-ch09/ex2</code>, make <code>orig/s.txt</code> containing <code>AAAA</code>, make a checksum list in <code>orig/</code>, and copy with <code>rsync -a orig/ copy/</code>.</p>
+<ol type="1">
+<li>Check the copy with <code>md5sum -c</code> inside <code>copy/</code>. Append one byte to <code>copy/s.txt</code>, check again, then repair it with the same rsync and check once more.</li>
+<li>The trap. Change one letter in <code>orig/s.txt</code> without changing its size or time: <code>printf 'AAAB\n' &gt; orig/s.txt.new &amp;&amp; touch -r orig/s.txt orig/s.txt.new &amp;&amp; mv orig/s.txt.new orig/s.txt</code>. Run <code>rsync -av orig/ copy/</code> and look at <code>copy/s.txt</code>. Then run <code>rsync -av --checksum orig/ copy/</code> and look again.</li>
+</ol>
+<p>What does this tell you about rsync’s quick check and about <code>md5sum -c</code>?</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-20-contents" aria-controls="callout-20" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-20" class="callout-20-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><code>OK</code>, then <code>FAILED</code> with the <code>WARNING</code> line and status 1; rsync resends the file because its size changed, and the check says <code>OK</code> again.</li>
+<li>The plain rsync sends nothing, and <code>copy/s.txt</code> still says <code>AAAA</code>: same size, same time, so rsync’s quick check thinks it is unchanged. With <code>--checksum</code>, rsync compares contents, resends it, and the copy says <code>AAAB</code>. rsync’s quick check looks at size and time; <code>md5sum -c</code> looks at the bytes. (The list in <code>orig/</code> still holds <code>AAAA</code>’s checksum, so <code>md5sum -c</code> now reports <code>FAILED</code> in both folders: the list describes the file as it was when you made it.)</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 3. A key and a config (laptop; cluster optional).</strong> After <a href="#sec-working-remotely-config" class="quarto-xref"><span>Section 9.4</span></a>.</p>
+<p>Make an ed25519 key with a passphrase (skip this if you already have one), and load it into the agent (<code>ssh-add</code>; on a Mac, the first login does it). Write config entries for your site’s login node and transfer node with <code>User</code> and <code>ServerAliveInterval</code>: in your real <code>~/.ssh/config</code> after a dated backup if you have a cluster account, otherwise in <code>sample-config</code>. Prove them with <code>ssh -G</code> (add <code>-F sample-config</code> for the practice file).</p>
+<p>With a cluster account: on a site that allows keys, install your public key and record what a login asks now. If you sign in with a code, add connection sharing and record how many prompts two quick logins give with and without it, for the login node and for the transfer node (<code>ssh -O check</code> on each). On SCINet, read the file <code>step</code> wrote (<code>cat ~/.step/ssh/config</code>) and explain each of its lines.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-21-contents" aria-controls="callout-21" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-21" class="callout-21-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>ssh -G nova-dtn | grep -E '^(hostname|user|serveraliveinterval) '</code> should print your user name, the transfer node’s full name, and <code>serveraliveinterval 60</code>. On Nova with a key (over the VPN), a login asks only the key’s passphrase, once; with the agent, nothing. With a code and no sharing, quick logins can ask twice each (a code cannot be reused); with sharing, the second login to the same host asks nothing, but the transfer node needs its own first sign-in. On SCINet: <code>Match exec</code> limits the block to SCINet hosts, <code>User</code> supplies your name, <code>UserKnownHostsFile</code> holds SCINet’s host certificate authority, and <code>ProxyCommand</code> runs <code>step</code>, which renews your certificate when needed.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 4. Survive a disconnect (laptop; cluster preferred).</strong> After <a href="#sec-working-remotely-tmux" class="quarto-xref"><span>Section 9.5</span></a>.</p>
+<p>Start a tmux session named <code>ex4</code>, run <code>bash ticker.sh</code> in it, detach, and close the terminal window (on a cluster: turn your Wi-Fi off for a minute). Reconnect, find the session, and reattach. Record <code>hostname</code>, the <code>tmux ls</code> line, and whether the times have a gap. End the session with <code>tmux kill-session -t ex4</code>.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-22-contents" aria-controls="callout-22" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-22" class="callout-22-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p><code>tmux ls</code> shows <code>ex4: 1 windows (created …)</code>, and after <code>tmux attach -t ex4</code> the ticker’s times run on with no gap. On a cluster, if <code>tmux ls</code> finds nothing, check <code>hostname</code>: you may be on the other login node; log in to the node you noted, by name.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 5. Move the project (cluster; the chapter’s check).</strong> After <a href="#sec-working-remotely-move" class="quarto-xref"><span>Section 9.7</span></a>.</p>
+<p>Move <code>~/bioinf-computing</code> to your cluster folder as in <a href="#sec-working-remotely-move-project" class="quarto-xref"><span>Section 9.7.1</span></a>: make the destination; dry-run, then copy through the transfer node with <code>--no-p --no-g</code>, leaving out <code>.pixi/</code>, <code>results/</code>, and <code>logs/</code>; verify <code>data/raw</code> with <code>md5sum -c</code> on the cluster; copy (or find and check) the reference folder and verify it; replace <code>data/ref</code>; run <code>pixi install --locked</code>; run <code>pixi run bash src/run_all.sh</code>, check that it exits 0, and compare <code>md5sum results/*.tsv</code> with your laptop’s.</p>
+<p><strong>No cluster?</strong> Do it in a <strong>copy</strong> on the laptop, never your real project: <code>rsync -a --exclude .pixi ~/bioinf-computing/ ~/bioinf-computing-ch09/fake-cluster/</code>. Its <code>data/ref</code> still points at your real reference, so it works and hides the problem. Point the copy’s link at a folder that does not exist (<code>unlink data/ref &amp;&amp; ln -s /no/such/folder data/ref</code> inside <code>fake-cluster</code>), see <code>ls data/ref/</code> fail, then replace it with the right one. Explain which step a laptop copy cannot really test.</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-23-contents" aria-controls="callout-23" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-23" class="callout-23-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>On the cluster: both <code>md5sum -c</code> runs print <code>OK</code> for every file, <code>ls data/ref/</code> lists <code>checksums.md5</code>, <code>genes.gtf.gz</code>, <code>genome.fa.gz</code>, and <code>README.md</code>, <code>run_all.sh</code> exits 0, and the two <code>md5sum results/*.tsv</code> lines match the laptop’s (<code>3b9c2b4c…</code> and <code>e1d81de7…</code> for the book’s data). On the laptop: <code>ls data/ref/</code> fails with <code>No such file or directory</code> while the link points at <code>/no/such/folder</code>, and lists the reference again after you replace it. A laptop copy cannot test the real problem, a link that points at another machine’s file system, because the laptop’s own reference folder is always there.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="check">
+<p><strong>Exercise 6. Globus (optional; SCINet or Nova account).</strong> After <a href="#sec-working-remotely-transfer" class="quarto-xref"><span>Section 9.6</span></a>.</p>
+<p>Install Globus Connect Personal on your laptop, and transfer the two FASTQ files to your site’s collection (“SCINet-Ceres”, “SCINet-Atlas”, or “Nova DTN”), into a new folder. Check them with <code>md5sum -c</code> on the cluster. Keep the laptop awake, with Globus Connect Personal running, until the transfer finishes. Record whether file verification was on in the transfer settings. (SCINet suggests turning it off for speed; for this tiny transfer, leave it on.)</p>
+<div class="callout callout-style-simple callout-tip no-icon callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-24-contents" aria-controls="callout-24" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Answer
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-24" class="callout-24-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Both files say <code>OK</code> when you run <code>md5sum -c</code> against the original list in the new folder (copy <code>checksums.md5</code> there too, or point <code>md5sum -c</code> at it). Whether verification was on by default depends on Globus’s current settings page; whatever it was, your <code>md5sum -c</code> is the check that does not depend on it.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section id="sec-working-remotely-reading" class="level2 page-columns page-full" data-number="9.10">
+<h2 data-number="9.10" class="anchored" data-anchor-id="sec-working-remotely-reading"><span class="header-section-number">9.10</span> Further reading</h2>
+<ul>
+<li><span class="citation" data-cites="buffalo2015bioinformatics">Buffalo (<a href="../references.html#ref-buffalo2015bioinformatics" role="doc-biblioref">2015</a>)</span>, <em>Bioinformatics Data Skills</em>, chapter 4 “Working with Remote Machines” and the part of chapter 6 on transferring data — SSH, keys, config files, tmux, <code>rsync</code>, and checksums, written for the same readers as this chapter.</li>
+<li><span class="citation" data-cites="shotts2025linux">Shotts (<a href="../references.html#ref-shotts2025linux" role="doc-biblioref">2025</a>)</span>, <em>The Linux Command Line</em>, the networking chapter — <code>ssh</code>, <code>scp</code>, and <code>sftp</code> in a few pages, with more on the network tools around them; free online.</li>
+<li><span class="citation" data-cites="microsoft2026remotessh">Microsoft (<a href="../references.html#ref-microsoft2026remotessh" role="doc-biblioref">2026</a>)</span>, <em>Remote Development using SSH</em> — how VS Code’s Remote-SSH uses your keys and <code>~/.ssh/config</code>, including jump hosts, for when you edit on a compute node in <a href="10-hpc-slurm.html" class="quarto-xref"><span>Chapter 10</span></a>.</li>
+<li>The OpenSSH manual pages, <a href="https://man.openbsd.org/ssh_config.5"><code>ssh_config(5)</code></a> and <a href="https://man.openbsd.org/ssh.1"><code>ssh(1)</code></a> — every option in <a href="#tbl-ssh-config-options" class="quarto-xref">Table&nbsp;<span>9.2</span></a>, exactly; read <code>ControlPath</code> for the <code>%C</code> token and <code>ProxyJump</code> for jump hosts.</li>
+<li>The <a href="https://download.samba.org/pub/rsync/rsync.1">rsync manual page</a>, section <em>USAGE</em> for the trailing-slash rule and <em>OPTIONS</em> for <code>--perms</code>, <code>--group</code>, <code>--partial</code>, and <code>--checksum</code>; and the tmux wiki’s <a href="https://github.com/tmux/tmux/wiki/Getting-Started"><em>Getting Started</em></a> for everything beyond <a href="#tbl-tmux-keys" class="quarto-xref">Table&nbsp;<span>9.3</span></a>.</li>
 </ul>
 
 
+<div class="no-row-height column-margin column-container"><div id="ref-buffalo2015bioinformatics" class="csl-entry" role="listitem">
+Buffalo, Vince. 2015. <em>Bioinformatics Data Skills: Reproducible and Robust Research with Open Source Tools</em>. O’Reilly Media. <a href="https://openlibrary.org/books/OL34496773M">https://openlibrary.org/books/OL34496773M</a>.
+</div><div id="ref-shotts2025linux" class="csl-entry" role="listitem">
+Shotts, William. 2025. <em>The Linux Command Line</em>. Seventh Internet, Rev. A (25.12). <a href="https://linuxcommand.org/tlcl.php">https://linuxcommand.org/tlcl.php</a>.
+</div><div id="ref-microsoft2026remotessh" class="csl-entry" role="listitem">
+Microsoft. 2026. <em>Remote Development Using <span>SSH</span></em>. Visual Studio Code documentation. <a href="https://code.visualstudio.com/docs/remote/ssh">https://code.visualstudio.com/docs/remote/ssh</a>.
+</div></div>
 </section>
 
 </main> <!-- /main -->

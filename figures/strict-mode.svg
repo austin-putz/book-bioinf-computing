@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 392" role="img" aria-labelledby="strict-mode-title">
+  <title id="strict-mode-title">The same script, count.sh, run on a missing file, with and without strict mode. Left, without strict mode: gzip prints No such file or directory, then the script prints missing.fastq.gz: 0 reads and done, and ends with exit status 0, a wrong result that looks like success. Right, with set -euo pipefail: the same error line, then the script stops, prints no count, and ends with exit status 1. Below, three cases strict mode still gets wrong. grep -c with no match exits 1, so a strict script stops although nothing is wrong. gunzip piped into head -n 1 on a real FASTQ file ends with status 141, and the script stops although nothing is wrong. seqkit stats on a truncated file prints an error but exits 0, so the script does not stop and a real problem is missed.</title>
+
+  <!-- Left: without strict mode -->
+  <rect x="10" y="10" width="342" height="206" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="24" y="32" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">WITHOUT STRICT MODE</text>
+  <g font-size="12" class="mono">
+    <text x="24" y="60">$ ./count.sh missing.fastq.gz</text>
+    <text x="24" y="82">gzip: missing.fastq.gz:</text>
+    <text x="24" y="99">  No such file or directory</text>
+    <text x="24" y="121" class="fill-warn" font-weight="700">missing.fastq.gz: 0 reads</text>
+    <text x="24" y="143">done</text>
+    <text x="24" y="173" class="fill-warn" font-weight="700">exit status 0</text>
+  </g>
+  <text x="24" y="200" font-size="12" class="fill-warn">a wrong count, reported as success</text>
+
+  <!-- Right: with strict mode -->
+  <rect x="368" y="10" width="342" height="206" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="382" y="32" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">WITH <tspan class="mono" letter-spacing="0">set -euo pipefail</tspan></text>
+  <g font-size="12" class="mono">
+    <text x="382" y="60">$ ./count.sh missing.fastq.gz</text>
+    <text x="382" y="82">gzip: missing.fastq.gz:</text>
+    <text x="382" y="99">  No such file or directory</text>
+    <text x="382" y="173" font-weight="700">exit status 1</text>
+  </g>
+  <path d="M382 116 h300" class="stroke-ink" stroke-width="2"/>
+  <text x="382" y="136" font-size="12" class="fill-muted">the script stops here: no count, no "done"</text>
+  <text x="382" y="200" font-size="12" class="fill-muted">the failure is visible</text>
+
+  <!-- What strict mode still gets wrong -->
+  <text x="10" y="248" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">WHAT STRICT MODE STILL GETS WRONG</text>
+  <g font-size="12" class="fill-muted">
+    <text x="24" y="270">command</text>
+    <text x="336" y="270">status</text>
+    <text x="482" y="270">strict mode</text>
+  </g>
+
+  <rect x="10" y="280" width="700" height="32" rx="6" fill="none" class="stroke-line"/>
+  <text x="24" y="301" font-size="12" class="mono">n=$(grep -c ZZZ file)</text>
+  <text x="336" y="301" font-size="12" class="mono">1 <tspan class="fill-muted">(no match)</tspan></text>
+  <text x="482" y="301" font-size="12" class="fill-warn">stops, though nothing is wrong</text>
+
+  <rect x="10" y="318" width="700" height="32" rx="6" fill="none" class="stroke-line"/>
+  <text x="24" y="339" font-size="12" class="mono">gunzip -c SRR…_1.fastq.gz | head -n 1</text>
+  <text x="336" y="339" font-size="12" class="mono">141</text>
+  <text x="482" y="339" font-size="12" class="fill-warn">stops, though nothing is wrong</text>
+
+  <rect x="10" y="356" width="700" height="32" rx="6" fill="none" class="stroke-line"/>
+  <text x="24" y="377" font-size="12" class="mono">seqkit stats -T trunc.fastq.gz</text>
+  <text x="336" y="377" font-size="12" class="mono">0 <tspan class="fill-muted">([ERRO] printed)</tspan></text>
+  <text x="482" y="377" font-size="12" class="fill-warn">does not stop: real problem missed</text>
+</svg>

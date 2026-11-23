@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img" aria-labelledby="numbered-pipeline-title">
+  <title id="numbered-pipeline-title">The project's numbered scripts as a small pipeline. run_all.sh, at the top, runs each step in order and stops at the first failure. Step 01_count_reads.sh reads data/raw/*.fastq.gz, checks it with md5sum -c, and writes results/read_counts.tsv. Then step 02_gtf_summary.sh reads the reference annotation data/ref/genes.gtf.gz and writes results/gtf_feature_counts.tsv; if step 01 fails, step 02 never runs. 01 writes its own log into logs/, and run_all.sh writes a log of the whole run there, which also holds 02's messages. On the right, a faint box lists what a workflow manager (Part VI) adds: it skips steps whose inputs have not changed, runs independent steps in parallel, and resumes after a failure.</title>
+  <defs>
+    <marker id="numbered-pipeline-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- logs/ -->
+  <rect x="10" y="10" width="170" height="50" rx="8" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="24" y="31" font-size="14" font-weight="700" class="mono">logs/</text>
+  <text x="24" y="50" font-size="12" class="fill-muted">a log for each run</text>
+
+  <!-- run_all.sh -->
+  <rect x="200" y="10" width="270" height="50" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="214" y="31" font-size="14" font-weight="700" class="mono">run_all.sh</text>
+  <text x="214" y="50" font-size="12" class="fill-muted">runs the steps in order</text>
+  <path d="M200 35 H186" class="stroke-muted" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <!-- arrow run_all -> 01 -->
+  <path d="M270 60 V82" class="stroke-muted" stroke-width="1.5" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <!-- Row 1 -->
+  <rect x="10" y="88" width="165" height="56" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="22" y="112" font-size="12" class="mono">data/raw/</text>
+  <text x="22" y="130" font-size="12" class="mono">*.fastq.gz</text>
+  <path d="M175 116 H189" class="stroke-muted" stroke-width="1.5" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <rect x="195" y="88" width="150" height="56" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="207" y="110" font-size="13" font-weight="700" class="mono">01_count_reads.sh</text>
+  <rect x="207" y="118" width="84" height="20" rx="10" class="fill-good-soft stroke-good"/>
+  <text x="249" y="132" font-size="12" class="mono" text-anchor="middle">md5sum -c</text>
+  <path d="M345 116 H359" class="stroke-muted" stroke-width="1.5" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <rect x="365" y="88" width="182" height="56" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="377" y="112" font-size="12" class="mono">results/</text>
+  <text x="377" y="130" font-size="12" class="mono">read_counts.tsv</text>
+
+  <!-- 01 writes its log -->
+  <path d="M215 88 L110 62" class="stroke-muted" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <!-- arrow 01 -> 02 with stop -->
+  <path d="M270 144 V176" class="stroke-muted" stroke-width="1.5" marker-end="url(#numbered-pipeline-arrow)"/>
+  <text x="258" y="165" font-size="12" class="fill-muted" text-anchor="end">then</text>
+  <path d="M290.5 149 h9 l6.5 6.5 v9 l-6.5 6.5 h-9 l-6.5 -6.5 v-9 z" fill="none" class="stroke-ink" stroke-width="1.5"/>
+  <path d="M290 160 h10" class="stroke-ink" stroke-width="2"/>
+  <text x="314" y="165" font-size="12" class="fill-muted">stops here if 01 fails</text>
+
+  <!-- Row 2 -->
+  <rect x="10" y="182" width="165" height="56" rx="8" class="fill-ref-soft stroke-ref" stroke-width="1.25"/>
+  <text x="22" y="206" font-size="12" class="mono">data/ref/</text>
+  <text x="22" y="224" font-size="12" class="mono">genes.gtf.gz</text>
+  <path d="M175 210 H189" class="stroke-muted" stroke-width="1.5" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <rect x="195" y="182" width="150" height="56" rx="8" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="207" y="204" font-size="13" font-weight="700" class="mono">02_gtf_summary.sh</text>
+  <text x="207" y="226" font-size="12" class="fill-muted">counts feature types</text>
+  <path d="M345 210 H359" class="stroke-muted" stroke-width="1.5" marker-end="url(#numbered-pipeline-arrow)"/>
+
+  <rect x="365" y="182" width="182" height="56" rx="8" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <text x="377" y="206" font-size="12" class="mono">results/</text>
+  <text x="377" y="224" font-size="12" class="mono">gtf_feature_counts.tsv</text>
+
+  <text x="10" y="288" font-size="12" class="fill-muted">02's messages go into run_all.sh's log; each step writes only its own result and never changes an input.</text>
+
+  <!-- Part VI box -->
+  <rect x="562" y="88" width="148" height="172" rx="8" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="574" y="108" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">PART VI</text>
+  <g font-size="12" class="fill-muted">
+    <text x="574" y="128">a workflow manager</text>
+    <text x="574" y="144">also:</text>
+    <text x="574" y="166">· skips unchanged</text>
+    <text x="584" y="182">steps</text>
+    <text x="574" y="202">· runs steps in</text>
+    <text x="584" y="218">parallel</text>
+    <text x="574" y="238">· resumes after</text>
+    <text x="584" y="254">a failure</text>
+  </g>
+</svg>

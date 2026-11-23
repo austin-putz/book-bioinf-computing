@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 352" role="img" aria-labelledby="word-splitting-title"
+     data-step-labels="Typed|Expand|Split|Run|Quoted">
+  <title id="word-splitting-title">What bash does with gunzip -c $f when f holds Run 3 final/sample_C_R1.fq.gz, a path with spaces. Step 1: the line as typed is three words: gunzip, -c, and $f. Step 2: $f is replaced by its value, Run 3 final/sample_C_R1.fq.gz. Step 3: because $f was not in double quotes, the value is split at its spaces into three words, Run, 3, and final/sample_C_R1.fq.gz, so the command now has five words. Step 4: gunzip receives three file names, none of which exists, and fails on each: gzip: Run.gz: No such file or directory, gzip: 3.gz: No such file or directory, gzip: final/sample_C_R1.fq.gz: No such file or directory. Step 5: typed as gunzip -c "$f", the value stays one word, gunzip receives the one real file, and prints its FASTQ records.</title>
+  <desc data-caption="1">Typed: the line is three words, gunzip, -c, and $f.</desc>
+  <desc data-caption="2">Expand: bash replaces $f with its value, a path that contains spaces.</desc>
+  <desc data-caption="3">Split: $f was not in double quotes, so bash splits the value at its spaces into three words.</desc>
+  <desc data-caption="4">Run: gunzip receives three file names, none of which exists, and fails on each.</desc>
+  <desc data-caption="5">Quoted: with "$f" the value stays one word, so gunzip receives the one real file and reads it.</desc>
+
+  <!-- The terminal -->
+  <rect x="10" y="10" width="700" height="92" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="26" y="32" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">TERMINAL, IN ~/bioinf-computing-ch05/share</text>
+  <text x="26" y="60" font-size="15" class="mono">f="Run 3 final/sample_C_R1.fq.gz"</text>
+  <text x="26" y="86" font-size="15" class="mono" data-hide="5">gunzip -c $f</text>
+  <text x="26" y="86" font-size="15" class="mono" data-show="5">gunzip -c <tspan font-weight="700">"</tspan>$f<tspan font-weight="700">"</tspan></text>
+
+  <!-- Heading for each step -->
+  <g font-size="13" font-weight="700">
+    <text x="26" y="134" data-hide="2">1 · As typed: 3 words</text>
+    <text x="26" y="134" data-show="2" data-hide="3">2 · Expand: $f is replaced by its value</text>
+    <text x="26" y="134" data-show="3" data-hide="4">3 · Split: unquoted, the value breaks at its spaces: 5 words</text>
+    <text x="26" y="134" data-show="4" data-hide="5">4 · Run: gunzip receives 3 file names</text>
+    <text x="26" y="134" data-show="5">5 · Quoted: "$f" stays one word, one real file</text>
+  </g>
+
+  <!-- Word chips -->
+  <g font-size="13" class="mono" text-anchor="middle">
+    <rect x="26" y="152" width="63" height="32" rx="5" class="fill-surface stroke-ink"/>
+    <text x="57.5" y="173">gunzip</text>
+    <rect x="99" y="152" width="32" height="32" rx="5" class="fill-surface stroke-ink"/>
+    <text x="115" y="173">-c</text>
+
+    <!-- Step 1: $f -->
+    <g data-hide="2">
+      <rect x="141" y="152" width="32" height="32" rx="5" class="fill-given-soft stroke-given" stroke-dasharray="5 3"/>
+      <text x="157" y="173">$f</text>
+    </g>
+
+    <!-- Step 2: the value, one chip, spaces inside -->
+    <g data-show="2" data-hide="3">
+      <rect x="141" y="152" width="242" height="32" rx="5" class="fill-given-soft stroke-given" stroke-dasharray="5 3"/>
+      <text x="262" y="173">Run 3 final/sample_C_R1.fq.gz</text>
+    </g>
+
+    <!-- Steps 3-4: split into three words -->
+    <g data-show="3" data-hide="5">
+      <rect x="141" y="152" width="40" height="32" rx="5" class="fill-warn-soft stroke-warn"/>
+      <text x="161" y="173">Run</text>
+      <rect x="191" y="152" width="32" height="32" rx="5" class="fill-warn-soft stroke-warn"/>
+      <text x="207" y="173">3</text>
+      <rect x="233" y="152" width="195" height="32" rx="5" class="fill-warn-soft stroke-warn"/>
+      <text x="330.5" y="173">final/sample_C_R1.fq.gz</text>
+    </g>
+
+    <!-- Step 5: quoted, one word -->
+    <g data-show="5">
+      <rect x="141" y="152" width="242" height="32" rx="5" class="fill-given-soft stroke-given" stroke-width="1.5"/>
+      <text x="262" y="173">Run 3 final/sample_C_R1.fq.gz</text>
+    </g>
+  </g>
+
+  <!-- Notes under the chips -->
+  <g font-size="12">
+    <text x="141" y="204" class="fill-muted" data-show="2" data-hide="3">one value, with spaces inside</text>
+    <text x="141" y="204" class="fill-warn" data-show="3" data-hide="5">three arguments: three file names</text>
+    <text x="141" y="204" class="fill-muted" data-show="5">one argument: the whole path</text>
+  </g>
+
+  <!-- What happens -->
+  <rect x="10" y="218" width="700" height="122" rx="10" fill="none" class="stroke-line" stroke-width="1.5"/>
+  <text x="26" y="240" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">WHAT GUNZIP DOES</text>
+  <text x="26" y="266" font-size="13" class="fill-muted" data-hide="4">(nothing yet: bash is still building the command)</text>
+  <g font-size="13" class="mono fill-warn" data-show="4" data-hide="5">
+    <text x="26" y="266">gzip: Run.gz: No such file or directory</text>
+    <text x="26" y="286">gzip: 3.gz: No such file or directory</text>
+    <text x="26" y="306">gzip: final/sample_C_R1.fq.gz: No such file or directory</text>
+    <text x="26" y="326">exit status 1</text>
+  </g>
+  <g font-size="13" class="mono" data-show="5">
+    <text x="26" y="266">@C.1</text>
+    <text x="26" y="286">ACGTACGTAC</text>
+    <text x="26" y="306">+</text>
+    <text x="26" y="326">IIIIIIIIII<tspan x="130" class="fill-muted">… four reads in all</tspan></text>
+  </g>
+</svg>

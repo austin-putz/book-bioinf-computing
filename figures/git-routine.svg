@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 300" role="img" aria-labelledby="git-routine-title">
+  <title id="git-routine-title">The minimal git routine. Three places: your files in the working folder, the staged copy that the next commit will save, and the history of commits. Before saving, look with git status and git diff. git add copies a change to the staged copy, and git commit saves the staged files as a new commit in the history; the newest commit is HEAD and the one before it is HEAD~1. Two arrows lead back to your files: git restore file copies the staged version back over your edit (normally the same as the last commit here), and git restore --source=HEAD~1 file brings back the version from an older commit.</title>
+  <defs>
+    <marker id="git-routine-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+    <marker id="git-routine-arrow-ink" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-ink"/>
+    </marker>
+  </defs>
+
+  <!-- Box 1: your files -->
+  <rect x="10" y="40" width="170" height="110" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="24" y="64" font-size="14" font-weight="700">Your files</text>
+  <text x="24" y="82" font-size="12" class="fill-muted">the working folder</text>
+  <rect x="24" y="96" width="142" height="24" rx="4" fill="none" class="stroke-ink"/>
+  <text x="32" y="113" font-size="12" class="mono">02_gtf_summary.sh</text>
+  <text x="24" y="138" font-size="12" class="fill-muted">what you edit</text>
+
+  <!-- Box 2: staged -->
+  <rect x="260" y="40" width="130" height="110" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="274" y="64" font-size="14" font-weight="700">Staged</text>
+  <text x="274" y="82" font-size="12" class="fill-muted">what the next</text>
+  <text x="274" y="98" font-size="12" class="fill-muted">commit will save</text>
+
+  <!-- Box 3: history -->
+  <rect x="480" y="40" width="230" height="110" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="494" y="64" font-size="14" font-weight="700">History</text>
+  <text x="494" y="82" font-size="12" class="fill-muted">saved commits, with messages</text>
+  <path d="M502 102 V128" class="stroke-line" stroke-width="2"/>
+  <circle cx="502" cy="104" r="5" class="fill-surface stroke-ink" stroke-width="1.5"/>
+  <circle cx="502" cy="128" r="5" class="fill-ink"/>
+  <text x="516" y="108" font-size="12" class="mono">HEAD~1</text>
+  <text x="570" y="108" font-size="12">Add the scripts</text>
+  <text x="516" y="132" font-size="12" class="mono">HEAD</text>
+  <text x="570" y="132" font-size="12">Clearer header in 02</text>
+
+  <!-- Look labels on the first gap -->
+  <text x="220" y="58" font-size="12" class="fill-muted" text-anchor="middle">look first:</text>
+  <text x="220" y="74" font-size="12" class="mono" text-anchor="middle">git status</text>
+  <text x="220" y="90" font-size="12" class="mono" text-anchor="middle">git diff</text>
+
+  <!-- Forward arrows -->
+  <path d="M182 104 H254" class="stroke-muted" stroke-width="1.5" marker-end="url(#git-routine-arrow)"/>
+  <text x="220" y="124" font-size="12" class="mono" text-anchor="middle">git add</text>
+  <path d="M392 104 H474" class="stroke-muted" stroke-width="1.5" marker-end="url(#git-routine-arrow)"/>
+  <text x="435" y="124" font-size="12" class="mono" text-anchor="middle">git commit</text>
+
+  <!-- Back: git restore file (from staged) -->
+  <path d="M325 150 V190 H95 V156" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#git-routine-arrow-ink)"/>
+  <text x="108" y="210" font-size="12" class="mono">git restore file</text>
+  <text x="108" y="226" font-size="12" class="fill-muted">from the staged copy; normally the last commit here</text>
+
+  <!-- Back: restore from an older commit (HEAD~1) -->
+  <path d="M560 150 V252 H55 V156" fill="none" class="stroke-ink" stroke-width="1.5" marker-end="url(#git-routine-arrow-ink)"/>
+  <text x="68" y="272" font-size="12" class="mono">git restore --source=HEAD~1 file</text>
+  <text x="68" y="288" font-size="12" class="fill-muted">from an older commit</text>
+</svg>

@@ -1,20 +1,3000 @@
 # Shell scripts {#sec-shell-scripts}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- Variables, quoting, loops, conditionals
-- Script arguments
-- `set -euo pipefail`: what it catches and what it does not
-- Logging output and errors
-- Numbered scripts as a simple pipeline
-- Reading a supplied script line by line; finding bugs with `bash -x` and ShellCheck (more in Chapter 34)
-- Minimal git routine for saved scripts: check changes, commit, recover a previous version (full treatment in Chapter 21)
+By the end of this chapter you should be able to:
+
+1. Save commands as a script, run it, and read any line of one,
+   including the script from @sec-organizing-projects.
+2. Use variables, `$( )`, and `$(( ))`, and quote every expansion so
+   file names with spaces stay whole.
+3. Loop over files and over the rows of a sample table, and preview a
+   loop before it changes anything.
+4. Take file names as arguments, check inputs with `if` and tests, and
+   explain what `set -euo pipefail` catches and what it misses.
+5. Keep results and messages apart in a log, chain numbered scripts
+   into a small pipeline, and save and recover script versions with
+   git.
+:::
+
+## What this chapter does {#sec-shell-scripts-intro}
+
+In Chapters 1 to 7 you typed commands one at a time and pasted the
+occasional block. A **script** is those commands saved in a file. Saved,
+they run the same way every time, they record exactly what was done,
+and you can share them, keep their history, and, in @sec-hpc-slurm,
+hand them to a cluster to run as a job. You have already run one:
+@sec-organizing-projects asked you to paste `src/01_count_reads.sh` into
+your project and run it on trust. By @sec-shell-scripts-read you will be
+able to explain every line of it.
+
+Several earlier chapters left loose ends here. @sec-orientation's read
+count `$(( $(gunzip -c … | wc -l) / 4 ))` was copied without
+explanation, and so was its warning that the shell does not stop on
+errors unless told to. @sec-getting-help said that whether a script
+stops after a failing command "depends on the program and the script".
+@sec-text-tools promised `set -o pipefail` and said that `grep`'s exit
+status 1 matters "in scripts that stop on any nonzero status".
+@sec-linux-system gave you the shebang line and the `x` bit. This
+chapter ties them together.
+
+It is the longest chapter in Part II, so it comes in **two sittings**,
+marked in the text:
+
+- **A. Writing scripts** (@sec-shell-scripts-first to
+  @sec-shell-scripts-arguments): saving commands in a file, variables
+  and quoting, loops, tests, and arguments. Exercise 1, part A, fits at
+  the end.
+- **B. Making them dependable** (@sec-shell-scripts-strict to
+  @sec-shell-scripts-git): stopping on errors, logging, reading
+  @sec-organizing-projects's script line by line, chaining scripts into
+  a small pipeline, finding bugs, and saving scripts with git.
+
+Practice happens in a scratch folder, `~/bioinf-computing-ch08`. Make it
+now, with a `bin/` folder inside for the exercise scripts:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch08/bin && cd ~/bioinf-computing-ch08
+```
+
+Most examples in sitting A **read** the practice folder
+`~/bioinf-computing-ch05/share/` from @sec-shell-basics: the run
+folders, the one with spaces in its name, the stray `.tmp` file, and
+the two sample tables. Nothing in this chapter changes, renames, or
+deletes anything there, so later chapters still find it as they expect.
+Scripts that write files write them in `~/bioinf-computing-ch08`. If you
+do not have the practice folder, paste the setup block from
+@sec-shell-basics-intro first.
+
+The project, `~/bioinf-computing`, is touched only in sitting B: you
+read `src/01_count_reads.sh`, add two scripts beside it, and turn the
+project into a git repository.
+
+The outputs shown were captured on a Mac (macOS 15, Homebrew bash
+5.3.15 with the GNU tools first on `PATH`, as set up in
+@sec-orientation) and on Ubuntu 24.04 (bash 5.2.21), with GNU gzip. A
+Mac's own `gunzip` words its errors differently (`gunzip: can't stat:
+…` where GNU says `gzip: …: No such file or directory`), and so do
+other versions; the meaning is the same. Paths start with `/home/you`
+on Linux and `/Users/you` on a Mac.
+
+## From the command line to a script {#sec-shell-scripts-first}
+
+Start with a command you already know. @sec-text-tools counted the
+feature types in the book's annotation file with one pipeline:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c ~/bioinf-computing/data/ref/genes.gtf.gz | cut -f3 | sort | uniq -c | sort -k1,1nr
+```
+
+```{.console}
+    129 exon
+    124 transcript
+    118 CDS
+    115 start_codon
+    114 stop_codon
+```
+
+Typing that again next month means remembering it exactly. Save it
+instead. Open a new file in VS Code (or `nano` if you prefer, as in
+@sec-book-setup):
+
+```{.bash filename="Terminal (laptop)"}
+code ~/bioinf-computing-ch08/gtf_types.sh
+```
+
+Paste these lines and save:
+
+```{.bash filename="~/bioinf-computing-ch08/gtf_types.sh"}
+#!/usr/bin/env bash
+# gtf_types.sh: count the feature types (column 3) in the book's GTF file.
+# Run:     bash gtf_types.sh   (from ~/bioinf-computing-ch08)
+# Input:   ~/bioinf-computing/data/ref/genes.gtf.gz
+# Output:  counts on the screen, most common first
+gunzip -c ~/bioinf-computing/data/ref/genes.gtf.gz | cut -f3 | sort | uniq -c | sort -k1,1nr
+```
+
+The first line is the shebang from @sec-linux-system-scripts. The lines
+starting with `#` are **comments**: bash skips them, and they are for
+the next person to read the file, who is usually you. A short header
+saying what the script does, how to run it, what it reads, and what it
+writes is worth the four lines in every script you keep.
+
+Run it, first with `bash`, then as a command of its own:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch08
+bash gtf_types.sh
+./gtf_types.sh
+chmod u+x gtf_types.sh
+./gtf_types.sh
+```
+
+`bash gtf_types.sh` prints the same five lines as before.
+`./gtf_types.sh` then fails with `bash: ./gtf_types.sh: Permission
+denied` (exit status 126) until `chmod u+x` gives the file its `x` bit,
+exactly as `hello.sh` did in @sec-linux-system-scripts. After that, it
+prints the five lines again.
+
+**What a script is.** A script is a text file of commands that a **new
+bash process** reads and runs from top to bottom. Because it is a new
+process, it starts fresh: it does not see the aliases you typed or the
+variables you set without `export` in your terminal
+(@tbl-variable-lifetime). It also cannot change your terminal: a `cd`
+or a variable set inside the script is gone when the script ends.
+
+**Relative paths are read from where you run it.** A script does not
+run "from its own folder". Every relative path in it is read from the
+folder you are in when you start it. @sec-shell-basics left a two-line
+script for exactly this, `~/bioinf-computing-ch05/where.sh`, which runs
+`pwd` and then `ls data/raw`. Run it from your home folder:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~
+bash ~/bioinf-computing-ch05/where.sh
+```
+
+```{.console}
+/home/you
+ls: cannot access 'data/raw': No such file or directory
+```
+
+The script is stored in `~/bioinf-computing-ch05`, but `pwd` says it
+runs in `~`, and `data/raw` is looked up there. `gtf_types.sh` does not
+have this problem because its one path starts with `~`, which is
+absolute. Project scripts use relative paths on purpose, so a project
+folder can be moved or copied as a whole. The book's rule is simple:
+**project scripts live in `src/` and are run from the project folder**,
+as `pixi run bash src/01_count_reads.sh`, and each says so in its
+header. @sec-shell-scripts-read adds one line that checks it.
+
+**The parts of a script.** Longer scripts follow the same order as the
+header lines above, and @fig-script-anatomy shows it on
+@sec-organizing-projects's script: the shebang; a header comment;
+settings that change how bash behaves; the inputs and checks on them;
+the work; and the outputs. You will meet each part in this chapter and
+read that script line by line in @sec-shell-scripts-read.
+
+::: {#fig-script-anatomy}
+{{< svg ../figures/script-anatomy.svg >}}
+
+The parts of a script, shown on `src/01_count_reads.sh` from
+@sec-organizing-projects (shortened): the shebang line, a header
+comment saying what it does and how to run it, a settings line
+(`set -euo pipefail`, @sec-shell-scripts-strict), inputs and checks,
+the work, and the outputs, written to a temporary name and then moved
+into place, with a log of the run. @sec-shell-scripts-read uses this
+map to read every line.
+:::
+
+::: {.check}
+**Check yourself.** You run `bash ~/bioinf-computing/src/01_count_reads.sh`
+from your home folder instead of from the project folder. What goes
+wrong, and why?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The script's paths are relative, so they are read from `~`. Its
+`mkdir -p results logs` makes those two folders in your home folder,
+then `md5sum` cannot find `src/01_count_reads.sh` and `cd data/raw`
+fails with `No such file or directory`. Run project scripts from the
+project folder; @sec-shell-scripts-read adds a guard that stops the
+script straight away when you do not.
+:::
+:::
+
+## Variables, quoting, and expansions {#sec-shell-scripts-variables}
+
+Go to the practice folder and store a folder name in a **variable**,
+then list that folder twice, once without quotes and once with them:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+d="Run 3 final"
+ls $d
+ls "$d"
+```
+
+```{.console}
+ls: cannot access 'Run': No such file or directory
+ls: cannot access '3': No such file or directory
+ls: cannot access 'final': No such file or directory
+sample_C_R1.fq.gz
+sample_C_R2.fq.gz
+```
+
+The first `ls` exits with status 2 after three errors; the second lists
+the two files.
+
+**What happened.** `d="Run 3 final"` stores the text `Run 3 final`
+under the name `d` (no spaces around `=`, @sec-linux-system-variables).
+When bash meets `$d`, it replaces it with that value. Without quotes,
+bash then does two more things to the value, the steps that
+@fig-shell-steps in @sec-shell-basics set aside:
+
+1. **Word splitting.** The value is cut at spaces, tabs, and newlines
+   (the default contents of a setting called `IFS`) into separate
+   words. `Run 3 final` becomes three words, so `ls` received three
+   names.
+2. **Wildcard matching.** Each piece that holds `*`, `?`, or `[` is
+   matched against file names, as if you had typed it
+   (@sec-shell-basics-wildcards).
+
+Inside double quotes neither happens: `"$d"` is replaced by its value
+and stays **one word**, spaces and all (@fig-word-splitting). That gives
+the rule this chapter follows everywhere:
+
+::: {.callout-important}
+## Key idea
+Put double quotes around every `$…`: write `"$d"`, `"$f"`, `"$1"`. An
+unquoted value is split at spaces and matched as a wildcard, so a file
+name with a space becomes several arguments.
+:::
+
+::: {#fig-word-splitting}
+{{< svg ../figures/word-splitting.svg >}}
+
+What bash does with `gunzip -c $f` when `f` holds `Run 3
+final/sample_C_R1.fq.gz`. The variable is replaced by its value, the
+unquoted value is split at its spaces into three words, and `gunzip`
+receives three file names that do not exist. The last step shows
+`"$f"`, which arrives as one word. Use *Next* to step through.
+:::
+
+Two places do not split, and you will see unquoted variables in them in
+other people's scripts: a plain assignment (`x=$y` copies the value
+whole) and the inside of `[[ … ]]` (@sec-shell-scripts-conditionals).
+Quoting there does no harm, and quoting everywhere is the simpler habit.
+**Single quotes** stop all expansion, as in @sec-shell-basics: `'$d'` is
+the two characters `$d`. Use double quotes when you want the value,
+single quotes when you want the text exactly as typed.
+
+**A misspelled variable is empty, not an error.** Set a variable and
+then use it with a typo, through `echo` so nothing happens:
+
+```{.bash filename="Terminal (laptop)"}
+outdir=~/bioinf-computing-ch08/out
+echo "would delete: $outdri/"
+```
+
+```{.console}
+would delete: /
+```
+
+`outdri` was never set, so bash replaced it with nothing, silently.
+Inside a real command such as `rm -rf "$outdri/"`, the quotes would
+faithfully hand `rm` the one argument `/`: the wrong path, built by a
+typo. What `rm` then does depends on its safeguards and your
+permissions; the point is that the command was built wrong and nothing
+warned you. Never run that line. @sec-shell-scripts-strict shows the
+setting, `set -u`, that turns an unset variable into an error.
+
+::: {.callout-warning}
+## Pitfall: a misspelled variable is empty
+`rm -rf "$outdri/"` with `outdri` unset is handed the argument `/`.
+Quotes keep an argument whole, but they do not check that it is the path
+you meant. Preview any command built from variables by putting `echo` in
+front of it, and use `set -u` in scripts (@sec-shell-scripts-strict).
+:::
+
+Two naming habits avoid trouble. Use **lower-case names** for your own
+variables (`d`, `outdir`, `sample`): upper-case names such as `PATH`,
+`HOME`, and `USER` belong to the system (@sec-linux-system-variables),
+and overwriting `PATH` inside a script stops it finding any command.
+And use names that say what the value is: `fastq` tells the next reader
+more than `x`.
+
+### The expansions you have already met
+
+Several pieces of syntax from earlier chapters are expansions too, and
+the quoting rule applies to all of them.
+
+**Command substitution, `$( )`**, runs a command and puts its output in
+its place. @sec-organizing-projects's script names its log with
+`$(date +%Y-%m-%dT%H%M%S)`, and @sec-linux-system stored a field with
+`f=$(…)`. Quote it like a variable: `"$(date +%Y-%m-%d)"`.
+
+**Arithmetic, `$(( ))`**, does whole-number arithmetic. Now
+@sec-orientation's read count can be taken apart. Run the inner part
+first, then the whole line:
+
+```{.bash filename="Terminal (laptop)"}
+gunzip -c ~/bioinf-computing/data/raw/SRR6357070_2.fastq.gz | wc -l
+echo $(( $(gunzip -c ~/bioinf-computing/data/raw/SRR6357070_2.fastq.gz | wc -l) / 4 ))
+```
+
+```{.console}
+200000
+50000
+```
+
+The inner `$( )` runs the pipeline and becomes `200000`, the number of
+lines; `$(( 200000 / 4 ))` becomes `50000`, one read per four lines.
+Bash arithmetic is integers only: `$(( 7 / 2 ))` is `3`. Anything with
+decimals belongs in R or Python (@sec-r-essentials,
+@sec-python-essentials) or `awk` (@sec-text-tools).
+
+**Braces, `${name}`**, mark where a variable's name ends. Compare:
+
+```{.bash filename="Terminal (laptop)"}
+sample=WT_REP1
+echo "$sample_R1.fastq.gz"
+echo "${sample}_R1.fastq.gz"
+```
+
+```{.console}
+.fastq.gz
+WT_REP1_R1.fastq.gz
+```
+
+In the first line, bash read the longest name it could, `sample_R1`,
+which is unset and so empty. Braces end the name where you mean it to:
+use `"${sample}_R1.fastq.gz"` whenever a name is followed by a letter,
+digit, or `_`.
+
+**Trimming a value.** Inside braces, `#`, `%`, and `/` cut or replace
+part of a value without starting another program. On a path from the
+practice folder:
+
+```{.bash filename="Terminal (laptop)"}
+f="Run 3 final/sample_C_R1.fq.gz"
+echo "${f##*/}"
+echo "${f%.gz}"
+echo "${f/_R1/_R2}"
+basename "$f"
+```
+
+```{.console}
+sample_C_R1.fq.gz
+Run 3 final/sample_C_R1.fq
+Run 3 final/sample_C_R2.fq.gz
+sample_C_R1.fq.gz
+```
+
+`${f##*/}` removes everything up to the last `/`, which leaves the file
+name, the same as the `basename` command. `${f%.gz}` removes `.gz` from
+the end. `${f/_R1/_R2}` replaces the first `_R1` with `_R2`, which
+@sec-shell-scripts-loops uses to find the partner of each R1 file.
+@tbl-expansions collects these forms.
+
+: Expansions, with examples on `f="Run 3 final/sample_C_R1.fq.gz"` and the `rows` list below. Quote every one of them. {#tbl-expansions}
+
+| Form | Gives | Example | Output |
+|:-----|:------|:--------|:-------|
+| `"$f"` | the value, as one word | `echo "$f"` | `Run 3 final/sample_C_R1.fq.gz` |
+| `"${f}"` | the same; braces mark where the name ends | `"${sample}_R1.fastq.gz"` | `WT_REP1_R1.fastq.gz` |
+| `"$(cmd)"` | the output of a command | `"$(date +%Y-%m-%d)"` | today's date |
+| `$(( expr ))` | whole-number arithmetic | `$(( 200000 / 4 ))` | `50000` |
+| `"${f##*/}"` | remove up to the last `/` | `"${f##*/}"` | `sample_C_R1.fq.gz` |
+| `"${f%.gz}"` | remove an ending | `"${f%.gz}"` | `Run 3 final/sample_C_R1.fq` |
+| `"${f/_R1/_R2}"` | replace the first match | `"${f/_R1/_R2}"` | `Run 3 final/sample_C_R2.fq.gz` |
+| `"${rows[@]}"` | every item of a list, each as its own word | `printf '[%s] ' "${rows[@]}"` | `[sample] [run_folder] …` |
+| `${#rows[@]}` | the number of items in a list | `echo "${#rows[@]}"` | `28` |
+
+### Lists
+
+@sec-shell-basics and @sec-text-tools built the sample table from a
+list, `rows=(…)`, and promised an explanation. A **list** (bash calls it
+an array) holds several values under one name. Paste the same list
+again:
+
+```{.bash filename="Terminal (laptop)"}
+rows=(sample run_folder condition reads
+  sample_C "Run 3 final" treated 12
+  sample_A run1 control 9
+  sample_B run2 control 30
+  sample_E run5 treated 105
+  sample_B run2 control 30
+  sample_D run4 control 8)
+echo "${#rows[@]} items"
+echo "${rows[5]}"
+```
+
+```{.console}
+28 items
+Run 3 final
+```
+
+The quotes around `"Run 3 final"` in the list made it one item, so the
+list has 28 items, not 30. Items are numbered from 0: `${rows[5]}` is
+the sixth, `Run 3 final`. `"${rows[@]}"`, in double quotes, gives every
+item as its own word, spaces kept. The table itself came from one
+`printf`:
+
+```{.bash filename="Terminal (laptop)"}
+printf '%s\t%s\t%s\t%s\n' "${rows[@]}"
+```
+
+`printf` takes a format and fills each `%s` with the next item. When it
+has more items than `%s` slots, it **reuses the format** until the items
+run out: four slots, 28 items, so seven lines of four tab-separated
+columns. A small case shows the rule:
+
+```{.bash filename="Terminal (laptop)"}
+printf '%s-%s\n' a b c d e
+```
+
+```{.console}
+a-b
+c-d
+e-
+```
+
+Prefer `printf` to `echo` for anything with tabs, backslashes, or a
+format: `printf` treats `\t` and `\n` the same way everywhere, while
+`echo`'s handling of them differs between shells and systems. `echo` is
+fine for a plain message.
+
+::: {.check}
+**Check yourself.** (a) `sample=WT_REP1; echo "$sample_R1.fastq.gz"`.
+What prints? (b) `f="Run 3 final/a.fq.gz"; ls $f`: how many names does
+`ls` receive?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+(a) `.fastq.gz`. Bash read a variable called `sample_R1`, which is
+unset, so it became nothing. Write `"${sample}_R1.fastq.gz"`. (b) Three:
+`Run`, `3`, and `final/a.fq.gz`, because the unquoted value is split at
+its spaces. `ls "$f"` receives one.
+:::
+:::
+
+## Loops {#sec-shell-scripts-loops}
+
+Count the reads in every R1 file of the practice folder. Here is the
+version most people write first. It has two bugs; run it and look for
+them in the output:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+for f in */*_R1*; do n=$(gunzip -c $f | wc -l); echo "$f $((n/4))"; done
+```
+
+```{.console}
+gzip: Run.gz: No such file or directory
+gzip: 3.gz: No such file or directory
+gzip: final/sample_C_R1.fq.gz: No such file or directory
+Run 3 final/sample_C_R1.fq.gz 0
+run1/sample_A_R1.fastq.gz 2
+run2/sample_B_R1.fastq.gz 3
+run2/sample_B_R1.fastq.gz.tmp 3
+```
+
+The exit status is 0. Sample C really has 4 reads, and the last line is
+the stray temporary copy from @sec-shell-basics, counted as if it were
+a sample. Neither bug stopped the loop or changed its exit status; the
+three error lines are the only hint, and in a long run they scroll past.
+(GNU `gunzip` tries adding `.gz` to a name it cannot find, which is why
+it reports `Run.gz`; a Mac's `gunzip` prints `gunzip: can't stat: Run`
+and so on.)
+
+Fix one bug at a time. First quote `"$f"`:
+
+```{.bash filename="Terminal (laptop)"}
+for f in */*_R1*; do n=$(gunzip -c "$f" | wc -l); echo "$f $((n/4))"; done
+```
+
+```{.console}
+Run 3 final/sample_C_R1.fq.gz 4
+run1/sample_A_R1.fastq.gz 2
+run2/sample_B_R1.fastq.gz 3
+run2/sample_B_R1.fastq.gz.tmp 3
+```
+
+Sample C now arrives as one name and gives 4. Then tighten the pattern
+so it only matches names that end the way FASTQ files end, `.fastq.gz`
+or `.fq.gz`:
+
+```{.bash filename="Terminal (laptop)"}
+for f in */*_R1.f*q.gz; do n=$(gunzip -c "$f" | wc -l); echo "$f $((n/4))"; done
+```
+
+```{.console}
+Run 3 final/sample_C_R1.fq.gz 4
+run1/sample_A_R1.fastq.gz 2
+run2/sample_B_R1.fastq.gz 3
+```
+
+Three samples, three correct counts. (The lines may come out in a
+different order on your system: the order of a wildcard's matches
+depends on the language settings. On these machines `Run 3 final`
+sorted first; on several Linux clusters it sorts last. The counts are
+what matter.)
+
+**What a `for` loop does.** The general form is:
+
+```{.bash filename="the form of a for loop"}
+for name in list; do
+  commands that use "$name"
+done
+```
+
+Bash expands the list **once**, before the loop starts: here the
+wildcard became the list of matching file names. Then it runs the
+commands once per item, with `f` set to each in turn. The one-line
+version above just puts `;` where the line breaks would be. In a
+script, write it on several lines and indent the body, as in the box.
+
+Loop over a wildcard, never over the output of `ls`: `for f in $(ls)`
+splits the names at their spaces, exactly like an unquoted variable.
+
+**Preview first.** A loop repeats a command many times, so a mistake is
+repeated too. Before a loop that changes files, put `echo` in front of
+the command and read what it would do:
+
+```{.bash filename="Terminal (laptop)"}
+for f in */*_R1.f*q.gz; do echo cp "$f" ~/bioinf-computing-ch08/; done
+```
+
+```{.console}
+cp Run 3 final/sample_C_R1.fq.gz /home/you/bioinf-computing-ch08/
+cp run1/sample_A_R1.fastq.gz /home/you/bioinf-computing-ch08/
+cp run2/sample_B_R1.fastq.gz /home/you/bioinf-computing-ch08/
+```
+
+This is @sec-shell-basics's habit with `rm`, now for loops. The list is
+right, so the real loop would copy three files. (`echo` joins its
+arguments with spaces, so it cannot show that `Run 3 final/…` is one
+argument; the quotes in the loop make sure it is.) When the list looks
+right, remove `echo` and run it.
+
+### When nothing matches
+
+Try a pattern that matches nothing in the practice folder:
+
+```{.bash filename="Terminal (laptop)"}
+for f in */*.bam; do echo "got: $f"; done
+```
+
+```{.console}
+got: */*.bam
+```
+
+When a wildcard matches nothing, bash passes the pattern unchanged
+(@sec-shell-basics-wildcards), so the loop ran once with `f` set to the
+literal text `*/*.bam`. The next command would fail with a confusing
+`No such file or directory` for a file called `*/*.bam`. Bash can be
+told to drop a pattern that matches nothing instead:
+
+```{.bash filename="Terminal (laptop)"}
+shopt -s nullglob
+for f in */*.bam; do echo "got: $f"; done
+shopt -u nullglob
+```
+
+With `nullglob` set the loop runs zero times and prints nothing;
+`shopt -u` unsets it again in your terminal. In a script that loops over
+a wildcard, put `shopt -s nullglob` near the top. But zero passes is not
+a success either: a script that "processes" no files and exits 0 looks
+exactly like one that worked. So store the matches in a list and stop
+if it is empty:
+
+```{.bash filename="in a script"}
+shopt -s nullglob
+files=(*/*_R1.f*q.gz)
+if (( ${#files[@]} == 0 )); then echo "no R1 files found" >&2; exit 1; fi
+for f in "${files[@]}"; do
+  echo "would count $f"
+done
+```
+
+These are script lines: typed into a terminal, the `exit` would close
+it. `if` is explained in @sec-shell-scripts-conditionals and `>&2` in
+@sec-shell-scripts-arguments; here they read "if the list has zero
+items, print a message and stop".
+
+**Numbered ranges.** Brace ranges from @sec-shell-basics work as a loop
+list: `for i in {01..03}; do echo "sample_$i"; done` prints `sample_01`,
+`sample_02`, `sample_03`.
+
+### Paired files
+
+Paired-end reads come as R1 and R2 files with matching names. From each
+R1 name, build the R2 name with the replacement from
+@tbl-expansions and check that the file exists (`-e`, "exists", is one
+of the tests in @sec-shell-scripts-conditionals):
+
+```{.bash filename="Terminal (laptop)"}
+for r1 in */*_R1.f*q.gz; do
+  r2="${r1/_R1/_R2}"
+  if [[ -e "$r2" ]]; then echo "pair: $r1 + $r2"; else echo "no R2 for $r1"; fi
+done
+```
+
+```{.console}
+pair: Run 3 final/sample_C_R1.fq.gz + Run 3 final/sample_C_R2.fq.gz
+pair: run1/sample_A_R1.fastq.gz + run1/sample_A_R2.fastq.gz
+pair: run2/sample_B_R1.fastq.gz + run2/sample_B_R2.fastq.gz
+```
+
+`${r1/_R1/_R2}` replaces the **first** `_R1` in the whole path. A
+folder called `run_R1_old/` would break it, which is one more reason
+for @sec-organizing-projects's naming rules: `_R1` and `_R2` appear only
+once, just before the file ending.
+
+### Rows of a table
+
+A sample table and the files on disk can disagree, as @sec-text-tools
+warned. Check each row of the practice table against the folders:
+
+```{.bash filename="Terminal (laptop)"}
+tail -n +2 meta/samples.tsv | while IFS=$'\t' read -r sample folder cond reads; do # <1>
+  if [[ -d "$folder" ]]; then echo "$sample: folder '$folder' found"
+  else echo "$sample: folder '$folder' MISSING"; fi
+done
+```
+1. `tail -n +2` skips the header line; `read` takes one line at a time
+   from the pipe.
+
+```{.console}
+sample_C: folder 'Run 3 final' found
+sample_A: folder 'run1' found
+sample_B: folder 'run2' found
+sample_E: folder 'run5' MISSING
+sample_B: folder 'run2' found
+sample_D: folder 'run4' MISSING
+```
+
+Two rows point at folders that do not exist. Three details make this
+loop work:
+
+- `while … read …; do … done` runs once per **line** of its input, and
+  stops when there are no more lines.
+- `IFS=$'\t'` sets, for this `read` only, the characters it splits a
+  line at: tabs only. So `Run 3 final` arrives whole in `folder`,
+  spaces and all. (`$'\t'` is bash's way to write a tab character.)
+- `read -r` keeps backslashes as they are, instead of treating them as
+  escapes. Always use `-r`.
+
+`read` puts the first field in `sample`, the second in `folder`, and so
+on; the last name gets whatever is left.
+
+The tempting alternative loops over the table's words:
+
+```{.bash filename="Terminal (laptop)"}
+for line in $(tail -n +2 meta/samples.tsv | head -n 2); do printf '[%s] ' "$line"; done; echo
+```
+
+```{.console}
+[sample_C] [Run] [3] [final] [treated] [12] [sample_A] [run1] [control] [9]
+```
+
+`$( )` unquoted is split at spaces, tabs, and newlines alike, so the
+"lines" arrive one word at a time, and `Run 3 final` falls apart.
+
+::: {.callout-warning}
+## Pitfall: loop over files with a wildcard, over lines with `while read`
+`for f in $(ls)` and `for line in $(cat file)` split at every space.
+Loop over files with a wildcard (`for f in */*_R1.f*q.gz`), and over
+the lines of a table with `while IFS=$'\t' read -r …; do … done`.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "`for line in $(cat file)` goes through a file line by line"
+**Reality.** It goes word by word, split at spaces and tabs, and it
+matches wildcards. Read lines with `while IFS= read -r line`.
+:::
+
+**A loop at the end of a pipe forgets.** Bash runs each part of a pipe
+in its own process (a **subshell**), including a `while` loop at the
+end. Variables set inside the loop disappear with that process. It
+matters as soon as a loop must remember something, such as "did any row
+fail?":
+
+```{.bash filename="Terminal (laptop)"}
+bad=0
+tail -n +2 meta/samples.tsv | while IFS=$'\t' read -r sample folder _; do
+  if [[ ! -d "$folder" ]]; then bad=1; fi
+done
+echo "bad after the loop: $bad"
+```
+
+```{.console}
+bad after the loop: 0
+```
+
+Two folders are missing, yet `bad` is still 0: the `bad=1` happened in
+the subshell. A script that ended with `exit "$bad"` would report
+success. (`_` is the usual name for "a value I don't need"; here it
+takes the rest of the line.) The repair feeds the file to the loop
+with `<` instead of a pipe, so the loop runs in the script's own shell.
+You will use it, ready-made, in exercise 2:
+
+```{.bash filename="in a script"}
+bad=0
+{
+  IFS= read -r _   # skip the header line
+  while IFS=$'\t' read -r sample folder rest || [[ -n "$sample$folder$rest" ]]; do
+    if [[ ! -d "$folder" ]]; then
+      printf '%s: missing folder %s\n' "$sample" "$folder" >&2
+      bad=1
+    fi
+  done
+} < "$table"
+exit "$bad"
+```
+
+The `< "$table"` after the closing `}` feeds the file to everything
+inside the braces. The first `read` takes the header line; the `while`
+loop gets the rest. Because nothing here is a pipe, `bad=1` survives
+the loop and the script can exit with it. The extra `|| [[ -n
+"$sample$folder$rest" ]]` handles a last line with no newline at its
+end: `read` still fills the variables but reports failure, so a plain
+`while read` would skip that row without a word. The test says "or
+the line was not empty", so the last row is checked too. (When you only need a total,
+`awk` from @sec-text-tools is simpler than a loop.)
+
+**Limits of `read`.** This way of reading a table is for simple,
+tidy tables like the practice one, where every field is filled in. A
+tab counts as "white space" to `read`, so two tabs in a row do not
+give an empty field. A row with an empty folder field,
+`sample_C<TAB><TAB>control<TAB>12`, gives `folder=control`, `cond=12`,
+and an empty `reads`, silently shifted. And a plain `while read` loop
+skips a last line that has no newline after it (the repair above
+deals with that one). Real sample sheets are read with R or Python
+(@sec-tabular-data).
+
+**Windows line endings, inside a loop.** @sec-linux-system-line-endings
+showed that a file saved by Excel ends each line in a carriage return,
+`\r`. Read the practice CSV with `IFS=,` and look at the last field:
+
+```{.bash filename="Terminal (laptop)"}
+tail -n +2 meta/samples_from_excel.csv | head -n 1 | while IFS=, read -r sample folder cond reads; do
+  if [[ "$reads" == 12 ]]; then echo "reads is 12"; else echo "reads is not 12"; fi
+  (( reads > 10 )) && echo big
+done
+```
+
+```{.console}
+reads is not 12
+bash: ((: 12: arithmetic syntax error: invalid arithmetic operator (error token is "")
+```
+
+The value is really `12\r`, so it is never equal to `12`, and arithmetic
+on it fails. (The exact wording of the error differs between bash
+versions.) The `\r` sits in the **last** field: a loop that only used
+the folder name would never notice it. `IFS=,` also works only for a
+simple file like this one, with no commas inside quoted fields; it is
+not a CSV reader. Look at any table with `cat -A` before a script
+relies on it, and fix the line endings first
+(@sec-linux-system-line-endings). @tbl-loop-patterns sums up the
+section.
+
+: Loop patterns. {#tbl-loop-patterns}
+
+| Task | Pattern | Pitfall it avoids |
+|:-----|:--------|:------------------|
+| Every file matching a pattern | `for f in */*_R1.f*q.gz; do … "$f" …; done` | names with spaces split; stray files matched by a loose pattern |
+| Pattern may match nothing | `shopt -s nullglob`, a list, and a check that it is not empty | a loop over the literal pattern; a "success" on no files |
+| R1/R2 pairs | `r2="${r1/_R1/_R2}"`, then `[[ -e "$r2" ]]` | a missing partner noticed only later |
+| A numbered range | `for i in {01..03}; do …; done` | typing the list by hand |
+| Rows of a TSV | `while IFS=$'\t' read -r a b c; do …; done` | fields split at spaces |
+| Rows, remembering something | `{ …; while read …; done; } < "$table"` | a variable lost in a pipe's subshell |
+| Don't: | `for f in $(ls)` | names split at spaces |
+| Don't: | `for line in $(cat file)` | lines split into words |
+
+::: {.check}
+**Check yourself.** A loop `for f in data/raw/*.fq.gz; do seqkit stats
+"$f"; done` prints an error for a file called `data/raw/*.fq.gz`, then
+stops. The folder holds `SRR6357070_1.fastq.gz` and
+`SRR6357070_2.fastq.gz`. Why, and what would `shopt -s nullglob` have
+changed?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+No file matched, so bash passed the pattern unchanged and the loop ran
+once with `f` set to `data/raw/*.fq.gz`. The files end in `.fastq.gz`,
+not `.fq.gz`. With `nullglob` the loop would have run zero times, so a
+script should also check that its list is not empty.
+:::
+:::
+
+## Exit status and conditionals {#sec-shell-scripts-conditionals}
+
+Every command finishes with an **exit status**, a number you saw with
+`echo $?` in @sec-getting-help: 0 means success, anything else a kind
+of failure. `grep` uses three (@sec-text-tools): 0 found a match, 1
+found none, 2 something went wrong. Check them in the practice folder:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+grep -q sample_E meta/samples.tsv; echo "status $?"
+grep -q sample_F meta/samples.tsv; echo "status $?"
+grep -q sample_E nope.tsv; echo "status $?"
+```
+
+```{.console}
+status 0
+status 1
+grep: nope.tsv: No such file or directory
+status 2
+```
+
+(`-q`, quiet, makes `grep` print nothing; only its status matters.)
+@sec-linux-system used one such status to choose what to print. Run it
+for a sample that is listed and one that is not:
+
+```{.bash filename="Terminal (laptop)"}
+grep -q sample_E meta/samples.tsv && echo listed || echo "not listed"
+grep -q sample_F meta/samples.tsv && echo listed || echo "not listed"
+```
+
+```{.console}
+listed
+not listed
+```
+
+`&&` runs the next command only if the one before it succeeded (status
+0); `||` runs the next only if it failed. `a && b || c` looks like
+"if a then b else c", but it is not quite: `c` also runs when `b`
+fails. `true && false || echo "c ran anyway"` prints `c ran anyway`. For
+anything more than a one-liner, use `if`.
+
+**`if` tests a command's exit status, and nothing else.** The form is:
+
+```{.bash filename="the form of if"}
+if command; then
+  commands to run when it succeeds
+elif other_command; then
+  commands when the first failed and this one succeeds
+else
+  commands when all of them failed
+fi
+```
+
+`elif` and `else` are optional. Any command can follow `if`:
+
+```{.bash filename="Terminal (laptop)"}
+if grep -q sample_D meta/samples.tsv; then echo "sample_D is in the table"; else echo "no sample_D"; fi
+```
+
+```{.console}
+sample_D is in the table
+```
+
+**Tests with `[[ … ]]`.** Most `if`s ask a question about a file, a
+string, or a number. `[[ … ]]` is a command that does nothing except
+answer such a question with its exit status:
+
+```{.bash filename="Terminal (laptop)"}
+f="Run 3 final/sample_C_R1.fq.gz"
+if [[ -f "$f" ]]; then echo "file exists"; fi
+if [[ -s "$f" ]]; then echo "and is not empty"; fi
+if [[ -d run5 ]]; then echo "run5 found"; else echo "no folder run5"; fi
+x=""
+if [[ -z "$x" ]]; then echo "x is empty"; fi
+```
+
+```{.console}
+file exists
+and is not empty
+no folder run5
+x is empty
+```
+
+The spaces inside `[[ ` and ` ]]` are required: `[[-f "$f"]]` is an
+error. @tbl-tests lists the tests you will use most.
+
+: Tests for `[[ … ]]` and `(( … ))`. {#tbl-tests}
+
+| Test | True when | Example |
+|:-----|:----------|:--------|
+| `-e path` | it exists (file, folder, or other) | `[[ -e "$r2" ]]` |
+| `-f path` | it is a regular file | `[[ -f "$1" ]]` |
+| `-d path` | it is a folder | `[[ -d "$folder" ]]` |
+| `-s path` | it exists and is not empty | `[[ -s results/counts.tsv ]]` |
+| `-r path` | you may read it | `[[ -r "$table" ]]` |
+| `a == b`, `a != b` | the strings are the same, or differ | `[[ "$ext" == gz ]]` |
+| `-z s`, `-n s` | the string is empty, or not empty | `[[ -z "$x" ]]` |
+| `a -eq b`, `-ne`, `-lt`, `-le`, `-gt`, `-ge` | numbers: equal, not equal, less than, … | `[[ "$n" -gt 0 ]]` |
+| `(( a < b ))`, `>`, `<=`, `>=`, `==`, `!=` | numbers, written as arithmetic | `(( n > 0 ))` |
+| **Trap:** `[[ 9 < 30 ]]` | false: `<` inside `[[ ]]` compares **text** | use `(( 9 < 30 ))` or `-lt` |
+| `! test` | the test is false | `[[ ! -d "$folder" ]]` |
+
+**The trap in the table.** Inside `[[ ]]`, `<` and `>` compare text, in
+dictionary order, not numbers:
+
+```{.bash filename="Terminal (laptop)"}
+[[ 9 < 30 ]]; echo "status $?"
+(( 9 < 30 )); echo "status $?"
+[[ 9 -lt 30 ]]; echo "status $?"
+```
+
+```{.console}
+status 1
+status 0
+status 0
+```
+
+As text, `9` comes after `3`, so `[[ 9 < 30 ]]` is false, the same
+mistake as `sort` without `-n` in @sec-text-tools. For numbers, use
+`(( ))` or the letter tests (`-lt`, `-gt`, …).
+
+You will also meet the older single-bracket test, `[ … ]` (for example
+`[ 9 -lt 30 ]`, also true). It works in every shell, not only bash, but
+every variable inside it must be quoted, and it lacks some features.
+This book uses `[[ ]]` in bash scripts.
+
+**`case`, for matching patterns.** When one value can match several
+patterns, `case` is tidier than a chain of `elif`s. You will see it in
+other people's scripts; recognising it is enough here:
+
+```{.bash filename="Terminal (laptop)"}
+f="Run 3 final/sample_C_R1.fq.gz"
+case "$f" in
+  *.fq.gz|*.fastq.gz) echo "FASTQ: $f" ;;
+  *)                  echo "skip: $f" ;;
+esac
+```
+
+```{.console}
+FASTQ: Run 3 final/sample_C_R1.fq.gz
+```
+
+Each pattern ends in `)`, `|` means "or", `;;` ends a branch, and `*)`
+catches everything else.
+
+**A script's own exit status.** A script exits with the status of the
+last command it ran, unless it calls `exit` first. `exit 0` reports
+success; any other number, usually `exit 1`, reports failure. The next
+program, or you with `echo $?`, can then tell whether it worked.
+Scripts that stop early on a problem use exactly this, as the next
+section shows.
+
+::: {.check}
+**Check yourself.** `n=9; if [[ $n < 10 ]]; then echo small; else echo
+big; fi`. What prints, and how do you fix it?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`big`. Inside `[[ ]]`, `<` compares text, and `9` sorts after `1`.
+`if (( n < 10 ))` or `if [[ "$n" -lt 10 ]]` prints `small`. The
+unquoted `$n` is not the problem: `[[ ]]` does not split its contents
+(@sec-shell-scripts-variables).
+:::
+:::
+
+## Script arguments {#sec-shell-scripts-arguments}
+
+`gtf_types.sh` always reads the same file. A useful script works on the
+files you give it. @sec-linux-system's exercise 1 left you a script that
+does: `count_lines.sh`. Run it again on the practice table (if you
+skipped that exercise, the script is the one-line file below; save it as
+`~/bioinf-computing-ch07/bin/count_lines.sh` and `chmod u+x` it):
+
+```{.bash filename="~/bioinf-computing-ch07/bin/count_lines.sh"}
+#!/usr/bin/env bash
+# count_lines.sh: print a file name and its number of lines
+printf "%s: %s lines\n" "$(basename "$1")" "$(wc -l < "$1")"
+```
+
+```{.bash filename="Terminal (laptop)"}
+~/bioinf-computing-ch07/bin/count_lines.sh ~/bioinf-computing-ch05/share/meta/samples.tsv
+```
+
+```{.console}
+samples.tsv: 7 lines
+```
+
+Now every piece can be read. `$1` is the **first argument**, the first
+word after the script's name: here the path to `samples.tsv`. `"$(wc -l
+< "$1")"` runs `wc -l` on that file and puts its count in place.
+`"$(basename "$1")"` puts the file name without its folders. `printf`
+fills its two `%s` with the two values. The quotes inside the `$( )`
+are separate from the ones outside, so both sets are needed.
+
+**What a script receives.** Save this script in your scratch folder. It
+prints what it was given, in two ways:
+
+```{.bash filename="~/bioinf-computing-ch08/args.sh"}
+#!/usr/bin/env bash
+# args.sh: show what a script receives as arguments.
+if [[ $# -lt 1 ]]; then # <1>
+  echo "usage: args.sh ARG [ARG ...]" >&2 # <2>
+  exit 2
+fi
+echo "script name (\$0): $0"
+echo "number of arguments (\$#): $#"
+echo 'with "$@":'
+for a in "$@"; do echo "  [$a]"; done
+echo 'with $* (unquoted):'
+for a in $*; do echo "  [$a]"; done # <3>
+```
+1. `$#` is the number of arguments. Fewer than one: print how to use
+   the script and stop.
+2. `>&2` sends the message to stderr (below).
+3. Deliberately wrong, for comparison; ShellCheck flags it
+   (@sec-shell-scripts-debugging).
+
+Run it with two arguments, one with spaces in it:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch08
+chmod u+x args.sh
+./args.sh a.fq.gz "Run 3 final/c.fq.gz"
+```
+
+```{.console}
+script name ($0): ./args.sh
+number of arguments ($#): 2
+with "$@":
+  [a.fq.gz]
+  [Run 3 final/c.fq.gz]
+with $* (unquoted):
+  [a.fq.gz]
+  [Run]
+  [3]
+  [final/c.fq.gz]
+```
+
+The script received two arguments, and `"$@"` gives exactly those two,
+each kept whole. Unquoted `$*` joins them and splits the result at
+spaces, giving four. **Always pass a script's arguments on as
+`"$@"`, in quotes**: `for f in "$@"` loops over the files the user
+gave, however they are named. @tbl-special-params lists these names
+and the others you will meet.
+
+: Special parameters, with `./args.sh a.fq.gz "Run 3 final/c.fq.gz"`. {#tbl-special-params}
+
+| Name | Holds | Example value |
+|:-----|:------|:--------------|
+| `$0` | the name the script was started as | `./args.sh` |
+| `$1`, `$2`, … `$9` | the first, second, … ninth argument | `$2` is `Run 3 final/c.fq.gz` |
+| `${10}` | the tenth argument (braces needed from 10 on) | (empty here) |
+| `$#` | the number of arguments | `2` |
+| `"$@"` | every argument, each as its own word | `a.fq.gz`, `Run 3 final/c.fq.gz` |
+| `$*` | every argument joined into one string; unquoted, split again | four words |
+| `$?` | the exit status of the last command | `0` after a success |
+| `$$` | the process number of this shell or script | a number such as `48213` |
+
+**A usage check.** Run `args.sh` with no arguments, and then with its
+output sent to a file:
+
+```{.bash filename="Terminal (laptop)"}
+./args.sh; echo "exit $?"
+./args.sh > out.txt; echo "exit $?"
+cat out.txt
+```
+
+```{.console}
+usage: args.sh ARG [ARG ...]
+exit 2
+usage: args.sh ARG [ARG ...]
+exit 2
+```
+
+The check at the top caught the mistake before the script did any
+work, said how to use it, and exited with a nonzero status. Two
+details make it a good check:
+
+- **`>&2` sends the message to stderr**, the error stream from
+  @sec-text-tools-streams. So even with `> out.txt` the message still
+  appears on the screen, and `out.txt` stays empty: a results file
+  never ends up holding an error message. Every message from a script
+  (warnings, progress, usage) goes to stderr; only results go to
+  stdout.
+- **Exit status 2** is the usual convention for "used wrongly", and 1
+  for "tried, and something failed". Any nonzero status tells the
+  caller to stop.
+
+Every script that takes arguments should start with a check like this.
+A script that needs exactly one file checks `if [[ $# -ne 1 ]]`.
+
+**Options.** Many tools take options such as `--threads 4` or `-o
+out.tsv`. Bash can parse them (with a built-in called `getopts`), but
+it takes more code than it saves at this stage; @sec-reusable-code
+returns to it. When a script's arguments get complicated, that is a
+sign it may be better written in R or Python (@sec-r-essentials,
+@sec-python-essentials).
+
+**Arguments, a variable at the top, or a settings file?** A script can
+get its inputs in three ways (@tbl-script-inputs). This book uses
+arguments for the files a script works on, and a variable near the top
+for settings that rarely change.
+
+: Three ways to give a script its inputs. {#tbl-script-inputs}
+
+| Way | Example | Use it for |
+|:----|:--------|:-----------|
+| Arguments | `./count_reads.sh run1/*.fastq.gz` | the files to work on: they change each run |
+| A variable at the top | `threads=4` on line 10 | settings that rarely change; easy to find and edit |
+| A settings file | `source config.sh` | many settings shared by several scripts; later, workflow managers' parameter files (@sec-workflow-managers) |
+
+::: {.check}
+**Check yourself.** You run `./run.sh "sample A.fq.gz" b.fq.gz`. What
+are `$#` and `$1`? And why does the script print its usage message with
+`>&2`?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`$#` is `2` and `$1` is `sample A.fq.gz`: the quotes on the command line
+made it one argument. `>&2` sends the message to stderr, so with `>
+results.tsv` it still appears on the screen and the results file holds
+only results.
+:::
+:::
+
+**End of sitting A.** You can now save commands as a script, quote
+values, loop over files and table rows, test conditions, and take file
+names as arguments. That is enough for **exercise 1, part A**
+(@sec-shell-scripts-exercises): fixing a supplied `count_reads.sh` that
+gets sample C wrong and counts the stray `.tmp` file. Part B, and
+everything else in the second half, is about making scripts
+dependable: what happens when a command inside them fails.
+
+The first sitting was about **writing** scripts: saving commands,
+quoting, loops, tests, and arguments. The second is about **making them
+dependable**: stopping when something fails, keeping results and
+messages apart, reading a real script line by line, chaining steps into
+a small pipeline, finding bugs, and saving each working version with
+git. If you are starting a new sitting, go back to your scratch folder
+first:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch08
+```
+
+## Stopping on errors: `set -euo pipefail` {#sec-shell-scripts-strict}
+
+In @sec-orientation, a pitfall said that the shell does not stop on
+errors unless told to. Here is what that means inside a script. Make a
+five-line script, `count.sh`: open it with `code count.sh` (or `nano
+count.sh`), paste, and save.
+
+```{.bash filename="count.sh"}
+#!/usr/bin/env bash
+# count.sh: count the reads in one gzipped FASTQ file.
+n=$(gunzip -c "$1" | wc -l)
+echo "$1: $(( n / 4 )) reads"
+echo "done"
+```
+
+Copy one practice file next to it (a copy, so the practice folder stays
+as it is), make the script executable, and run it three ways: on the
+copy, on a file that does not exist, and with no argument at all.
+
+```{.bash filename="Terminal (laptop)"}
+cp ~/bioinf-computing-ch05/share/run1/sample_A_R1.fastq.gz .
+chmod u+x count.sh
+./count.sh sample_A_R1.fastq.gz; echo "exit $?"
+./count.sh missing.fastq.gz; echo "exit $?"
+./count.sh; echo "exit $?"
+```
+
+```{.console}
+sample_A_R1.fastq.gz: 2 reads
+done
+exit 0
+gzip: missing.fastq.gz: No such file or directory
+missing.fastq.gz: 0 reads
+done
+exit 0
+gunzip: can't stat:  (.gz): No such file or directory
+: 0 reads
+done
+exit 0
+```
+
+(The error lines come from gzip, and their wording varies: GNU gzip on
+Linux says `gzip: missing.fastq.gz: No such file or directory`; Apple's
+on a Mac says `gunzip: can't stat: …`. The last block is from a Mac.)
+
+The first run is right. The other two are wrong in a quiet way. `gunzip`
+failed and said so, but bash went on to the next line, `wc -l` counted
+the zero lines it was given, and the script printed `0 reads`, then
+`done`, and finished with exit status 0, which means success. A script
+that ran later steps on this "result" would never know.
+
+Now add **one line** after the comment, so that the script reads:
+
+```{.bash filename="count.sh"}
+#!/usr/bin/env bash
+# count.sh: count the reads in one gzipped FASTQ file.
+set -euo pipefail
+n=$(gunzip -c "$1" | wc -l)
+echo "$1: $(( n / 4 )) reads"
+echo "done"
+```
+
+Run the same three commands again:
+
+```{.console}
+sample_A_R1.fastq.gz: 2 reads
+done
+exit 0
+gzip: missing.fastq.gz: No such file or directory
+exit 1
+./count.sh: line 4: $1: unbound variable
+exit 1
+```
+
+The good run is unchanged. The missing file now stops the script at the
+failed line, with no count and exit status 1. The missing argument stops
+it before `gunzip` even starts, with a message that names the line and
+the problem (@fig-strict-mode).
+
+::: {#fig-strict-mode}
+{{< svg ../figures/strict-mode.svg >}}
+
+The same script run on a missing file, without and with `set -euo
+pipefail`. Without it, bash goes on past the error and reports a wrong
+count with exit status 0; with it, the script stops at the failure with
+exit status 1 and no result. The strips below show what strict mode
+gets wrong: it stops on a `grep` that simply found nothing, and on
+`head` closing a pipe, and it cannot see a tool that reports success on
+bad input.
+:::
+
+**Now name each letter.** `set` changes how bash behaves for the rest
+of the script. The three settings are independent, and each has its
+own demonstration (all are small scripts you can make the same way as
+`count.sh`).
+
+- **`-e`: stop when a command fails.** A command "fails" when its exit
+  status is not 0 (@sec-getting-help). By default bash just moves on to
+  the next line, which is @sec-orientation's pitfall.
+- **`-u`: an unset variable is an error, not an empty value.** This is
+  @sec-shell-scripts-variables's misspelled `$outdri`, which silently
+  became empty and turned `"$outdri/"` into `/`. With `set -u`:
+
+  ```{.bash filename="typo.sh"}
+  #!/usr/bin/env bash
+  set -u
+  outdir=~/bioinf-computing-ch08/out
+  echo "would delete: $outdri/"
+  ```
+
+  ```{.console}
+  ./typo.sh: line 4: outdri: unbound variable
+  ```
+
+  The script stops (exit status 1) and names the misspelled variable.
+- **`-o pipefail`: a pipeline fails if any command in it fails.**
+  Without it, a pipeline's exit status is that of its **last**
+  command. In `gunzip -c missing.gz | wc -l`, `gunzip` fails but `wc`
+  succeeds, so the whole line "succeeds", and `-e` alone has nothing to
+  stop on:
+
+  ```{.bash filename="pipe.sh"}
+  #!/usr/bin/env bash
+  set -e
+  lines=$(gunzip -c missing.gz | wc -l)
+  echo "lines=$lines"
+  echo "still running"
+  ```
+
+  ```{.console}
+  gzip: missing.gz: No such file or directory
+  lines=0
+  still running
+  ```
+
+  Exit status 0. Change the second line to `set -eo pipefail` and the
+  script stops after the gzip error, with exit status 1. This is the
+  `pipefail` that @sec-text-tools promised. To see each command's status
+  yourself, bash keeps them in a list, `PIPESTATUS`, right after a
+  pipeline: `gunzip -c missing.gz | wc -l; echo "${PIPESTATUS[@]}"`
+  prints the count (`0`) and then `1 0`, one status per command.
+
+**Then what it does not catch.** Strict mode is the book's rule for
+every script, but it reacts only to exit statuses, and only in some
+places. Five things to know, each captured from a real run:
+
+**1. A "failure" that is not one.** `grep` exits with 1 when it finds
+no match (@sec-text-tools). In a strict script, that stops everything,
+silently:
+
+```{.bash filename="grep1.sh"}
+#!/usr/bin/env bash
+set -euo pipefail
+n=$(grep -c ZZZ names.txt)
+echo "n=$n"
+```
+
+With a `names.txt` that does not contain `ZZZ`, this prints nothing and
+exits with 1. The tempting fix is `n=$(grep -c ZZZ names.txt || true)`:
+"if it fails, succeed anyway". It does print `n=0`. But `grep` has a
+second failure status, **2**, for a real error such as a missing or
+unreadable file, and `|| true` swallows that too. With a misspelled
+file name:
+
+```{.console}
+grep: missing.txt: No such file or directory
+n=
+```
+
+Exit status 0, and `n` is empty. The script carries on with no number,
+which is exactly what strict mode was meant to prevent. Keep the two
+statuses apart instead:
+
+```{.bash filename="grep2.sh"}
+#!/usr/bin/env bash
+set -euo pipefail
+file=names.txt
+if n=$(grep -c ZZZ "$file"); then # <1>
+  : # <2>
+else
+  status=$? # <3>
+  [[ "$status" -eq 1 ]] || exit "$status" # <4>
+fi
+echo "n=$n"
+```
+1. A command inside an `if` does not trigger `-e`; the `if` looks at
+   its status instead.
+2. `:` is a command that does nothing and succeeds: here, "a match was
+   found, carry on".
+3. `$?` is `grep`'s status; save it before running anything else.
+4. Status 1 (no match) is fine; anything else (2, an error) ends the
+   script with that status.
+
+With `names.txt` it prints `n=0` and exits 0. With `file=missing.txt` it
+prints grep's error and exits with 2. When you only need a yes or no,
+`if grep -q ZZZ "$file"; then …` is enough, but it treats a missing
+file as "no", so check that the file is readable first (`[[ -r "$file"
+]]`, @sec-shell-scripts-conditionals).
+
+**2. `head` closing a pipe early.** In a strict script, try the
+@sec-orientation idiom for a first look at a file, on the project's real
+reads:
+
+```{.bash filename="peek.sh"}
+#!/usr/bin/env bash
+set -euo pipefail
+gunzip -c data/raw/SRR6357070_1.fastq.gz | head -n 1
+echo "reached"
+```
+
+It prints the first header line and then stops, without `reached`,
+with exit status **141**: in all six runs captured on Linux for this
+book. `head` read its one line and exited; `gunzip`, still writing,
+was stopped by the system (@sec-text-tools's `141`); and `pipefail`
+reported that as a failure. `seq 1 1000000 | head -n 1` does the same.
+On a tiny input, such as the practice folder's two-read file, the same
+lines print `reached` and exit 0, because `gunzip` finished before
+`head` exited. It is a matter of timing, not a guarantee either way,
+so a script tested on toy data can fail on real data. Keep `| head`
+for looking at files in the terminal, not inside strict scripts.
+(`… | head -n 1 || true` would also hide a real decompression error,
+so it is not the fix.)
+
+**3. Commands that are being tested.** Commands tested by `if` and
+`while` never trigger `-e`: their status is the test. That includes
+everything inside a function called from an `if`:
+
+```{.bash filename="func.sh"}
+#!/usr/bin/env bash
+set -euo pipefail
+f() { false; echo "after false in f"; }
+if f; then echo ok; fi
+```
+
+```{.console}
+after false in f
+ok
+```
+
+In a chain with `&&` or `||`, only the commands **before the last**
+are exempt. `false && echo skipped` does not stop a strict script (the
+`false` is being tested); `true && false` does, with exit status 1
+(the last `false` is not tested by anything).
+
+**4. Masked statuses.** `local x=$(false)` inside a function, and
+`export x=$(false)`, succeed: the status that `-e` sees is that of
+`local` or `export`, which worked, not that of the command inside.
+Declare and assign on separate lines (`local x`, then `x=$(…)`), and
+the failure stops the script again.
+
+**5. Tools that report success despite a problem.** This is
+@sec-getting-help's finding, now inside a strict script. Give
+@sec-organizing-projects's script a truncated read file, with a
+checksum list made **after** the truncation (the mistake of making
+checksums from a damaged copy):
+
+```{.console}
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+[ERRO] data/raw/SRR6357070_2.fastq.gz: unexpected EOF
+[ERRO]
+output:   db1d8098fba21ca3be9934a6cc0dde37  results/read_counts.tsv
+finished: 2026-11-22 15:45:39 -0600
+```
+
+seqkit 2.14.0 prints `[ERRO]` but exits 0, so strict mode sees nothing
+wrong. The script finishes with exit status 0, and
+`results/read_counts.tsv` holds **only the header line**. In the same
+way, a gzip file that is valid but holds no reads gives `0 reads` and
+passes both strict mode and `gzip -t`.
+
+Strict mode only sees exit statuses. The remedy is to check what you
+expect: a results file with more than a header line, a read count
+above zero (or equal to the expected one), `gzip -t` before counting
+(it catches a damaged stream, not a valid but empty one), and `md5sum
+-c` against checksums made from the source (@sec-organizing-projects).
+@sec-shell-scripts-read adds the first of these to @sec-organizing-projects's script.
+@tbl-strict-mode sums up the section.
+
+: What `set -euo pipefail` catches, and what it does not. {#tbl-strict-mode}
+
+| Setting or case | Stops the script when | Does **not** catch | What to do |
+|:----------------|:----------------------|:-------------------|:-----------|
+| `-e` | a command exits nonzero | commands tested by `if`, `while`, or before the last `&&`/`\|\|` | nothing: by design |
+| `-u` | an unset variable is used (`$outdri`) | a variable set to the wrong value | preview with `echo` |
+| `-o pipefail` | any command in a pipeline fails | which command failed (see `PIPESTATUS`) | read the first error message |
+| `grep` with no match | always (exit 1), although nothing is wrong | — | `if n=$(grep …)`; accept 1, exit on 2; never a blanket `\|\| true` |
+| `… \| head` | often on real data (exit 141), rarely on toy data | — | keep `head` in the terminal |
+| function called from `if` | — | failures inside the function | do not call work functions from `if` |
+| `local x=$(cmd)` | — | `cmd` failing | `local x`, then `x=$(cmd)` |
+| tool reports success on bad input | — | wrong or empty results | check outputs: counts, line numbers, `md5sum -c` |
+
+::: {.callout-important}
+## Key idea
+`set -euo pipefail` stops a script when a command *reports* failure.
+It cannot see a wrong result from a command that reports success, so
+check the outputs too. Every script in this book starts with it: a
+seatbelt, not a guarantee.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "With `set -euo pipefail` my script stops on every error"
+**Reality.** It stops on a nonzero exit status, except in conditions,
+functions called from conditions, all but the last command of an
+`&&`/`||` chain, and masked assignments such as `local x=$(…)`. It
+cannot see a tool that reports success on bad input, and it can stop
+on harmless statuses (`grep` with no match, `head` closing a pipe).
+:::
+
+::: {.check}
+**Check yourself.** Which of these stops a script that starts with `set
+-euo pipefail`? (a) `grep -c XYZ file` with no match; (b) `seqkit stats`
+(2.14.0) on a truncated file; (c) `gunzip -c missing.gz | wc -l`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+(a) Yes, with exit status 1, although nothing is wrong: put it in an
+`if`, accept status 1, and keep status 2 (a real error) fatal, not a
+blanket `|| true`. (b) No: seqkit prints `[ERRO]` but exits 0. (c) Yes,
+thanks to `pipefail`; with `-e` alone it would not.
+:::
+:::
+
+Exercise 1, part B and exercise 2 (@sec-shell-scripts-exercises) are
+available from here.
+
+## Logging output and errors {#sec-shell-scripts-logging}
+
+Your finished `count_reads.sh` from exercise 1 prints one tab-separated
+line per file. Run it with the two output streams of @sec-text-tools
+sent to two different files: results (stdout) to `counts.tsv`, messages
+(stderr) to `run.log`.
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+~/bioinf-computing-ch08/bin/count_reads.sh */*_R1.f*q.gz > ~/bioinf-computing-ch08/counts.tsv 2> ~/bioinf-computing-ch08/run.log
+echo "exit $?"
+cat ~/bioinf-computing-ch08/counts.tsv
+cat ~/bioinf-computing-ch08/run.log
+```
+
+```{.console}
+exit 0
+sample_C_R1.fq.gz	4
+sample_A_R1.fastq.gz	2
+sample_B_R1.fastq.gz	3
+```
+
+The table is clean, and the log is empty. Now give it one good file and
+one missing one, with the same redirections:
+
+```{.bash filename="Terminal (laptop)"}
+~/bioinf-computing-ch08/bin/count_reads.sh run1/sample_A_R1.fastq.gz missing.fastq.gz > ~/bioinf-computing-ch08/counts.tsv 2> ~/bioinf-computing-ch08/run.log
+echo "exit $?"
+cat ~/bioinf-computing-ch08/counts.tsv
+cat ~/bioinf-computing-ch08/run.log
+```
+
+```{.console}
+exit 1
+sample_A_R1.fastq.gz	2
+gzip: missing.fastq.gz: No such file or directory
+```
+
+The error went to the log, not into the table, and the script stopped
+with exit status 1. Notice the table: it holds the line for the file
+that worked. A table can look fine and still be incomplete; the exit
+status and the log are what tell you the run failed.
+
+**Now name it.** Results go to stdout; messages (progress, warnings,
+errors, the usage line) go to stderr, in every script you write. Then
+`> results.tsv` captures only results, and the messages still reach
+your screen or a log.
+
+A message to stderr is `echo "…" >&2`. For a script with several
+messages, define two short **functions** once, near the top. A function
+is a named group of commands (@sec-linux-system); this is the book's
+first use of one:
+
+```{.bash filename="part of a script"}
+log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >&2; }
+die() { log "ERROR: $*"; exit 1; }
+```
+
+`log "counting reads"` prints `[2026-11-22 14:26:50] counting reads` to
+stderr; `die "missing input"` logs `ERROR: missing input` and ends the
+script with status 1. Inside a function, `$*` is all its arguments
+joined into one string: the one place this book joins arguments on
+purpose. A function must be defined before the line that uses it.
+Writing your own reusable functions is @sec-reusable-code.
+
+**Keeping a log of a whole run.** @sec-organizing-projects's script
+keeps everything it prints in a log file, with this form:
+
+```{.bash filename="part of a script"}
+log="$(mktemp "logs/01_count_reads_$(date +%Y-%m-%dT%H%M%S)_XXXX.log")"
+{
+  …the commands…
+} 2>&1 | tee "$log"
+```
+
+The `{ … }` group collects the output of all its commands; `2>&1` joins
+stderr to stdout; `tee` shows that stream on the screen and writes it
+to the log. The log name holds the date and time in the ISO form of
+@sec-organizing-projects, and `mktemp` replaces `XXXX` with random
+characters and creates the file, so two runs in the same second never
+share a log. (This needs GNU `mktemp`, which fills in X's that come
+before a suffix such as `.log`. The Mac's own `/usr/bin/mktemp` only
+replaces X's at the very end, so without @sec-orientation's GNU tools
+the log is literally named `…_XXXX.log` every run.)
+@sec-shell-scripts-read takes this form apart line by line.
+
+**Write to a temporary name, then `mv`.** @sec-text-tools showed that
+`>` empties a file before the command starts, so a failed command can
+leave a half-written result under the real name. Scripts in this book
+write each output to `name.tmp` and move it into place only when the
+step has succeeded:
+
+```{.bash filename="part of a script"}
+seqkit stats --quiet -T data/raw/*.fastq.gz > results/read_counts.tsv.tmp
+mv results/read_counts.tsv.tmp results/read_counts.tsv
+```
+
+With `set -e`, a failure stops the script before `mv`, so a new result
+is **published only after the step succeeds**, and a good result from
+an earlier run is never replaced by a partial one. What this does not
+do: after a failed rerun, the earlier run's finished file is still
+there, and the half-written `.tmp` may be there too. So the rule is:
+*publish a new result only after the step succeeds; on failure, an
+older result may still exist, so use the run's exit status and log to
+decide whether a result belongs to this run.*
+@sec-shell-scripts-pipeline shows this on a real rerun. One assumption
+is built in: a fixed `name.tmp` is fine while one run at a time writes
+that output, as in this book's pipeline. Two runs at once would share
+the `.tmp` (unique log names do not help with that), which needs unique
+temporary names and more care than this chapter covers.
+
+**What to log.** @sec-organizing-projects's list of what makes a result
+traceable: start and end time, machine, tool versions, input checksums,
+the exact command, and the output's checksum. To see every command as
+bash runs it, there is `bash -x` (@sec-shell-scripts-debugging). @tbl-log-recipes collects the recipes.
+
+: Recipes for output and logs. {#tbl-log-recipes}
+
+| Goal | Recipe |
+|:-----|:-------|
+| Results to a file, messages to a log | `script.sh > results.tsv 2> run.log` |
+| A message to stderr | `echo "…" >&2`, or a `log` function as above |
+| Everything to the screen **and** a log | `{ …; } 2>&1 \| tee "$log"` **inside** a script that has `set -o pipefail`, as in `01` and `run_all.sh` |
+| A dated log name that no other run shares | `mktemp "logs/name_$(date +%Y-%m-%dT%H%M%S)_XXXX.log"` (GNU `mktemp`) |
+| Publish a result only on success | write `name.tmp`, then `mv name.tmp name` (one run at a time) |
+
+::: {.callout-tip}
+## Tip
+Write each output to `name.tmp`, then `mv` it into place, so a new
+result is published only after the step succeeds. On failure an older
+result may still exist: the exit status and the log say whether it
+belongs to this run.
+:::
+
+::: {.check}
+**Check yourself.** Why does `count_reads.sh` print its usage message
+with `>&2`? And after the run above with the missing file, what should
+you trust: `counts.tsv`, or the exit status?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+So the message goes to stderr: with `> counts.tsv`, it stays on the
+screen and the file holds only results. And the exit status (1): the
+table looks fine but lacks the missing file's line.
+:::
+:::
+
+## Reading Chapter 3's script, line by line {#sec-shell-scripts-read}
+
+@sec-organizing-projects asked you to run `src/01_count_reads.sh` on
+trust and promised that this chapter would explain every line. You now
+know every piece. Look at it again:
+
+```{.bash filename="Terminal (laptop)"}
+cat ~/bioinf-computing/src/01_count_reads.sh
+```
+
+Before reading on, write in `NOTEBOOK.md`, in your own words, what each
+line does. Use @fig-script-anatomy as the map of its parts. Then
+compare with the annotations below (click a number to see its note).
+
+```{.bash filename="src/01_count_reads.sh"}
+#!/usr/bin/env bash # <1>
+# 01_count_reads.sh: check the raw FASTQ files, then count their reads. # <2>
+# Run from the project folder:  pixi run bash src/01_count_reads.sh
+set -euo pipefail # <3>
+
+mkdir -p results logs # <4>
+log="$(mktemp "logs/01_count_reads_$(date +%Y-%m-%dT%H%M%S)_XXXX.log")" # <5>
+
+{ # <6>
+  echo "started:  $(date "+%Y-%m-%d %H:%M:%S %z")" # <7>
+  echo "host:     $(hostname)"
+  echo "script:   $(md5sum src/01_count_reads.sh)" # <8>
+  echo "seqkit:   $(seqkit version)" # <9>
+  echo "checking inputs against data/raw/checksums.md5:"
+  (cd data/raw && md5sum -c checksums.md5) # <10>
+  echo "command:  seqkit stats -T data/raw/*.fastq.gz" # <11>
+  seqkit stats --quiet -T data/raw/*.fastq.gz > results/read_counts.tsv.tmp # <12>
+  mv results/read_counts.tsv.tmp results/read_counts.tsv # <13>
+  echo "output:   $(md5sum results/read_counts.tsv)" # <14>
+  echo "finished: $(date "+%Y-%m-%d %H:%M:%S %z")" # <15>
+} 2>&1 | tee "$log" # <16>
+```
+1. The shebang: run this file with the `bash` found on `PATH`
+   (@sec-linux-system).
+2. The header comment: what the script does, and how and from where to
+   run it. Comments start with `#` and are ignored.
+3. Strict mode (@sec-shell-scripts-strict): stop on any failure, any
+   unset variable, any failing command in a pipeline.
+4. Make the output folders; `-p` means no error if they already exist.
+5. Nested substitutions, run inside out: `date` makes a time stamp,
+   `mktemp` turns the name into a new, unique file, and `$( )` stores
+   its name in `log` (@sec-shell-scripts-logging).
+6. Start of a group: everything up to the closing `}` sends its output
+   into one pipe (line 16).
+7. `$( )` puts the current date and time into the line.
+8. The script's own checksum: if anyone edits the script, this line in
+   the log changes.
+9. The tool's version, for the record.
+10. A **subshell** in parentheses: the `cd` happens in a separate copy
+    of the shell, so the next line still runs from the project folder.
+    `&&` runs `md5sum -c` only if the `cd` worked. If a checksum fails,
+    `md5sum` exits 1 and strict mode stops the script here.
+11. The exact command, written to the log.
+12. The real work, written to a temporary name.
+13. Published under its real name only after the step succeeded.
+14. The result's checksum, for the record.
+15. A log with no `finished:` line means the run did not finish.
+16. `2>&1` joins error messages to the normal output; `tee` shows both
+    on the screen and writes them to the log.
+
+**Then break it on purpose.** Never in `data/raw/`, which stays
+read-only (@sec-organizing-projects). Copy the inputs, their checksums,
+and the script to a scratch folder, make the copied reads writable,
+and append one byte to one of them:
+
+```{.bash filename="Terminal (laptop)"}
+mkdir -p ~/bioinf-computing-ch08/proj-copy/data/raw ~/bioinf-computing-ch08/proj-copy/src
+cd ~/bioinf-computing-ch08/proj-copy
+cp ~/bioinf-computing/data/raw/*.fastq.gz ~/bioinf-computing/data/raw/checksums.md5 data/raw/
+cp ~/bioinf-computing/src/01_count_reads.sh src/
+chmod u+w data/raw/*
+printf 'x' >> data/raw/SRR6357070_2.fastq.gz
+pixi run --manifest-path ~/bioinf-computing/pixi.toml bash src/01_count_reads.sh; echo "exit $?"
+ls -A results
+```
+
+(`--manifest-path` tells pixi to use the project's environment while
+you work in another folder.)
+
+```{.console}
+started:  2026-11-22 15:45:39 -0600
+host:     your-laptop
+script:   76fa8eb6a7b90f212042cfbe6d95cfcc  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: FAILED
+md5sum: WARNING: 1 computed checksum did NOT match
+exit 1
+```
+
+The script stopped at the checksum, exit status 1. `results/` is
+empty: no `read_counts.tsv` and no `.tmp`. The log in `logs/` keeps the
+failure. Why does it stop, when the failing command sits inside a group
+whose output goes through a pipe to `tee`? The group runs in a
+subshell that inherits `set -e`, so the subshell stops and exits 1;
+`pipefail` then makes the whole pipeline fail despite `tee`'s success,
+and `-e` stops the script. Remove `pipefail` (change line 4 to `set
+-eu`) and rerun: the same `FAILED` lines print, but the script **exits
+0**, because without `pipefail` the pipeline's status is `tee`'s.
+
+**Run it from the wrong folder.** The script uses paths relative to
+the project folder. Run it from your home folder instead:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~ && pixi run --manifest-path ~/bioinf-computing/pixi.toml bash bioinf-computing/src/01_count_reads.sh; echo "exit $?"
+```
+
+```{.console}
+started:  2026-11-22 15:45:49 -0600
+host:     your-laptop
+md5sum: src/01_count_reads.sh: No such file or directory
+script:
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+bioinf-computing/src/01_count_reads.sh: line 15: cd: data/raw: No such file or directory
+exit 1
+```
+
+It failed, but only at line 15, and it has already made empty
+`results/` and `logs/` folders, plus a log file, in your home folder.
+The `md5sum` failure on the `script:` line did not stop it either: a
+command inside `echo "…$(…)"` is one more case `set -e` does not see.
+Look with `ls ~/results ~/logs`; if they hold only this run's leftovers,
+remove them (`rmdir ~/results` and `rm -r ~/logs`).
+
+**Add a guard.** Open the real script, `code
+~/bioinf-computing/src/01_count_reads.sh`, and add one line right after
+`set -euo pipefail`:
+
+```{.bash filename="src/01_count_reads.sh (new line 5)"}
+[[ -f pixi.toml ]] || { echo "run from the project folder" >&2; exit 1; }
+```
+
+From `~`, the script now stops at once with `run from the project
+folder` and exit status 1, and leaves nothing behind. The guard checks
+for a file that only the project folder has, so it catches the common
+mistake of running from the wrong folder; it does not prove that this
+is the right project. (To repeat the broken-copy test above with the
+guarded script, copy `~/bioinf-computing/pixi.toml` into `proj-copy/`
+first, or it stops at the guard instead of the checksum.)
+
+**Add a result check.** @sec-shell-scripts-strict showed this very
+script finishing with exit status 0 and a `read_counts.tsv` holding
+only its header line, because seqkit reported a damaged file but
+exited 0. Strict mode cannot see that; a check of the result can. This
+project always has two FASTQ files, so a good table has a header and
+two rows. Add two lines right after the `seqkit stats` line, before
+the `mv`:
+
+```{.bash filename="src/01_count_reads.sh (after the seqkit line)"}
+  [[ $(wc -l < results/read_counts.tsv.tmp) -eq 3 ]] ||
+    { echo "read_counts: expected a header and 2 rows" >&2; exit 1; }
+```
+
+The number 3 belongs to this two-file project; a general script would
+work out the expected number from its list of inputs. Rerun the
+damaged-file case from @sec-shell-scripts-strict (a truncated R2 with
+checksums made after the damage, in a copy) and the script now stops:
+
+```{.console}
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+[ERRO] data/raw/SRR6357070_2.fastq.gz: unexpected EOF
+read_counts: expected a header and 2 rows
+```
+
+The exit status is 1, the `mv` never runs, and the previous good
+`read_counts.tsv` stays as it was (the half-made `.tmp` is left
+beside it). On the real files nothing changes: the same table, the
+same output checksum. Your next run's log shows a new script checksum
+(`f2857591…` instead of `76fa8eb6…`): that is exactly what the
+`script:` line is for. You commit both changes in
+@sec-shell-scripts-git.
+
+::: {.callout-important}
+## Key idea
+A failed step should stop the run, leave a log that says why, and
+publish no new result.
+:::
+
+::: {.check}
+**Check yourself.** In the script, why is `(cd data/raw && md5sum -c
+checksums.md5)` in parentheses?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The parentheses make a subshell: the `cd` happens there and ends with
+it, so the next line still runs from the project folder, where
+`data/raw/*.fastq.gz` and `results/` are.
+:::
+:::
+
+## Numbered scripts as a simple pipeline {#sec-shell-scripts-pipeline}
+
+@sec-organizing-projects named scripts by their run order: `01_`,
+`02_`, and so on. Now add the second step. It is
+@sec-shell-scripts-first's `gtf_types.sh`, the GTF feature count from
+@sec-text-tools, made into a project script. In `~/bioinf-computing`,
+open `code src/02_gtf_summary.sh`, paste, and save:
+
+```{.bash filename="src/02_gtf_summary.sh"}
+#!/usr/bin/env bash
+# 02_gtf_summary.sh: count the feature types in the reference annotation.
+# Run from the project folder:  pixi run bash src/02_gtf_summary.sh
+# Input:  data/ref/genes.gtf.gz
+# Output: results/gtf_feature_counts.tsv (feature, count; most common first)
+set -euo pipefail
+
+log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >&2; } # <1>
+die() { log "ERROR: $*"; exit 1; }
+
+[[ -f pixi.toml ]] || die "run from the project folder" # <2>
+
+gtf="data/ref/genes.gtf.gz"
+out="results/gtf_feature_counts.tsv"
+[[ -s "$gtf" ]] || die "missing or empty: $gtf" # <3>
+
+mkdir -p results
+log "start; input md5: $(md5sum "$gtf")"
+{
+  printf 'feature\tcount\n' # <4>
+  gunzip -c "$gtf" | cut -f3 | sort | uniq -c | sort -k1,1nr \
+    | awk -v OFS='\t' '{print $2, $1}' # <5>
+} > "$out.tmp"
+mv "$out.tmp" "$out" # <6>
+log "wrote $out ($(( $(wc -l < "$out") - 1 )) feature types)" # <7>
+log "output md5: $(md5sum "$out")"
+```
+1. The `log` and `die` functions from @sec-shell-scripts-logging.
+2. The guard from @sec-shell-scripts-read, using `die`.
+3. Check the input exists and is not empty (`-s`) before starting.
+4. A header line for the table.
+5. @sec-text-tools's count, then `awk` swaps the two columns and
+   separates them with a tab (`-v OFS='\t'`, also @sec-text-tools).
+6. Published only after the step succeeded.
+7. Lines in the file minus the header: the number of feature types.
+
+`02` is deliberately shorter than `01`: its log lines go to the screen
+(stderr), it keeps no log file of its own, and it records input and
+output checksums but not tool versions (recording versions properly is
+@sec-environments). The log file for the whole run comes from the next
+script, `src/run_all.sh`, which runs every step in order and keeps one
+log of all of them, with exactly `01`'s form:
+
+```{.bash filename="src/run_all.sh"}
+#!/usr/bin/env bash
+# run_all.sh: run every numbered step in order; stop at the first failure.
+# Run from the project folder:  pixi run bash src/run_all.sh
+# Log: logs/run_all_<date>_XXXX.log (01 also keeps its own log)
+set -euo pipefail
+[[ -f pixi.toml ]] || { echo "run from the project folder" >&2; exit 1; }
+mkdir -p logs
+log="$(mktemp "logs/run_all_$(date +%Y-%m-%dT%H%M%S)_XXXX.log")"
+{
+  bash src/01_count_reads.sh
+  bash src/02_gtf_summary.sh
+} 2>&1 | tee "$log"
+```
+
+Because `pipefail` is set inside the script, a failing step makes
+`run_all.sh` fail, despite `tee`. (A `| tee` typed in the terminal
+around `run_all.sh` would not have `pipefail`, and would bring back the
+problem you saw in @sec-shell-scripts-read.) Run the pipeline:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+pixi run bash src/run_all.sh; echo "exit $?"
+cat results/gtf_feature_counts.tsv
+```
+
+```{.console}
+started:  2026-11-22 14:26:49 -0600
+host:     your-laptop
+script:   f28575917774e7916b14362989eeed68  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-22 14:26:50 -0600
+[2026-11-22 14:26:50] start; input md5: 504334f6741ee771c665ae845429087f  data/ref/genes.gtf.gz
+[2026-11-22 14:26:50] wrote results/gtf_feature_counts.tsv (5 feature types)
+[2026-11-22 14:26:50] output md5: 3b9c2b4c499d85a7e70aaf3faaef3c99  results/gtf_feature_counts.tsv
+exit 0
+feature	count
+exon	129
+transcript	124
+CDS	118
+start_codon	115
+stop_codon	114
+```
+
+The five counts are @sec-text-tools's, now as a two-column table that
+other programs can read. `ls logs` shows two new logs, one from `01`
+and one from `run_all.sh` holding the whole run. Run from `~`,
+`02_gtf_summary.sh` stops with `ERROR: run from the project folder`,
+exit status 1.
+
+**A failed rerun.** @sec-shell-scripts-logging promised that a failed
+step publishes no new result, but that an older one may still be
+there. See it in the scratch copy: give it `02`, the GTF, and the
+project's `pixi.toml`, run `02` once, then swap in a damaged GTF (cut
+to its first 5,000 bytes, on a copy, as in @sec-getting-help) and run
+it again.
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch08/proj-copy
+mkdir -p data/ref
+cp ~/bioinf-computing/pixi.toml .
+cp ~/bioinf-computing/src/02_gtf_summary.sh src/
+cp ~/bioinf-computing/data/ref/genes.gtf.gz data/ref/
+bash src/02_gtf_summary.sh; echo "first run exit $?"
+md5sum results/gtf_feature_counts.tsv
+head -c 5000 ~/bioinf-computing/data/ref/genes.gtf.gz > data/ref/genes.gtf.gz
+bash src/02_gtf_summary.sh; echo "rerun exit $?"
+md5sum results/gtf_feature_counts.tsv
+ls results
+cat results/gtf_feature_counts.tsv.tmp
+```
+
+(`cp` follows the `data/ref` link of @sec-organizing-projects and
+copies the file itself.)
+
+```{.console}
+[2026-11-22 14:44:15] start; input md5: 504334f6741ee771c665ae845429087f  data/ref/genes.gtf.gz
+[2026-11-22 14:44:15] wrote results/gtf_feature_counts.tsv (5 feature types)
+[2026-11-22 14:44:15] output md5: 3b9c2b4c499d85a7e70aaf3faaef3c99  results/gtf_feature_counts.tsv
+first run exit 0
+3b9c2b4c499d85a7e70aaf3faaef3c99  results/gtf_feature_counts.tsv
+[2026-11-22 14:44:17] start; input md5: 7e4688760800a9e5632424a6f67a00ae  data/ref/genes.gtf.gz
+gunzip: data/ref/genes.gtf.gz: unexpected end of file
+gunzip: data/ref/genes.gtf.gz: uncompress failed
+rerun exit 1
+3b9c2b4c499d85a7e70aaf3faaef3c99  results/gtf_feature_counts.tsv
+gtf_feature_counts.tsv  gtf_feature_counts.tsv.tmp
+feature	count
+CDS	39
+exon	39
+start_codon	39
+stop_codon	38
+transcript	38
+```
+
+(Captured on a Mac; GNU gzip says `gzip: data/ref/genes.gtf.gz:
+unexpected end of file`.) The rerun logged a different input checksum,
+failed with exit status 1, and wrote no `wrote …` line. The old result
+is untouched: same checksum. And the leftover `.tmp` holds counts that
+**look** like a real result. Had the step written straight to the final
+name, that partial table would now be `gtf_feature_counts.tsv`. The
+file on disk is the *last good* result, not this run's; the exit status
+and the log say which run you are looking at.
+
+**Now name it.** A numbered pipeline is a set of scripts with three
+habits (@fig-numbered-pipeline):
+
+- Each step reads only raw inputs or earlier steps' results, and writes
+  only its own outputs.
+- Each step can be rerun safely: it overwrites its own result, never
+  an input (assuming one run at a time).
+- The number is the order; the name says what the step does
+  (@sec-organizing-projects's naming rule).
+
+`run_all.sh` lists the steps **by name**, not with a pattern such as
+`for s in src/[0-9]*.sh`, so a stray `03_old_try.sh` never runs by
+accident. The pattern version is shorter, and some people prefer it;
+listing by name means you must add each new step to `run_all.sh`
+yourself.
+
+::: {#fig-numbered-pipeline}
+{{< svg ../figures/numbered-pipeline.svg >}}
+
+The project's numbered pipeline. `run_all.sh` calls `01_count_reads.sh`
+(reads in, read counts out, after a checksum check) and then
+`02_gtf_summary.sh` (annotation in, feature counts out), stopping at
+the first failure; `01` and `run_all.sh` write logs. On the right, what
+a workflow manager adds.
+:::
+
+**Its limits** are why Part VI exists. A numbered pipeline reruns
+every step even when nothing changed; runs one step at a time, even
+when two steps could run side by side; cannot resume after a failure
+from where it stopped; and does not know which result came from which
+version of its inputs. Workflow managers (@sec-workflow-managers) solve
+these, as does the older `make` (see the [GNU make
+manual](https://www.gnu.org/software/make/manual/)); nf-core
+(@sec-nf-core) is the one you will use. Running each step as a cluster
+job is @sec-hpc-slurm.
+
+::: {.check}
+**Check yourself.** You add `03_plot.sh` to `src/` but forget to list
+it in `run_all.sh`. What happens when you run the pipeline?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+It never runs, and nothing warns you. Listing steps by name is
+deliberate, so check `run_all.sh` whenever you add a step.
+:::
+:::
+
+## When a script misbehaves {#sec-shell-scripts-debugging}
+
+Two tools find most bugs in short scripts: `bash -x`, which shows each
+command as bash runs it, and ShellCheck, which reads a script without
+running it. Save this script, which has two bugs from earlier sections,
+as `~/bioinf-computing-ch08/broken.sh`:
+
+```{.bash filename="broken.sh"}
+#!/usr/bin/env bash
+# broken.sh: count the reads in each R1 file and save the counts.
+outdir=~/bioinf-computing-ch08/out
+mkdir -p "$outdir"
+for f in */*_R1.f*q.gz; do
+  n=$(gunzip -c $f | wc -l)
+  echo "$f $(( n / 4 ))" >> "$outdri/counts.txt"
+done
+```
+
+Run it from the practice folder with `bash -x`:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+bash -x ~/bioinf-computing-ch08/broken.sh
+```
+
+```{.console}
++ outdir=/home/you/bioinf-computing-ch08/out
++ mkdir -p /home/you/bioinf-computing-ch08/out
++ for f in */*_R1.f*q.gz
+++ gunzip -c Run 3 final/sample_C_R1.fq.gz
+++ wc -l
++ n=0
++ echo 'Run 3 final/sample_C_R1.fq.gz 0'
+/home/you/bioinf-computing-ch08/broken.sh: line 7: /counts.txt: Permission denied
++ for f in */*_R1.f*q.gz
+++ gunzip -c run1/sample_A_R1.fastq.gz
+++ wc -l
++ n=8
++ echo 'run1/sample_A_R1.fastq.gz 2'
+/home/you/bioinf-computing-ch08/broken.sh: line 7: /counts.txt: Permission denied
+…
+```
+
+(gunzip's three error lines after `++ wc -l` are left out here.) Each
+line starting with `+` is a command after bash has expanded it; `++`
+marks a command inside `$( )`. Both bugs are visible. `gunzip -c Run 3
+final/sample_C_R1.fq.gz` shows the unquoted `$f` split into three
+words (@fig-word-splitting), so sample C counts 0. And
+`"$outdri/counts.txt"` became `/counts.txt`: the misspelled variable is
+empty, and the write fails only because an ordinary user may not write
+to `/`. (On a Mac the message says `Read-only file system` instead.)
+`set -x` at the top of a script does the same as `bash -x`, from that
+line on.
+
+Now ask ShellCheck, which is in the book environment:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch08
+pixi run --manifest-path ~/bioinf-computing/pixi.toml shellcheck broken.sh
+```
+
+```{.console}
+In broken.sh line 6:
+  n=$(gunzip -c $f | wc -l)
+                ^-- SC2086 (info): Double quote to prevent globbing and word splitting.
+
+Did you mean:
+  n=$(gunzip -c "$f" | wc -l)
+
+
+In broken.sh line 7:
+  echo "$f $(( n / 4 ))" >> "$outdri/counts.txt"
+                             ^-----^ SC2154 (warning): outdri is referenced but not assigned.
+
+For more information:
+  https://www.shellcheck.net/wiki/SC2154 -- outdri is referenced but not assi...
+  https://www.shellcheck.net/wiki/SC2086 -- Double quote to prevent globbing ...
+```
+
+Both bugs are named, with line numbers, before the script ever runs;
+ShellCheck exits with status 1 when it finds something. Each code
+(`SC2086`) has a page on the [ShellCheck
+wiki](https://www.shellcheck.net/wiki/SC2086) that explains why.
+
+If pixi says `shellcheck` is not found, you set up the book environment
+before ShellCheck joined it. Download the current environment files
+into the project and install them, as in @sec-book-setup:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+curl -fLO {{< var setup-url >}}/pixi.toml
+curl -fLO {{< var setup-url >}}/pixi.lock
+pixi install --locked
+pixi run shellcheck --version
+```
+
+The last line should print a version, 0.11.0 or later.
+
+Two more things, one sentence each. The [ShellCheck extension for VS
+Code](https://marketplace.visualstudio.com/items?itemName=timonwong.shellcheck)
+underlines the same problems as you type: search the Extensions view
+for its ID, `timonwong.shellcheck`; it needs no further setup, and
+hovering over the underlined `$f` shows the same SC2086 message. And
+the Mac's own `/bin/bash` is version 3.2, which lacks features such as
+`mapfile`, `declare -A`, and `${x,,}` (`mapfile: command not found`):
+`#!/usr/bin/env bash`, with @sec-orientation's current bash, avoids
+it. Debuggers, tests, and linting in depth are @sec-reusable-code.
+
+::: {.callout-tip}
+## Tip
+Run ShellCheck on every script before you trust it, and keep the VS
+Code extension on while you write.
+:::
+
+::: {.check}
+**Check yourself.** ShellCheck says `SC2086: Double quote to prevent
+globbing and word splitting` on `gunzip -c $f`. Which rule of this
+chapter is it, and what is the fix?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Quote every expansion (@sec-shell-scripts-variables): `gunzip -c
+"$f"`, so a name with spaces stays one argument.
+:::
+:::
+
+## Saving scripts with git {#sec-shell-scripts-git}
+
+Your project now has three scripts that work. Before you change them
+again, save this working state so you can always get it back. git keeps
+a history of your files; this section uses a five-command routine, and
+@sec-git teaches git properly, starting from this repository.
+
+**One-time setup.** Check that git is installed. On a Mac it came with
+the Xcode Command Line Tools that Homebrew installed in
+@sec-orientation; Ubuntu, WSL, and clusters have it already:
+
+```{.bash filename="Terminal (laptop)"}
+git --version
+```
+
+```{.console}
+git version 2.50.1 (Apple Git-155)
+```
+
+You need git 2.28 or later for the setup shown here (`git restore`
+itself needs 2.23, and the `init.defaultBranch` setting below arrived
+in 2.28); every system checked for this book had a newer one. Then tell git your name and
+email (they are stored in each commit) and the name for the first
+branch, **before** making a repository:
+
+```{.bash filename="Terminal (laptop)"}
+git config --global user.name "Your Name"
+git config --global user.email "you@example.org"
+git config --global init.defaultBranch main
+```
+
+Without the last line, `git init` prints several lines of `hint:`
+about the default branch name, worded differently in different git
+versions. They are harmless; the setting just makes the name `main`
+and stops the hint.
+
+**Tell git what not to save.** In `~/bioinf-computing`, make a file
+`.gitignore` (`code .gitignore`), paste, and save:
+
+```{.default filename=".gitignore"}
+data/
+results/
+logs/
+.pixi/
+```
+
+Each line is a folder git will ignore: `data/` because the raw data are
+large, read-only, and backed up elsewhere (@sec-organizing-projects);
+`results/` and `logs/` because the scripts rebuild them; `.pixi/`
+because `pixi install --locked` rebuilds the environment from
+`pixi.lock`. @sec-git covers `.gitignore` rules in full.
+
+**The routine.** Make the project a repository, look, add, commit, and
+look at the history:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+git init
+git status --short
+git add .gitignore src/ README.md NOTEBOOK.md pixi.toml pixi.lock
+git status --short
+git commit -m "Add read-count and GTF summary scripts"
+git log --oneline
+```
+
+```{.console}
+Initialized empty Git repository in /home/you/bioinf-computing/.git/
+?? .gitignore
+?? NOTEBOOK.md
+?? README.md
+?? pixi.lock
+?? pixi.toml
+?? src/
+A  .gitignore
+A  NOTEBOOK.md
+A  README.md
+A  pixi.lock
+A  pixi.toml
+A  src/01_count_reads.sh
+A  src/02_gtf_summary.sh
+A  src/run_all.sh
+[main (root-commit) 447c010] Add read-count and GTF summary scripts
+ 8 files changed, 4605 insertions(+)
+ create mode 100644 .gitignore
+ …
+447c010 Add read-count and GTF summary scripts
+```
+
+(Your commit IDs, such as `447c010`, will differ, and `git status` may
+list other files you made, such as `notes.txt`.) `??` means "not yet
+tracked"; `A` means "added, ready to commit". `data/`, `results/`,
+`logs/`, and `.pixi/` never appear: `.gitignore` works.
+
+**Break it.** Make a mistake on purpose, comment out the strict-mode
+line, and see what git shows:
+
+```{.bash filename="Terminal (laptop)"}
+sed -i 's/^set -euo pipefail$/# set -euo pipefail/' src/01_count_reads.sh
+git status --short
+git diff
+```
+
+```{.console}
+ M src/01_count_reads.sh
+diff --git a/src/01_count_reads.sh b/src/01_count_reads.sh
+index 5b963b8..05e986d 100644
+--- a/src/01_count_reads.sh
++++ b/src/01_count_reads.sh
+@@ -1,7 +1,7 @@
+ #!/usr/bin/env bash
+ # 01_count_reads.sh: check the raw FASTQ files, then count their reads.
+ # Run from the project folder:  pixi run bash src/01_count_reads.sh
+-set -euo pipefail
++# set -euo pipefail
+ [[ -f pixi.toml ]] || { echo "run from the project folder" >&2; exit 1; }
+
+ mkdir -p results logs
+```
+
+` M` means "modified since the last commit". `git diff` shows the
+change: `-` for the old line, `+` for the new one. **Read the diff
+before you throw anything away.** Then bring the file back:
+
+```{.bash filename="Terminal (laptop)"}
+git restore src/01_count_reads.sh
+git status --short
+```
+
+`git status --short` now prints nothing: the file is as it was.
+Strictly, `git restore file` copies the **staged** version of the file
+(the one your last `git add` recorded), which here is the same as the
+last commit because nothing was staged since; @sec-git explains the
+staging area.
+
+**Get back an older version.** Make a small second change and commit
+it, so there are two commits. For example, in `src/02_gtf_summary.sh`
+change the `# Output:` comment to read `(two columns: feature, count;
+most common first)`, then:
+
+```{.bash filename="Terminal (laptop)"}
+git add src/02_gtf_summary.sh
+git commit -m "Describe the output columns of 02"
+git log --oneline
+git show --stat HEAD
+```
+
+```{.console}
+[main 71bad40] Describe the output columns of 02
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+71bad40 Describe the output columns of 02
+447c010 Add read-count and GTF summary scripts
+…
+ src/02_gtf_summary.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+```
+
+`git log --oneline` shows only the messages; `git show --stat HEAD`
+shows which files the latest commit (`HEAD`) changed. Now suppose the
+older version was better. `HEAD~1` means "one commit before the
+latest". Look at the old file, bring it back, check it, and save the
+recovery as a new commit:
+
+```{.bash filename="Terminal (laptop)"}
+git show HEAD~1:src/02_gtf_summary.sh | head -n 5
+git restore --source=HEAD~1 src/02_gtf_summary.sh
+git status --short
+pixi run bash src/run_all.sh
+git commit -am "Restore the shorter output comment in 02"
+git log --oneline
+```
+
+```{.console}
+…
+# Output: results/gtf_feature_counts.tsv (feature, count; most common first)
+ M src/02_gtf_summary.sh
+…
+947b2e9 Restore the shorter output comment in 02
+71bad40 Describe the output columns of 02
+447c010 Add read-count and GTF summary scripts
+```
+
+Nothing was lost: the history still holds all three versions
+(@fig-git-routine). `git commit -am` adds every changed tracked file
+and commits in one step.
+
+::: {#fig-git-routine}
+{{< svg ../figures/git-routine.svg >}}
+
+The minimal git routine. Your files are changed in the working folder,
+staged with `git add`, and saved in the history with `git commit`.
+`git status` and `git diff` look at what changed. `git restore file`
+brings back the staged copy (normally the last commit, here), and `git
+restore --source=HEAD~1 file` brings back a file from an older commit.
+:::
+
+**Now name it.** A commit is a saved snapshot of the files you added,
+with a message saying why. Here git does not save `data/` or
+`results/`, by design. The habit: commit each time a script works, and
+before you change it. VS Code shows the same information in its
+[Source Control
+view](https://code.visualstudio.com/docs/sourcecontrol/overview).
+Everything else, such as branches, undoing commits, and remotes, is
+@sec-git. @tbl-git-routine lists the routine.
+
+: The minimal git routine. {#tbl-git-routine}
+
+| When | Command | What it does |
+|:-----|:--------|:-------------|
+| Once per computer | `git config --global user.name …`, `user.email …`, `init.defaultBranch main` | who you are; name of the first branch |
+| Once per project | `git init` | make the folder a repository |
+| Every change | `git status --short`, `git diff` | what changed, line by line |
+| | `git add file`, `git commit -m "why"` | stage the change, save a snapshot |
+| Look back | `git log --oneline`, `git show --stat HEAD`, `git show HEAD~1:file` | the history; files in a commit; an old version |
+| Undo an edit | `git restore file` | back to the staged copy (normally the last commit) |
+| Bring back an old version | `git restore --source=HEAD~1 file` | the file as it was one commit ago |
+| Everything else | branches, undoing commits, remotes | @sec-git |
+
+::: {.callout-note}
+## Background
+git stores the files you add, as they were at each commit. It does not
+store what `.gitignore` excludes: here, data and results, by design.
+And a repository on the same disk is not an off-machine backup: if the
+disk fails, the `.git/` folder goes with it. Pushing to another machine
+is one way to make an independent copy (@sec-github).
+:::
+
+::: {.check}
+**Check yourself.** You edited `02_gtf_summary.sh`, it broke, and you
+have not committed or staged the change. How do you get the last
+working version back?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Look at the change first with `git diff`, then `git restore
+src/02_gtf_summary.sh`, and check with `git status --short`. It brings
+back the staged copy, which is the last commit when nothing was
+staged.
+:::
+:::
+
+## Summary {#sec-shell-scripts-summary}
+
+- A script is commands saved in a file and run, top to bottom, by a new
+  bash process. Start it with `#!/usr/bin/env bash` and a header comment
+  that says what it does, how to run it, and what it reads and writes.
+  Relative paths are read from where it is **run**, so project scripts
+  are run from the project folder.
+- `$name` is replaced by its value; unquoted, that value is split at
+  spaces and matched as a wildcard. Put double quotes around every
+  expansion: `"$f"`, `"$@"`, `"${sample}_R1.fastq.gz"`. `$( )` captures a
+  command's output and `$(( ))` does whole-number arithmetic.
+- Loop over a glob, never over `ls` or `$(cat file)`; read table rows
+  with `while IFS=$'\t' read -r`. Preview a loop with `echo` before it
+  changes anything, and check that a list of files is not empty.
+- `if` tests an exit status; `[[ ]]` tests files, text, and numbers
+  (`<` compares text, `-lt` and `(( ))` compare numbers). Take file names
+  as arguments with `"$@"`, and stop with a usage message (exit 2) when
+  they are missing. `set -euo pipefail` stops on a reported failure, an
+  unset variable, or a failed pipe stage; it cannot see a tool that
+  reports success on bad input, so check results too.
+- Send results to stdout and messages to stderr, and keep a log of each
+  run. Write each output to `name.tmp` and `mv` it into place only after
+  the step succeeds. Numbered scripts run in order by `run_all.sh` make
+  a small pipeline. Commit each script once it works, look with
+  `git status` and `git diff`, and bring back an old version with
+  `git restore`.
+
+A template to start every script from. Delete the lines you do not
+need; keep `set -euo pipefail`.
+
+```{.bash filename="template.sh"}
+#!/usr/bin/env bash
+# NAME.sh: what this script does, in one line.
+# Run:    bash NAME.sh FILE [MORE ...]   (from the project folder)
+# Input:  what it reads
+# Output: what it writes (results on stdout or in results/, messages on stderr)
+set -euo pipefail
+shopt -s nullglob     # only if the script loops over a glob
+
+log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >&2; }
+die() { log "ERROR: $*"; exit 1; }
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: NAME.sh FILE [MORE ...]" >&2
+  exit 2
+fi
+
+out="results/NAME.tsv"
+mkdir -p results
+log "start"
+for f in "$@"; do
+  [[ -s "$f" ]] || die "missing or empty: $f"
+  printf '%s\t%s\n' "$(basename "$f")" "something about $f"
+done > "$out.tmp"
+mv "$out.tmp" "$out"
+log "wrote $out"
+```
+
+@tbl-ch08-commands collects the chapter's commands.
+
+: The chapter's commands on one page. {#tbl-ch08-commands}
+
+| Task | Command |
+|:-----|:--------|
+| Run a script | `bash script.sh`, or `chmod u+x script.sh` then `./script.sh` |
+| Variables | `name=value` (no spaces), `"$name"`, `"${name}_R1.fastq.gz"` |
+| Capture output, do arithmetic | `n=$(wc -l < "$f")`, `$(( n / 4 ))` |
+| Trim a value | `${f##*/}` (drop folders), `${f%.gz}` (drop an ending), `basename "$f"` |
+| Lists | `files=(*.fastq.gz)`, `"${files[@]}"`, `${#files[@]}` |
+| Loops | `for f in */*_R1.f*q.gz; do …; done`, `for i in {01..03}`, `while IFS=$'\t' read -r a b c; do …; done < table.tsv` |
+| Tests | `if [[ -s "$f" ]]; then …; fi`, `[[ "$a" == "$b" ]]`, `(( n > 0 ))` |
+| Arguments | `"$1"`, `"$@"`, `$#`, `$0`; usage message with `>&2` and `exit 2` |
+| Stop on errors | `set -euo pipefail`; inspect a pipe with `"${PIPESTATUS[@]}"` |
+| Logging | `> results.tsv 2> run.log`, `{ …; } 2>&1 \| tee "$log"`, `mktemp` |
+| Safe output | `cmd > "$out.tmp"` then `mv "$out.tmp" "$out"` |
+| Find bugs | `bash -x script.sh`, `pixi run shellcheck script.sh` |
+| git routine | `git status`, `git diff`, `git add`, `git commit -m "…"`, `git log --oneline`, `git show --stat HEAD`, `git restore file`, `git restore --source=HEAD~1 file` |
+
+## Exercises {#sec-shell-scripts-exercises}
+
+Do exercises 1–3 in `~/bioinf-computing-ch08`, reading the practice
+folder `~/bioinf-computing-ch05/share/` without changing it. Exercises 4
+and 5 change your project, `~/bioinf-computing`.
+
+::: {.check}
+**Exercise 1. Finish `count_reads.sh`.** Part A after
+@sec-shell-scripts-arguments; part B after @sec-shell-scripts-strict.
+
+A labmate's script counts the reads in each FASTQ file it is given.
+Save it as `~/bioinf-computing-ch08/bin/count_reads.sh` (`code
+~/bioinf-computing-ch08/bin/count_reads.sh`, paste, save) and make it
+executable with `chmod u+x ~/bioinf-computing-ch08/bin/count_reads.sh`:
+
+```{.bash filename="~/bioinf-computing-ch08/bin/count_reads.sh"}
+#!/usr/bin/env bash
+# count_reads.sh: print each FASTQ file's name and its number of reads.
+# Usage: count_reads.sh FILE.fastq.gz [MORE.fastq.gz ...]
+for f in $@; do
+  n=$(gunzip -c $f | wc -l)
+  echo "$f $((n / 4))"
+done
+```
+
+Run it from the practice folder on every R1 file, and on a file that
+does not exist:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch05/share
+~/bioinf-computing-ch08/bin/count_reads.sh */*_R1*; echo "exit $?"
+~/bioinf-computing-ch08/bin/count_reads.sh missing.fastq.gz; echo "exit $?"
+```
+
+Write down what is wrong. Then fix it one change at a time, rerunning
+after each, and record each change in `NOTEBOOK.md`.
+
+- **Part A.** Quote `"$@"` and `"$f"`. Add a usage check that prints
+  `usage: count_reads.sh FILE.fastq.gz [MORE.fastq.gz ...]` to stderr
+  and exits 2 when there are no arguments. Print the file's base name
+  and its count separated by a tab. Run it with the tighter pattern
+  `*/*_R1.f*q.gz`.
+- **Part B.** Add `set -euo pipefail` and run the missing file again.
+  What changed, and why?
+
+The goal, from `~/bioinf-computing-ch05/share`:
+
+```{.console}
+$ ~/bioinf-computing-ch08/bin/count_reads.sh */*_R1.f*q.gz
+sample_C_R1.fq.gz	4
+sample_A_R1.fastq.gz	2
+sample_B_R1.fastq.gz	3
+```
+
+and two runs that stop with a message and a nonzero status, printing no
+count: no arguments (exit 2) and a missing file (exit 1).
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+The script as supplied (captured on macOS; on Linux, GNU gzip words
+each error as `gzip: Run.gz: No such file or directory`):
+
+```{.console}
+$ ~/bioinf-computing-ch08/bin/count_reads.sh */*_R1*; echo "exit $?"
+gunzip: can't stat: Run (Run.gz): No such file or directory
+Run 0
+gunzip: can't stat: 3 (3.gz): No such file or directory
+3 0
+gunzip: can't stat: final/sample_C_R1.fq.gz (final/sample_C_R1.fq.gz.gz): No such file or directory
+final/sample_C_R1.fq.gz 0
+run1/sample_A_R1.fastq.gz 2
+run2/sample_B_R1.fastq.gz 3
+run2/sample_B_R1.fastq.gz.tmp 3
+exit 0
+```
+
+Three faults, and the status says 0 through all of them. The unquoted
+`$@` and `$f` split `Run 3 final/sample_C_R1.fq.gz` into three names
+(@sec-shell-scripts-variables), so sample C counts as `0` three times.
+The pattern `*_R1*` also matched the stray `.tmp` copy, counted as a
+fourth sample (@sec-shell-scripts-loops). The missing file prints an
+error, then `missing.fastq.gz 0`, and still exits 0.
+
+The finished script:
+
+```{.bash filename="~/bioinf-computing-ch08/bin/count_reads.sh"}
+#!/usr/bin/env bash
+# count_reads.sh: print each FASTQ file's name and its number of reads.
+# Usage: count_reads.sh FILE.fastq.gz [MORE.fastq.gz ...]
+set -euo pipefail
+
+if [[ $# -lt 1 ]]; then
+  echo "usage: count_reads.sh FILE.fastq.gz [MORE.fastq.gz ...]" >&2
+  exit 2
+fi
+
+for f in "$@"; do
+  n=$(gunzip -c "$f" | wc -l)
+  printf '%s\t%s\n' "$(basename "$f")" "$((n / 4))"
+done
+```
+
+```{.console}
+$ ~/bioinf-computing-ch08/bin/count_reads.sh */*_R1.f*q.gz; echo "exit $?"
+sample_C_R1.fq.gz	4
+sample_A_R1.fastq.gz	2
+sample_B_R1.fastq.gz	3
+exit 0
+$ ~/bioinf-computing-ch08/bin/count_reads.sh; echo "exit $?"
+usage: count_reads.sh FILE.fastq.gz [MORE.fastq.gz ...]
+exit 2
+$ ~/bioinf-computing-ch08/bin/count_reads.sh missing.fastq.gz; echo "exit $?"
+gzip: missing.fastq.gz: No such file or directory
+exit 1
+```
+
+After part A alone the missing file still printed `missing.fastq.gz`, a
+tab, and `0`, with exit 0: quoting and the usage check do not stop a
+failed `gunzip`. Part B's `set -euo pipefail` does. `pipefail` makes
+the `gunzip | wc -l` pipeline fail when `gunzip` fails, and `-e` stops
+the script at that line, before it prints a count. (On a Mac, Apple
+gzip words the error `gunzip: can't stat: missing.fastq.gz …`.)
+
+The order of the three lines comes from bash's sort of the matched
+names, which depends on your locale: here `Run 3 final` sorts first,
+but on many Linux clusters it comes last. The counts are what matter.
+`pixi run shellcheck count_reads.sh` on the supplied version flags the
+unquoted `$@` (SC2068) and `$f` (SC2086); on the finished one it prints
+nothing.
+:::
+:::
+
+::: {.check}
+**Exercise 2. Check a sample table against the disk.** After
+@sec-shell-scripts-strict.
+
+The sample table `meta/samples.tsv` lists a run folder for each
+sample. Save this script as `~/bioinf-computing-ch08/bin/check_samples.sh`.
+It is the loop from @sec-shell-scripts-loops that reads the table with
+`<` instead of a pipe, so the `bad` flag survives the loop:
+
+```{.bash filename="~/bioinf-computing-ch08/bin/check_samples.sh"}
+#!/usr/bin/env bash
+# check_samples.sh: check that each sample in a table has its run folder.
+# Usage:  check_samples.sh TABLE
+#   TABLE: tab-separated, header line first, columns sample, run_folder, ...
+#   Run it from the folder that the run_folder paths are relative to.
+# Problems go to stderr; exit 1 if any row has a problem.
+set -euo pipefail
+
+if [[ $# -ne 1 ]]; then
+  echo "usage: check_samples.sh TABLE" >&2
+  exit 2
+fi
+table="$1"
+[[ -r "$table" ]] || { echo "cannot read: $table" >&2; exit 1; }
+
+bad=0
+{
+  IFS= read -r _   # skip the header line
+  while IFS=$'\t' read -r sample folder rest || [[ -n "$sample$folder$rest" ]]; do
+    if [[ ! -d "$folder" ]]; then
+      printf '%s: missing folder %s\n' "$sample" "$folder" >&2
+      bad=1
+    fi
+    # Your turn: when the folder exists, check that it holds an R1 file
+    # for this sample (sample_X_R1.fastq.gz or .fq.gz), and report it if not.
+  done
+} < "$table"
+exit "$bad"
+```
+
+Run it from `~/bioinf-computing-ch05/share` with `bash
+~/bioinf-computing-ch08/bin/check_samples.sh meta/samples.tsv; echo
+"exit $?"`. It already reports missing folders on stderr, keeps going
+after a bad row, and exits 1 if any row failed. Add the R1 check: when
+the folder exists, look for that sample's R1 file, report it the same
+way if there is none, and print the sample and its R1 file, separated
+by a tab, on stdout when there is one.
+
+Then a prediction. Make a copy, `check_samples_csv.sh`, that reads
+`meta/samples_from_excel.csv` with `IFS=,`, keeps the last column (`read -r sample folder _ reads ||
+[[ -n "$sample$folder$reads" ]]`),
+and also checks that `reads` is a positive number with `if ! (( reads >
+0 ))`. Before running it: which checks will pass, and which will fail?
+Run it and explain the result from @sec-linux-system-line-endings.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+Add `shopt -s nullglob` under `set -euo pipefail`, so a pattern that
+matches nothing gives an empty list, and replace the `fi` and the
+comment with an `else` branch:
+
+```{.bash filename="~/bioinf-computing-ch08/bin/check_samples.sh (the loop)"}
+    if [[ ! -d "$folder" ]]; then
+      printf '%s: missing folder %s\n' "$sample" "$folder" >&2
+      bad=1
+    else
+      r1=("$folder/${sample}"_R1.f*q.gz)
+      if (( ${#r1[@]} == 0 )); then
+        printf '%s: no R1 file in %s\n' "$sample" "$folder" >&2
+        bad=1
+      else
+        printf '%s\t%s\n' "$sample" "${r1[0]}"
+      fi
+    fi
+```
+
+```{.console}
+$ bash ~/bioinf-computing-ch08/bin/check_samples.sh meta/samples.tsv; echo "exit $?"
+sample_C	Run 3 final/sample_C_R1.fq.gz
+sample_A	run1/sample_A_R1.fastq.gz
+sample_B	run2/sample_B_R1.fastq.gz
+sample_E: missing folder run5
+sample_B	run2/sample_B_R1.fastq.gz
+sample_D: missing folder run4
+exit 1
+```
+
+With `2>/dev/null` only the four found rows remain: results and
+problems go to different streams (@sec-shell-scripts-logging). Every
+bad row is reported, not just the first. To see the R1 check fire, copy
+the table to `~/bioinf-computing-ch08/`, add a row `sample_Z`, tab,
+`run1`, and run on the copy: the output gains `sample_Z: no R1 file in
+run1`. The supplied version printed only the two `missing folder` lines.
+A follow-up worth thinking about: `sample_B` is listed twice. The table
+has a duplicate row, which this script does not look for.
+
+The CSV copy (captured with bash 5.3):
+
+```{.console}
+$ bash ~/bioinf-computing-ch08/bin/check_samples_csv.sh meta/samples_from_excel.csv
+…check_samples_csv.sh: line 22: ((: 12: arithmetic syntax error: invalid arithmetic operator (error token is "")
+sample_C: reads is not a positive number: 12
+sample_C	Run 3 final/sample_C_R1.fq.gz
+…
+```
+
+Every row fails the number test, and the message even says `12` is not
+a positive number. The folder and R1 checks give the same result as the
+TSV. The file has Windows line endings, so each line's **last** field,
+`reads`, ends in an invisible `\r`: `12\r` is not a number, but the
+`\r` does not show on screen. The folder name is not the last field, so
+those checks never notice. After `tr -d '\r' < meta/samples_from_excel.csv
+> samples_lf.csv`, the copy run on `samples_lf.csv` gives the TSV's
+result. The error does not stop the script, because it sits in an `if`.
+Older bash versions, such as 5.1 on many clusters, word the message
+differently. `IFS=,` works for this simple file only; a real CSV reader
+handles quoted commas (@sec-tabular-data).
+:::
+:::
+
+::: {.check}
+**Exercise 3. What strict mode misses.** After @sec-shell-scripts-strict.
+
+Save this script as `~/bioinf-computing-ch08/ex3/count_ok.sh`:
+
+```{.bash filename="~/bioinf-computing-ch08/ex3/count_ok.sh"}
+#!/usr/bin/env bash
+# count_ok.sh: count the reads in one FASTQ file, then report OK.
+# Usage: count_ok.sh FILE.fastq.gz
+n=$(gunzip -c "$1" | wc -l)
+echo "$(basename "$1"): $((n / 4)) reads"
+echo "OK"
+```
+
+Make a good input and three bad ones next to it: a truncated copy, and
+a gzip file that is valid but holds nothing (`missing.fastq.gz` you do
+not make at all):
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing-ch08/ex3
+cp ~/bioinf-computing-ch05/share/run2/sample_B_R1.fastq.gz good.fastq.gz
+head -c 30 good.fastq.gz > trunc.fastq.gz
+gzip < /dev/null > empty.fastq.gz
+for f in good missing trunc empty; do bash count_ok.sh "$f.fastq.gz"; echo "exit $?"; done
+```
+
+All four end with `OK` and exit 0. Add `set -euo pipefail` and predict
+which inputs it stops before you rerun. Then add **one** explicit check
+so that the remaining bad input stops the script with a message on
+stderr and exit 1, while `good.fastq.gz` still prints `3 reads` and
+`OK`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+With `set -euo pipefail` (GNU gzip wording):
+
+```{.console}
+$ for f in good missing trunc empty; do bash count_ok.sh "$f.fastq.gz"; echo "exit $?"; done
+good.fastq.gz: 3 reads
+OK
+exit 0
+gzip: missing.fastq.gz: No such file or directory
+exit 1
+gzip: trunc.fastq.gz: unexpected end of file
+exit 1
+empty.fastq.gz: 0 reads
+OK
+exit 0
+```
+
+Strict mode catches the missing and the truncated file, because
+`gunzip` reports both as failures and `pipefail` passes that on. (Apple
+gzip words them `gunzip: can't stat: …` and `gunzip: trunc.fastq.gz:
+unexpected end of file`.) The empty file is a **valid** gzip stream with
+no content: `gunzip` succeeds, `wc -l` prints `0`, and nothing has
+reported a failure. Only a check of the result catches it:
+
+```{.bash filename="~/bioinf-computing-ch08/ex3/count_ok.sh"}
+#!/usr/bin/env bash
+# count_ok.sh: count the reads in one FASTQ file, then report OK.
+# Usage: count_ok.sh FILE.fastq.gz
+set -euo pipefail
+if [[ $# -ne 1 ]]; then echo "usage: count_ok.sh FILE.fastq.gz" >&2; exit 2; fi
+
+n=$(gunzip -c "$1" | wc -l)
+reads=$((n / 4))
+if (( reads == 0 )); then
+  echo "$(basename "$1"): no reads" >&2
+  exit 1
+fi
+echo "$(basename "$1"): $reads reads"
+echo "OK"
+```
+
+```{.console}
+$ bash count_ok.sh empty.fastq.gz; echo "exit $?"
+empty.fastq.gz: no reads
+exit 1
+$ bash count_ok.sh good.fastq.gz; echo "exit $?"
+good.fastq.gz: 3 reads
+OK
+exit 0
+```
+
+The other checks you might reach for do not work here. `gzip -t
+empty.fastq.gz` exits 0, because the stream is valid, and `[[ -s
+empty.fastq.gz ]]` is true, because the file holds 20 bytes of gzip
+header. Do not confuse it with a zero-byte file named `.gz`, which
+`gunzip` and `gzip -t` both reject. Dividing lines by 4 is right only
+for these plain four-line toy records; it does not check that a file is
+valid FASTQ. Tools that read the format properly come in
+@sec-fasta-fastq.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Add a third step to the project.** After
+@sec-shell-scripts-pipeline.
+
+Add `src/03_transcript_biotypes.sh`, which counts the transcripts of
+each biotype (protein-coding, tRNA, and so on) in the reference
+annotation and writes `results/transcript_biotypes.tsv`. Follow
+`02_gtf_summary.sh`: header comment, `set -euo pipefail`, the
+project-folder guard, `log` and `die`, an input check, the `.tmp` and
+`mv`, and the two MD5 log lines. One line is new to you (`grep -o`
+prints only the part of each line that matches), so here it is:
+
+```{.bash filename="the extraction line for src/03_transcript_biotypes.sh"}
+gunzip -c "$gtf" | awk -F'\t' '$3 == "transcript"' \
+  | grep -o 'transcript_biotype "[^"]*"' | cut -d'"' -f2 \
+  | sort | uniq -c | sort -k1,1nr | awk -v OFS='\t' '{print $2, $1}'
+```
+
+Add the step to `run_all.sh`, run the whole pipeline with `pixi run bash
+src/run_all.sh`, and check that the counts add up to the 124
+transcripts of @sec-text-tools. Commit the new script and the changed
+`run_all.sh` with a message that says what the step does, and check
+the commit with `git show --stat HEAD`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+```{.bash filename="src/03_transcript_biotypes.sh"}
+#!/usr/bin/env bash
+# 03_transcript_biotypes.sh: count transcripts of each biotype in the reference annotation.
+# Run from the project folder:  pixi run bash src/03_transcript_biotypes.sh
+# Input:  data/ref/genes.gtf.gz
+# Output: results/transcript_biotypes.tsv (biotype, count; most common first)
+set -euo pipefail
+
+log() { printf '[%s] %s\n' "$(date '+%Y-%m-%d %H:%M:%S')" "$*" >&2; }
+die() { log "ERROR: $*"; exit 1; }
+
+[[ -f pixi.toml ]] || die "run from the project folder"
+
+gtf="data/ref/genes.gtf.gz"
+out="results/transcript_biotypes.tsv"
+[[ -s "$gtf" ]] || die "missing or empty: $gtf"
+
+mkdir -p results
+log "start; input md5: $(md5sum "$gtf")"
+{
+  printf 'biotype\tcount\n'
+  gunzip -c "$gtf" | awk -F'\t' '$3 == "transcript"' \
+    | grep -o 'transcript_biotype "[^"]*"' | cut -d'"' -f2 \
+    | sort | uniq -c | sort -k1,1nr | awk -v OFS='\t' '{print $2, $1}'
+} > "$out.tmp"
+mv "$out.tmp" "$out"
+log "wrote $out ($(( $(wc -l < "$out") - 1 )) biotypes)"
+log "output md5: $(md5sum "$out")"
+```
+
+In `run_all.sh`, add `bash src/03_transcript_biotypes.sh` after the
+`02` line, inside the `{ … }` group. The new step's log lines and
+result:
+
+```{.console}
+[2026-11-22 15:08:39] start; input md5: 504334f6741ee771c665ae845429087f  data/ref/genes.gtf.gz
+[2026-11-22 15:08:39] wrote results/transcript_biotypes.tsv (5 biotypes)
+[2026-11-22 15:08:40] output md5: 06f05e65e07083ae63267ee916dedccc  results/transcript_biotypes.tsv
+$ cat results/transcript_biotypes.tsv
+biotype	count
+protein_coding	116
+tRNA	4
+pseudogene	2
+ncRNA	1
+snoRNA	1
+```
+
+116 + 4 + 2 + 1 + 1 = 124, the transcript count from
+`gtf_feature_counts.tsv`. Your MD5 should match: the tied `ncRNA` and
+`snoRNA` rows come out in the same order whatever your locale. Then:
+
+```{.bash filename="Terminal (laptop)"}
+git add src/03_transcript_biotypes.sh src/run_all.sh
+git commit -m "Add step 03: count transcripts by biotype"
+git show --stat HEAD
+```
+
+`git show --stat HEAD` lists both files. One more thing to notice:
+`02` and `03` both read only the GTF and write different files, so
+they could run at the same time. `run_all.sh` runs them one after the
+other, one of the limits in @sec-shell-scripts-pipeline that workflow
+managers remove.
+:::
+:::
+
+::: {.check}
+**Exercise 5. Break, see, recover.** After @sec-shell-scripts-git.
+
+In `~/bioinf-computing`, delete the line that prints the header in
+`src/02_gtf_summary.sh` (`printf 'feature\tcount\n'`), run the script,
+and commit the change as if you had not noticed. Then find what
+changed, bring back the working version from the commit before, check
+that it works, and commit the recovery. Record each command and what it
+showed in `NOTEBOOK.md`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+
+The broken script still runs and exits 0, but its log says `wrote
+results/gtf_feature_counts.tsv (4 feature types)`, and the file starts
+with `exon	129`: the header is gone, and the count of "feature types"
+is now one short because the script subtracts a header line that is
+not there. Nothing failed; only reading the result shows the problem.
+
+```{.console}
+$ git commit -am "Drop header line from GTF summary"
+$ git log --oneline -- src/02_gtf_summary.sh
+<hash> Drop header line from GTF summary
+<hash> Add read-count and GTF summary scripts
+$ git diff HEAD~1
+diff --git a/src/02_gtf_summary.sh b/src/02_gtf_summary.sh
+…
+ {
+-  printf 'feature\tcount\n'
+   gunzip -c "$gtf" | cut -f3 | sort | uniq -c | sort -k1,1nr \
+     | awk -v OFS='\t' '{print $2, $1}'
+ } > "$out.tmp"
+$ git restore --source=HEAD~1 src/02_gtf_summary.sh
+$ git status --short
+ M src/02_gtf_summary.sh
+$ pixi run bash src/run_all.sh
+$ git commit -am "Restore header line in GTF summary"
+```
+
+Your commit hashes (shown as `<hash>`) and messages will differ, and
+your history may have more commits. `git log -- file` lists only the commits that changed that
+file. `git diff HEAD~1` compares your files with the commit before the
+last one, so the removed line shows with a `-`. `git restore
+--source=HEAD~1` copies the file as it was in that commit into your
+folder; `git status` shows it as modified, because it now differs from
+the last commit. Rerunning `run_all.sh` should give five feature types
+again, and the new commit records the repair without erasing the
+mistake from history. (If you had not committed the bad change, `git
+restore src/02_gtf_summary.sh` alone would have been enough.)
+:::
+:::
+
+## Further reading {#sec-shell-scripts-reading}
+
+- @shotts2025linux, *The Linux Command Line*, Part 4 "Writing Shell
+  Scripts" --- variables, `if`, loops, and positional parameters, one
+  chapter each, in the same order as this chapter; free online.
+- @wilson2019swcarpentry, *The Unix Shell*, episodes "Loops" and "Shell
+  Scripts" --- a second, shorter walk through the same ideas, with
+  exercises and a different dataset.
+- @buffalo2015bioinformatics, *Bioinformatics Data Skills*, chapter 12
+  "Bioinformatics Shell Scripting, Writing Pipelines, and Parallelizing
+  Tasks" --- written for the same readers: `set -euo pipefail`, loops
+  over samples, and `make` for pipelines.
+- @wilson2017good, "Good enough practices in scientific computing" ---
+  the sections on software and project organisation give the reasons
+  behind numbered scripts, one command to rerun everything, and version
+  control.
+- @ramey2025bash, the [*Bash Reference
+  Manual*](https://www.gnu.org/software/bash/manual/), sections *Shell
+  Expansions* and *The Set Builtin* --- the exact rules for word
+  splitting and for when `set -e` does and does not stop a script.
+  Short, precise, and the place to settle an argument.

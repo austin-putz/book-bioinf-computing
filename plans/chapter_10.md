@@ -7,7 +7,8 @@ date: 2026-11-22
 **Part:** II — The Linux command line · **Label:** core · **Status:**
 draft plan, 2026-11-22; revised the same day after
 `chapter_10_codex_review.md` (what changed and why: *Review response*
-at the end). Site facts come from Appendix A (checked 2026-11-21/22
+at the end); open questions decided by Austin the same day
+(*Decisions*). Site facts come from Appendix A (checked 2026-11-21/22
 against the sites' pages and by logging in to Ceres, Atlas, and Nova).
 Rows marked *observed* were seen on those logins; rows marked *to
 capture* need a login (listed under *Checks to capture*, to become
@@ -204,8 +205,12 @@ aids*.
    job "$SLURM_JOB_ID" | grep -E 'NumCPUs|mem='`. Lesson: a different
    machine; `free` describes the whole node, and what `nproc` shows
    depends on site configuration, so the allocation lines, not the
-   hardware ones, say what **you** may use (*to capture* on Nova and
-   Ceres). No-cluster readers: which sections work locally (§6's job
+   hardware ones, say what **you** may use (Ceres, *observed*
+   2026-11-23, 2 CPUs and 2 GB on `ceres20-compute-6`: `nproc` → 2,
+   `free -g` → 754 GB total, `SLURM_CPUS_PER_TASK` → 2,
+   `SLURM_MEM_PER_NODE` → 2048, `scontrol` → `NumCPUs=2`,
+   `AllocTRES=cpu=2,mem=2G`, `QOS=ceres`; Nova the same pattern on
+   `nova18-wide-13`: `nproc` → 2, `free -g` → 376 GB, `QOS=normal`). No-cluster readers: which sections work locally (§6's job
    script with `bash`, §10's array selection with test values) and
    which are captured sessions. [`fig-cluster-anatomy` reused; key idea
    "work runs as jobs"]
@@ -224,14 +229,39 @@ aids*.
    that can apply to a request. Limits apply at several levels, and the
    strictest wins (Slurm's resource-limits page). Motivating example,
    labelled as such: Ceres's `ceres` partition shows 60 days, while
-   SCINet's guide gives 3 weeks; the likely explanation is a QOS limit
-   (*inference*, to confirm with check 2). Reference block: how to see
+   SCINet's guide gives 3 weeks; the explanation is the `ceres` QOS,
+   whose `MaxWall` is `21-00:00:00` (*observed* 2026-11-23 with
+   `sacctmgr show qos`; `scontrol show partition ceres` shows
+   `QoS=ceres`, so the partition attaches that QOS to every job in it;
+   *observed* 2026-11-23). Showing a partition's own settings is the
+   reader's tool for this: `scontrol show partition <name>` lists
+   `DefaultTime`, `MaxTime`, `DefMemPerCPU`, and `QoS` (Ceres:
+   2 hours, 60 days, 2,000 MB per CPU, `ceres`; Nova's `nova`: 4 hours,
+   31 days, 3,800 MB per CPU, `QoS=N/A`, and your association's
+   default QOS `normal` has no `MaxWall`, so the partition's 31 days is
+   the limit; Atlas's `atlas`: 2 hours default, `MaxTime=UNLIMITED`
+   (the `infinite` in `sinfo`), 7,686 MB per CPU, `QoS=N/A`, and the
+   `normal` QOS sets **14 days** (`MaxWall 14-00:00:00`,
+   `cpu=1920,node=40`); *observed* 2026-11-23). Reference block: how to see
    your own applicable limits (`sacctmgr show assoc user=$USER
    format=account,partition,qos,defaultqos`; `sacctmgr show qos
    format=Name,MaxWall,MaxTRESPU%30`; the `QOS=` field of `scontrol
    show job` for a real job; *to capture*, may be restricted). A request
    that breaks a limit may be **rejected when you submit** or left
-   **pending** with a reason (§8), depending on site settings.
+   **pending** with a reason (§8), depending on site settings. Ceres
+   rejects it at once (*observed* 2026-11-23, `--time=30-00:00:00`):
+   `sbatch: error: QOSMaxWallDurationPerJobLimit` then `sbatch: error:
+   Batch job submission failed: Job violates accounting/QOS policy (job
+   submit limit, user's size and/or time limits)`; no job is created.
+   Nova also rejects it, with a different message because its limit is
+   the partition's, not a QOS (*observed* 2026-11-23,
+   `--time=40-00:00:00`): `sbatch: error: Batch job submission failed:
+   Requested time limit is invalid (missing or exceeds some limit)`.
+   Atlas refuses a 30-day request with Ceres's message
+   (`QOSMaxWallDurationPerJobLimit`; its `normal` QOS allows 14 days).
+   All three sites refuse at submission, so the pending reasons
+   `QOSMaxWallDurationPerJobLimit` and `PartitionTimeLimit` appear only
+   on sites configured to accept such jobs; say so beside the table.
    **Scavenger** partitions run on idle nodes and can be stopped
    (preempted). What one node has: `sinfo -N -o "%N %c %m %G" | head`
    (CPUs, memory in MB, GPUs; *to capture*). Site table
@@ -243,8 +273,9 @@ aids*.
    /work/<group>/group_storage_usage` on Nova), then, in the cluster
    project folder, `find .pixi -type f | wc -l` and `du -sh .pixi`
    (laptop: about 15,500 files and 1.3 GB, *measured* 2026-11-16;
-   cluster numbers *to capture*; Nova's compressed `/work` showed 813 MB,
-   *observed* 2026-11-22). Say that this counts regular files only; a
+   Ceres: 13,001 regular files, 15,528 entries in all, 1.3 GB,
+   *observed* 2026-11-23; Nova the same 13,001 and 15,528 but `du`
+   813 MB, because Nova's `/work` compresses, *observed* 2026-11-23). Say that this counts regular files only; a
    site's object or inode count also includes folders and links, so the
    two numbers need not match. *Then name it:* four tiers in
    `fig-storage-tiers`: **home** (small; config and the `pixi` program
@@ -256,9 +287,27 @@ aids*.
    faster than network storage for many small files, but that depends on
    the site and workload). Plus long-term archive (Juno on SCINet;
    `/lss` on Nova, not visible from compute nodes). Observed: Ceres and
-   Nova set `TMPDIR=/tmp` at the start of an interactive session; what
-   batch jobs get, and whether that folder is private to the job, is
-   *to capture* (check 3), and Atlas is unconfirmed. So the chapter
+   Nova set `TMPDIR=/tmp` at the start of an interactive session. In a
+   Ceres **batch** job (*observed* 2026-11-23) `TMPDIR` is also `/tmp`,
+   but that `/tmp` is an empty folder owned by you, mode `drwx------`
+   (a normal `/tmp` is `drwxrwxrwt`, shared by everyone), on a 1.5 TB
+   local NVMe disk, and `scontrol show config` shows `NamespaceType =
+   namespace/tmpfs`, `TmpFS = /tmp`: Slurm gives each job its own empty
+   `/tmp`, removed when the job ends. Readers can check their own site
+   with `scontrol show config | grep -i -E 'NamespaceType|JobContainer'`.
+   Atlas does **not** (`NamespaceType = (null)`, *observed*
+   2026-11-23); instead an Atlas batch job gets **`TMPDIR=/local/
+   scratch/<user>/<jobid>`**, a new empty folder for each job (mode
+   `drwxr-xr-x`, owned by you) on a 1.7 TB local NVMe disk mounted at
+   `/local`; two jobs on the same node each saw only their own file
+   (*observed* 2026-11-23). There, `/tmp` itself is the node's shared
+   one, which is why the chapter says "use `$TMPDIR`", not "use
+   `/tmp`". Whether Atlas deletes the folder when the job ends is not
+   observed (SCINet's guide says node-local space is temporary).
+   Nova has the same setting as Ceres (`namespace/tmpfs`, `TmpFS = /tmp`,
+   *observed* 2026-11-23; a Nova batch job shows the same private
+   `drwx------` `/tmp` on a 1.5 TB NVMe disk); Atlas *to capture*
+   (check 3). So the chapter
    teaches "make your own folder under it", never "clean `$TMPDIR`".
    *Then file counts:* many systems limit **files** as well as bytes; a
    Nextflow `work/` folder can reach millions (Chapter 26). Nova and
@@ -300,7 +349,12 @@ aids*.
 4. **Software: modules and the book environment.** *Start hands-on
    (login node):* `module avail apptainer` (*observed* on Nova: three
    dated software trees, versions 1.1.5–1.4.0), `module spider
-   samtools` (*to capture*), `module load <name>/<version>`, `module
+   samtools` (Ceres: `samtools/1.16.1`, `samtools/1.17` in three
+   module trees, *observed* 2026-11-23; Nova:
+   `samtools/1.16.1-py310-d6uutpz`, `1.19.2-py311-qlmoxzv`,
+   `1.23.1-py313-3cgtvqh` across nine module trees, four of them dated
+   software releases (`/opt/rit/el9/20230413` … `20250815`); the hash
+   suffixes are why readers copy the full name from `module spider`), `module load <name>/<version>`, `module
    list`, `type -a samtools`, `module purge`. *Then name it:* Lmod
    modules change `PATH` and a few other variables (Chapter 7), for
    this shell only; `module spider` searches everything, including
@@ -310,8 +364,9 @@ aids*.
    Rules" message, *observed*). In a job, load modules **inside the
    script**, not by relying on what was loaded when you submitted; if
    the `module` command is missing in a batch job, the site's setup
-   line goes at the top of the script (whether that is needed is *to
-   capture* in a non-interactive batch shell, check 4). *Then the
+   line goes at the top of the script (Ceres, *observed* 2026-11-23:
+   `type -t module` → `function` in a batch job, so no setup line is
+   needed there; Nova the same, *observed* 2026-11-23; check 4). *Then the
    book's way:* `pixi run` for everything the book environment has; a
    module only for what it lacks; never both for the same tool in one
    job (`type -a` shows which wins, Chapter 7). Do not put `module
@@ -329,7 +384,21 @@ aids*.
    in them. After leaving an `salloc` shell, check `squeue -u $USER`
    and `scancel <jobid>` anything left; SCINet's differences page
    documents that Ceres and Atlas behave differently here (Atlas needs
-   `srun` inside the allocation). *Then connecting to the node you
+   `srun` inside the allocation). Ceres, *observed* 2026-11-23:
+   `salloc` lands you **on the compute node** (`Nodes ceres20-compute-6
+   are ready for job`, prompt and `hostname` both show the node; the
+   job is named `interact` in `squeue`), and `exit` prints `salloc:
+   Relinquishing job allocation …`, after which `squeue` is empty.
+   Nova behaves the same (`nova21-swift-4`, job `interact`, released;
+   *observed* 2026-11-23). **Atlas differs** (*observed* 2026-11-23):
+   after `Nodes atlas-0006 are ready for job` the prompt is still the
+   login node's and `hostname` prints `atlas-login-1`; only `srun
+   hostname` runs on `atlas-0006`. So on Atlas, commands typed after
+   `salloc` run on the **login node** unless prefixed with `srun`; use
+   `srun --pty bash -l` for an interactive shell there. `exit` still
+   releases the job (`Relinquishing job allocation`). Worth a pitfall
+   callout: the same `salloc` line means different things on Ceres and
+   Atlas. *Then connecting to the node you
    hold* (completes Chapter 9's `ProxyJump`; cluster only, Nova as the
    worked example, from ISU's "Launching remote IDEs on Nova's compute
    nodes"). Four steps, all in one place so nothing is left running:
@@ -417,7 +486,9 @@ aids*.
    starts in the folder you submitted from (Chapter 8's script needs the
    project root, which is why readers submit from there); it gets a copy
    of your environment at submission time (`--export=ALL` default, so
-   `~/.pixi/bin` is on `PATH`; *to confirm*, check 11); it has no
+   `~/.pixi/bin` is on `PATH`; Ceres, *observed* 2026-11-23: the job
+   started in the submit folder, saw an exported `PROJ`, and found
+   `~/.pixi/bin/pixi`; Nova the same, *observed* 2026-11-23; check 11); it has no
    terminal, so nothing can ask a question; `SLURM_*` variables tell
    the script about itself (`tbl-slurm-env`). **Two logs:** the
    scheduler's (`logs/01_count_reads_<jobid>.out`, everything the job
@@ -449,10 +520,20 @@ aids*.
    separate tasks (copies of a program), which the book's tools do not
    need. A Slurm "CPU" may be a core or a hardware thread, depending on
    the site. `--mem` (per node) vs `--mem-per-cpu` in one sentence; use
-   `--mem`. Time format `D-HH:MM:SS`. `tbl-sbatch-options` lists the
+   `--mem`. Time format `D-HH:MM:SS`. What you get if you leave
+   `--time` or `--mem` out is the partition's default, not "as much as
+   needed" (Ceres: 2 hours and 2,000 MB per CPU; Nova: 4 hours and 3,800 MB
+   per CPU; Atlas: 2 hours and 7,686 MB per CPU; *observed* 2026-11-23 with `scontrol show partition`), so always set both. `tbl-sbatch-options` lists the
    dozen options readers need. CPU efficiency is taught with one
-   captured, longer job or a labelled worked example (*to capture*),
-   not with the toy count, which finishes too fast to show anything.
+   captured, longer job (Ceres, *observed* 2026-11-23: two 2-minute
+   Python jobs holding 4 CPUs each; 4 workers busy → `seff` `CPU
+   Efficiency: 95.04% of 00:08:24 core-walltime`, `TotalCPU 07:58.890`;
+   1 worker busy → `24.00% of 00:08:20`, `TotalCPU 02:00.008`; both
+   about 70 MB of the 1 GB asked for; Nova the same pair: 97.15% and
+   24.39%),
+   not with the toy count, which finishes too fast to show anything
+   (Ceres, *observed* 2026-11-23: the 2-CPU count ran 2 s and `seff`
+   reported `CPU Efficiency: 0.00%`).
    *Then why accurate requests matter:* the scheduler can fit small,
    short jobs into gaps while it waits to start a large one
    (**backfill**), so a shorter request **can** start sooner; it is not
@@ -473,16 +554,30 @@ aids*.
    so no job installs anything under a small memory limit. (0)
    `ok.sbatch` runs a tiny Python command by the same route and
    completes: proof the route works. (a) `oom.sbatch` asks for
-   `--mem=500M` and allocates 2 GB in Python → expected
-   `OUT_OF_MEMORY` and a "killed" line in the log, but memory
-   enforcement differs between sites, so the exact state and message are
-   *to capture* (it may instead fail inside Python with `MemoryError`);
-   keeps Chapter 4's `Killed` promise. Cluster only: not run on a laptop.
-   (b) `timeout.sbatch` asks for `--time=00:01:00` and runs `sleep 300`
-   → `TIMEOUT`, log line `CANCELLED … DUE TO TIME LIMIT` (*to capture*).
-   (c) `typo.sbatch` runs `bash "$project/src/01_count_raeds.sh"` (a
-   misspelled script name) → `FAILED`, exit code `127:0` (*to
-   capture*). *Then read the records together:* `sacct -j <id>
+   `--mem=500M` and allocates 2 GB in Python → Ceres (*observed*
+   2026-11-23): `OUT_OF_MEMORY`, `ExitCode 0:125` on the allocation and
+   `.batch` lines, after 5 s; log: `slurm_script: line 8: <pid> Killed
+   pixi run …` then `error: Detected 1 oom_kill event in
+   StepId=<id>.batch. Some of the step tasks have been OOM Killed.` No
+   Python `MemoryError`. `MaxRSS` showed `1045816K`, **above** the
+   500M request (the kernel kills a moment after the limit is passed,
+   and sampling adds noise), so say "MaxRSS near or above ReqMem plus
+   `OUT_OF_MEMORY`". Keeps Chapter 4's `Killed` promise. Cluster only:
+   not run on a laptop. Nova gives the same state, exit code, and both
+   log lines (`MaxRSS` printed as `1G`; *observed* 2026-11-23). (b) `timeout.sbatch` asks
+   for `--time=00:01:00` and runs `sleep 300` → Ceres: allocation line
+   `TIMEOUT 0:0` at `00:01:07`, but the `.batch` line `CANCELLED 0:15`
+   (signal 15, SIGTERM) — the reason is on the allocation line here;
+   log line `error: *** JOB <id> ON <node> CANCELLED AT <time> DUE TO
+   TIME LIMIT ***`. (c) `typo.sbatch` runs `bash
+   "$project/src/01_count_raeds.sh"` (a misspelled script name) →
+   Ceres: `FAILED`, `127:0` on both lines, log `bash: <path>/src/
+   01_count_raeds.sh: No such file or directory`. In all three
+   failures the script's final `echo "end …"` never ran, which is how
+   the log shows where it stopped. `ExitCode` is `code:signal`
+   (`127:0` the script's own status; `0:15` and `0:125` mean stopped
+   from outside). `sacct` cuts `OUT_OF_MEMORY` to `OUT_OF_ME+`, so the
+   chapter's command widens `State%15` as well as `JobID%15`. *Then read the records together:* `sacct -j <id>
    --format=JobID,State,ExitCode,Elapsed,ReqMem,MaxRSS` shows the
    allocation line and one line per step (`.batch`, and numbered steps
    if the script uses `srun`); read those lines **and** the log, since
@@ -510,9 +605,18 @@ aids*.
    per-node or per-CPU suffix), the step lines hold use (`MaxRSS` is the
    peak of one step, sampled, not a sum over everything in the job);
    blank or zero values can mean the site does not collect that metric.
-   Then `seff <jobid>` if the site has it (*to capture*, check 5); CPU
+   Ceres capture (2026-11-23, the stand-in count job, 2 CPUs, 2 GB):
+   allocation line `COMPLETED 0:0 00:00:02 2 00:00.246 2G` with
+   `MaxRSS` blank; `.batch` line `MaxRSS 106944K`; `.extern` line
+   all zero. `sacct` cuts long names to 10 characters (`22918876.ba+`),
+   so the chapter's command widens the column (`JobID%15`). `seff`:
+   `Memory Utilized: 104.44 MB`, `Memory Efficiency: 5.10% of 2.00
+   GB`, `Cores per node: 2`.
+   Then `seff <jobid>` if the site has it (Ceres has, *observed*); CPU
    efficiency computed by hand once (`TotalCPU / (Elapsed ×
-   AllocCPUS)`) so `seff`'s number is not magic. *Then estimate:* test
+   AllocCPUS)`) so `seff`'s number is not magic: with the Ceres pair,
+   478.9 s / (126 s × 4) = 95.0% and 120.0 s / (125 s × 4) = 24.0%,
+   matching `seff`. *Then estimate:* test
    on a small input, measure, scale with care (Chapter 1: small runs are
    not a fair sample; memory often depends on the reference, time on the
    reads). For the next run of a **comparable job that succeeded**,
@@ -565,11 +669,17 @@ aids*.
     at once, one after another, on one node or several, finishing in any
     order, so each writes its own output (`stats_<run>.tsv`).
     `--array=1-40%5` runs at most 5 at once (etiquette). `scancel
-    1234567_3` cancels one task; `sacct -j 1234567` shows each. Why the
+    1234567_3` cancels one task; `sacct -j 1234567` shows each (Ceres,
+    *observed* 2026-11-23 with the stand-in array: pending shows as one
+    line `<id>_[1-4] … PD (None)`; logs `array_<id>_1.out` … `_4.out`;
+    `sacct` lists `<id>_1`, `<id>_1.batch`, `<id>_1.extern` per task, so
+    array JobIDs need `JobID%20`; dry run printed `runA`–`runD`, then
+    `no row 5 in reads_test.tsv`). Why the
     checks matter: `awk` prints nothing and exits 0 for a row past the
     end, so `set -e` alone would not catch `--array=1-5` with four rows.
     Site maximum array size (`scontrol show config | grep -i
-    MaxArraySize`, *to capture*). [`fig-job-array`; pitfall "header row
+    MaxArraySize`: Ceres and Atlas 10001, Nova **1001**, *observed* 2026-11-23;
+    the largest task ID is one less, so Nova allows `--array=1-1000`). [`fig-job-array`; pitfall "header row
     and the last task"; self-check]
 
 11. **Chains of jobs (overview, short).** Chapter 8's numbered pipeline
@@ -578,8 +688,20 @@ aids*.
     `squeue` shows the second as `(Dependency)`. `afterok` never starts
     the second job after a failed first one; whether it then stays
     pending (`DependencyNeverSatisfied`, cancel it) or is cancelled
-    automatically depends on the site (`--kill-on-invalid-dep`; *to
-    capture*). Say that here the two steps have independent inputs:
+    automatically depends on the site (`--kill-on-invalid-dep`). Ceres,
+    *observed* 2026-11-23: the second job showed `(Dependency)` while
+    the first waited, then **stayed** `PD (DependencyNeverSatisfied)`
+    after the first `FAILED 127:0`; `DependencyParameters = (null)`, so
+    nothing cancels it: `scancel` it yourself, or submit with
+    `--kill-on-invalid-dep=yes`. Nova has the same setting
+    (`DependencyParameters = (null)`) and the same result: the second
+    job stayed `PD (DependencyNeverSatisfied)` (*observed* 2026-11-23).
+    **Atlas differs:** `DependencyParameters = kill_invalid_depend`, so
+    Slurm cancels the waiting job itself (*observed* 2026-11-23: after
+    the first job `FAILED 1:0`, the second went from `PD (Dependency)`
+    to `CANCELLED` with no `scancel`). This is the site difference the
+    chapter names: "check `squeue`; on some sites the job waits forever,
+    on others it is cancelled". Say that here the two steps have independent inputs:
     `afterok` imposes the order you chose, it does not pass data. One
     paragraph on the limit: this is where a workflow manager (Part VI)
     takes over; nf-core submits its own jobs (Chapter 26). Exercise 5
@@ -592,8 +714,26 @@ aids*.
     job shows the card. Only tools built for GPUs use one (deep-learning
     tools, Parabricks, some basecallers); an ordinary tool on a GPU node
     leaves it idle. Sites: Atlas `gpu-v100`, `gpu-a100`,
-    `gpu-a100-mig7`, `gpu-l40s` (*observed*); Nova GPU nodes appear in
-    `sinfo` (partition use *to check*); Ceres (*to check*). Depth:
+    `gpu-a100-mig7`, `gpu-l40s` (*observed*; `sinfo -o "%P %G"`
+    on 2026-11-23 gives `gpu:a100:8`, `gpu:l40s:4`, `gpu:v100:2`, and
+    for the MIG partition `gpu:nvidia_a100_1g.10gb:56`. Tested with
+    `sbatch --test-only` on 2026-11-23: **`--gres=gpu:nvidia_a100_1g.10gb:1`
+    and plain `--gres=gpu:1` are accepted**; the OnDemand form's
+    `gpu:a100_1g.10gb:1` is refused (`allocation failure: Requested node
+    configuration is not available`). So the chapter uses the name
+    `sinfo` shows, and teaches `sbatch --test-only` as the safe way to
+    check a request. `srun … -p gpu-a100-mig7 --gres=gpu:1 nvidia-smi
+    -L` listed the node's eight `NVIDIA A100-SXM4-80GB` cards with one
+    `MIG 1g.10gb` device under one of them: the slice the job holds.
+    Partition `QoS=mig7` (2 days); QOS time limits 2 days for
+    `v100`, `mig7`, `l40s` and 7 days for `a100`); Nova has no separate GPU
+    partition: GPU nodes sit in the default `nova` partition (and
+    `interactive`, `instruction`, `scavenger`, `nova-arm`), and the card
+    type goes in `--gres`, e.g. `--gres=gpu:a100:1` (types `a100`,
+    `a100-pcie`, `a40`, `h200`, `gh200`, `l40s`, `rtx_2080_Ti`,
+    `rtx_6000`, `rtx_pro_6000`, `v100`, `v100-sxm2-32G`; *observed*
+    2026-11-23 with `sinfo -o "%P %G"`); Ceres has none (`sinfo -o "%P
+    %G"`: GRES `(null)` on both partitions, *observed* 2026-11-23). Depth:
     Chapter 37. [one row in `tbl-sites-slurm`]
 
 13. **Etiquette and a checklist.** *Start with a quick audit:* `ps -u
@@ -655,7 +795,7 @@ SVG text.
 | Label | Section | Columns |
 |:------|:-------:|:--------|
 | `tbl-slurm-vocab` | 2 | Term · plain meaning · where you see it — node, partition, account, QOS, job, job step, task, Slurm CPU (a core or a hardware thread, by site), allocation, fair share, preemption (scavenger) |
-| `tbl-sites-slurm` | 2 | Ceres · Atlas · Nova — `-A` needed?, default partition and its `sinfo` limit, interactive partition, scavenger, GPU partitions, `seff` available?, Appendix A link (*observed* cells from Appendix A; *to capture* the rest) |
+| `tbl-sites-slurm` | 2 | Ceres · Atlas · Nova — `-A` needed?, default partition and its `sinfo` limit, **where the real time limit comes from**, default time and memory per CPU, interactive partition, scavenger, GPU partitions and `--gres` form, `MaxArraySize`, `seff` available?, Appendix A link (all *observed*; values in *Site differences observed* below). A second, shorter table in §5/§6/§11 or a callout covers the behaviour differences: `salloc`, batch `TMPDIR`, failed chains |
 | `tbl-storage-tiers` | 3 | Tier · what goes there · size · backed up? · purged? · visible on compute nodes? — home, project/group, scratch, node-local temporary space, archive (general wording; site names in one column linking Appendix A) |
 | `tbl-module-commands` | 4 | Command · what it does — `module avail`, `module spider <name>`, `module spider <name>/<version>`, `module load <name>/<version>`, `module list`, `module unload`, `module purge`, `module show` |
 | `tbl-process-vs-job` | 5 | · command on the login node · interactive job (`srun --pty`, `salloc`, OnDemand) · batch job — where it runs, when it starts, lost connection or sleeping laptop, output goes to, stop it with, records afterwards |
@@ -663,12 +803,15 @@ SVG text.
 | `tbl-sbatch-options` | 7 | Option · short form · what it asks for · example · notes — `--job-name`, `--account`, `--partition`, `--qos`, `--time`, `--nodes`, `--ntasks`, `--cpus-per-task`, `--mem`, `--output`/`--error` (`%x`, `%j`, `%A`, `%a`), `--array`, `--dependency`, `--mail-type`/`--mail-user` (whether mail works is site-specific), `--gres` |
 | `tbl-slurm-commands` | 8 | Command · what it shows or does · example — `sinfo`, `squeue -u $USER`, `squeue --start`, `scontrol show job`, `sacct`, `seff`, `scancel`, `sbatch --parsable`, `sacctmgr show assoc` (the chapter's cheat sheet; candidate for the "Command cheat sheets" appendix) |
 | `tbl-job-states` | 8 | State · short · what happened · what to do — `PENDING` `PD`, `RUNNING` `R`, `COMPLETED` `CD` (script exited 0; check the result), `FAILED` `F`, `OUT_OF_MEMORY` `OOM`, `TIMEOUT` `TO`, `CANCELLED` `CA`, `PREEMPTED` `PR`, `NODE_FAIL` `NF` |
-| `tbl-pending-reasons` | 8 | Reason · meaning · fix — `Priority`, `Resources`, `Dependency`, `DependencyNeverSatisfied`, `QOSMaxWallDurationPerJobLimit`, `PartitionTimeLimit`, `AssocGrpCpuLimit` (and other `AssocGrp…`), `ReqNodeNotAvail` (exact spellings from the site capture) |
+| `tbl-pending-reasons` | 8 | Reason · meaning · fix — `None` (just submitted, not yet considered; *observed* on Ceres and Nova), `Priority` (*observed* on Nova for jobs submitted together), `Resources`, `Dependency`, `DependencyNeverSatisfied`, `QOSMaxWallDurationPerJobLimit`, `PartitionTimeLimit`, `AssocGrpCpuLimit` (and other `AssocGrp…`), `ReqNodeNotAvail` (exact spellings from the site capture) |
 | `tbl-measure-cmds` | 9 | Question · command · field · read from which line — how long?, how much memory?, were the CPUs used?, how much disk?; `sacct` fields `Elapsed`, `MaxRSS` (step line), `TotalCPU`, `AllocCPUS`, `ReqMem` (allocation line); `seff`; `du -sh` |
 | `tbl-etiquette` | 13 | Do · don't · why |
 
 ### Code (§6)
 
+- **`sacct` widths:** every `sacct` command in the chapter uses
+  `JobID%20` and `State%15` (Ceres cut `22918896_1.batch` and
+  `OUT_OF_MEMORY` at the default width).
 - **Where commands run:** `filename="Terminal (login node)"` for
   `sinfo`, `sbatch`, `squeue`, `sacct`, `module`, quotas;
   `filename="Terminal (compute node)"` inside `srun` sessions (including
@@ -824,8 +967,8 @@ between the two misconceptions of §7).
     after this step; the chapter's check (§6, Outcome) is run **before**
     the download, or its expected output says 8 rows.
   Accessions, file names, sizes, and read counts *to verify* against
-  `samplesheet_test.csv` at the pinned commit before drafting (*open
-  question 3*).
+  `samplesheet_test.csv` at the pinned commit before drafting
+  (*Decisions* 3).
 - **Where commands run:** laptop (only `ssh`, and the no-cluster path);
   login node (`sinfo`, `sbatch`, `squeue`, `sacct`, `seff`, `module`,
   quotas, editing job scripts); compute node (everything inside a job
@@ -945,6 +1088,47 @@ To verify with scite and fetch BibTeX from the DOI before adding:
 - Lmod paper (*to find*; only if a citable one exists).
 - Your site's own SLURM page (Appendix A): the authority for limits.
 
+## Site differences observed (2026-11-23)
+
+From `chapter_10_checks.md` (Ceres and Nova: Parts 0–3; Atlas: the
+parts where it may differ). The chapter's text, `tbl-sites-slurm`, and
+the pitfall callouts are written from this table. User and project
+names are placeholders.
+
+::: {.wide-table}
+: Where Ceres, Atlas, and Nova differ for Chapter 10 (*observed*). {#tbl-ch10-site-diffs}
+
+| Topic | Ceres | Atlas | Nova | Chapter section |
+|:--|:--|:--|:--|:--|
+| Real time limit and its source | 21 days, from the `ceres` **QOS** the partition attaches (`sinfo` shows 60 days) | 14 days, from the `normal` **QOS** (`sinfo` shows `infinite`) | 31 days, from the **partition** (default QOS `normal` sets none) | §2 |
+| Over-long request | refused: `QOSMaxWallDurationPerJobLimit` | refused: same message | refused: `Requested time limit is invalid (missing or exceeds some limit)` | §2, §8 |
+| Default time / memory if left out | 2 h / 2,000 MB per CPU | 2 h / 7,686 MB per CPU | 4 h / 3,800 MB per CPU | §7 |
+| `-A <account>` needed | yes | yes | no (default account) | §2, §6 |
+| `salloc` puts you on | the compute node | **the login node** (`srun` reaches the node) | the compute node | §5 (pitfall) |
+| Batch job's `TMPDIR` | `/tmp`, private to the job (`namespace/tmpfs`), 1.5 TB NVMe | **`/local/scratch/<user>/<jobid>`**, per job, 1.7 TB NVMe; `/tmp` is the node's shared one | as Ceres | §3 |
+| Failed `afterok` chain | second job waits forever, `DependencyNeverSatisfied`; `scancel` it | **cancelled automatically** (`kill_invalid_depend`) | as Ceres | §11 |
+| `MaxArraySize` | 10001 | 10001 | **1001** | §10 |
+| GPUs | none | four GPU partitions (`gpu-a100`, `gpu-a100-mig7`, `gpu-l40s`, `gpu-v100`); MIG slice `--gres=gpu:nvidia_a100_1g.10gb:1` or `gpu:1` (the OnDemand form's `a100_1g.10gb` is refused) | GPU nodes **in the default partition**; `--gres=gpu:<type>:1` | §12 |
+| `samtools` modules | 1.16.1, 1.17 (3 trees) | not checked | 1.16.1, 1.19.2, 1.23.1 with hash suffixes (9 trees, dated) | §4 |
+| `.pixi` on disk | 1.3 GB | 1.3 GB | 813 MB (compressed `/work`); same 13,001 files everywhere | §3 |
+| Login node | 32 CPUs, 376 GB | 48 CPUs, 376 GB | 64 CPUs, 188 GB | §1 |
+:::
+
+**The same on all three** (one capture can stand for all): a batch job
+starts in the submit folder and sees exported variables, `pixi`, and
+`module`; `seff` and GNU `time -v` exist; inside a job `nproc` shows
+the allocation and `free` the whole node; `salloc`'s `exit` releases
+the job; the failure states (`OUT_OF_MEMORY 0:125` with `Killed` and
+an `oom_kill event` line, `TIMEOUT` on the allocation line with
+`.batch` `CANCELLED 0:15`, `FAILED 127:0`) on Ceres and Nova; CPU
+efficiency about 95–97% with 4 of 4 CPUs busy and 24% with 1 of 4.
+
+**What this means for the text:** teach `scontrol show partition` and
+`sacctmgr show qos` as the way to find *your* limit, since the number
+in `sinfo` is wrong on two of three sites; always set `--time` and
+`--mem`; always use `$TMPDIR`, never a hard-coded `/tmp`; after
+`salloc`, check `hostname`; after a failed chain, check `squeue`.
+
 ## Checks to capture
 
 To become `chapter_10_checks.md` (on Nova and Ceres; Atlas where the
@@ -1011,26 +1195,34 @@ explained, a self-check, check 16, and the *builds on* note. No new
 section, figure, or table; `fig-proxyjump` is Chapter 9's. Appendix A
 keeps the per-site config block and links to §5.
 
+## Decisions (Austin, 2026-11-22)
+
+All six open questions answered; each took the proposed option.
+
+1. **`sacct` first.** The chapter teaches `sacct` fields as the main way
+   to measure a job, since every site has it; `seff` appears as "if your
+   site has it". Which of Ceres, Atlas, and Nova have `seff` is still
+   check 5, and only changes that one sentence.
+2. **Job scripts wrap Chapter 8's scripts.** The §6 job runs `pixi run
+   bash src/01_count_reads.sh`, and the check reads
+   `results/read_counts.tsv`. §10's array script calls seqkit directly,
+   because it works one run at a time and needs `-j`. Final wording waits
+   until Chapter 8's script is settled.
+3. **Three more paired-end fixture runs** for the array (pinned,
+   checksummed, a few MB), added as the supplied project step in
+   *Examples and data*. Accessions still to verify against
+   `samplesheet_test.csv` at the pinned commit.
+4. **§11 (chains) and §12 (GPUs) stay** as short sections labelled
+   overview inline; the chain exercise is optional. Chains stay here
+   because Chapter 8 promised them.
+5. **`fig-backfill` is built in the first draft.**
+6. **Email notifications: table only,** one row in `tbl-sbatch-options`
+   noting that it is site-specific; no demonstration.
+
 ## Open questions
 
-1. **`seff`:** if a site lacks it, teach `sacct` fields as the main
-   route and `seff` as "if your site has it"? (Proposed: yes, `sacct`
-   first, since it is everywhere; decide after check 5.)
-2. **Job scripts wrap Chapter 8's scripts.** (Proposed, and the review
-   agrees: the §6 job runs `pixi run bash src/01_count_reads.sh`, so the
-   check reads `results/read_counts.tsv`; §10's array script calls seqkit
-   directly because it works per run and needs `-j`. Final wording waits
-   for Chapter 8's script to be fixed.)
-3. **Array data:** add three more paired-end fixture runs (pinned,
-   checksummed, a few MB), or run a two-row array over the existing run's
-   two files? (Proposed: three more runs, done as the supplied project
-   step in *Examples and data*.)
-4. **Length:** keep §11 (chains) and §12 (GPUs) as inline-labelled
-   overview sections, with the chain exercise optional? (Proposed: yes;
-   the review agrees. Chains stay here because Chapter 8 promised them.)
-5. **`fig-backfill` in the first draft?** (Proposed: yes.)
-6. **Email notifications** (`--mail-type=END,FAIL`): table only, or a
-   demonstration? (Proposed: table only; sites differ.)
+- None at the moment. Remaining unknowns are site facts, listed under
+  *Checks to capture*.
 
 ## Review response (2026-11-22)
 

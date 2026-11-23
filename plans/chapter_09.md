@@ -1,7 +1,7 @@
 ---
 title: "Chapter 9 — Working remotely"
 subtitle: "Chapter plan · core · draft"
-date: 2026-11-22
+date: 2026-11-23
 ---
 
 **Part:** II — The Linux command line · **Label:** core · **Status:**
@@ -19,7 +19,10 @@ machine or a cluster login (Nova, Ceres, Atlas). Revised 2026-11-22
 after the Codex review (`chapter_09_codex_review.md`); what changed is
 listed under *Decisions (2026-11-22, Codex review)*. SCINet and ISU
 facts quoted in that revision were re-read from the official pages the
-same day.
+same day. Revised again 2026-11-23 after Austin ran
+`chapter_09_checks.md` on WSL, Windows, Nova, Atlas, and Ceres: most
+*to capture* items are now *captured* or *observed* (quoted in place),
+and *Decisions (2026-11-23)* lists what changed.
 
 ## From `PLAN_CHAPTERS.md`
 
@@ -127,23 +130,30 @@ examples in one compact table and links there.
 
   ```bash
   ssh nova 'mkdir -p /work/<group>/<netid>/bioinf-computing/data/raw'   # 1. make the destination
-  rsync -avn ~/bioinf-computing/data/raw/ nova-dtn:/work/<group>/<netid>/bioinf-computing/data/raw/   # 2. dry run
-  rsync -av  ~/bioinf-computing/data/raw/ nova-dtn:/work/<group>/<netid>/bioinf-computing/data/raw/   # 3. copy
+  rsync -avn --no-p --no-g ~/bioinf-computing/data/raw/ nova-dtn:/work/<group>/<netid>/bioinf-computing/data/raw/   # 2. dry run
+  rsync -av  --no-p --no-g ~/bioinf-computing/data/raw/ nova-dtn:/work/<group>/<netid>/bioinf-computing/data/raw/   # 3. copy
   ssh nova 'cd /work/<group>/<netid>/bioinf-computing/data/raw && md5sum -c checksums.md5'   # 4. verify
   ```
 
   Step 1 makes the folder on the login node; step 3 sends the files to
   the DTN, and both see the same `/work` storage. Without step 1, rsync
   stops with `mkdir … failed: No such file or directory` and `code 11`
-  (*captured*: rsync creates only the last folder of a destination, not
-  a chain of missing parents; `--mkpath` is newer than some cluster
-  rsyncs, so the book does not rely on it). Expected after step 4
-  (exact): `SRR6357070_1.fastq.gz: OK` and `SRR6357070_2.fastq.gz: OK`.
-  Running step 3 again resends no file contents (rsync may still print
-  `./` or the summary lines). SCINet: the alias `ceres-dtn` or
-  `atlas-dtn` defined in §4 (real names `ceres-dtn.scinet.usda.gov`,
-  `atlas-dtn.hpc.msstate.edu`), `/project/<name>/<you>/…`, and SCINet's
-  documented options `rsync -avz --no-p --no-g` (§6).
+  (*captured* on the Mac, Nova, Atlas, and Ceres: rsync creates only the
+  last folder of a destination, not a chain of missing parents;
+  `--mkpath` exists on all three clusters, rsync 3.2.5–3.2.7, but not
+  on older laptops, so the book does not rely on it). `--no-p --no-g`
+  is the book's one recipe for project folders (*Decisions* 18; §6).
+  Expected after step 4 (exact, *captured* on all three):
+  `SRR6357070_1.fastq.gz: OK` and `SRR6357070_2.fastq.gz: OK`. On Atlas
+  and Ceres, running step 3 again sends nothing. On Nova it currently
+  re-checks all three files every time (`<f..t` in `-i` output),
+  because files copied through `novadtn` this way get the copy time
+  instead of the laptop's (*observed* 2026-11-22; asked ISU); the copy
+  is still correct, and the text says so in one sentence. SCINet: the
+  alias `ceres-dtn` or `atlas-dtn` defined in §4 (real names
+  `ceres-dtn.scinet.usda.gov`, `atlas-dtn.hpc.msstate.edu`),
+  `/project/<name>/<you>/…`, and `-z` added as in SCINet's page
+  (`rsync -avz --no-p --no-g`).
 - **Check (no-cluster path):** the same habits locally. In
   `~/bioinf-computing-ch09/`: (1) `rsync -a src dst1` and `rsync -a src/
   dst2` give the two trees below (*captured*); (2) `md5sum -c` on the
@@ -219,16 +229,23 @@ are recognition only until Chapter 10 teaches allocations.
    cd ~/bioinf-computing-ch09`. macOS box: `brew install rsync tmux`
    (Apple's rsync is the older openrsync; tmux is missing), checked
    with `type -a rsync` and `rsync --version` (*Decisions* 2).
+   Ubuntu 26.04 under WSL already has rsync 3.4.1, tmux 3.6, screen,
+   and OpenSSH 10.2 (*captured* 2026-11-22), so Linux readers install
+   nothing; one sentence says `sudo apt install rsync tmux` only if
+   `type -a` finds nothing.
    No-cluster readers: which sections work
-   locally (§3 key generation, §4 `ssh -G`, §5 tmux, §6–§7 local rsync
-   and checksums) and which are captured sessions.
+   locally (§2 fake-`ssh` demo, §3 key generation, §4 `ssh -G` on
+   `sample-config`, §5 tmux, §6–§7 local rsync and checksums, exercise
+   5's toy copy) and which are captured sessions.
 2. **One command on another machine.** *Start hands-on (cluster):*
    `ssh nova hostname` and `ssh nova 'pwd; ls'` from the laptop: the
    command runs on the login node and its output comes back, with no
    prompt to `exit` (recalls `tbl-startup-files`, `ssh host command`).
    Quoting decides where expansion happens: `ssh nova "echo $HOME"`
    prints the **laptop's** home, `ssh nova 'echo $HOME'` the cluster's
-   (*to capture*; quoting from Chapter 5, deeper in Chapter 8). *Then
+   (*captured*: `/Users/<you>` vs `/home/<netid>`; quoting from Chapter
+   5, deeper in Chapter 8). `ssh nova 'exit 3'; echo $?` prints `3`:
+   the remote exit status comes back (*captured*). *Then
    name it:* `ssh host command` is the form `rsync` uses behind the
    scenes (and older, legacy `scp`), so text printed on standard output
    when the remote shell starts corrupts rsync's data stream. Current
@@ -239,21 +256,33 @@ are recognition only until Chapter 10 teaches allocations.
    connection prove nothing). Nonzero bytes mean something prints on
    standard output at startup: the reader's own startup file is the
    usual cause, but a site's login scripts can also print; messages on
-   standard error (the terminal, not the pipe) do not count (*to
-   capture* on clusters). What breaks, shown without a cluster or any
+   standard error (the terminal, not the pipe) do not count
+   (*captured*: `0` and status 0 on Nova, Atlas, and Ceres, even with a
+   heavily customised `~/.bashrc` on Nova; Atlas prints a long MSU
+   notice on every connection, but on standard error, so it is
+   harmless and the text says so). What breaks, shown without a cluster or any
    startup-file edit (*captured*): a supplied fake `ssh` wrapper that
    prints one line before running the command; `rsync -av -e ./fakessh
    …` fails with `protocol version mismatch -- is your shell clean?`,
    `rsync error: protocol incompatibility (code 2)`, exit 2, and the
    same wrapper without the print copies fine. Readers run it
    themselves in `~/bioinf-computing-ch09` (*Decisions* 2026-11-22,
-   10). *Then the host
+   10): the supplied file is made executable with `chmod u+x fakessh`
+   (Chapter 7), and the copy is between two local folders, so no
+   network is involved. *Then the host
    key again:* the `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!`
-   message, shown as captured text only: the site changed its keys
+   message, shown as captured text only (*captured* from a fake
+   `known_hosts`: the full box, `Offending ED25519 key in …:1`, `Host
+   key verification failed.`, status 255): the site changed its keys
    (check its announcements or published fingerprints, Nova's page) or
    something is in the way; never "fix" it by deleting `known_hosts`
    blindly; `ssh-keygen -R <host>` removes one entry once the site
-   confirms. [`fig-three-machines`; pitfall: `.bashrc` that prints;
+   confirms. The **harmless** cousin, shown beside it: the first
+   connection to a new name for the same machine (e.g. `nova-login-1`
+   after `nova`) asks the ordinary host-key question again, and ssh
+   adds `This host key is known by the following other names/addresses:
+   … nova.its.iastate.edu` (*captured*; all Nova login names share one
+   key). [`fig-three-machines`; pitfall: `.bashrc` that prints;
    self-check]
 3. **SSH keys: logging in without retyping a password.** *Start
    hands-on (laptop, no cluster needed):* generate a key pair:
@@ -263,7 +292,11 @@ are recognition only until Chapter 10 teaches allocations.
    ls -l ~/.ssh
    ```
 
-   Readers accept the default file and **set a passphrase**; `ls -l`
+   Readers accept the default file and **set a passphrase** (OpenSSH
+   10.x asks `Enter passphrase for "<file>" (empty for no
+   passphrase):` and `Enter same passphrase again:`; a mismatch prints
+   `Passphrases do not match.  Try again.`; older versions omit the
+   file name; *captured* on WSL); `ls -l`
    shows `id_ed25519` (`-rw-------`, 600) and `id_ed25519.pub`
    (`-rw-r--r--`); `cat ~/.ssh/id_ed25519.pub` shows one line
    (`ssh-ed25519 AAAA… laptop-2026`); `ssh-keygen -lf
@@ -279,10 +312,16 @@ are recognition only until Chapter 10 teaches allocations.
    `700`, private key `600`, or ssh refuses it (*captured*: `WARNING: UNPROTECTED PRIVATE KEY
    FILE!` … `This private key will be ignored.`). *Then
    `ssh-agent`:* type the passphrase once per session with `ssh-add`;
-   `ssh-add -l` lists loaded keys. macOS: `UseKeychain yes` /
-   `AddKeysToAgent yes` in the config (Apple's OpenSSH only; one line);
-   Ubuntu desktop and WSL: start the agent (exact WSL lines *to
-   capture*; WSL has no agent by default). *Then install the public
+   `ssh-add -l` lists loaded keys. macOS: `AddKeysToAgent yes` /
+   `UseKeychain yes` in a `Host *` block at the end (Apple's OpenSSH
+   only): the first login asks for the passphrase once, loads the key
+   into the agent, and Keychain remembers it, so no `ssh-add` is needed
+   (*observed*). WSL has no agent in a new terminal (`SSH_AUTH_SOCK=[]`,
+   `Could not open a connection to your authentication agent.`);
+   `eval "$(ssh-agent -s)"` starts one (`Agent pid …`), then `ssh-add`
+   (*captured*); with OpenSSH 10.x, starting the agent itself creates
+   `~/.ssh/` (`700`) and `~/.ssh/agent/` for its socket, so the text
+   never says "you have no `~/.ssh` yet". *Then install the public
    key, by site* (`tbl-site-login`):
    - **Nova:** ISU documents key login as an alternative to the
      authenticator code: "Public key authentication does not use TOTP
@@ -292,8 +331,21 @@ are recognition only until Chapter 10 teaches allocations.
      ~/.ssh/id_ed25519.pub <netid>@nova-login-1.its.iastate.edu`, and
      key logins go to a **named** login node (`nova-login-1` or
      `nova-login-2`), because `nova.its.iastate.edu` "is not a single
-     server". Whether the ISU password is still asked after the key is
-     not stated: *to capture*.
+     server". *Captured* 2026-11-22/23 (on the ISU VPN from home):
+     `ssh-copy-id` asks for the code and password once and ends
+     `Number of key(s) added: 1`; afterwards a login asks **only the
+     key passphrase**, no code and no ISU password (`ssh -v`: `Server
+     accepts key`, `Authenticated … using "publickey"`). The key
+     worked on `nova-login-1`, `nova-login-2`, `novadtn`, and the
+     round-robin name; the book still uses the named node (§5). With
+     the key loaded, rsync to `nova-dtn` asks nothing, which also
+     removes the problem below. Why keys matter so much on Nova: the
+     authenticator code cannot be reused, so two connections within
+     the same 30-second window fail on the second and ask again
+     (*observed*: about two code-and-password rounds per connection
+     when commands ran back to back; `There were 6 failed login
+     attempts …` greets the next login, and the text says not to
+     worry about it).
    - **SCINet:** use SCINet's documented certificate route (the `step`
      setup from Chapter 2, valid "once for the day (or every 16
      hours)") and skip manual `ssh-copy-id` here; SCINet's SSH page
@@ -320,9 +372,15 @@ are recognition only until Chapter 10 teaches allocations.
      already supported in Chapter 2. A short note links SCINet's
      Windows `step` setup for readers with admin rights who want VS
      Code Remote-SSH from Windows.
-   Agent behaviour is not promised as "one passphrase per session" on
-   both clients until the WSL agent lines and the Windows service steps
-   are captured. [`fig-ssh-key-login`
+   *Captured* on Windows 11: `OpenSSH_for_Windows_9.5p2`, at
+   `C:\WINDOWS\System32\OpenSSH\ssh.exe`; the `ssh-agent` service is
+   `Stopped` / `Disabled`, so only an administrator can turn it on.
+   That supports OnDemand-first for SCINet and means "one passphrase
+   per session" is promised for macOS and WSL only. A Windows home
+   folder can contain a space (`C:\Users\<name with a space>`), which breaks
+   unquoted paths in ssh options (`keyword controlpath extra arguments
+   at end of line`); one tip says to quote such paths.
+   [`fig-ssh-key-login`
    (stepped), `tbl-site-login`; key idea; misconception
    `public-key-is-secret`; pitfall: never share the private key;
    self-check]
@@ -341,27 +399,41 @@ are recognition only until Chapter 10 teaches allocations.
    `~/bioinf-computing-ch09/sample-config` and use `ssh -F
    sample-config -G …`. The book's Nova block, built one option at a
    time (each one-line explanation; Appendix A holds the final per-site
-   versions):
+   versions). First change from Chapter 2: its `HostName
+   nova.its.iastate.edu` becomes the named node `nova-login-1`, because
+   key logins (§3) and tmux sessions (§5) need one fixed login node.
 
    ```default
    Host nova
        HostName nova-login-1.its.iastate.edu
-       IdentityFile ~/.ssh/id_ed25519
 
    Host nova-dtn
        HostName novadtn.its.iastate.edu
 
    Host nova nova-dtn
        User <netid>
+       IdentityFile ~/.ssh/id_ed25519
+       IdentitiesOnly yes
        ServerAliveInterval 60
        ControlMaster auto
-       ControlPath ~/.ssh/cm-%r@%h:%p
+       ControlPath ~/.ssh/cm-%C
        ControlPersist 10h
    ```
 
+   - `IdentitiesOnly yes`: offer only this key. Without it ssh offers
+     every key in the agent (GitHub, SCINet certificate, …) first
+     (*observed* in `ssh -v`), and servers stop after a few wrong
+     keys.
+   - `ControlPath ~/.ssh/cm-%C`: `%C` is a fixed-length hash of user,
+     host, and port. The longer `cm-%r@%h:%p` form failed on macOS
+     when the folder path was long: `unix_listener: path "…" too long
+     for Unix domain socket` (*captured*; the limit is about 104
+     characters including a 17-character temporary suffix).
+     OpenSSH's manual recommends `%C`.
+
    - The shared defaults block comes **after** the specific entries and
      names both aliases, so the login node and the DTN each get the
-     same user, keep-alive, and sharing settings.
+     same user, key, keep-alive, and sharing settings.
    - `ServerAliveInterval 60`: sends a small probe every 60 s, which
      can stop an idle connection being dropped by a firewall or VPN
      (ISU FAQ recommends it); it cannot bring back a VPN or network
@@ -376,11 +448,22 @@ are recognition only until Chapter 10 teaches allocations.
      using it closes** (an idle timeout, not a guaranteed 10-hour
      sign-in); the site or the network can still end it sooner. ISU's
      FAQ recommends sharing for exactly "having to authenticate so
-     often". Check with `ssh -O check nova` and `ssh -O check
+     often". *Captured* on Nova: the login node took one sign-in, a
+     second `ssh` asked nothing, `ssh -O check` printed `Master
+     running (pid=…)`; the DTN needed its own sign-in, then `rsync` and
+     `scp` through it asked nothing. With a key and the agent, sharing
+     matters much less; the text presents it as the route for readers
+     who sign in with a code (or a site without keys). Check with `ssh -O check nova` and `ssh -O check
      nova-dtn`; close with `ssh -O exit <alias>`; `ssh -G nova-dtn |
      grep '^control'` confirms the DTN picked up the settings. Caution
      in one line: anyone with your laptop account can use the open
-     connection while it lasts.
+     connection while it lasts. **Windows:** connection sharing works
+     in the Ubuntu (WSL) terminal, but Windows' own OpenSSH does not
+     support `ControlMaster` (it relies on Unix sockets), so the three
+     sharing lines go only in the WSL config, never in
+     `C:\Users\<you>\.ssh\config`, where they break the connection:
+     `getsockname failed: Not a socket`, `Read from remote host …:
+     Unknown error`, no login (*captured*, OpenSSH for Windows 9.5p2).
    - For most options, the first value found wins in `~/.ssh/config`
      (ssh reads every matching block), so specific `Host` blocks go
      above shared and `Host *` blocks (same "first match" idea as
@@ -402,13 +485,27 @@ are recognition only until Chapter 10 teaches allocations.
    acquire → connect → release recipe (`salloc … sleep infinity`, the
    `Host` block, `scancel`) is taught in Chapter 10, linked from here;
    Appendix A keeps only the per-site config block (ISU's "Launching
-   remote IDEs on Nova's compute nodes") and links to Chapter 10. Host-key checking stays on in this generic example. ISU's own
+   remote IDEs on Nova's compute nodes") and links to Chapter 10.
+   Host-key checking stays on in this generic example. ISU's own
    recipe adds `ForwardAgent yes` and `StrictHostKeyChecking no` (its
    block uses `ProxyJump nova-login`, an alias for
    `nova-login-2.its.iastate.edu`); those are site choices, not part of
-   a two-hop connection, and are explained beside that site recipe,
-   only for that compute-node entry, never in `Host *`.
-   SCINet: `step` writes its own `Include` block; do not edit it. If
+   a two-hop connection, and are explained beside that site recipe
+   in Chapter 10's §5, only for that compute-node entry, never in
+   `Host *`.
+   SCINet: `step` writes its own `Include` block; do not edit it.
+   What it contains (*captured*, exercise 3 asks readers to look):
+   `Match exec "step ssh check-host %h"` (only SCINet hosts), `User
+   <scinet.user>`, `UserKnownHostsFile ~/.step/ssh/known_hosts` (an
+   `@cert-authority` line: trust host certificates SCINet signs), and
+   `ProxyCommand step ssh proxycommand --provisioner keycloak %r %h
+   %p`, which fetches a new certificate (the browser sign-in) when the
+   old one has expired. This is the chapter's real example of a
+   `ProxyCommand`. Two visible side effects: `atlas-dtn` prints
+   `Certificate invalid: name is not a listed principal` on every
+   connection and asks one ordinary host-key question (its host
+   certificate does not list that name; harmless; reported to SCINet),
+   while `atlas-login-1`/`-2` and Ceres ask nothing. If
    readers want short names, they add their own aliases above it:
    `ceres-dtn` → `ceres-dtn.scinet.usda.gov`, `atlas-dtn` →
    `atlas-dtn.hpc.msstate.edu` (and login aliases for
@@ -425,9 +522,15 @@ are recognition only until Chapter 10 teaches allocations.
    `bash ticker.sh`), detach with {{< kbd Ctrl-B >}}
    then {{< kbd D >}}, close the terminal window, open a new one,
    `tmux ls` (`ch09: 1 windows …`), `tmux attach -t ch09`: still
-   running. Then the same ticker on the login node, with Wi-Fi turned
-   off for a minute instead of closing the window (*to capture* on
-   Nova). *Then name it* with `fig-tmux-detach` (stepped): the tmux
+   running (*captured* on the Mac: `[detached (from session ch09)]`,
+   `ch09: 1 windows (created …)`, no gap in the times). Then the same
+   ticker on the login node, with Wi-Fi turned off for a minute instead
+   of closing the window (*captured* on Nova and Atlas: the frozen
+   terminal ends with `Connection to <host> closed by remote host.`,
+   `Connection to <host> closed.`, `client_loop: send disconnect:
+   Broken pipe`; after reattaching, the ticker had no gap). tmux's
+   green status bar shows the node's name (`"nova-login-1"`), a free
+   reminder of where the session lives. *Then name it* with `fig-tmux-detach` (stepped): the tmux
    **server** runs on the machine where you started it and owns the
    shell; your terminal is only a **client** attached to it; a dropped
    connection kills the client, not the server. *Then where it lives:*
@@ -435,13 +538,19 @@ are recognition only until Chapter 10 teaches allocations.
    either at random (ISU FAQ), so a session started on `nova-login-1`
    is invisible from `nova-login-2`. Habit: run `hostname` before
    detaching and put that node in `HostName` (as in §4's block).
-   SCINet's SSH page names `atlas-login-1.hpc.msstate.edu` and
-   `atlas-login-2.hpc.msstate.edu` (in its host-key notes) beside the
-   general `atlas-login.hpc.msstate.edu`, and only
-   `ceres.scinet.usda.gov` for Ceres; it says nothing about tmux. These
-   are documented leads, not proof of routing (*to check* on Ceres and
-   Atlas: is tmux installed, can a named login node be reached
-   directly, `hostname` across several logins, does a session persist).
+   *Observed* routing (what we saw, not a count of nodes): Nova's
+   round-robin name is one public address, and logins landed on
+   `-1`/`-2` at random; Atlas's `atlas-login` is two DNS addresses
+   (`-1`, `-2`), and both named nodes accept direct logins with no
+   extra prompt; Ceres's name is one address and landed on
+   `ceres-login-1`. On the wrong node, tmux 3.2a says `error
+   connecting to /tmp/tmux-<uid>/default (No such file or directory)`
+   if tmux never ran there, or `no server running on
+   /tmp/tmux-<uid>/default` once a session has ended; newer versions
+   word it `no server running on …`. Both mean "no session here".
+   Installed (*captured*): Nova tmux 3.2a only (no screen, no module);
+   Atlas tmux 3.2a, module `tmux/3.5a`, no screen; Ceres tmux 3.2a,
+   module `tmux/3.3a`, and `screen`.
    *Then the limits:* tmux on a login node is still the login node:
    editing, short commands, the ticker; heavy work goes to a job
    (Chapter 10), which survives without tmux. Laptop transfers are not
@@ -452,7 +561,12 @@ are recognition only until Chapter 10 teaches allocations.
    disconnects only while its server lives: a node reboot
    (maintenance), the session being killed, or site cleanup of
    long-idle processes still ends it (this sets up Chapter 10's
-   difference between a persistent shell and an allocation). A
+   difference between a persistent shell and an allocation; Nova's
+   login banner announcing the next maintenance date is a real
+   example). Scrolling: the mouse wheel does **not** scroll tmux by
+   default; in iTerm2 it sends arrow keys, which step through shell
+   history at a prompt and type `^[[A^[[B…` into a running program
+   (*captured* on Nova); use `Ctrl-B [`. A
    handful of keys only (`tbl-tmux-keys`):
    new, detach, list, attach, kill, scroll (`Ctrl-B [` then `q`), new
    window and switch, split (one row each). `screen` in one row of the
@@ -479,16 +593,26 @@ are recognition only until Chapter 10 teaches allocations.
    destination folder (`ssh nova 'mkdir -p …'`, as in the check): rsync
    makes only the last folder of a destination path, not missing
    parents (*captured*: exit 11). `-a` keeps times and, on a plain
-   destination, permissions (shown locally). Destinations can have
-   their own rules: SCINet's `/project` folders rely on the project
-   group and setgid directories, and SCINet's documented command is
-   `rsync -avz --no-p --no-g` (do not copy laptop permission bits or
-   group); the book follows each site's documented variant in its
-   note and does not promise identical permission bits everywhere.
+   destination, permissions (shown locally). **Project folders need
+   `--no-p --no-g`** (*Decisions* 18): they are group folders with the
+   setgid bit (`drwxrws---` on SCINet, `drwxrwsr-x` on Nova), so new
+   files should get the project's group. *Captured* on all three:
+   plain `-av` gives the copied files the reader's **personal** group
+   (`domain users` on Nova, the user's own group on SCINet), and on
+   Nova also clears the folder's setgid bit; `--no-p --no-g` keeps the
+   project group and the setgid bit and uses the site's default modes
+   (`-rw-r-----` on SCINet). This is SCINet's documented command
+   (`rsync -avz --no-p --no-g`), and the book uses it for every site.
+   Times: kept on Atlas and Ceres, so a second run sends nothing; not
+   kept through Nova's `novadtn` (files get the copy time, so every
+   run re-checks all files; correct, just slower; plain `-av` and a
+   copy to the login node do keep them; cause unknown, asked ISU, one
+   sentence in the text, revisit when ISU replies).
    Two separate steps: *bytes verified* (`md5sum -c`, §7), then
    *permissions set on purpose for this destination* (for example,
    protecting `data/raw/` with `chmod a-w` after verification, in the
-   reader's own folder, keeping the group's read access). `-v`,
+   reader's own folder, keeping the group's read access; *captured* on
+   Atlas: `dr-xr-s---` and `-r--r-----`, group still `proj-…`). `-v`,
    `--progress` or `-P` (resume a broken large copy with `--partial`,
    part of `-P`); `-n` before any copy you are unsure of. `--delete` is
    mentioned only in a pitfall:
@@ -508,7 +632,13 @@ are recognition only until Chapter 10 teaches allocations.
    with `rsync --version` and `type -a rsync` (Chapter 7). *Then the DTN rule*
    again, now with the reason seen from the inside: the login node is
    shared, the DTN is built for transfers on the same storage, so the
-   files appear in the same `/work` or `/project` folder. *Then Globus
+   files appear in the same `/work` or `/project` folder. One line on
+   when a DTN misbehaves: a transfer that fails with `connection
+   unexpectedly closed` / code 255 right after signing in is worth one
+   retry; if it keeps happening, tell the site (*observed*:
+   `atlas-dtn-1` accepted the certificate and then closed every
+   connection, 5 of 6 tries via the shared name, while `atlas-dtn-2`
+   and `ceres-dtn` worked every time; reported to SCINet). *Then Globus
    (overview; optional exercise 6):* for large or many files, or
    cluster-to-cluster (Ceres ↔ Atlas), use the site's Globus collection
    (SCINet "SCINet-Ceres", "SCINet-Atlas", "SCINet-Juno"; Nova "Nova
@@ -545,14 +675,29 @@ are recognition only until Chapter 10 teaches allocations.
    (Chapter 3's three steps, now with commands, plus the reference data
    that lives outside the project):
    1. **Files.** `ssh nova 'mkdir -p /work/<group>/<netid>/bioinf-computing'`,
-      then `rsync -avn` and `rsync -av --exclude .pixi
-      ~/bioinf-computing/ nova-dtn:/work/<group>/<netid>/bioinf-computing/`
-      (the environment is reinstalled, not copied: it is large,
+      then `rsync -avn` and `rsync -av --no-p --no-g --exclude .pixi
+      --exclude results --exclude logs ~/bioinf-computing/
+      nova-dtn:/work/<group>/<netid>/bioinf-computing/` (the
+      environment is reinstalled, not copied: it is large,
       platform-specific, and full of small files that count against
-      the inode quota of Chapter 10); `md5sum -c` on `data/raw` on the
-      cluster.
-   2. **Environment.** `pixi install --locked` on the cluster (pixi
-      cache location from Chapter 2).
+      the inode quota of Chapter 10; `results/` and `logs/` are left
+      behind so step 4 must make them itself); `md5sum -c` on
+      `data/raw` on the cluster. The `.git/` folder from Chapter 8 comes along, so the
+      cluster copy has the same history; Chapter 22 shows the usual
+      route instead (push to GitHub, clone on the cluster), and from
+      then on the project moves that way while data still moves with
+      rsync.
+   2. **Environment.** `pixi install --locked` on the cluster login
+      node, in the copied project (pixi itself and `PIXI_CACHE_DIR`
+      in the work/project folder were set up in Chapter 2; this is
+      light enough for a login node, as Chapter 2 already did).
+      *Captured* reinstall times from the existing cache: Atlas 18 s,
+      Ceres 48 s, but **Nova 25–41 minutes** (twice; first install
+      into the empty cache 10 s; a fresh cache on local `/tmp` 7 s).
+      The text keeps the `PIXI_CACHE_DIR` advice and adds one Nova
+      note: a reinstall can take half an hour; start it and wait, or
+      run it in an interactive job (Chapter 10) (*Decisions* 19; asked
+      ISU; revisit when they reply).
    3. **Reference data, then the link.** `rsync -a` copies the
       `data/ref` symlink as a link, not the files it points to: the
       Chapter 3 reference lives outside the project, in
@@ -573,18 +718,28 @@ are recognition only until Chapter 10 teaches allocations.
       link with Chapter 3's rule: `ls -l data/ref` (inspect),
       `unlink data/ref` (no trailing slash), `ln -s <cluster reference
       folder> data/ref`, `ls data/ref/` (the four files). A plain
-      `ln -s` over the existing link does not reliably replace it.
-   4. **Prove it runs.** `pixi run bash src/run_all.sh` (Chapter 8) in
-      the cluster copy, then compare its outputs with the laptop's
-      (the same summary lines). Raw-read checksums and a successful
+      `ln -s` over the existing link fails: `ln: failed to create
+      symbolic link 'data/ref': File exists`, status 1, link unchanged
+      (*captured* on Nova); and if the old link pointed at a folder
+      that does exist, plain `ln -s` would quietly put the new link
+      *inside* it.
+   4. **Prove it runs.** `pixi run bash src/run_all.sh; echo $?` (Chapter 8) in
+      the cluster copy: status `0`, then compare its outputs with the
+      laptop's (`md5sum results/*.tsv`; *captured*: identical on Nova
+      and Atlas). Check the exit status, not only the files: on Atlas
+      the reference copy had failed, `02` stopped with `ERROR: missing
+      or empty: data/ref/genes.gtf.gz`, yet the **stale `results/`
+      copied from the laptop** still matched. That is why step 1 leaves
+      `results/` and `logs/` behind. Raw-read checksums and a successful
       install alone do not prove the link or the pipeline work; the
       move is done only when destination, both checksum checks, the
       new link, the locked environment, and the pipeline all pass.
    [`tbl-move-project`; self-check]
 8. **Summary and exercises.** Summary bullets; links forward to Chapter
-   10 (holding a compute node; storage tiers and quotas; jobs survive
-   without tmux), Chapter 20 (downloads from the internet), Chapter 22
-   (SSH keys on GitHub), Appendix A (per-site recipes).
+   10 (holding a compute node and connecting to it with `ProxyJump`;
+   storage tiers and quotas; jobs survive without tmux), Chapter 20
+   (downloads from the internet), Chapter 22 (SSH keys on GitHub;
+   moving code by clone), Appendix A (per-site recipes).
 
 ## Visuals and teaching aids
 
@@ -607,7 +762,7 @@ machines neutral (`ink`, `line`, `muted`). Reuse shapes from
 | `fig-three-machines` | 1 | static | Laptop, login node, DTN, compute nodes, shared storage. Arrows: laptop → login node "ssh: log in, edit, submit"; laptop → DTN "rsync, scp: connection started here", with a double-headed data arrow beside it ("files go both ways"); login → compute "jobs (Chapter 10)"; login and DTN both on the same storage. A small note at the laptop: "behind a firewall: usually cannot accept incoming SSH", not a crossed-out arrow. Globus is named in a caption line, not drawn as an SSH arrow. |
 | `fig-ssh-key-login` | 3 | stepped (5 steps) | (1) `ssh-keygen` makes a pair on the laptop: private key locked by the passphrase, public key; (2) the public key is copied once to `~/.ssh/authorized_keys` on the cluster (a password login); (3) at login the server sends a challenge; (4) the laptop signs it with the private key (the agent holds it unlocked), the server checks with the public key; (5) logged in. The private key never crosses the boundary line. SCINet note on the last frame: "`step` gives you a certificate for the day instead". |
 | `fig-proxyjump` | 4 | static | Laptop → login node → compute node labelled `<allocated-node>` ("a node in your own allocation, Chapter 10"); one ssh command at the top (`ssh -J nova <allocated-node>`), the minimal config form underneath; a dashed `warn` line laptop → compute node "not reachable directly". Recognition figure, no live run. |
-| `fig-tmux-detach` | 5 | stepped (4 steps) | (1) laptop terminal attached to a tmux session on `nova-login-1`, a command (the ticker) running inside; (2) connection drops: client gone, session and command keep running; (3) reconnect lands on `nova-login-2`: `tmux ls` finds nothing (`warn`); (4) `ssh nova-login-1`, `tmux attach -t ch09`: back. Caption: survives disconnects, not reboots or session cleanup. "Command"/"process", never "job" (no scheduler job is involved). |
+| `fig-tmux-detach` | 5 | stepped (4 steps) | (1) laptop terminal attached to a tmux session on `nova-login-1`, a command (the ticker) running inside; (2) connection drops: client gone, session and command keep running; (3) reconnect lands on `nova-login-2`: `tmux ls` finds nothing (`warn`; the captured `error connecting to /tmp/tmux-<uid>/default (No such file or directory)`); (4) `ssh nova-login-1`, `tmux attach -t ch09`: back. Caption: survives disconnects, not reboots or session cleanup. "Command"/"process", never "job" (no scheduler job is involved). |
 | `fig-rsync-slash` | 6 | static | Two panels from the captured trees: `rsync -a src dst1` → `dst1/src/a.txt …`; `rsync -a src/ dst2` → `dst2/a.txt …`; the slash highlighted. Below, a small strip: second run sends only `c.txt`. |
 
 Not used: Mermaid (the transfer decision is a table); screenshots of
@@ -618,18 +773,18 @@ Globus (described in text, with a link to the site's own guide).
 - None in the first draft. Candidate if testers stumble on the slash
   rule: two toggles (slash on source, slash on destination) and the
   resulting tree. The destination slash makes no difference for an
-  existing folder, which is itself a lesson (*to capture* both cases
-  before building).
+  existing folder or a new one, which is itself a lesson (*captured*:
+  `src2/ e1` and `src2/ e2/` give the same tree).
 
 ### Tables (§5)
 
 | Label | Section | Columns |
 |:------|:-------:|:--------|
 | `tbl-site-login` | 3 | Site · how you prove who you are · keys? · host for key logins · VPN · Windows/WSL note · prompts per day — rows Nova (code + password, or key + passphrase on VPN; `nova-login-1/2`; one key per client), SCINet (`step` certificate, 16 h; documented route is the certificate, skip `ssh-copy-id`; Windows needs the `ssh-agent` service, or use OnDemand), "your site" (check its page) |
-| `tbl-ssh-config-options` | 4 | Option · what it does · example value · when you need it — `Host`, `HostName`, `User`, `IdentityFile`, `ServerAliveInterval` (probes; cannot restore a failed network), `ControlMaster`/`ControlPath`/`ControlPersist` (one master per host; idle timeout), `ProxyJump` (recognition; Chapter 10), `ForwardAgent` and `StrictHostKeyChecking` (site recipes only, never `Host *`), `Include`, `AddKeysToAgent`/`UseKeychain` (macOS) |
-| `tbl-tmux-keys` | 5 | Task · tmux · screen — new named session, detach, list, attach, kill, scroll back, new window / next window, split |
-| `tbl-transfer-tools` | 6 | Tool · best for · resumes? · runs where · site notes — `rsync` (SCINet: `-avz --no-p --no-g`), `scp` (one file; SCINet: not `scp -r` into `/project`), `sftp`/Cyberduck, FileZilla (Nova only; one connection), Globus (managed transfer; retries failures itself), Open OnDemand file manager (small files), Rclone (cloud storage; one row, linked) |
-| `tbl-move-project` | 7 | Part of the project · copy it? · how · why — scripts, docs, `pixi.toml`/`pixi.lock` (copy); `data/raw/` (copy + `md5sum -c`); `.pixi/` (no: reinstall with `pixi install --locked`); reference folder outside the project (copy through the DTN, or use a site/lab copy after checking its checksums; `md5sum -c` both files); `data/ref` link (arrives dangling: `unlink`, then `ln -s` to the cluster copy); `results/` (regenerate with `pixi run bash src/run_all.sh` and compare) |
+| `tbl-ssh-config-options` | 4 | Option · what it does · example value · when you need it — `Host`, `HostName`, `User`, `IdentityFile`, `ServerAliveInterval` (probes; cannot restore a failed network), `ControlMaster`/`ControlPath`/`ControlPersist` (one master per host; idle timeout; not in Windows' own OpenSSH), `ProxyJump` (recognition; Chapter 10), `ForwardAgent` and `StrictHostKeyChecking` (site recipes only, never `Host *`), `Include`, `AddKeysToAgent`/`UseKeychain` (macOS) |
+| `tbl-tmux-keys` | 5 | Task · tmux · screen — new named session, detach, list, attach, kill, scroll back (`Ctrl-B [`; the mouse wheel does not scroll by default), new window / next window, split; a last row "on our clusters": Nova tmux only, Atlas tmux (+ module 3.5a), Ceres tmux (+ module 3.3a) and screen |
+| `tbl-transfer-tools` | 6 | Tool · best for · resumes? · runs where · site notes — `rsync` (project folders: `-av --no-p --no-g`; SCINet adds `-z`), `scp` (one file; SCINet: not `scp -r` into `/project`), `sftp`/Cyberduck, FileZilla (Nova only; one connection), Globus (managed transfer; retries failures itself), Open OnDemand file manager (small files), Rclone (cloud storage; one row, linked) |
+| `tbl-move-project` | 7 | Part of the project · copy it? · how · why — scripts, docs, `pixi.toml`/`pixi.lock` (copy); `data/raw/` (copy + `md5sum -c`); `.pixi/` (no: reinstall with `pixi install --locked`); reference folder outside the project (copy through the DTN, or use a site/lab copy after checking its checksums; `md5sum -c` both files); `data/ref` link (arrives dangling: `unlink`, then `ln -s` to the cluster copy); `.git/` (copied; Chapter 22 replaces this with clone); `results/`, `logs/` (regenerate with `pixi run bash src/run_all.sh` and compare) |
 
 ### Code (§6)
 
@@ -689,7 +844,7 @@ section:
   how do you check? (*`guest`: for most options the first value found
   wins. `ssh -G nova | grep '^user '`. Move `Host *` to the end.*)
 - §5: You detached from tmux on Nova yesterday; today `tmux ls` says
-  `no server running`. Two possible reasons? (*You landed on the other
+  `no server running` (or `error connecting to …`). Two possible reasons? (*You landed on the other
   login node, or the session ended (node reboot, or the site cleaned it
   up). Check `hostname`; try the other node.*)
 - §6: You run `rsync -a results nova-dtn:/work/<group>/<netid>/results`.
@@ -735,11 +890,13 @@ material; each says whether it needs a cluster):
    session at the end (`tmux kill-session -t ch09`).
 5. **Move the project (cluster; the check).** Make the destination,
    dry-run, then copy `~/bioinf-computing` to your cluster folder
-   through the DTN without `.pixi/`; verify `data/raw` with `md5sum -c`
+   through the DTN with `--no-p --no-g` and without `.pixi/`,
+   `results/`, and `logs/`; verify `data/raw` with `md5sum -c`
    on the cluster; copy (or identify and check) the reference folder
    and verify both reference files; replace `data/ref` (`ls -l`,
-   `unlink`, `ln -s`, `ls data/ref/`); run `pixi install --locked`;
-   run `pixi run bash src/run_all.sh` and compare its output with the
+   `unlink`, `ln -s`, `ls data/ref/`); run `pixi install --locked`
+   (Nova: allow half an hour); run `pixi run bash src/run_all.sh`,
+   check that it exits `0`, and compare `md5sum results/*.tsv` with the
    laptop's. No-cluster readers: copy into
    `~/bioinf-computing-ch09/fake-cluster/`, where a link back to the
    laptop's reference would still resolve and hide the problem. So in
@@ -811,25 +968,29 @@ material; each says whether it needs a cluster):
     box, `Permissions 0644 for 'id_ed25519' are too open.`, `This
     private key will be ignored.`, `Load key "id_ed25519": bad
     permissions`.
-- To capture (Ubuntu/WSL and clusters; the step-by-step list is
-  `chapter_09_checks.md`): the passphrase prompts; WSL
-  `ssh-agent` start lines; `ssh-copy-id` to `nova-login-1` and whether
-  the password is still asked; `ControlMaster` prompt counts;
-  `REMOTE HOST IDENTIFICATION HAS CHANGED` text (from a deliberately
-  edited `known_hosts` entry on a test host, not a real site); `ssh
-  nova true | wc -c` with ssh's exit status, and rsync's error when a
-  startup file prints; double vs single quotes over ssh; tmux on Nova,
-  Ceres, Atlas (version, `tmux ls` after a dropped connection,
-  observed login-node routing vs documented node names); rsync version
-  on each cluster and DTN (and whether `--mkpath` exists); a real
-  `mkdir -p` + `rsync -avn` + `rsync -av` to each DTN and `md5sum -c`
-  on the cluster; on SCINet, the group and permissions after `rsync
-  -avz --no-p --no-g` into `/project`; `ssh -O check` for both the
-  login and DTN aliases; `rsync -a` of the `data/ref` symlink, the
-  reference copy with its `md5sum -c`, the link replacement, and
-  `pixi run bash src/run_all.sh` on the cluster; Windows `step` with
-  the `ssh-agent` service; Ubuntu's rsync version; whether rsync,
-  tmux, and openssh are in conda-forge for all three platforms.
+- Captured 2026-11-22/23 on WSL, Windows, Nova, Atlas, and Ceres (all
+  results in the results table of `chapter_09_checks.md`, quoted in
+  the sections above): passphrase prompts; WSL agent lines and
+  `~/.ssh/agent/`; Windows ssh version, agent service, and the
+  `ControlMaster` error; Nova key login, `ssh-copy-id`, keys on all
+  four names; prompt counts with and without sharing; the host-key
+  warning (fake `known_hosts`) and the "known by other names" prompt;
+  `ssh host true | wc -c` (0 on all three) with status; quotes and
+  exit status over ssh; tmux versions, drop messages, `tmux ls`
+  wordings, observed routing, direct logins; rsync versions and
+  `--mkpath`; `mkdir -p` + dry run + copy + `md5sum -c` on all three;
+  group, mode, and time after `-av` vs `--no-p --no-g` on all three;
+  `chmod a-w` keeping group read (Atlas); dangling link, `ln -s`
+  "File exists", reference copy and replacement, `run_all.sh`
+  matching the laptop (Nova, Atlas); `pixi install` reuse times;
+  `step`'s config; the `atlas-dtn` principal warning and the
+  `atlas-dtn-1` failures.
+- Still to capture (small): Globus web app's current verification
+  default (exercise 6; skipped for now); Windows `step` with the
+  agent service turned on by an administrator (optional); whether a
+  detached tmux session survives overnight; whether rsync, tmux, and
+  openssh are in conda-forge for all three platforms; ISU's answers
+  (novadtn times, pixi cache on `/work`) and SCINet's (`atlas-dtn-1`).
 - Where commands run: laptop for every connection and transfer; login
   node inside SSH and tmux; DTN only as a transfer target (no
   interactive work there).
@@ -869,7 +1030,9 @@ add `09-working-remotely` to `checksum-proves-correct`.
 ## Links to other chapters and books
 
 - Builds on: Chapters 1–7 (see *What this chapter builds on*); Chapter
-  8 (planned) only for typing commands at the prompt vs scripts.
+  8 (planned) for scripts recognised but not written here, its
+  `src/run_all.sh` (run unchanged after the move), and its `.git/`
+  (copied with the project).
 - Leads to: Chapter 10 (holding a compute node with `salloc`/`srun`;
   storage tiers, quotas, inode limits and why `.pixi` is not copied;
   jobs survive without tmux; the full acquire → `ProxyJump` → `scancel`
@@ -1000,7 +1163,7 @@ so.
    node, minimal block with host-key checking on; ISU's
    `ForwardAgent`/`StrictHostKeyChecking` explained beside its own
    recipe; acquire/connect/release together in Chapter 10 or Appendix
-   A.
+   A (settled by 11: Chapter 10).
 6. **Authentication per client.** Refines 2026-11-19 decision 3: one
    key per side still holds for Nova-like sites; for SCINet each
    client needs its own `step` setup (Windows: the `ssh-agent`
@@ -1032,7 +1195,11 @@ round):
     at a broken rsync stream.
 11. **ProxyJump recipe in Chapter 10.** Acquire → connect → release is
     taught in Chapter 10; Appendix A keeps only the per-site config
-    block and links there. Chapter 10's plan must include it.
+    block and links there. Done: `chapter_10.md` §5 now has the
+    four-step block (acquire → find → connect → release), a
+    self-check, and check 16. When Appendix A is next revised, its
+    "Remote-SSH to a compute node" row should link Chapter 10 §5 as
+    well as this chapter.
 12. **Windows SCINet readers: OnDemand first.** The Windows `step` +
     `ssh-agent` service setup is a short linked note for readers with
     admin rights.
@@ -1045,20 +1212,77 @@ The companion `chapter_09_checks.md` was updated the same day to match
 nodes, dated backups, SCINet `--no-p --no-g` and permissions record,
 Block E's `bash -c` test removed, new 3.7/4.5 whole-project move).
 
+Final review (2026-11-22), small fixes, no change of direction:
+
+14. §4 says explicitly that Chapter 2's `HostName nova.its.iastate.edu`
+    becomes `nova-login-1`; `IdentityFile` moved into the shared block
+    so the DTN uses the same key.
+15. Windows' own OpenSSH has no `ControlMaster`: the sharing lines go in
+    the WSL config only (Windows error captured 2026-11-23: `getsockname
+    failed: Not a socket`).
+16. The project move notes that Chapter 8's `.git/` is copied and that
+    Chapter 22 replaces copying code with clone; `logs/` joins
+    `results/` as regenerated; `pixi install` runs on the login node as
+    in Chapter 2.
+17. §1's no-cluster list now names the §2 demo and exercise 5's toy
+    copy; the fake wrapper needs `chmod u+x`; links and summary point
+    to Chapter 10's `ProxyJump` route.
+
+## Decisions (2026-11-23, after the hands-on checks)
+
+All checks in `chapter_09_checks.md` were run on 2026-11-22/23 (Mac,
+WSL, Windows, Nova, Atlas, Ceres; Globus skipped). The sections above
+now quote the results; what they changed:
+
+18. **One rsync recipe for project folders: `rsync -av --no-p --no-g`**
+    (Austin). Plain `-av` gave files the personal group on all three
+    clusters (and cleared setgid on Nova); `--no-p --no-g` kept the
+    project group everywhere and kept times on Atlas and Ceres.
+    Through Nova's `novadtn` it loses times, so every re-run re-checks
+    all files; one sentence in the text until ISU replies. SCINet's
+    form adds `-z`. Plain `-a` stays for the local demonstrations.
+19. **Nova `pixi install`: a note, not a new recipe** (Austin). Keep
+    `PIXI_CACHE_DIR` in the work/project folder (Chapter 2, Appendix
+    A); add that a Nova reinstall from the cache took 25–41 minutes
+    (Atlas 18 s, Ceres 48 s), so start it and wait or use an
+    interactive job. Revisit when ISU replies.
+20. **The move leaves `results/` and `logs/` behind and checks
+    `run_all.sh`'s exit status**, after a stale copied result hid a
+    failed run on Atlas.
+21. **Config details from the checks:** `ControlPath ~/.ssh/cm-%C`
+    (the long form failed: socket path too long); `IdentitiesOnly
+    yes` in the shared block; sharing lines never in the Windows
+    config (captured error); keys presented as the main Nova route
+    (they remove the code-reuse double prompts), sharing as the route
+    for code users.
+22. **Smaller text points:** WSL needs no install; OpenSSH 10.x prompt
+    wording and `~/.ssh/agent/`; Windows agent service disabled and a
+    space in the home path; harmless banners on stderr; the "known by
+    other names" host-key prompt; both tmux "no session" wordings;
+    tmux's status bar shows the node; the mouse wheel does not scroll;
+    `step`'s config as the `ProxyCommand` example; the `atlas-dtn`
+    certificate warning; retry once, then tell the site, for code 255
+    right after sign-in.
+
+Reported to the sites (drafts in Austin's private notes, not sent yet):
+ISU (novadtn times; pixi cache on `/work`), SCINet (`atlas-dtn-1`
+closes connections after authentication; `atlas-dtn` certificate
+name). Austin's own Nova key login was set up during the checks.
+
+Also for other chapters: Chapter 8's `run_all.sh` log names come out
+literally `…_XXXX.log` (the X's are not at the end of the `mktemp`
+template); told the Chapter 8 session via Austin.
+
 ## Open questions
 
-All need a test on the cluster, not a decision.
+The first-round questions are answered by the checks (Nova keys:
+passphrase only, works on the DTN and all login names, VPN; SCINet:
+tmux present, named Atlas nodes reachable, routing observed, sessions
+survive a drop; SCINet permissions: project group and `-rw-r-----`,
+`chmod a-w` keeps group read). Left open, waiting on others:
 
-1. **Nova key logins in practice.** Test on Nova: after `ssh-copy-id`,
-   is the ISU password still asked; how many prompts do the login node
-   and DTN each give with the shared block (one master each); is
-   `novadtn` reachable with a key and on VPN only?
-2. **SCINet tmux and login nodes.** SCINet's SSH page names
-   `atlas-login-1/2.hpc.msstate.edu` but says nothing about tmux or
-   routing: check whether Ceres and Atlas have tmux (or only screen),
-   whether a named login node can be reached directly, which nodes
-   repeated logins land on (observed, not a total count), and whether a
-   detached session persists.
-3. **SCINet permissions after rsync.** After `rsync -avz --no-p --no-g`
-   into `/project`, what group and mode do files and folders get, and
-   does a later `chmod a-w` on `data/raw` keep group read access?
+1. **ISU:** why files copied through `novadtn` without `-g` get the
+   copy time, and why pixi's cache on `/work` is slow to reuse. If ISU
+   gives a fix, update §6, §7, and Appendix A.
+2. **SCINet:** `atlas-dtn-1` closing connections after sign-in. If it
+   is fixed, drop the "observed" note in §6 (the retry line stays).

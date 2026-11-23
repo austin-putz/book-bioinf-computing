@@ -1,7 +1,7 @@
 ---
 title: "Chapter 9: Hands-on checks for Austin"
 subtitle: "What to run on WSL, Nova, and SCINet (Atlas, Ceres), and a little on your Mac"
-date: 2026-11-22
+date: 2026-11-23
 ---
 
 These are the checks Chapter 9 (`chapter_09.md`) still needs from
@@ -168,6 +168,19 @@ OnDemand unless you want to test the admin route (optional: an admin
 PowerShell, `Set-Service ssh-agent -StartupType Automatic; Start-Service
 ssh-agent`, then SCINet's Windows `step` steps; record whether VS Code
 Remote-SSH then reaches Atlas).
+
+Then, still in PowerShell, whether Windows' ssh accepts connection
+sharing (options on the command line, so your config is untouched; any
+reachable host works, e.g. your Nova login):
+
+```powershell
+ssh -o ControlMaster=auto -o "ControlPath=$HOME\bioinf-computing-checks\cm-%r@%h-%p" -o ControlPersist=10m <netid>@nova-login-1.its.iastate.edu hostname
+```
+
+**Record:** the exact message (expected an error about Unix domain
+sockets or `getsockname failed`, or the option being ignored), and
+whether the login still worked. Decides the plan's "sharing lines in
+the WSL config only" note.
 
 Cleanup: `Remove-Item -Recurse $HOME\bioinf-computing-checks`.
 
@@ -602,38 +615,39 @@ Fill in, or paste outputs into the chat and I'll fill it in.
 
 | Check | Mac | WSL | Windows | Nova | Atlas | Ceres | Chapter 9 section it changes |
 |:------|:---:|:---:|:-------:|:----:|:-----:|:-----:|:-----------------------------|
-| tmux survives a closed window; detach line | | — | — | — | — | — | §5 |
-| Mouse scroll in tmux by default | | — | — | — | — | — | §5 `tbl-tmux-keys` |
-| rsync / tmux installed by default | done | | — | | | | §1 box, *Decisions* 2 |
-| Agent running in a new terminal | done | | | — | — | — | §3 |
-| Passphrase prompt wording | | | — | — | — | — | §3 |
-| Windows `ssh.exe` path, agent service state | — | — | | — | — | — | §3, *Decisions* 3 |
+| tmux survives a closed window; detach line | yes: `[detached (from session ch09)]`; `ch09: 1 windows (created Sun Nov 22 15:30:08 2026)`; ticker no gap | — | — | — | — | — | §5 |
+| Mouse scroll in tmux by default | no: wheel scrolls shell history (arrow-key history); `Ctrl-B [` + arrows works, counter shown | — | — | same: wheel sends arrow keys (`^[[A^[[B…` typed into the running ticker); use `Ctrl-B [` | — | — | §5 `tbl-tmux-keys` |
+| rsync / tmux installed by default | done | yes (Ubuntu 26.04.1): rsync 3.4.1, tmux 3.6, screen, OpenSSH_10.2p1 | — | | | | §1 box, *Decisions* 2 |
+| Agent running in a new terminal | done | no: `SSH_AUTH_SOCK=[]`, `Could not open a connection to your authentication agent.`, status 2; `eval "$(ssh-agent -s)"` → `Agent pid …`, `The agent has no identities.` ; starting the agent created `~/.ssh/` (700) and `~/.ssh/agent/` (OpenSSH 10.x socket folder) | | — | — | — | §3 |
+| Passphrase prompt wording | | OpenSSH 10.2: `Enter passphrase for "<file>" (empty for no passphrase):`, `Enter same passphrase again:`; mismatch → `Passphrases do not match.  Try again.` and asks again | — | — | — | — | §3 |
+| Windows `ssh.exe` path, agent service state | — | — | `OpenSSH_for_Windows_9.5p2, LibreSSL 3.8.2`; `C:\WINDOWS\System32\OpenSSH\ssh.exe`; ssh-agent `Stopped` / `Disabled`; `-N '""'` made a key with no prompt; home `C:\Users\<name with a space>` (space) | — | — | — | §3, *Decisions* 3 |
+| Windows ssh with `ControlMaster`: error or ignored | — | — | error, no login: `getsockname failed: Not a socket`, `Read from remote host nova-login-1…: Unknown error`; unquoted `ControlPath` under `$HOME` with a space → `command-line line 0: keyword controlpath extra arguments at end of line` | — | — | — | §4 |
 | Windows `step` with the agent service (optional) | — | — | | — | | | §3, *Decisions* 3 |
-| tmux / screen version (or module) | done | | — | | | | §5 |
-| rsync `--mkpath` available | done | | — | | | | §6 |
-| Addresses behind the names (`getent`); documented vs observed nodes | — | — | — | | | | §5 |
-| `ssh host true \| wc -c` = 0, ssh status 0 | — | — | — | | | | §2 |
-| Double vs single quotes over ssh | — | — | — | | | | §2 self-check |
-| Exit status comes back over ssh | — | — | — | | | | §2 |
-| Prompts per Block F run | — | — | — | | | | §3, §4 |
-| Missing destination parents: code 11 | done | — | — | | | | §6, the check |
-| rsync to DTN: dry run, real, second run resends nothing | — | — | — | | | | §6, the check |
-| `md5sum -c` on the cluster: two OK | — | — | — | | | | §7, the check |
-| Mode and group after rsync (`-av` / SCINet `--no-p --no-g`) | — | — | — | | | | §6, *Open questions* 3 |
-| `chmod a-w` keeps group read (SCINet) | — | — | — | — | | | §6, *Open questions* 3 |
-| Symlink arrives dangling | done | — | — | | | | §7 |
-| Reference copied, `md5sum -c` both files OK | — | — | — | | | | §7 |
-| Plain `ln -s` over a link fails; `unlink` + `ln -s` works | — | — | — | | | | §7 |
-| `pixi install --locked` time in the moved project | — | — | — | | | | §7 |
-| `run_all.sh` output matches the laptop | | — | — | | | | §7, exercise 5 |
-| Key login: passphrase only, or also password? | — | — | — | | — | — | §3, *Open questions* 1 |
-| Key works on `nova-login-2`, `novadtn`, round-robin name | — | — | — | | — | — | §3, §4 |
-| ControlMaster: second login silent; DTN asks once, then rsync silent | — | — | — | | | | §4 |
-| tmux on the other login node: `no server running` | — | — | — | | | | §5, `fig-tmux-detach` |
-| Direct login to a named login node (Atlas 1/2) | — | — | — | | | | §5 |
-| Detached session still there next visit | — | — | — | | | | §5 |
+| tmux / screen version (or module) | done | tmux 3.6, screen present | — | tmux 3.2a; no `screen`; no tmux module (nova-login-2, AlmaLinux 9.6) | tmux 3.2a; no `screen`; module `tmux/3.5a` (atlas-login-2, Rocky Linux 9.6) | tmux 3.2a; `screen` present (`/usr/bin/screen`); module `tmux/3.3a` (ceres-login-1, RHEL 9.8) | §5 |
+| rsync `--mkpath` available | done | yes (rsync 3.4.1 has it) | — | yes, rsync 3.2.5 (protocol 31) | yes, rsync 3.2.5 (protocol 31); OpenSSH_8.7p1 | yes, rsync 3.2.7 (protocol 31); OpenSSH_9.9p1 | §6 |
+| Addresses behind the names (`getent`); documented vs observed nodes | — | — | — | `nova` → one public address; `nova-login-1`/`-2` → private (campus/VPN-only) addresses; `novadtn` → one public address | `atlas-login` → two addresses (DNS round robin; one is login-1); `atlas-dtn` → two addresses; `/project` is NFS4 (`atlas-vast-c1:/atlas/project`); project folder `drwxrws--- root proj-<project>`, own folder `drwxr-s---` | `ceres` → one address, landed on `ceres-login-1`; `ceres-dtn` → one address; `/project` NFS4 (`vast-vip1…:/project`); project folder `drwxrws--T root proj-<project>`, own folder `drwxr-s---` | §5 |
+| `ssh host true \| wc -c` = 0, ssh status 0 | — | — | — | 0, ssh status 0 (custom `~/.bashrc` prints nothing to stdout) | 0, ssh status 0 (MSU notice banner goes to stderr, harmless) | 0, ssh status 0 | §2 |
+| Double vs single quotes over ssh | — | — | — | double: `/Users/<you>` (laptop); single: `/home/<netid>` | double: laptop home; single: `/home/<user>` | single: `/home/<user>` | §2 self-check |
+| Exit status comes back over ssh | — | — | — | `status 3` | `status 3` | `status 3` | §2 |
+| Prompts per Block F run | — | — | — | 13 connections (Mac, password + TOTP, no sharing): ~24 `Verification code:` + ~28 `Password:` + 3 `'s password:`; most connections asked code + password twice (just-used code refused? to confirm) | none (step certificate); one ECDSA host-key question for `atlas-dtn` because every DTN connection prints `Certificate invalid: name is not a listed principal` (host cert lacks that name) and falls back to known_hosts | none (step certificate); `ceres-dtn` 6/6 connections OK | §3, §4 |
+| Missing destination parents: code 11 | done | — | — | code 11: `mkdir … failed: No such file or directory (2)`, `main.c(780) [Receiver=3.2.5]` | code 11, `main.c(780) [Receiver=3.2.5]` | code 11, `main.c(806) [Receiver=3.2.7]` | §6, the check |
+| rsync to DTN: dry run, real, second run resends nothing | — | — | — | yes with plain `-av`: dry run lists 3 files + `(DRY RUN)`; second run lists nothing. With `--no-p --no-g` a second run re-sends all three (`<f..t`), never settling | `-avz --no-p --no-g`: real copy OK, second run sends nothing, when the connection lands on `atlas-dtn-2`. `atlas-dtn-1` accepts the step certificate then closes the connection (`Connection closed by UNKNOWN port 65535`, status/code 255): 3/3 direct failures, 5 of 6 via the shared name. Site issue (reported to SCINet); not a reader step | `-avz --no-p --no-g`: dry run `(DRY RUN)`, copy OK, second run sends 0 files | §6, the check |
+| `md5sum -c` on the cluster: two OK | — | — | — | two `OK`, status 0 | two `OK`, status 0 | two `OK`, status 0 | §7, the check |
+| Mode and group after rsync (`-av` / SCINet `--no-p --no-g`) | — | — | — | Mac → `novadtn` → NFS4 `/work/<group>`: `-av` keeps times but files get `domain users` and the folder loses setgid; `--no-p --no-g`, `--no-p`, `--no-g`, `-rlt`, `-rlt --fsync` all keep the project group (except `--no-g`) but files get the copy time, so every rerun shows `<f..t` for all files. Same `-rlt` to the login node keeps both. DTN `touch -d` works. Cause unknown (DTN-side); see 3.4 notes | `/project` NFS4 (VAST). `--no-p --no-g`: times kept (14:26), group `proj-<project>`, files `-rw-r-----`, folder `drwxr-s---`. Plain `-av`: times kept, files group = personal group, `-rw-r--r--` | `/project` NFS4 (VAST). `--no-p --no-g`: times kept (14:26), group `proj-<project>`, `-rw-r-----`, folder `drwxr-s---`. Plain `-av`: times kept, group = personal, `-rw-r--r--` (same as Atlas) | §6, *Open questions* 3 |
+| `chmod a-w` keeps group read (SCINet) | — | — | — | — | yes: `dr-xr-s---`, files `-r--r-----` group `proj-<project>` |  | §6, *Open questions* 3 |
+| Symlink arrives dangling | done | — | — | yes: `ref -> /Users/nobody/refs/R64` (Block F) and the project copy `data/ref -> /Users/…/yeast_R64-1-1_test`; `ls data/ref/`: `No such file or directory` | yes: `ref -> /Users/nobody/refs/R64` (Block F) and project `data/ref -> /Users/…`; `No such file or directory` |  | §7 |
+| Reference copied, `md5sum -c` both files OK | — | — | — | yes, through the DTN: `genome.fa.gz: OK`, `genes.gtf.gz: OK`, status 0 (project copy built from a Chapter 3-style layout in the checks folder; Austin's Mac project has `data/ref` as a plain folder) | yes (via `atlas-dtn-2`): `genome.fa.gz: OK`, `genes.gtf.gz: OK`; `ls data/ref/` lists the three files after `unlink` + `ln -s` |  | §7 |
+| Plain `ln -s` over a link fails; `unlink` + `ln -s` works | — | — | — | yes: `ln: failed to create symbolic link 'data/ref': File exists`, status 1, link unchanged; `ls -l` → `unlink data/ref` → `ln -s` → `ls data/ref/` lists the three files |  |  | §7 |
+| `pixi install --locked` time in the moved project | — | — | — | ~41 min in the rsync'd project (`real 40m59s`, `user 1.2s`, `sys 16m19s`) and 24.6 min in a fresh `mkdir` folder (setgid), both with `PIXI_CACHE_DIR` on NFS `/work` (cache reused; hard-linked; 13,003 files, 820 MB); fresh cache on local `/tmp`: 7.3 s. `/work` itself fast (1,000 files 0.2 s, 1,000 links 0.8 s). First install into the empty cache (2026-11-22) took 10 s. Cause: pixi reusing a cache on NFS (locking?). Also: rsync'd project lost setgid, so `.pixi` got group `domain users` | 17.9 s (`real 0m17.857s`) reusing `PIXI_CACHE_DIR` on `/project` (NFS4, VAST): no slowdown, unlike Nova | 47.9 s reusing `PIXI_CACHE_DIR` on `/project` (NFS4, VAST); first install was 54 s: no slowdown | §7 |
+| `run_all.sh` output matches the laptop |  | — | — | yes: both result files have the same MD5 as on the Mac (`e1d81de7…`, `3b9c2b4c…`); 50,000 reads each; GTF md5 `504334f6…` (ran on nova-login-2) | yes after the reference arrived and `results/` was moved aside: `run_all status 0`, both MD5s match the Mac (`e1d81de7…`, `3b9c2b4c…`). First try had failed with `ERROR: missing or empty: data/ref/genes.gtf.gz` while the stale copied `results/` still matched: exclude `results/`, `logs/` from the move and check the exit status |  | §7, exercise 5 |
+| Key login: passphrase only, or also password? | — | — | — | passphrase only: no code, no ISU password (`Server accepts key`, `Authenticated … using "publickey"`); `ssh-copy-id`: `Number of key(s) added: 1` after one code + password login. On the ISU VPN from home | — | — | §3, *Open questions* 1 |
+| Key works on `nova-login-2`, `novadtn`, round-robin name | — | — | — | yes on all four: `nova-login-1`, `nova-login-2`, `novadtn`, and round-robin `nova` (landed on login-1). With the key in the agent (macOS `AddKeysToAgent yes` loads it at first passphrase) logins and the DTN ask nothing | — | — | §3, §4 |
+| ControlMaster: second login silent; DTN asks once, then rsync silent | — | — | — | login master: 1 sign-in, second `ssh` silent, `Master running (pid=…)`; DTN asked again (its own master; code + password twice); rsync and `scp` through the DTN master silent (`scp status 0`). Book `ControlPath` under a long folder failed: `unix_listener: path "…" too long for Unix domain socket` (104 chars incl. 17-char suffix); `~/.ssh/cm-%C` works, socket removed on `-O exit` |  |  | §4 |
+| tmux on the other login node: `no server running` | — | — | — | started on `nova-login-1`; round-robin logins landed -2, -2, -1, -2 (observed, random): on -2 `error connecting to /tmp/tmux-<uid>/default (No such file or directory)` (tmux 3.2a wording), on -1 `ch09: 1 windows (created …)`; `ssh -t nova-login-1 tmux attach -t ch09` → ticker had no gap across the drop. tmux status bar shows `"nova-login-1"`. Mouse wheel typed `^[[A`/`^[[B` into the running program | started on `atlas-login-2`; round-robin logins landed -2, -1, -1; only -2 listed `ch09: 1 windows …`; reattach via `ssh -t atlas-login-2… tmux attach -t ch09`: ticker had no gap. Status bar shows `"atlas-login-2.hpc.mss"`. tmux 3.2a wording: `error connecting to /tmp/tmux-<uid>/default (No such file or directory)` where tmux never ran, `no server running on /tmp/tmux-<uid>/default` after a session ended |  | §5, `fig-tmux-detach` |
+| Direct login to a named login node (Atlas 1/2) | — | — | — |  | yes: `atlas-login-1` and `atlas-login-2` both work directly, no host-key question or certificate warning (step host cert covers them, unlike `atlas-dtn`) |  | §5 |
+| Detached session still there next visit | — | — | — | yes after ~1 min Wi-Fi drop (next-day not tested) | yes after ~1 min Wi-Fi drop (next-day not tested) |  | §5 |
 | Process without tmux after Wi-Fi drop | — | — | — | | | | §5, Chapter 7 link |
-| Frozen-terminal message after a drop | — | — | — | | | | §5 |
-| "Host key changed" message, status 255 | — | — | — | | — | — | §2 |
-| `step` `Include` line and files | — | — | — | — | | | §4, Exercise 3 |
+| Frozen-terminal message after a drop | — | — | — | `Connection to nova.its.iastate.edu closed by remote host.` / `Connection to nova.its.iastate.edu closed.` / `client_loop: send disconnect: Broken pipe` (Wi-Fi off ~1 min, VPN at home) | same as Nova: `Connection to atlas-login.hpc.msstate.edu closed by remote host.` / `… closed.` / `client_loop: send disconnect: Broken pipe` |  | §5 |
+| "Host key changed" message, status 255 | — | — | — | yes, status 255: full `WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!` box, `Offending ED25519 key in ./fake_known_hosts:1`, `Host key verification failed.` Also: `nova-login-1`/`-2` each asked the host-key question on first use; same fingerprint as `nova`, ssh lists the other names | — | — | §2 |
+| `step` `Include` line and files | — | — | — | — | Mac: `Include ~/.step/ssh/includes` → `~/.step/ssh/config`: `Match exec "step ssh check-host %h"` with `User <user>`, `UserKnownHostsFile ~/.step/ssh/known_hosts` (`@cert-authority *` line; `atlas-dtn` plain key added after the principal warning), `ProxyCommand step ssh proxycommand --provisioner keycloak %r %h %p` |  | §4, Exercise 3 |
 | Globus verify option wording, default | — | — | — | | | | §6, Exercise 6 |

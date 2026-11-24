@@ -9,7 +9,7 @@ CC BY-NC-SA or MIT licenses.
 
 | Field | Value |
 |:------|:------|
-| What | *Saccharomyces cerevisiae* RNA-seq test data of nf-core/rnaseq: 5 sample labels (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`, `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) over 7 runs in `samplesheet/v3.10/samplesheet_test.csv`, each run sub-sampled to 50,000 reads (pairs, for paired runs; 4 runs used paired-end, 3 single-end). The labels group runs for pipeline testing: ENA lists the 7 runs as 7 biological samples (GSM2879618–24), all paired-end. The book's own files so far: run SRR6357070 (GSM2879618, wild type, biological replicate 1), paired. Counts and ENA records checked 2026-11-17 |
+| What | *Saccharomyces cerevisiae* RNA-seq test data of nf-core/rnaseq: 5 sample labels (`WT_REP1`, `WT_REP2`, `RAP1_UNINDUCED_REP1`, `RAP1_UNINDUCED_REP2`, `RAP1_IAA_30M_REP1`) over 7 runs in `samplesheet/v3.10/samplesheet_test.csv`, each run sub-sampled to 50,000 reads (pairs, for paired runs; 4 runs used paired-end, 3 single-end). The labels group runs for pipeline testing: ENA lists the 7 runs as 7 biological samples (GSM2879618–24), all paired-end. The book's own files so far: run SRR6357070 (GSM2879618, wild type, biological replicate 1), paired; from Chapter 10, also runs SRR6357071, SRR6357072, and SRR6357076, paired (below). Counts and ENA records checked 2026-11-17 |
 | Source | [nf-core/test-datasets](https://github.com/nf-core/test-datasets), branch `rnaseq`, folder `testdata/GSE110004/` |
 | Version | Last commit touching `SRR6357070_1.fastq.gz`: `58ec9dc30549f0f28a01fae5971bdb2f1386f185` (2021-04-12); checked 2026-11-13 |
 | Accession | GEO [GSE110004](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE110004) (reads in SRA, e.g. SRR6357070) |
@@ -74,5 +74,21 @@ source and license as above. Checked 2026-11-13.
 
 The script also reads `SRR6357072_1.fastq.gz` and `SRR6357072_2.fastq.gz`
 (sample WT_REP2) for their sizes: 2,148,269 and 2,167,239 bytes.
+
+Files added in Chapter 10 (same source, commit, and license; the job
+array's inputs, `data/raw/` in the reader's project). Paired-end runs of
+the fixture's samplesheet besides SRR6357070; SRR6357073–75 are
+single-end there. Each file has 50,000 reads, and read 1 and read 2
+names match. Downloaded from `testdata-url` + `/testdata/GSE110004/`
+and checked 2026-11-23:
+
+| File | Run's GEO sample (fixture label) | Size (bytes) | MD5 | SHA-256 |
+|:-----|:---------------------------------|-------------:|:----|:--------|
+| `SRR6357071_1.fastq.gz` | GSM2879619 (`WT_REP1`) | 2,189,243 | `fd11dc240712f88f1f800656fc59b6ab` | `06951c97884df8975d5419a2f0d03d435b9da722564000536524b01926970c93` |
+| `SRR6357071_2.fastq.gz` | GSM2879619 (`WT_REP1`) | 2,183,711 | `3325feca06747fa80e34daed0dc57de4` | `00bbbf100ee90c5f681c3b4814637283732cd06e620171bd48718aa02de3a91d` |
+| `SRR6357072_1.fastq.gz` | GSM2879620 (`WT_REP2`) | 2,148,269 | `63534a634de5efa0273fa812932b0ed1` | `6c92efe43dc8145951c4131cd30e3e169f9877f041fcf20c2577eeeb7ec2b6ed` |
+| `SRR6357072_2.fastq.gz` | GSM2879620 (`WT_REP2`) | 2,167,239 | `4c7fb08dc831bc372bb6e827182f6ff7` | `4501eb0062d4005cc1a4c836a86c036c15d3c38d685138d02675c5ecef84c0a3` |
+| `SRR6357076_1.fastq.gz` | GSM2879624 (`RAP1_IAA_30M_REP1`) | 2,268,588 | `e026fe5743035e52b7b40606b4c05fba` | `1ba6b60cd24c8abf1db57dec5a13b23eeb35beece6193af8ce6f9bac4fd4546f` |
+| `SRR6357076_2.fastq.gz` | GSM2879624 (`RAP1_IAA_30M_REP1`) | 2,250,281 | `00377e768cfd005fb8556d17fd2ee239` | `4a04e6de648091eb42d703f67489d87e929544af478ce5e28b0c790f79a82a5d` |
 
 Add a row for each further file when a chapter starts using it.

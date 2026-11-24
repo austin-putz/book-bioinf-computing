@@ -687,17 +687,19 @@ ul.task-list li input[type="checkbox"] {
 <section id="planned-topics" class="level2" data-number="10.1">
 <h2 data-number="10.1" class="anchored" data-anchor-id="planned-topics"><span class="header-section-number">10.1</span> Planned topics</h2>
 <ul>
-<li>Cluster anatomy: login vs compute nodes</li>
-<li>Environment modules (<code>module load</code>, Lmod)</li>
-<li>Storage tiers: home, project, scratch; quotas (site quota command) and purges</li>
+<li>Cluster anatomy: login vs compute nodes; partitions, accounts, QOS, and each site’s defaults and time limits (<code>sinfo</code>, <code>scontrol show partition</code>)</li>
+<li>Storage tiers: home, project, scratch, and node-local temporary space (<code>$TMPDIR</code>); quotas (site quota command) and purges</li>
 <li>File-count (inode) quotas: millions of small files (a Nextflow <code>work/</code> directory, environments in <code>$HOME</code>) can fill an account that has bytes to spare</li>
-<li><code>sbatch</code> scripts and resource requests</li>
-<li>Estimating memory, time, and disk for a job; measuring a real one</li>
-<li>Interactive jobs</li>
-<li>Job arrays</li>
-<li>Monitoring and accounting (<code>squeue</code>, <code>sacct</code>, <code>seff</code>); cancelling (<code>scancel</code>)</li>
+<li>Environment modules (<code>module load</code>, Lmod) beside the book’s pixi environment</li>
+<li>Interactive jobs (<code>srun --pty</code>, <code>salloc</code>); connecting to a node you hold (<code>ProxyJump</code>, completing <a href="09-working-remotely.html" class="quarto-xref"><span>Chapter 9</span></a>) and giving it back</li>
 <li>A running process vs a submitted job</li>
-<li>GPU partitions (brief)</li>
+<li><code>sbatch</code> scripts that wrap <a href="08-shell-scripts.html" class="quarto-xref"><span>Chapter 8</span></a>’s scripts; resource requests (CPUs, memory, time; passing the CPU count to the tool)</li>
+<li>Why jobs wait or fail: pending reasons, out of memory, time limit, missing file</li>
+<li>Estimating memory, time, and disk for a job; measuring a real one (<code>sacct</code>, <code>seff</code> where the site has it)</li>
+<li>Monitoring and cancelling (<code>squeue</code>, <code>scancel</code>)</li>
+<li>Job arrays</li>
+<li>Chains of jobs (dependencies) (overview)</li>
+<li>GPU partitions (overview, brief)</li>
 <li>Etiquette: no heavy work on login nodes</li>
 </ul>
 

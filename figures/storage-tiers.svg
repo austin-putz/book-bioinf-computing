@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 512" role="img" aria-labelledby="storage-tiers-title">
+  <title id="storage-tiers-title">Where files live on a cluster. A login node and a compute node are both connected to shared storage, which has three tiers. Home is small, tens of gigabytes, for configuration and the pixi program only; whether it is backed up depends on the site; it is not purged, and only you see it. Example path: /home/user. Project or group storage is large, terabytes, for your work, shared with your lab, with a quota per project; whether it is backed up depends on the site; it is not purged. Example paths: /project/project on SCINet, /work/group on Nova. Scratch is large, terabytes, for big temporary files, but purged: files unused for 60 to 90 days are deleted, and it is never backed up; it is shared with your lab. Example paths: /90daydata on SCINet, /ptmp on Nova. The fourth tier, node-local temporary space, written $TMPDIR, is inside the compute node itself: only that job sees it, its size varies, and it is deleted when the job ends. A dashed box shows long-term archive storage, Juno on SCINet and /lss on Nova, which is not visible on compute nodes on Nova. Below, the staging pattern in three steps: 1, read the FASTQ input from project; 2, work in your own temporary folder, $TMPDIR, on the compute node; 3, copy the result file back to project.</title>
+  <defs>
+    <marker id="storage-tiers-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- Login node -->
+  <rect x="10" y="42" width="205" height="72" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="24" y="70" font-size="15" font-weight="700">Login node</text>
+  <text x="24" y="92" font-size="13" class="fill-muted">sees shared storage</text>
+
+  <!-- Compute node, with its own local temporary space inside -->
+  <rect x="10" y="150" width="205" height="182" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="24" y="176" font-size="15" font-weight="700">Compute node</text>
+  <text x="24" y="195" font-size="13" class="fill-muted">runs your job; sees</text>
+  <text x="24" y="211" font-size="13" class="fill-muted">shared storage and:</text>
+  <rect x="22" y="220" width="181" height="102" rx="6" class="fill-surface stroke-line" stroke-width="1.5"/>
+  <text x="32" y="240" font-size="13" font-weight="700">node-local</text>
+  <text x="32" y="256" font-size="13" font-weight="700">temporary space</text>
+  <text x="32" y="273" font-size="12" class="mono fill-muted">$TMPDIR</text>
+  <text x="32" y="290" font-size="12">this job only; size varies</text>
+  <text x="32" y="311" font-size="12" font-weight="700" class="fill-warn">deleted when the job ends</text>
+
+  <!-- Wires from both nodes to shared storage -->
+  <g class="stroke-line" stroke-width="2.5">
+    <line x1="215" y1="78" x2="255" y2="78"/>
+    <line x1="215" y1="182" x2="255" y2="182"/>
+  </g>
+
+  <!-- Shared storage -->
+  <rect x="255" y="10" width="455" height="322" rx="12" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="269" y="31" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">SHARED STORAGE</text>
+  <text x="696" y="31" font-size="12" text-anchor="end" class="fill-muted">both kinds of node see it</text>
+
+  <!-- Bands: height hints at size -->
+  <g class="fill-surface stroke-line" stroke-width="1.5">
+    <rect x="267" y="42" width="431" height="72" rx="6"/>
+    <rect x="267" y="122" width="431" height="96" rx="6"/>
+    <rect x="267" y="226" width="431" height="96" rx="6"/>
+  </g>
+
+  <!-- Home -->
+  <text x="281" y="66" font-size="15" font-weight="700">home</text>
+  <text x="281" y="86" font-size="12" class="mono fill-muted">/home/&lt;user&gt;</text>
+  <g font-size="13">
+    <text x="472" y="62">tens of GB: config, pixi only</text>
+    <text x="472" y="80">backed up? depends on the site</text>
+    <text x="472" y="98">not purged · only you see it</text>
+  </g>
+
+  <!-- Project / group -->
+  <text x="281" y="146" font-size="15" font-weight="700">project / group</text>
+  <g font-size="12" class="fill-muted">
+    <text x="281" y="166"><tspan class="mono">/project/&lt;project&gt;</tspan> SCINet</text>
+    <text x="281" y="183"><tspan class="mono">/work/&lt;group&gt;</tspan> Nova</text>
+  </g>
+  <g font-size="13">
+    <text x="472" y="144">TB: your work; quota per project</text>
+    <text x="472" y="162">shared with your lab</text>
+    <text x="472" y="180">backed up? depends on the site</text>
+    <text x="472" y="198">not purged</text>
+  </g>
+
+  <!-- Scratch -->
+  <text x="281" y="250" font-size="15" font-weight="700">scratch</text>
+  <g font-size="12" class="fill-muted">
+    <text x="281" y="270"><tspan class="mono">/90daydata</tspan> SCINet</text>
+    <text x="281" y="287"><tspan class="mono">/ptmp</tspan> Nova</text>
+  </g>
+  <g font-size="13">
+    <text x="472" y="248">TB: big temporary files</text>
+    <text x="490" y="266" font-weight="700" class="fill-warn">deleted after 60–90 days unused</text>
+    <text x="472" y="284">never backed up</text>
+    <text x="472" y="302">shared with your lab</text>
+  </g>
+  <!-- Purge clock -->
+  <g class="stroke-warn" stroke-width="1.5" fill="none">
+    <circle cx="479" cy="261.5" r="6.5"/>
+    <line x1="479" y1="261.5" x2="479" y2="257"/>
+    <line x1="479" y1="261.5" x2="482.5" y2="263.5"/>
+  </g>
+
+  <!-- Archive -->
+  <rect x="255" y="344" width="455" height="52" rx="10" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="269" y="366" font-size="15" font-weight="700">archive</text>
+  <text x="269" y="385" font-size="12" class="fill-muted"><tspan class="mono">Juno</tspan> SCINet · <tspan class="mono">/lss</tspan> Nova</text>
+  <text x="472" y="366" font-size="13">long-term storage for finished data</text>
+  <text x="472" y="385" font-size="12">not visible on compute nodes (Nova)</text>
+
+  <!-- Staging pattern -->
+  <text x="10" y="424" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">STAGING PATTERN, INSIDE A JOB</text>
+  <g class="fill-surface stroke-line" stroke-width="1.5">
+    <rect x="10" y="434" width="210" height="70" rx="8"/>
+    <rect x="255" y="434" width="210" height="70" rx="8"/>
+    <rect x="500" y="434" width="210" height="70" rx="8"/>
+  </g>
+
+  <!-- 1: FASTQ in project -->
+  <path d="M18,446 h36 l10,10 v36 h-46 z" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <path d="M54,446 v10 h10" fill="none" class="stroke-given" stroke-width="1.25"/>
+  <text x="41" y="479" font-size="12" text-anchor="middle" class="fill-given">FASTQ</text>
+  <text x="76" y="460" font-size="13" font-weight="700">1. Read</text>
+  <text x="76" y="478" font-size="13">input from project</text>
+
+  <!-- 2: work in $TMPDIR -->
+  <text x="269" y="460" font-size="13" font-weight="700">2. Work</text>
+  <text x="269" y="478" font-size="13">in your own temporary folder</text>
+  <text x="269" y="495" font-size="12" class="fill-muted"><tspan class="mono">$TMPDIR</tspan> on the compute node</text>
+
+  <!-- 3: result back to project -->
+  <text x="514" y="460" font-size="13" font-weight="700">3. Copy back</text>
+  <text x="514" y="478" font-size="13">results to project</text>
+  <path d="M646,446 h36 l10,10 v36 h-46 z" class="fill-given-soft stroke-given" stroke-width="1.25"/>
+  <path d="M682,446 v10 h10" fill="none" class="stroke-given" stroke-width="1.25"/>
+  <text x="669" y="479" font-size="12" text-anchor="middle" class="fill-given">result</text>
+
+  <g class="stroke-muted" stroke-width="1.75">
+    <line x1="220" y1="469" x2="253" y2="469" marker-end="url(#storage-tiers-arrow)"/>
+    <line x1="465" y1="469" x2="498" y2="469" marker-end="url(#storage-tiers-arrow)"/>
+  </g>
+</svg>

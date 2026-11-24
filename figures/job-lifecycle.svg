@@ -1,0 +1,211 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 476" role="img" aria-labelledby="job-lifecycle-title"
+     data-step-labels="Write|Submit|Starts|Runs|Ends|Check">
+  <title id="job-lifecycle-title">The life of a batch job, in six steps. The scene: your laptop on the left, connected by ssh to the cluster's login node; next to it the scheduler with its queue and its records; below, three compute nodes, two of them busy with other jobs; and at the bottom the shared storage with the project folder, holding the input FASTQ files data/raw/*.fastq.gz. Step 1: you write the job script jobs/01_count_reads.sbatch on the login node, or edit it on your laptop and copy it there. Step 2: sbatch jobs/01_count_reads.sbatch prints Submitted batch job 17720240, and the job waits in the queue as PD, PENDING, with a reason such as Priority. Step 3: when a compute node has the CPUs and memory you asked for free, the scheduler starts the job there, and its state becomes R, RUNNING. Step 4: the script runs on the compute node; it reads the FASTQ files and writes results/read_counts.tsv and the log logs/01_count_reads_17720240.out in the shared project folder. You can log out, and the laptop is drawn closed. Step 5: the job ends. It is COMPLETED if the script exited 0; otherwise FAILED (exit code not 0), OUT_OF_MEMORY (used more than --mem), or TIMEOUT (ran longer than --time). Each outcome has its own icon: a check mark, a cross, a memory chip with an arrow, and a clock. The scheduler's records now say 17720240 COMPLETED. Step 6: back on the login node, sacct -j 17720240 and seff 17720240 read the scheduler's records, and you check the result file itself with cat results/read_counts.tsv: 50,000 reads in each file, as expected. COMPLETED alone does not prove the result is right.</title>
+  <desc data-caption="1">You write a job script on the login node (or edit it on your laptop and copy it there).</desc>
+  <desc data-caption="2">sbatch hands the script to the scheduler and prints a job ID; the job waits in the queue as PENDING, with a reason such as (Priority) or (Resources).</desc>
+  <desc data-caption="3">When a node has the CPUs and memory you asked for free, the scheduler starts the job there: RUNNING.</desc>
+  <desc data-caption="4">The script runs on the compute node, reading and writing the shared project folder and its log; you can log out, so the laptop is drawn closed while the job runs.</desc>
+  <desc data-caption="5">The job ends: COMPLETED if the script exited 0, otherwise FAILED, OUT_OF_MEMORY, or TIMEOUT, each with its own icon.</desc>
+  <desc data-caption="6">Afterwards, sacct and seff read the scheduler's records, and you check the result file itself: COMPLETED alone does not prove the result is right.</desc>
+  <defs>
+    <marker id="job-lifecycle-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- The cluster boundary -->
+  <rect x="180" y="8" width="530" height="460" rx="14" fill="none" class="stroke-line" stroke-width="1.5" stroke-dasharray="6 5"/>
+  <text x="194" y="28" font-size="12" font-weight="700" letter-spacing="1" class="fill-muted">THE CLUSTER</text>
+
+  <!-- ===== Laptop ===== -->
+  <text x="85" y="162" font-size="14" font-weight="700" text-anchor="middle">Your laptop</text>
+  <!-- open: steps 1-3 -->
+  <g data-hide="4">
+    <rect x="28" y="48" width="114" height="76" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <rect x="36" y="56" width="98" height="60" rx="3" class="fill-muted-soft"/>
+    <text x="44" y="80" font-size="12" class="mono">$ ssh …</text>
+    <path d="M14 126 H156 L148 138 H22 Z" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="85" y="180" font-size="12" text-anchor="middle" class="fill-muted">connected by ssh</text>
+  </g>
+  <!-- closed: steps 4-5 -->
+  <g data-show="4" data-hide="6">
+    <rect x="22" y="116" width="126" height="10" rx="3" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <path d="M14 126 H156 L148 138 H22 Z" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="85" y="180" font-size="12" text-anchor="middle" class="fill-muted">closed: logged out</text>
+  </g>
+  <!-- open again: step 6 -->
+  <g data-show="6">
+    <rect x="28" y="48" width="114" height="76" rx="6" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <rect x="36" y="56" width="98" height="60" rx="3" class="fill-muted-soft"/>
+    <text x="44" y="80" font-size="12" class="mono">$ ssh …</text>
+    <path d="M14 126 H156 L148 138 H22 Z" class="fill-surface stroke-ink" stroke-width="1.25"/>
+    <text x="85" y="180" font-size="12" text-anchor="middle" class="fill-muted">back to check</text>
+  </g>
+
+  <!-- ssh connection, laptop to login node (not while logged out) -->
+  <g data-hide="4">
+    <line x1="158" y1="96" x2="188" y2="96" class="stroke-muted" stroke-width="1.75" marker-start="url(#job-lifecycle-arrow)" marker-end="url(#job-lifecycle-arrow)"/>
+    <text x="171" y="86" font-size="12" text-anchor="middle" class="mono">ssh</text>
+    <text x="171" y="114" font-size="12" text-anchor="middle" class="fill-muted">copy</text>
+  </g>
+  <g data-show="6">
+    <line x1="158" y1="96" x2="188" y2="96" class="stroke-muted" stroke-width="1.75" marker-start="url(#job-lifecycle-arrow)" marker-end="url(#job-lifecycle-arrow)"/>
+    <text x="171" y="86" font-size="12" text-anchor="middle" class="mono">ssh</text>
+  </g>
+
+  <!-- ===== Login node ===== -->
+  <rect x="190" y="40" width="290" height="146" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="204" y="62" font-size="15" font-weight="700">Login node</text>
+  <!-- the job script -->
+  <path d="M206 72 H226 L234 80 V108 H206 Z" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <path d="M226 72 V80 H234" fill="none" class="stroke-ink" stroke-width="1.25"/>
+  <g class="stroke-muted" stroke-width="1.25">
+    <line x1="211" y1="88" x2="229" y2="88"/>
+    <line x1="211" y1="95" x2="229" y2="95"/>
+    <line x1="211" y1="102" x2="223" y2="102"/>
+  </g>
+  <text x="244" y="88" font-size="12" class="mono">jobs/01_count_reads.sbatch</text>
+  <text x="244" y="104" font-size="12" class="fill-muted">the job script</text>
+  <!-- terminal -->
+  <rect x="200" y="116" width="270" height="62" rx="4" class="fill-muted-soft"/>
+  <g font-size="12">
+    <text data-hide="2" x="208" y="134" class="fill-muted">write the script, or copy it here</text>
+    <g data-show="2" data-hide="4" class="mono">
+      <text x="208" y="134">$ sbatch jobs/01_count_reads.sbatch</text>
+      <text x="208" y="151">Submitted batch job <tspan font-weight="700">17720240</tspan></text>
+    </g>
+    <g data-show="4" data-hide="6" class="fill-muted">
+      <text x="208" y="134">you logged out;</text>
+      <text x="208" y="151">the job does not need you</text>
+    </g>
+    <g data-show="6" class="mono">
+      <text x="208" y="134">$ sacct -j 17720240</text>
+      <text x="208" y="151">$ seff 17720240</text>
+      <text x="208" y="168">$ cat results/read_counts.tsv</text>
+    </g>
+  </g>
+
+  <!-- ===== Scheduler ===== -->
+  <rect x="494" y="40" width="210" height="146" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="508" y="62" font-size="15" font-weight="700">Scheduler (queue)</text>
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="508" y="72" width="182" height="20" rx="4"/>
+    <rect x="508" y="96" width="182" height="20" rx="4"/>
+  </g>
+  <g font-size="12" class="fill-muted">
+    <text x="516" y="86">other job <tspan class="mono">PD</tspan></text>
+    <text x="516" y="110">other job <tspan class="mono">PD</tspan></text>
+  </g>
+  <!-- our job, pending: step 2 -->
+  <g data-show="2" data-hide="3">
+    <rect x="508" y="120" width="182" height="20" rx="4" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="516" y="134" font-size="12" class="mono"><tspan font-weight="700">17720240 PD</tspan> (Priority)</text>
+  </g>
+  <!-- records -->
+  <rect x="508" y="146" width="182" height="34" rx="4" fill="none" class="stroke-muted"/>
+  <rect data-show="6" x="508" y="146" width="182" height="34" rx="4" fill="none" class="stroke-ink" stroke-width="2"/>
+  <text x="516" y="160" font-size="12" class="fill-muted">records</text>
+  <text data-show="5" x="516" y="175" font-size="12" class="mono">17720240 COMPLETED</text>
+  <!-- step 6: sacct and seff read the records -->
+  <path data-show="6" d="M506 163 L474 154" fill="none" class="stroke-ink" stroke-width="1.75" marker-end="url(#job-lifecycle-arrow)"/>
+
+  <!-- step 3: the scheduler starts the job on a node -->
+  <path data-show="3" data-hide="4" d="M560 188 C556 206 340 194 300 212" fill="none" class="stroke-muted" stroke-width="1.75" marker-end="url(#job-lifecycle-arrow)"/>
+
+  <!-- ===== Compute nodes ===== -->
+  <g class="fill-surface stroke-ink" stroke-width="1.25">
+    <rect x="190" y="214" width="160" height="70" rx="8"/>
+    <rect x="367" y="214" width="160" height="70" rx="8"/>
+    <rect x="544" y="214" width="160" height="70" rx="8"/>
+  </g>
+  <g font-size="13" font-weight="700">
+    <text x="202" y="234">Compute node</text>
+    <text x="379" y="234">Compute node</text>
+    <text x="556" y="234">Compute node</text>
+  </g>
+  <g class="fill-muted-soft stroke-muted" stroke-width="1">
+    <rect x="379" y="246" width="136" height="22" rx="4"/>
+    <rect x="556" y="246" width="136" height="22" rx="4"/>
+  </g>
+  <g font-size="12" class="fill-muted">
+    <text x="387" y="261">other job <tspan class="mono">R</tspan></text>
+    <text x="564" y="261">other job <tspan class="mono">R</tspan></text>
+  </g>
+  <text data-hide="3" x="202" y="261" font-size="12" class="fill-muted">free: CPUs, memory</text>
+  <!-- our job, running: steps 3-4; slides in from the queue -->
+  <g data-show="3" data-move="3" data-hide="5" style="--dx:306px; --dy:-126px">
+    <rect x="202" y="246" width="136" height="22" rx="4" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <text x="210" y="261" font-size="12" class="mono"><tspan font-weight="700">17720240 R</tspan></text>
+  </g>
+  <!-- our job, ended: step 5 -->
+  <g data-show="5" data-hide="6">
+    <rect x="202" y="246" width="136" height="22" rx="4" fill="none" class="stroke-ink" stroke-width="1.25" stroke-dasharray="4 3"/>
+    <text x="210" y="261" font-size="12"><tspan class="mono" font-weight="700">17720240</tspan> ended</text>
+  </g>
+  <text data-show="6" x="202" y="261" font-size="12" class="fill-muted">free again</text>
+
+  <!-- ===== Shared storage ===== -->
+  <rect x="190" y="300" width="514" height="160" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <text x="204" y="322" font-size="15" font-weight="700">Shared storage</text>
+  <text x="204" y="446" font-size="12" class="fill-muted">the project folder, seen by every node</text>
+  <!-- input FASTQ -->
+  <rect x="204" y="348" width="170" height="28" rx="4" class="fill-given-soft stroke-given"/>
+  <text x="214" y="367" font-size="12" class="mono fill-given">data/raw/*.fastq.gz</text>
+  <text x="204" y="394" font-size="12" class="fill-muted">input: 2 files</text>
+  <!-- outputs, from step 4 -->
+  <g data-show="4">
+    <rect x="420" y="348" width="270" height="28" rx="4" class="fill-surface stroke-ink"/>
+    <text x="430" y="367" font-size="12" class="mono">logs/01_count_reads_17720240.out</text>
+    <rect x="420" y="390" width="186" height="28" rx="4" class="fill-given-soft stroke-given"/>
+    <text x="430" y="409" font-size="12" class="mono fill-given">results/read_counts.tsv</text>
+  </g>
+  <!-- step 4: the job reads and writes -->
+  <g data-show="4" data-hide="5" class="stroke-muted" stroke-width="1.75" fill="none" marker-end="url(#job-lifecycle-arrow)">
+    <path d="M270 346 V288"/>
+    <path d="M340 286 L424 346"/>
+    <path d="M350 270 L416 398"/>
+  </g>
+  <g data-show="4" data-hide="5" font-size="12" class="fill-muted">
+    <text x="278" y="342">reads</text>
+    <text x="404" y="326">writes</text>
+  </g>
+  <!-- step 6: the count check on the result file -->
+  <g data-show="6">
+    <rect x="420" y="424" width="200" height="26" rx="13" class="fill-good-soft stroke-good" stroke-width="1.5"/>
+    <path d="M432 437 l5 5 l10 -10" fill="none" class="stroke-good" stroke-width="2.25"/>
+    <text x="454" y="442" font-size="12">50,000 reads in each file</text>
+  </g>
+
+  <!-- ===== Step 5: how a job ends ===== -->
+  <g data-show="5">
+    <text x="12" y="222" font-size="12" class="fill-muted">the job ends as one of:</text>
+    <line x1="188" y1="252" x2="176" y2="252" class="stroke-muted" stroke-width="1.75" marker-end="url(#job-lifecycle-arrow)"/>
+
+    <!-- COMPLETED: bold outline -->
+    <rect x="12" y="232" width="162" height="46" rx="8" class="fill-surface stroke-ink" stroke-width="2.5"/>
+    <path d="M25 255 l6 6 l11 -12" fill="none" class="stroke-ink" stroke-width="2.5"/>
+    <text x="54" y="251" font-size="12" font-weight="700" class="mono">COMPLETED</text>
+    <text x="54" y="268" font-size="12" class="fill-muted">script exited 0</text>
+
+    <!-- FAILED -->
+    <rect x="12" y="284" width="162" height="46" rx="8" class="fill-surface stroke-muted"/>
+    <path d="M27 299 l12 12 M39 299 l-12 12" fill="none" class="stroke-ink" stroke-width="2.25"/>
+    <text x="54" y="303" font-size="12" class="mono">FAILED</text>
+    <text x="54" y="320" font-size="12" class="fill-muted">exit code not 0</text>
+
+    <!-- OUT_OF_MEMORY: a memory chip with an arrow up -->
+    <rect x="12" y="336" width="162" height="46" rx="8" class="fill-surface stroke-muted"/>
+    <rect x="22" y="356" width="18" height="12" rx="1.5" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <path d="M25 368 v4 M29 368 v4 M33 368 v4 M37 368 v4" fill="none" class="stroke-ink" stroke-width="1.25"/>
+    <path d="M44 360 V346 M40 350 L44 345 L48 350" fill="none" class="stroke-ink" stroke-width="1.5"/>
+    <text x="54" y="355" font-size="12" class="mono">OUT_OF_MEMORY</text>
+    <text x="54" y="372" font-size="12" class="fill-muted">over <tspan class="mono">--mem</tspan></text>
+
+    <!-- TIMEOUT: a clock -->
+    <rect x="12" y="388" width="162" height="46" rx="8" class="fill-surface stroke-muted"/>
+    <circle cx="33" cy="411" r="9" class="fill-surface stroke-ink" stroke-width="1.5"/>
+    <path d="M33 411 V405 M33 411 L38 414" fill="none" class="stroke-ink" stroke-width="1.5"/>
+    <text x="54" y="407" font-size="12" class="mono">TIMEOUT</text>
+    <text x="54" y="424" font-size="12" class="fill-muted">over <tspan class="mono">--time</tspan></text>
+  </g>
+</svg>

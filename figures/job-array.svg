@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 558" role="img" aria-labelledby="job-array-title">
+  <title id="job-array-title">A job array. One command, sbatch --array=1-4 jobs/02_stats_array.sbatch, starts four tasks, _1 to _4, each with its own SLURM_ARRAY_TASK_ID from 1 to 4. Beside them is the sample table data/meta/reads.tsv, with columns sample, run, fastq_1, and fastq_2. Line 1 is the header, so no task reads it; task N reads data row N, on line N plus 1. Task 1 reads WT_REP1, run SRR6357070; task 2 reads WT_REP1, run SRR6357071; task 3 reads WT_REP2, run SRR6357072; task 4 reads RAP1_IAA_30M_REP1, run SRR6357076. Each task writes its own result file, results/stats_ followed by its run and .tsv, and its own log, logs/02_stats_array_ followed by the array job ID, the task ID, and .out. A dashed fifth task, which would exist only with --array=1-5, points past the end of the table: there is no row 5, so the script stops. Below, a comparison: Chapter 8's for loop is one job in which the four runs go one after another; in the array the four tasks are independent, so they can run at once or one after another, on one node or several, and finish in any order.</title>
+  <defs>
+    <marker id="job-array-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" class="fill-muted"/>
+    </marker>
+  </defs>
+
+  <!-- The one submission -->
+  <rect x="10" y="10" width="352" height="32" rx="6" class="fill-surface stroke-line" stroke-width="1.5"/>
+  <text x="20" y="31" font-size="12" class="mono">sbatch --array=1-4 jobs/02_stats_array.sbatch</text>
+
+  <!-- Fan out to the tasks -->
+  <g class="stroke-muted" stroke-width="1.75" fill="none">
+    <path d="M24,42 V330"/>
+    <path d="M24,150 H46" marker-end="url(#job-array-arrow)"/>
+    <path d="M24,210 H46" marker-end="url(#job-array-arrow)"/>
+    <path d="M24,270 H46" marker-end="url(#job-array-arrow)"/>
+    <path d="M24,330 H46" marker-end="url(#job-array-arrow)"/>
+    <path d="M24,330 V390 H46" stroke-dasharray="4 4" marker-end="url(#job-array-arrow)"/>
+  </g>
+
+  <!-- Header note, level with line 1 -->
+  <text x="48" y="90" font-size="12" class="fill-muted">line 1 is the header: no task reads it</text>
+  <text x="48" y="106" font-size="12" class="fill-muted">task N reads row N, on line N+1</text>
+
+  <!-- Task boxes -->
+  <g class="fill-surface stroke-ink" stroke-width="1.25">
+    <rect x="48" y="122" width="252" height="56" rx="6"/>
+    <rect x="48" y="182" width="252" height="56" rx="6"/>
+    <rect x="48" y="242" width="252" height="56" rx="6"/>
+    <rect x="48" y="302" width="252" height="56" rx="6"/>
+  </g>
+  <rect x="48" y="362" width="252" height="56" rx="6" class="fill-surface stroke-warn" stroke-width="1.25" stroke-dasharray="5 4"/>
+
+  <!-- Line 1 of each box: task and its ID -->
+  <g font-size="13" font-weight="700">
+    <text x="60" y="140">task <tspan class="mono">_1</tspan></text>
+    <text x="60" y="200">task <tspan class="mono">_2</tspan></text>
+    <text x="60" y="260">task <tspan class="mono">_3</tspan></text>
+    <text x="60" y="320">task <tspan class="mono">_4</tspan></text>
+    <text x="60" y="380">task <tspan class="mono">_5</tspan></text>
+  </g>
+  <g font-size="12" class="mono">
+    <text x="118" y="140">SLURM_ARRAY_TASK_ID=1</text>
+    <text x="118" y="200">SLURM_ARRAY_TASK_ID=2</text>
+    <text x="118" y="260">SLURM_ARRAY_TASK_ID=3</text>
+    <text x="118" y="320">SLURM_ARRAY_TASK_ID=4</text>
+    <text x="118" y="380">SLURM_ARRAY_TASK_ID=5</text>
+  </g>
+  <text x="60" y="404" font-size="12" class="fill-muted">only if you wrote <tspan class="mono">--array=1-5</tspan></text>
+
+  <!-- Result files (data: given) -->
+  <g class="fill-given-soft stroke-given" stroke-width="1">
+    <path d="M60,146 h7 l3,3 v10 h-10 z"/>
+    <path d="M60,206 h7 l3,3 v10 h-10 z"/>
+    <path d="M60,266 h7 l3,3 v10 h-10 z"/>
+    <path d="M60,326 h7 l3,3 v10 h-10 z"/>
+  </g>
+  <g font-size="12" class="mono">
+    <text x="76" y="156">results/stats_SRR6357070.tsv</text>
+    <text x="76" y="216">results/stats_SRR6357071.tsv</text>
+    <text x="76" y="276">results/stats_SRR6357072.tsv</text>
+    <text x="76" y="336">results/stats_SRR6357076.tsv</text>
+  </g>
+
+  <!-- Logs (neutral) -->
+  <g class="fill-surface stroke-muted" stroke-width="1">
+    <path d="M60,162 h7 l3,3 v10 h-10 z"/>
+    <path d="M60,222 h7 l3,3 v10 h-10 z"/>
+    <path d="M60,282 h7 l3,3 v10 h-10 z"/>
+    <path d="M60,342 h7 l3,3 v10 h-10 z"/>
+  </g>
+  <g font-size="12" class="mono">
+    <text x="76" y="173">logs/02_stats_array_&lt;A&gt;_1.out</text>
+    <text x="76" y="233">logs/02_stats_array_&lt;A&gt;_2.out</text>
+    <text x="76" y="293">logs/02_stats_array_&lt;A&gt;_3.out</text>
+    <text x="76" y="353">logs/02_stats_array_&lt;A&gt;_4.out</text>
+  </g>
+
+  <!-- Each task reads one line -->
+  <g class="stroke-muted" stroke-width="1.75">
+    <line x1="300" y1="150" x2="328" y2="150" marker-end="url(#job-array-arrow)"/>
+    <line x1="300" y1="210" x2="328" y2="210" marker-end="url(#job-array-arrow)"/>
+    <line x1="300" y1="270" x2="328" y2="270" marker-end="url(#job-array-arrow)"/>
+    <line x1="300" y1="330" x2="328" y2="330" marker-end="url(#job-array-arrow)"/>
+    <line x1="300" y1="390" x2="328" y2="390" stroke-dasharray="4 4" marker-end="url(#job-array-arrow)"/>
+  </g>
+
+  <!-- The sample table -->
+  <text x="330" y="62" font-size="13" font-weight="700" class="mono">data/meta/reads.tsv</text>
+  <path d="M330,120 V76 a6,6 0 0 1 6,-6 H704 a6,6 0 0 1 6,6 V120 z" class="fill-muted-soft"/>
+  <rect x="330" y="70" width="380" height="290" rx="6" fill="none" class="stroke-ink" stroke-width="1.25"/>
+  <g class="stroke-line" stroke-width="1.25">
+    <line x1="360" y1="70" x2="360" y2="360"/>
+    <line x1="330" y1="120" x2="710" y2="120"/>
+    <line x1="330" y1="180" x2="710" y2="180"/>
+    <line x1="330" y1="240" x2="710" y2="240"/>
+    <line x1="330" y1="300" x2="710" y2="300"/>
+  </g>
+  <g font-size="12" text-anchor="middle" class="fill-muted">
+    <text x="345" y="100">1</text>
+    <text x="345" y="155">2</text>
+    <text x="345" y="215">3</text>
+    <text x="345" y="275">4</text>
+    <text x="345" y="335">5</text>
+  </g>
+
+  <!-- Header row (two lines: the table is wrapped to fit) -->
+  <g font-size="12" class="mono fill-muted">
+    <text x="372" y="92">sample</text>
+    <text x="510" y="92">run</text>
+    <text x="372" y="110">fastq_1</text>
+    <text x="540" y="110">fastq_2</text>
+  </g>
+
+  <!-- Data rows -->
+  <g font-size="12" class="mono">
+    <text x="372" y="146">WT_REP1</text>
+    <text x="510" y="146">SRR6357070</text>
+    <text x="372" y="206">WT_REP1</text>
+    <text x="510" y="206">SRR6357071</text>
+    <text x="372" y="266">WT_REP2</text>
+    <text x="510" y="266">SRR6357072</text>
+    <text x="372" y="326">RAP1_IAA_30M_REP1</text>
+    <text x="510" y="326">SRR6357076</text>
+  </g>
+  <g font-size="12" class="mono fill-muted">
+    <text x="372" y="164">data/raw/…_1.fastq.gz</text>
+    <text x="540" y="164">data/raw/…_2.fastq.gz</text>
+    <text x="372" y="224">data/raw/…_1.fastq.gz</text>
+    <text x="540" y="224">data/raw/…_2.fastq.gz</text>
+    <text x="372" y="284">data/raw/…_1.fastq.gz</text>
+    <text x="540" y="284">data/raw/…_2.fastq.gz</text>
+    <text x="372" y="344">data/raw/…_1.fastq.gz</text>
+    <text x="540" y="344">data/raw/…_2.fastq.gz</text>
+  </g>
+
+  <!-- Past the end -->
+  <rect x="330" y="366" width="380" height="48" rx="6" fill="none" class="stroke-muted" stroke-width="1.25" stroke-dasharray="5 4"/>
+  <text x="345" y="388" font-size="12" text-anchor="middle" class="fill-muted">6</text>
+  <text x="372" y="386" font-size="13" font-weight="700" class="fill-warn">no row 5: the script stops</text>
+  <text x="372" y="404" font-size="12" class="fill-muted">task 5 would read line 6; there is none</text>
+
+  <!-- Comparison: Chapter 8's for loop vs the array -->
+  <g fill="none" class="stroke-line" stroke-width="1.5">
+    <rect x="10" y="430" width="340" height="118" rx="10"/>
+    <rect x="370" y="430" width="340" height="118" rx="10"/>
+  </g>
+  <text x="24" y="452" font-size="13" font-weight="700">Chapter 8: a <tspan class="mono">for</tspan> loop</text>
+  <text x="24" y="469" font-size="12" class="fill-muted">one job; the runs go one after another</text>
+  <rect x="24" y="478" width="312" height="32" rx="4" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <g class="stroke-line" stroke-width="1.25">
+    <line x1="102" y1="478" x2="102" y2="510"/>
+    <line x1="180" y1="478" x2="180" y2="510"/>
+    <line x1="258" y1="478" x2="258" y2="510"/>
+  </g>
+  <g font-size="12" text-anchor="middle" class="mono">
+    <text x="63" y="499">…070</text>
+    <text x="141" y="499">…071</text>
+    <text x="219" y="499">…072</text>
+    <text x="297" y="499">…076</text>
+  </g>
+  <line x1="24" y1="526" x2="336" y2="526" class="stroke-muted" stroke-width="1.5" marker-end="url(#job-array-arrow)"/>
+  <text x="336" y="541" font-size="12" text-anchor="end" class="fill-muted">time</text>
+
+  <text x="384" y="452" font-size="13" font-weight="700">Job array: independent tasks</text>
+  <text x="384" y="469" font-size="12" class="fill-muted">at once or in turn, any node, any order</text>
+  <g font-size="12" class="fill-muted">
+    <text x="384" y="491">node A</text>
+    <text x="384" y="513">node B</text>
+  </g>
+  <g class="fill-surface stroke-ink" stroke-width="1.25">
+    <rect x="436" y="478" width="60" height="18" rx="3"/>
+    <rect x="600" y="478" width="60" height="18" rx="3"/>
+    <rect x="450" y="500" width="60" height="18" rx="3"/>
+    <rect x="520" y="500" width="60" height="18" rx="3"/>
+  </g>
+  <g font-size="12" text-anchor="middle" class="mono">
+    <text x="466" y="491">_2</text>
+    <text x="630" y="491">_4</text>
+    <text x="480" y="513">_3</text>
+    <text x="550" y="513">_1</text>
+  </g>
+  <line x1="436" y1="526" x2="696" y2="526" class="stroke-muted" stroke-width="1.5" marker-end="url(#job-array-arrow)"/>
+  <text x="696" y="541" font-size="12" text-anchor="end" class="fill-muted">time</text>
+</svg>

@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 406" role="img" aria-labelledby="sbatch-anatomy-title">
+  <title id="sbatch-anatomy-title">The job script jobs/01_count_reads.sbatch with its parts named in the margin. Line 1, the shebang #!/usr/bin/env bash, says to run the file with bash. Lines 2 to 9 are the #SBATCH block: sbatch reads these lines, while bash sees only comments; they must come before the first command, and they are not expanded, so $HOME or $(date) would stay as plain text. Inside the block, --job-name=01_count_reads names the job; --account=&lt;project&gt; is needed on SCINet, and on Nova you delete that line; --nodes=1, --ntasks=1, --cpus-per-task=1, --mem=2G and --time=00:10:00 are the resource request: 1 node, 1 task, 1 CPU, 2 GB of memory, 10 minutes. --output=logs/%x_%j.out names the log: %x becomes the job name 01_count_reads and %j the job ID, for example 17720240, giving logs/01_count_reads_17720240.out. Then set -euo pipefail makes a failed command fail the job. The line job_id=${SLURM_JOB_ID:-local} uses the job ID that Slurm sets in a job, and falls back to the word local when the script is run with plain bash. The last three lines are the commands: an echo line with the job ID, host and start time, pixi run bash src/01_count_reads.sh, and an echo line with the finish time. They run on a compute node, in the folder you submitted the job from.</title>
+
+  <text x="20" y="24" font-size="14" font-weight="700" class="mono">jobs/01_count_reads.sbatch</text>
+
+  <!-- Code box -->
+  <rect x="10" y="36" width="400" height="358" rx="10" class="fill-surface stroke-ink" stroke-width="1.25"/>
+  <!-- The #SBATCH block, shaded -->
+  <rect x="16" y="78" width="388" height="164" rx="6" class="fill-muted-soft"/>
+
+  <g font-size="12" class="mono">
+    <text x="24" y="60">#!/usr/bin/env bash</text>
+    <text x="24" y="94"><tspan font-weight="700">#SBATCH</tspan> --job-name=01_count_reads</text>
+    <text x="24" y="114"><tspan font-weight="700">#SBATCH</tspan> --account=&lt;project&gt;</text>
+    <text x="24" y="134"><tspan font-weight="700">#SBATCH</tspan> --nodes=1</text>
+    <text x="24" y="154"><tspan font-weight="700">#SBATCH</tspan> --ntasks=1</text>
+    <text x="24" y="174"><tspan font-weight="700">#SBATCH</tspan> --cpus-per-task=1</text>
+    <text x="24" y="194"><tspan font-weight="700">#SBATCH</tspan> --mem=2G</text>
+    <text x="24" y="214"><tspan font-weight="700">#SBATCH</tspan> --time=00:10:00</text>
+    <text x="24" y="234"><tspan font-weight="700">#SBATCH</tspan> --output=logs/<tspan font-weight="700">%x</tspan>_<tspan font-weight="700">%j</tspan>.out</text>
+    <text x="24" y="280" font-weight="700">set -euo pipefail</text>
+    <text x="24" y="300">job_id=${SLURM_JOB_ID:-local}</text>
+    <text x="24" y="330">echo "job $job_id on $(hostname), started $(date)"</text>
+    <text x="24" y="350">pixi run bash src/01_count_reads.sh</text>
+    <text x="24" y="370">echo "job $job_id finished $(date)"</text>
+  </g>
+
+  <!-- Brackets inside the code box: account line, resource request -->
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M250 104 h6 v14 h-6"/>
+    <path d="M250 124 h6 v94 h-6"/>
+  </g>
+  <g font-size="12">
+    <text x="264" y="115" class="fill-muted">SCINet; Nova: delete</text>
+    <text x="264" y="148" font-weight="700">the resource request:</text>
+    <text x="264" y="164">1 node, 1 task,</text>
+    <text x="264" y="180">1 CPU, 2 GB,</text>
+    <text x="264" y="196">10 minutes</text>
+  </g>
+
+  <!-- Margin brackets: vertical line with ticks, label to the right -->
+  <g class="stroke-muted" stroke-width="1.5" fill="none">
+    <path d="M416 50 h6 v14 h-6"/>
+    <path d="M416 224 h6 v14 h-6"/>
+    <path d="M416 270 h6 v14 h-6"/>
+    <path d="M416 290 h6 v14 h-6"/>
+    <path d="M416 320 h6 v54 h-6"/>
+  </g>
+  <!-- The #SBATCH block label, tied to the shaded block -->
+  <rect x="430" y="78" width="280" height="110" rx="8" class="fill-muted-soft"/>
+  <line x1="404" y1="133" x2="430" y2="133" class="stroke-muted" stroke-width="1.5"/>
+
+  <g font-size="12">
+    <text x="432" y="61"><tspan font-weight="700">shebang:</tspan> run with bash</text>
+
+    <text x="442" y="98" font-weight="700"><tspan class="mono">#SBATCH</tspan> lines: read by <tspan class="mono">sbatch</tspan></text>
+    <text x="442" y="116">bash sees them as comments</text>
+    <text x="442" y="134">must come before the first command</text>
+    <text x="442" y="152">not expanded: <tspan class="mono">$HOME</tspan> and <tspan class="mono">$(date)</tspan></text>
+    <text x="442" y="170">stay as plain text</text>
+
+    <text x="432" y="226"><tspan class="mono" font-weight="700">%x</tspan> → job name <tspan class="mono">01_count_reads</tspan></text>
+    <text x="432" y="242"><tspan class="mono" font-weight="700">%j</tspan> → job ID, e.g. <tspan class="mono">17720240</tspan></text>
+    <text x="432" y="258" class="mono">= logs/01_count_reads_17720240.out</text>
+
+    <text x="432" y="281">a failed command fails the job</text>
+
+    <text x="432" y="301">Slurm sets <tspan class="mono">SLURM_JOB_ID</tspan>;</text>
+    <text x="432" y="316" class="fill-muted">plain bash falls back to <tspan class="mono">local</tspan></text>
+
+    <text x="432" y="342" font-weight="700">commands: run on a compute node,</text>
+    <text x="432" y="358">in the folder you submitted from</text>
+  </g>
+</svg>

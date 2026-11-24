@@ -1388,6 +1388,30 @@ the Mac the same day. Where the draft differs from this plan:
 - **Not checked in a browser yet:** `fig-backfill`'s logic was tested in
   Node (the three cases in `tbl-backfill-cases` and four more); the page
   itself still needs a look over `http://`.
+- **After `reviews/chapter_10_codex_review.md` (same day)**, each
+  finding checked locally before changing anything:
+  - §10's data step now updates Chapter 8's result check (it expected
+    exactly 3 lines and refuses the 8-file table) to count from the
+    list of inputs; tested with 2 files, 8 files, and a truncated file.
+    New script checksum `8398b37e…`.
+  - The array script checks for a header plus one row before `mv`
+    (seqkit 2.14.0 exits 0 on a truncated gzip, header only; tested).
+  - `jobs/01_count_reads.sbatch` exports `SEQKIT_THREADS` from
+    `SLURM_CPUS_PER_TASK` (figure updated). SeqKit's default is
+    min(4, visible CPUs) in v2.14.0's source, so §7 says "up to 4".
+  - "The strictest limit wins" replaced: SLURM uses a precedence
+    order, with the partition still capping time and nodes.
+  - Exercise 3 explains why fixing only the typo fails (the guard),
+    instead of changing `typo.sbatch`, whose log is a cluster capture.
+  - Exercise 4 no longer asks for CPU efficiency from sub-second
+    tasks; the CPU part uses `tbl-cpu-efficiency`.
+  - Exercise 1's fictional site gains a quota output and a guide
+    sentence for the interactive partition.
+  - Also: minimum route in §1, `TMPDIR=/tmp` for Linux/WSL in §3,
+    `MaxRSS` defined per task, "two jobs running" in the backfill
+    text, and a note that captured `script:` checksums differ from the
+    reader's (`f2867b2a…` capture copy vs `f2857591…` Chapter 8's
+    final script).
 - `data/README.md` has the three new runs (MD5 and SHA-256);
   `references.bib` has `yoo2003slurm` (DOI checked with scite),
   `hpccarpentry2026intro`, `schedmd2026quickstart`, `lmod2026docs`.

@@ -680,7 +680,7 @@
   claim: "If I ask SLURM for 8 CPUs, my tool uses 8."
   reality: >
     SLURM reserves CPUs; the tool starts as many threads as its own
-    option says (seqkit starts 4 by default, whatever was reserved).
+    option says (seqkit starts up to 4 by default, whatever was reserved).
     Pass $SLURM_CPUS_PER_TASK to the tool's thread option. Some sites
     also round a request up to whole cores, so check AllocCPUS in sacct.
   probe: >

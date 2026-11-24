@@ -91,6 +91,15 @@ pattern on `nova18-wide-13`: `nproc` 2, `free` 376 GB, `QOS=normal`.
 Read what you may use from the allocation lines, never from the
 hardware lines.
 
+**In a hurry?** The shortest path to a working job is: the first two
+commands of @sec-hpc-slurm-layout (partitions and accounts), a shell
+on a compute node in @sec-hpc-slurm-interactive, your first batch job
+and its three checks in @sec-hpc-slurm-first-job, reading a failure in
+@sec-hpc-slurm-failures, and the array in @sec-hpc-slurm-arrays. The
+rest (QOS details, the storage comparison, modules, the reference
+tables) is there to come back to; @sec-hpc-slurm-chains and
+@sec-hpc-slurm-gpu are short overviews.
+
 **Without a cluster**, these parts work on the laptop: the job script
 in @sec-hpc-slurm-first-job runs with plain `bash`, the array's dry run
 in @sec-hpc-slurm-arrays runs with test values, the staging script in
@@ -165,9 +174,14 @@ resources:
 - a **QOS** (quality of service): another set of limits (longest run,
   most CPUs per user) attached to your account or to a partition.
 
-Limits apply at several levels, and the strictest one wins (SLURM's
-[resource limits](https://slurm.schedmd.com/resource_limits.html)
-page). This is not academic. Ceres's `sinfo` says 60 days, yet
+Several of these layers can limit a job: the partition, your
+account's association, and the QOS that apply. SLURM has rules for
+which layer takes precedence (its [resource
+limits](https://slurm.schedmd.com/resource_limits.html) page). For
+the longest run, the case that matters most here, a QOS limit applies
+and the partition's limit still caps it, so the smaller of the two is
+your real limit. You do not need the full rules, only the habit of
+looking at every layer. This is not academic. Ceres's `sinfo` says 60 days, yet
 SCINet's guide says jobs on `ceres` run at most three weeks. Both are
 right:
 
@@ -291,8 +305,9 @@ Look past the partition: `scontrol show partition <name>` shows whether
 it attaches a QOS, `sacctmgr show assoc user=$USER …` shows your
 account's QOS, and `sacctmgr show qos` shows each QOS's `MaxWall`. A
 real job's `QOS=` field in `scontrol show job` tells you which one it
-got. The strictest limit wins; an over-long request is refused or left
-pending with a reason that names the limit.
+got. For time, the smaller of the QOS's and the partition's limit
+applies; an over-long request is refused or left pending with a reason
+that names the limit.
 :::
 :::
 
@@ -475,13 +490,18 @@ echo "done: $(wc -l < "$out") lines in $out"
 8. The job removes only the folder it made; never clean `$TMPDIR` as a
    whole, which other jobs on the node may share (Atlas).
 
-Try it on the laptop first (macOS and Linux set their own `TMPDIR`, or
-the `:?` line tells you), from the project folder, then submit it on the
-cluster in the same way as the first job in @sec-hpc-slurm-first-job:
+Try it on the laptop first, from the project folder, then submit it on
+the cluster in the same way as the first job in
+@sec-hpc-slurm-first-job. macOS sets `TMPDIR` for you; on Linux and
+WSL it is often unset, and the `:?` line stops the script with `TMPDIR
+is not set`. Then give it a temporary folder for this one run (the
+second line); the script still makes and removes only its own folder
+inside it:
 
 ```{.bash filename="Terminal (laptop)"}
 cd ~/bioinf-computing
 bash jobs/ch10_staging.sbatch
+TMPDIR=/tmp bash jobs/ch10_staging.sbatch     # Linux or WSL, if TMPDIR is not set
 ```
 
 As a job on Nova (captured 2026-11-23):
@@ -943,6 +963,7 @@ Nova readers delete the `--account` line.
 #SBATCH --output=logs/%x_%j.out   # %x job name, %j job ID
 set -euo pipefail
 job_id=${SLURM_JOB_ID:-local}     # set by SLURM in a job; "local" with plain bash
+export SEQKIT_THREADS=${SLURM_CPUS_PER_TASK:-1}   # seqkit's threads = the CPUs asked for
 echo "job $job_id on $(hostname), started $(date)"
 pixi run bash src/01_count_reads.sh
 echo "job $job_id finished $(date)"
@@ -981,6 +1002,11 @@ Bash read the `#SBATCH` lines as comments and ran the rest.
 `${VAR:-default}` is the value of `VAR`, or `default` when it is unset
 or empty. The lines between came from Chapter 8's script, and
 its output checksum is the one from @sec-working-remotely-move-project.
+Your `script:` line will show a different checksum: this chapter's
+captures used a copy of Chapter 8's script with its guard but before
+its result check (`f2857591…` is the script with both, as Chapter 8
+finished it), and the `export SEQKIT_THREADS` line was added after the
+captures. Neither change prints anything else.
 
 On the cluster, test it the same way, but **inside an interactive job**
 (the login node is for editing, not running): start an `srun` session,
@@ -1103,6 +1129,11 @@ compute node in the folder you submitted from.
 - **`set -euo pipefail`** (@sec-shell-scripts-strict) makes a failed
   command fail the job, instead of carrying on to a misleading
   `COMPLETED`.
+- **`export SEQKIT_THREADS=…`** gives the `seqkit` command inside
+  Chapter 8's script as many threads as the CPUs you asked for, so the
+  request and the tool agree (@sec-hpc-slurm-resources explains why
+  that needs saying). `export` makes the variable visible to the
+  programs the script starts (@sec-linux-system-variables).
 
 ::: {.callout-important}
 ## Key idea
@@ -1222,27 +1253,34 @@ enforces two of its sides:
   sit idle, reserved for you and unavailable to anyone else.
 
 **CPUs do not set threads.** How many threads a tool starts is decided
-by the tool's own option, not by SLURM. `seqkit` uses 4 threads unless
-you tell it otherwise (its `-j` option, or the `SEQKIT_THREADS`
-variable; [SeqKit usage](https://bioinf.shenwei.me/seqkit/usage/)).
-With `--cpus-per-task=1`, an unadjusted seqkit starts more threads
-than it was given, and they share one CPU; with `--cpus-per-task=8`
-and no `-j`, it uses four and leaves four idle. Pass the request to
-the tool:
+by the tool's own option, not by SLURM. Left alone, `seqkit` uses 4
+threads, or fewer if it sees fewer CPUs (its `-j` option and the
+`SEQKIT_THREADS` variable override that; [SeqKit
+usage](https://bioinf.shenwei.me/seqkit/usage/)). How many CPUs it
+sees inside a job depends on the site (@sec-hpc-slurm-intro). So with
+`--cpus-per-task=1` on a site where the job sees the whole node, an
+unadjusted seqkit starts 4 threads that share one CPU; with
+`--cpus-per-task=8` and no `-j`, it uses four and leaves four idle.
+Either way, the request and the tool disagree by accident. Pass the
+request to the tool, with its option or its variable:
 
 ```bash
 threads=${SLURM_CPUS_PER_TASK:-1}
-seqkit stats -j "$threads" -T data/raw/*.fastq.gz
+seqkit stats -j "$threads" -T data/raw/*.fastq.gz   # the option
+export SEQKIT_THREADS=$threads                      # or the variable
 ```
 
-The array script in @sec-hpc-slurm-arrays does exactly this. (Threads
+The array script in @sec-hpc-slurm-arrays uses the option; the first
+job script uses the variable, because the `seqkit` command it runs is
+inside Chapter 8's script. (Threads
 and how much faster they make a tool are @sec-performance; the rule
 here is only "ask for as many CPUs as you tell the tool to use".)
 
 ::: {.callout-caution .misconception}
 ## Misconception: "If I ask SLURM for 8 CPUs, my tool uses 8"
 **Reality.** SLURM reserves the CPUs; the tool starts as many threads
-as its own option says (seqkit: 4 by default, whatever you reserved).
+as its own option says (seqkit: up to 4 by default, whatever you
+reserved).
 Pass `$SLURM_CPUS_PER_TASK` to the tool's thread option.
 :::
 
@@ -1325,7 +1363,7 @@ shorter ones into the gaps, as long as they do not delay the big one
 configuration](https://slurm.schedmd.com/sched_config.html#backfill-scheduling)).
 So a shorter, smaller request **can** start sooner. It is not
 guaranteed: priority, fair share, and new jobs arriving all change the
-picture. Try it in @fig-backfill: a toy node with 8 CPUs, three jobs
+picture. Try it in @fig-backfill: a toy node with 8 CPUs, two jobs
 running, and one big job waiting for the whole node. Set your job's
 CPUs and requested hours, and see when it could start.
 
@@ -1735,9 +1773,11 @@ Compare cells across lines:
 - The **allocation line** holds the request: `ReqMem 2G` (older SLURM
   versions add `n` or `c`, per node or per CPU), `AllocCPUS 2`.
 - The **step lines** hold the use: `MaxRSS 106944K` on `.batch`, about
-  104 MB. `MaxRSS` is the peak memory of one step, sampled every so
-  often, not a sum over everything in the job; a blank or zero means
-  that line was not measured, or the site does not collect it.
+  104 MB. `MaxRSS` is the peak memory of the largest single task in
+  that step, sampled every so often: not a total for the step or the
+  job (with one task per job, as in this book, it is that task's
+  peak). A blank or zero means that line was not measured, or the site
+  does not collect it.
 - `seff` puts the two side by side: 104 MB used of 2 GB, 5.10%. It
   exists on Ceres, Atlas, and Nova; if your site lacks it, `sacct` has
   everything it uses.
@@ -1868,16 +1908,48 @@ RAP1_IAA_30M_REP1	SRR6357076	data/raw/SRR6357076_1.fastq.gz	data/raw/SRR6357076_
 
 Two runs carry the label `WT_REP1`: the test set groups them to test
 merging, though ENA lists them as separate biological samples. This is
-exactly why the run, not the label, keys each task. Send the project
-to the cluster with the `rsync` line from
-@sec-working-remotely-move-project (only the new files travel), and run
-`md5sum -c checksums.md5` in `data/raw/` there: on Nova all eight said
-`OK`. Note in `NOTEBOOK.md` what you added and why.
+exactly why the run, not the label, keys each task.
 
-One side effect: `src/01_count_reads.sh` counts every file in
-`data/raw/`, so from now on `results/read_counts.tsv` has eight rows,
-not two. That is correct, and the first job's numbers above were from
-before this step.
+**One script needs updating.** `src/01_count_reads.sh` counts every
+file in `data/raw/`, so its table now has eight rows. But the result
+check you added in @sec-shell-scripts-read expects exactly a header and
+two rows, and it does its job: run the script now and it refuses the
+new table, leaving the old one in place.
+
+```{.console}
+read_counts: expected a header and 2 rows
+```
+
+That number 3 belonged to the two-file project, as Chapter 8 warned.
+Make the check work out the expected count from the same list of files
+that seqkit reads. In `src/01_count_reads.sh`, replace the `seqkit
+stats` line and the two check lines below it with these four
+(@sec-shell-scripts-variables has the lists):
+
+```{.bash filename="src/01_count_reads.sh (replaces three lines)"}
+  fastqs=(data/raw/*.fastq.gz)                                  # <1>
+  seqkit stats --quiet -T "${fastqs[@]}" > results/read_counts.tsv.tmp
+  [[ $(wc -l < results/read_counts.tsv.tmp) -eq $(( ${#fastqs[@]} + 1 )) ]] ||  # <2>
+    { echo "read_counts: expected a header and ${#fastqs[@]} rows" >&2; exit 1; }
+```
+1. A list of the FASTQ files, made once and used twice.
+2. `${#fastqs[@]}` is the number of files; a good table has one more
+   line, the header.
+
+Run it again from the project folder (`pixi run bash
+src/01_count_reads.sh`): it exits 0, `results/read_counts.tsv` has nine
+lines (a header and eight 50,000-read rows), and the log's `script:`
+line shows a new checksum (`8398b37e…` on the book's copy), which is
+what that line is for. A damaged file still stops it: a truncated
+FASTQ gave `expected a header and 8 rows` and kept the previous table.
+Commit the change and note it in `NOTEBOOK.md` with the new data
+(@sec-shell-scripts-git). The first job's numbers earlier in this
+chapter, two rows, were from before this step.
+
+Then send the project to the cluster with the `rsync` line from
+@sec-working-remotely-move-project (only the new and changed files
+travel), and run `md5sum -c checksums.md5` in `data/raw/` there: on
+Nova all eight said `OK`.
 
 ### The array script
 
@@ -1909,6 +1981,7 @@ echo "task $task: run $run, file $fq, $threads threads, on $(hostname)"
 if [ "${1:-}" = "--dry-run" ]; then exit 0; fi                            # <7>
 mkdir -p results
 pixi run seqkit stats -j "$threads" -T "$fq" > "results/stats_${run}.tsv.tmp"  # <8>
+[[ $(wc -l < "results/stats_${run}.tsv.tmp") -eq 2 ]] || { echo "expected one stats row for $run" >&2; exit 1; }  # <9>
 mv "results/stats_${run}.tsv.tmp" "results/stats_${run}.tsv"
 echo "task $task finished $(date)"
 ```
@@ -1926,6 +1999,13 @@ echo "task $task finished $(date)"
    anywhere.
 8. Each task writes **its own** output, named by run, through a `.tmp`
    name. Read 1 only, to keep the example small.
+9. The result check from @sec-shell-scripts-read, for one file: a
+   header and one row. seqkit can report a damaged file and still exit
+   0, leaving a table with only its header; the `.tmp` name alone would
+   then publish it. With the check, a truncated FASTQ stopped the task
+   with exit 1 and kept the previous good result (tested on the
+   laptop; the cluster captures below came from the script before this
+   line was added, which prints nothing when the check passes).
 
 Run the selection for every task number before you submit anything,
 one more than you have rows:
@@ -2188,9 +2268,9 @@ a few minutes.
   started by SLURM when resources are free. Inside a job, the
   allocation (`SLURM_*`, `scontrol show job`), not `free`, says what
   you may use.
-- A request names a partition, an account, and sometimes a QOS; the
-  strictest limit wins. `sinfo` is not always the real limit: check
-  `scontrol show partition` and `sacctmgr show qos`.
+- A request names a partition, an account, and sometimes a QOS, and
+  each layer can set limits. `sinfo` is not always the real limit:
+  check `scontrol show partition` and `sacctmgr show qos`.
 - Home is small; projects hold your work; scratch is big but purged;
   node-local `$TMPDIR` lasts one job. Count files as well as bytes.
   Stage work in a temporary folder of your own and copy results back.
@@ -2257,8 +2337,9 @@ partition and its real time limit (and where that limit comes from);
 your accounts; the interactive partition, if any; the quota command
 and your current use; whether `seff` exists.
 
-**No cluster?** Fill the card for this fictional site from its
-captured outputs:
+**No cluster?** Fill the card for this fictional site from its outputs
+and one sentence of its user guide ("Interactive sessions: use the
+`short` partition."):
 
 ```{.console}
 $ sinfo -s
@@ -2275,15 +2356,22 @@ $ sacctmgr -n show assoc user=$USER format=account%20
             lab-smith
 $ command -v seff || echo "no seff"
 no seff
+$ site_quota
+Path                      Used (GB)   Quota (GB)   Files     File quota
+/home/<user>                    4.1         20      31,207     200,000
+/proj/lab-smith              1840.0       5000   2,914,330   5,000,000
 ```
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Answer
 For the fictional site: default partition `main`, whose real limit is
 7 days, from the `main` QOS the partition attaches (`sinfo` says 30);
-account `lab-smith`; interactive work goes to `short` (4 hours); no
-quota command given, so ask the site or use `df -h` on your project; no
-`seff`, so measure with `sacct`. On a real site, compare with
+account `lab-smith`; interactive partition `short` (4 hours; it is the
+user guide that says so, not the time limit); quota command
+`site_quota`: home 4.1 of 20 GB, the project 1,840 of 5,000 GB, and
+this site also counts files (2.9 of 5 million in the project); no
+`seff`, so measure with `sacct`. (`df -h` would show the file system's
+free space, not your quota.) On a real site, compare with
 @tbl-sites-slurm.
 :::
 :::
@@ -2323,8 +2411,11 @@ is no log file at all: everything goes to your terminal.
 
 Submit `ok.sbatch`, then the three broken scripts. For each, record
 `State`, `ExitCode`, and the one log line that explains it. Then fix
-one of them (raise the memory, the time, or the spelling), resubmit,
-and confirm it completes.
+one of them, resubmit, and confirm it completes: give `oom` more
+memory than it takes (`--mem=3G`), or `timeout` more time than it
+sleeps (`--time=00:10:00`). If you choose `typo`, fix the spelling
+first and submit it: it fails again, for a different reason. Find that
+reason in the log, and fix it too.
 
 **No cluster?** Use the captured `sacct` table and logs in
 @sec-hpc-slurm-failures, and answer from these three lines of another
@@ -2348,8 +2439,14 @@ far more memory than it used?
 `ok`: `COMPLETED 0:0`, log `ok`. `oom`: `OUT_OF_MEMORY 0:125`, log
 `… Killed …` and `Detected 1 oom_kill event`. `timeout`: `TIMEOUT 0:0`
 (`.batch` `CANCELLED 0:15`), log `CANCELLED AT … DUE TO TIME LIMIT`.
-`typo`: `FAILED 127:0`, log `No such file or directory`. In the extra
-table: 31337001 ran out of memory (its peak passed 16 GB);
+`typo`: `FAILED 127:0`, log `No such file or directory`. With the
+spelling fixed, `typo` fails with `run from the project folder`: the
+job starts in the scratch folder, and Chapter 8's guard stops the
+script there, as it should. A path to the script finds the script; it
+does not change the folder the script runs in, nor start the book
+environment that `seqkit` needs. The full fix replaces the `bash` line
+with `cd "$project"` and `pixi run bash src/01_count_reads.sh`. In the
+extra table: 31337001 ran out of memory (its peak passed 16 GB);
 31337002 hit its 12-hour limit (and used only 3.1 of 64 GB, so the next
 request needs more time but far less memory); 31337003 used 2.2 of 120
 GB, so about 3 GB would do.
@@ -2363,23 +2460,30 @@ GB, so about 3 GB would do.
 Run `jobs/02_stats_array.sbatch` as an array over the four runs with a
 generous request (8 CPUs, 16 GB, 1 hour, given on the command line:
 `sbatch --array=1-4 --cpus-per-task=8 --mem=16G --time=01:00:00 …`).
-Use `seff` or `sacct` to choose a smaller request, and resubmit with
-it. For both runs, record CPU efficiency, peak memory, and queue wait
-(`sacct -j <id> --format=JobID%20,Submit,Start`) in `NOTEBOOK.md`. Wait
-times depend on the queue at that moment, so record them; do not
-expect a "right" answer.
+Use `sacct` or `seff` to choose a smaller memory and time request, and
+resubmit with it. For both runs, record peak memory, elapsed time, and
+queue wait (`sacct -j <id> --format=JobID%20,Submit,Start`) in
+`NOTEBOOK.md`. Wait times depend on the queue at that moment, so record
+them; do not expect a "right" answer. These tasks last a second or
+less, too short for CPU efficiency to mean anything (it will likely
+read 0%, as for the first job). For the CPU part, use the two
+2-minute jobs in @tbl-cpu-efficiency instead: compute each one's
+efficiency by hand from `TotalCPU`, `Elapsed`, and `AllocCPUS`, and
+say how many CPUs you would ask for to run the second one again.
 
 **No cluster?** Choose the smaller request from the four captured
-tasks in @sec-hpc-slurm-arrays (2 CPUs, 2 GB, at most 1 second each).
+tasks in @sec-hpc-slurm-arrays (2 CPUs, 2 GB, at most 1 second each),
+and do the CPU part as above.
 
 ::: {.callout-tip collapse="true" appearance="minimal"}
 ## Answer
-Each task peaked at 72–88 MB and ran a second or less, so 1–2 CPUs,
-about 256–512 MB (the peak plus a margin, rounded up generously for
-such a small number), and a few minutes is plenty. With 8 CPUs, seqkit
-used only as many threads as `-j "$threads"` gave it; check that your
-`seff` efficiency fell with the bigger request. The smaller request
-often waits less, but not always.
+Each task peaked at 72–88 MB and ran a second or less, so about
+256–512 MB (the peak plus a margin, rounded up generously for such a
+small number) and a few minutes is plenty; keep 1–2 CPUs, since a
+second-long task gains nothing from more. The smaller request often
+waits less, but not always. CPU part: 478.9 s / (126 s × 4) = 95.0%
+and 120.0 s / (125 s × 4) = 24.0%; the second job kept one CPU busy,
+so it needs 1 CPU (or its tool told to use 4).
 :::
 :::
 
@@ -2431,6 +2535,7 @@ project=$PWD
 work=$(mktemp -d "${TMPDIR:?}/stats_${SLURM_ARRAY_JOB_ID:-local}_${task}_XXXX")
 cp "$fq" "$work/"
 pixi run seqkit stats -j "$threads" -T "$work/$(basename "$fq")" > "$work/stats.tsv"
+[[ $(wc -l < "$work/stats.tsv") -eq 2 ]] || { echo "expected one stats row for $run" >&2; exit 1; }
 cp "$work/stats.tsv" "$project/results/stats_${run}.tsv.tmp"
 mv "$project/results/stats_${run}.tsv.tmp" "$project/results/stats_${run}.tsv"
 rm -rf "$work"

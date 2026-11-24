@@ -24,7 +24,7 @@
     A step keeps one core at 100% while seven sit idle. Will rerunning it
     with --threads 8 make it faster? (Correct: only if the tool supports
     threads; if it does not, nothing changes.)
-  chapters: [01-orientation, 35-performance]
+  chapters: [01-orientation, 10-hpc-slurm, 35-performance]
 
 - id: cluster-faster-computer
   claim: "The cluster is just a faster computer."
@@ -174,7 +174,7 @@
   probe: >
     `as.integer(c("12","7","n/a"))` finished without an error. Is the
     result fine? (Correct: only if `n/a` means missing in that column.)
-  chapters: [04-getting-help, 08-shell-scripts]
+  chapters: [04-getting-help, 08-shell-scripts, 10-hpc-slurm]
 
 - id: last-line-is-the-error
   claim: "The last line of the output is the error that matters."
@@ -647,3 +647,68 @@
     After `rsync -av` into /project/..., `ls -l` shows your own group on
     the files. What option fixes it? (Correct: --no-p --no-g.)
   chapters: [09-working-remotely, 10-hpc-slurm]
+
+# Chapter 10 ----------------------------------------------------------------
+
+- id: space-means-room
+  claim: "If my quota shows free space, I can keep making files."
+  reality: >
+    Many systems also limit the number of files. A pixi environment is
+    about 15,000 files, and a pipeline's work folder can hold millions.
+    Count with `find … -type f | wc -l`, and read the site's own file
+    count where it gives one.
+  probe: >
+    You get "Disk quota exceeded" with 400 GB free. What do you check?
+    (Correct: the file-count limit, with the site's quota command, and
+    which folder holds the most files.)
+  chapters: [10-hpc-slurm]
+
+- id: job-runs-in-my-shell
+  claim: "A job sees my terminal as it is now."
+  reality: >
+    A batch job runs later, on another node, with a copy of the
+    environment from when you submitted, starting in the folder you
+    submitted from, with no terminal. Scripts it calls are read when it
+    starts, not when you submit.
+  probe: >
+    You run sbatch in your project folder, then cd somewhere else. Where
+    do the job's relative paths point? (Correct: the project folder you
+    submitted from.)
+  chapters: [10-hpc-slurm]
+
+- id: cpus-sets-threads
+  claim: "If I ask Slurm for 8 CPUs, my tool uses 8."
+  reality: >
+    Slurm reserves CPUs; the tool starts as many threads as its own
+    option says (seqkit starts 4 by default, whatever was reserved).
+    Pass $SLURM_CPUS_PER_TASK to the tool's thread option. Some sites
+    also round a request up to whole cores, so check AllocCPUS in sacct.
+  probe: >
+    You ask for --cpus-per-task=8 and run seqkit stats with no -j. How
+    many threads does seqkit use? (Correct: 4, its default; the other 4
+    CPUs sit idle.)
+  chapters: [10-hpc-slurm, 35-performance]
+
+- id: ask-big-to-be-safe
+  claim: "Asking for lots of memory and time is the safe choice."
+  reality: >
+    A big or long request can wait longer, because the scheduler fits
+    smaller, shorter jobs into gaps (backfill). Resources you hold but do
+    not use while the job runs are unavailable to others and can count
+    toward your group's usage. Measure a test run, then add a margin.
+  probe: >
+    Two identical jobs, one asking for 2 hours and one for 3 days: which
+    may start first, and why? (Correct: the 2-hour job, because it fits
+    into more gaps; it is likely, not guaranteed.)
+  chapters: [10-hpc-slurm]
+
+- id: pending-means-broken
+  claim: "My job is pending, so something is wrong."
+  reality: >
+    Priority and Resources are normal waiting. Only some reasons, such
+    as a limit the request breaks or a failed dependency, need a fix.
+    Read the reason column in squeue.
+  probe: >
+    Your job shows (Priority) after 20 minutes. What do you do? (Correct:
+    wait; check squeue --start; ask the site only if hours pass.)
+  chapters: [10-hpc-slurm]

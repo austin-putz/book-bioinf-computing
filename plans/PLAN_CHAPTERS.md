@@ -26,6 +26,12 @@ ShellCheck); Chapter 34 keeps debugging and linting in depth.
 Revised 2026-11-19 (Chapter 9 plan): Chapter 9 adds `ssh host command`
 and the host-key warning, connection sharing (`ControlMaster`), and
 moving the project to the cluster.
+Revised 2026-11-23 (Chapter 10 plan, checked on Ceres, Atlas, and
+Nova): Chapter 10 adds partitions, accounts, and QOS; node-local
+temporary space as a fourth storage tier; why jobs wait or fail
+(pending reasons, out of memory, time limit); chains of jobs
+(dependencies, overview); and connecting to a held compute node
+(`ProxyJump`, completing Chapter 9). Topics in the chapter's order.
 
 **Guiding idea:** most readers will work on a Linux HPC cluster (SCINet
 Ceres/Atlas, ISU Nova, and similar), with a laptop for editing, small
@@ -215,21 +221,29 @@ Short: get readers to a first successful command quickly.
 
 ### 10. HPC and SLURM [core]
 
-- Cluster anatomy: login vs compute nodes
-- Environment modules (`module load`, Lmod)
-- Storage tiers: home, project, scratch; quotas (site quota command) and
-  purges
+- Cluster anatomy: login vs compute nodes; partitions, accounts, QOS,
+  and each site's defaults and time limits (`sinfo`, `scontrol show
+  partition`)
+- Storage tiers: home, project, scratch, and node-local temporary space
+  (`$TMPDIR`); quotas (site quota command) and purges
 - File-count (inode) quotas: millions of small files (a Nextflow `work/`
   directory, environments in `$HOME`) can fill an account that has bytes
   to spare
-- `sbatch` scripts and resource requests
-- Estimating memory, time, and disk for a job; measuring a real one
-- Interactive jobs
-- Job arrays
-- Monitoring and accounting (`squeue`, `sacct`, `seff`); cancelling
-  (`scancel`)
+- Environment modules (`module load`, Lmod) beside the book's pixi
+  environment
+- Interactive jobs (`srun --pty`, `salloc`); connecting to a node you
+  hold (`ProxyJump`, completing Chapter 9) and giving it back
 - A running process vs a submitted job
-- GPU partitions (brief)
+- `sbatch` scripts that wrap Chapter 8's scripts; resource requests
+  (CPUs, memory, time; passing the CPU count to the tool)
+- Why jobs wait or fail: pending reasons, out of memory, time limit,
+  missing file
+- Estimating memory, time, and disk for a job; measuring a real one
+  (`sacct`, `seff` where the site has it)
+- Monitoring and cancelling (`squeue`, `scancel`)
+- Job arrays
+- Chains of jobs (dependencies) [overview]
+- GPU partitions [overview, brief]
 - Etiquette: no heavy work on login nodes
 
 ---

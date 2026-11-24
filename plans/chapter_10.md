@@ -1057,7 +1057,7 @@ between the two misconceptions of §7).
 
 ## Misconceptions
 
-New entries for `misconceptions.yml` (added when this plan is agreed):
+New entries, added to `misconceptions.yml` on 2026-11-23 when the plan was agreed (with `10-hpc-slurm` added to `more-cores-faster` and `no-error-means-correct`):
 
 - `ask-big-to-be-safe`: "Asking for lots of memory and time is the safe
   choice." Reality: a big or long request can wait longer, because the

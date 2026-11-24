@@ -1,18 +1,20 @@
 ---
 title: "Chapter 10 — HPC and SLURM"
-subtitle: "Chapter plan · core · draft"
-date: 2026-11-22
+subtitle: "Chapter plan · core · agreed"
+date: 2026-11-23
 ---
 
 **Part:** II — The Linux command line · **Label:** core · **Status:**
-draft plan, 2026-11-22; revised the same day after
+agreed 2026-11-23, after the hands-on checks on all three clusters
+(`chapter_10_checks.md`) and a consistency pass against the Chapter 8
+and 9 drafts; ready to draft. Drafted 2026-11-22; revised the same day after
 `chapter_10_codex_review.md` (what changed and why: *Review response*
 at the end); open questions decided by Austin the same day
 (*Decisions*). Site facts come from Appendix A (checked 2026-11-21/22
 against the sites' pages and by logging in to Ceres, Atlas, and Nova).
-Rows marked *observed* were seen on those logins; rows marked *to
-capture* need a login (listed under *Checks to capture*, to become
-`chapter_10_checks.md`). Where a site behaviour is inferred rather than
+Rows marked *observed* were seen on those logins; every
+check has been run (`chapter_10_checks.md`); anything not checked is
+said in place. Where a site behaviour is inferred rather than
 confirmed, the plan says *inference*.
 
 ## From `PLAN_CHAPTERS.md`
@@ -161,7 +163,7 @@ overview section.
   ```bash
   mkdir -p logs
   sbatch jobs/01_count_reads.sbatch
-  sacct -j <jobid> --format=JobID,JobName,State,ExitCode,Elapsed,ReqMem,MaxRSS
+  sacct -j <jobid> --format=JobID%20,JobName,State%15,ExitCode,Elapsed,AllocCPUS,ReqMem,MaxRSS
   cat logs/01_count_reads_<jobid>.out
   cat results/read_counts.tsv
   ```
@@ -173,7 +175,9 @@ overview section.
   1–3). The text says plainly that `COMPLETED` means the script exited
   0, not that the result is right: the count check is what confirms the
   result (Slurm's exit-code guide makes the same point). `MaxRSS` is
-  well below `ReqMem` (values *to capture*).
+  well below `ReqMem` (Nova, *observed* 2026-11-23: `COMPLETED 0:0`
+  on all three lines, `Elapsed 00:00:02`, `MaxRSS 116244K` on `.batch`
+  against `ReqMem 2G`, `AllocCPUS 2` for a 1-CPU request, see §7).
 - **Check (no-cluster path):** the job script is a bash script with
   local fallbacks for the `SLURM_*` values (`job_id=${SLURM_JOB_ID:-local}`),
   so `bash jobs/01_count_reads.sbatch` runs on the laptop from the
@@ -273,7 +277,9 @@ aids*.
    your own applicable limits (`sacctmgr show assoc user=$USER
    format=account,partition,qos,defaultqos`; `sacctmgr show qos
    format=Name,MaxWall,MaxTRESPU%30`; the `QOS=` field of `scontrol
-   show job` for a real job; *to capture*, may be restricted). A request
+   show job` for a real job; all readable as an ordinary user on the
+   three sites, *observed* 2026-11-23: `QOS=ceres` on Ceres,
+   `QOS=normal` on Nova). A request
    that breaks a limit may be **rejected when you submit** or left
    **pending** with a reason (§8), depending on site settings. Ceres
    rejects it at once (*observed* 2026-11-23, `--time=30-00:00:00`):
@@ -291,7 +297,9 @@ aids*.
    on sites configured to accept such jobs; say so beside the table.
    **Scavenger** partitions run on idle nodes and can be stopped
    (preempted). What one node has: `sinfo -N -o "%N %c %m %G" | head`
-   (CPUs, memory in MB, GPUs; *to capture*). Site table
+   (CPUs, memory in MB, GPUs; *observed* 2026-11-23: Ceres
+   `ceres20-compute-*` 96 CPUs, 752,000 MB; Nova `nova18-5` 72 CPUs,
+   189,000 MB; Atlas `atlas-0001` 48 CPUs, 385,323 MB). Site table
    (`tbl-sites-slurm`), linking Appendix A for the full lists.
    [`tbl-slurm-vocab`, `tbl-sites-slurm`; self-check]
 
@@ -334,8 +342,7 @@ aids*.
    observed (SCINet's guide says node-local space is temporary).
    Nova has the same setting as Ceres (`namespace/tmpfs`, `TmpFS = /tmp`,
    *observed* 2026-11-23; a Nova batch job shows the same private
-   `drwx------` `/tmp` on a 1.5 TB NVMe disk); Atlas *to capture*
-   (check 3). So the chapter
+   `drwx------` `/tmp` on a 1.5 TB NVMe disk). So the chapter
    teaches "make your own folder under it", never "clean `$TMPDIR`".
    *Then file counts:* many systems limit **files** as well as bytes; a
    Nextflow `work/` folder can reach millions (Chapter 26). Nova and
@@ -350,7 +357,7 @@ aids*.
    tmp_root=${TMPDIR:?TMPDIR is not set}          # stop if the site did not set it
    work=$(mktemp -d "$tmp_root/ch10_${SLURM_JOB_ID:-local}_XXXX")
    cp "$project/results/read_counts.tsv" "$work/"
-   LC_ALL=C sort -T "$work" -k2,2n "$work/read_counts.tsv" > "$work/sorted.tsv"
+   LC_ALL=C sort -T "$work" -t $'\t' -k4,4n "$work/read_counts.tsv" > "$work/sorted.tsv"
    cp "$work/sorted.tsv" "$out.tmp" && mv "$out.tmp" "$out"
    rm -rf "$work"                                 # only the folder this job made
    ```
@@ -359,13 +366,25 @@ aids*.
    folder; output paths are fixed before changing folder; `sort -T`
    tells `sort` where to write its temporary files (keeps Chapter 6's
    promise; putting inputs in a folder does not configure a tool's
-   temporary files); `pixi run` finds the environment from the project
+   temporary files); `-t $'\t' -k4,4n` sorts on `num_seqs`, the fourth
+   column of seqkit's table, and the header stays on top because a
+   word counts as 0 in a numeric sort (checked 2026-11-23 on the
+   laptop with GNU sort: the earlier `-k2,2n` keyed on `FASTQ` and
+   moved the header to the bottom); `pixi run` finds the environment from the project
    folder, so commands that need it run there or with `pixi run
    --manifest-path "$project/pixi.toml"`; a job killed by a time or
    memory limit never reaches the copy-back line, so anything that must
    survive a long run is written to project storage as it goes; disk
    checks stay inside the job's own folder (`du -sh "$work"`). The
    chapter uses a tiny file, so this is about the habit, not speed.
+   Nova, *observed* 2026-11-23, the block as a 1 GB, 5-minute job
+   submitted from the project folder: log `work folder:
+   /tmp/ch10_<id>_3FzT on nova18-71`, `8.0K` for that folder, then
+   `ls: cannot access '/tmp/ch10_<id>_3FzT': No such file or
+   directory` after the `rm -rf` (the folder is gone), and `done: 3
+   lines in …/results/sorted_counts.tsv`, header on top; `COMPLETED
+   0:0`, `MaxRSS 2376K`. The same script run with `bash` on the laptop
+   used macOS's `TMPDIR` and gave the same file.
    *Real-world note (observed 2026-11-22):* moving 2 GB of R packages
    (67,000 small files) from home to `/work` with `mv` took hours and
    died with the SSH connection; small files are slow on network
@@ -433,32 +452,62 @@ aids*.
    1. **Acquire** (login node): hold one node for a set time with
       `salloc` and the site's options; ISU's recipe keeps the
       allocation busy with `sleep infinity` so it lasts until released
-      or its time limit (exact command from ISU's page at drafting).
+      or its time limit. ISU's page gives `salloc -N1 -n 8
+      --time=2:00:00 --mem=8G sleep infinity` ("use your standard
+      SLURM arguments"); the chapter uses a small request. Nova,
+      *observed* 2026-11-23 with `salloc -N1 -n1 --time=00:20:00
+      --mem=2G sleep infinity`: `Granted job allocation <id>`,
+      `Waiting for resource configuration`, `Nodes nova18-71 are ready
+      for job`, then no prompt: the terminal stays busy while you
+      hold the node, so the next steps use a second terminal.
    2. **Find the node** (login node): `squeue -u $USER` → the
-      `NODELIST` column (e.g. `nova18-11`; *observed* name format to
-      capture).
+      `NODELIST` column (Nova names *observed* in the checks:
+      `nova18-71`, `nova18-72`, `nova18-wide-33`, `nova21-swift-4`;
+      the held job shows as `interact`, state `R`). From the laptop,
+      `ssh nova 'squeue -u $USER'` does the same in one line.
    3. **Connect** (laptop): put that name into the `Host
       <allocated-node>` block from Chapter 9 (`ProxyJump nova`), check
       it with `ssh -G <allocated-node> | grep -i proxyjump`, then `ssh
       <allocated-node> hostname` or VS Code Remote-SSH to it (Windows:
       the block must be in the Windows config, Chapter 2). The node
-      name changes every time, so the block is edited each time. Most
-      sites let you SSH to a compute node only while you hold a job
-      there (*inference*; *to capture* on Nova what an SSH to a node
-      you do not hold prints).
+      name changes every time, so the block is edited each time.
+      **The block needs a `User` line** (ISU's has one): the `nova`
+      alias sets the user name only for the login node, so without it
+      ssh uses the laptop's user name for the compute node. Nova,
+      *observed* 2026-11-23 from the Mac on the VPN: `ssh -J nova
+      <netid>@nova18-71 hostname` printed `nova18-71`, with no password
+      or code (the key came from the agent; no `-i` needed). It first
+      asked the host-key question (`The authenticity of host 'nova18-71
+      (<no hostip for proxy command>)' can't be established`); answering
+      `yes` added it to `known_hosts`. A second node showed the **same
+      fingerprint** and said `This host key is known by the following
+      other names/addresses: … nova18-71`: Nova's compute nodes share
+      one host key, so the question comes once per node name but
+      always with the same fingerprint. You can SSH to a compute node
+      only while you hold a job there: on a node not held, `Access
+      denied by pam_slurm_adopt: you have no active jobs on this node`
+      then `Connection closed by UNKNOWN port 65535` (*observed*). That
+      line is worth quoting: it is what readers see when the allocation
+      has ended (§5 self-check).
    4. **Release** (login node): `scancel <jobid>`, then `squeue -u
       $USER` shows nothing; an idle held node still uses the
-      account's allocation and blocks others (etiquette, §13).
+      account's allocation and blocks others (etiquette, §13). ISU's
+      page does not say how to release, so the chapter does. Nova,
+      *observed* 2026-11-23: after `scancel`, the waiting `salloc`
+      terminal printed `salloc: Job allocation <id> has been revoked.`
+      and returned to the prompt; `squeue` empty. (Ctrl-C in that
+      terminal is the other way; not tested.)
    ISU's own block adds `ForwardAgent yes` (lets the node use your
    laptop's agent, e.g. for git; anyone with root on the node could
    use it while you are connected) and `StrictHostKeyChecking no`
    (skips the host-key question, because each node is new to your
-   `known_hosts`); both are explained here as **ISU's choices for that
+   `known_hosts`; on Nova the fingerprint is the same for every node,
+   *observed*, so answering `yes` once per node is little work); both are explained here as **ISU's choices for that
    one compute-node entry**, never for `Host *`, and the generic
    Chapter 9 block keeps host-key checking on. SCINet: Open OnDemand
    is the supported route to an editor on a compute node (Chapter 2;
-   whether direct SSH to a held Ceres/Atlas node works is *to
-   capture*). [`fig-proxyjump` reused from Chapter 9; self-check] An
+   whether direct SSH to a held Ceres/Atlas node works was not
+   checked; the chapter does not teach it there). [`fig-proxyjump` reused from Chapter 9; self-check] An
    Open OnDemand VS Code, RStudio, or JupyterLab session is also a job,
    with a web page in front (`closing-tab-ends-session`). Settings the
    site prints on arrival (*observed* on Ceres and Nova: `TMPDIR`,
@@ -500,8 +549,13 @@ aids*.
    starts, so its folder must already exist), `sbatch
    jobs/01_count_reads.sbatch` → `Submitted batch job 1234567`; `squeue
    -u $USER` (`PD`, then `R`); `tail -f logs/01_count_reads_<jobid>.out`;
-   Ctrl-C stops `tail`, not the job. The script (shown, not run in the
-   book build; final form after Chapter 8's script is fixed):
+   Ctrl-C stops `tail`, not the job. A 2-second job may be gone before
+   `R` shows (Nova, *observed* 2026-11-23: `PD … (None)`, then nothing),
+   so say so. Run `sbatch` from the project folder: from `~` it fails
+   with `sbatch: error: Unable to open file jobs/01_count_reads.sbatch`
+   (*observed*). The script (shown, not run in the book build; tested
+   2026-11-23 on Nova without the `--account` line, against Chapter 8's
+   drafted script):
 
    ```bash
    #!/usr/bin/env bash
@@ -537,7 +591,9 @@ aids*.
    scheduler's (`logs/01_count_reads_<jobid>.out`, everything the job
    prints; stdout and stderr together unless `--error` is set,
    `errors-go-to-file` revisited) and Chapter 8's own log written by
-   `01_count_reads.sh`. **What runs is fixed late:** `sbatch` keeps a
+   `01_count_reads.sh` (`logs/01_count_reads_<date>_XXXX.log`, the
+   `XXXX` filled in by `mktemp`; both names start `01_count_reads_`, so
+   `ls logs` shows them side by side, *observed*). **What runs is fixed late:** `sbatch` keeps a
    copy of the job script, but `src/01_count_reads.sh` is read when the
    job starts, so editing it while the job waits changes what runs;
    note the job ID and the script's git commit in `NOTEBOOK.md`
@@ -626,8 +682,8 @@ aids*.
    the log shows where it stopped. `ExitCode` is `code:signal`
    (`127:0` the script's own status; `0:15` and `0:125` mean stopped
    from outside). `sacct` cuts `OUT_OF_MEMORY` to `OUT_OF_ME+`, so the
-   chapter's command widens `State%15` as well as `JobID%15`. *Then read the records together:* `sacct -j <id>
-   --format=JobID,State,ExitCode,Elapsed,ReqMem,MaxRSS` shows the
+   chapter's command widens `State%15` as well as `JobID%20`. *Then read the records together:* `sacct -j <id>
+   --format=JobID%20,State%15,ExitCode,Elapsed,ReqMem,MaxRSS` shows the
    allocation line and one line per step (`.batch`, and numbered steps
    if the script uses `srun`); read those lines **and** the log, since
    the most useful one varies. `tbl-job-states`. *Then waiting:*
@@ -648,7 +704,7 @@ aids*.
 
 9. **Measuring a job and sizing the next one.** *Start hands-on:* one
    annotated capture of `sacct
-   --format=JobID,State,Elapsed,AllocCPUS,TotalCPU,ReqMem,MaxRSS` for a
+   --format=JobID%20,State%15,Elapsed,AllocCPUS,TotalCPU,ReqMem,MaxRSS` for a
    finished job, with the cells to compare marked: the allocation line
    holds the request (`ReqMem`, with its unit; older versions add a
    per-node or per-CPU suffix), the step lines hold use (`MaxRSS` is the
@@ -658,10 +714,12 @@ aids*.
    allocation line `COMPLETED 0:0 00:00:02 2 00:00.246 2G` with
    `MaxRSS` blank; `.batch` line `MaxRSS 106944K`; `.extern` line
    all zero. `sacct` cuts long names to 10 characters (`22918876.ba+`),
-   so the chapter's command widens the column (`JobID%15`). `seff`:
+   so the chapter's command widens the column (`JobID%20`, which array
+   step names also need). `seff`:
    `Memory Utilized: 104.44 MB`, `Memory Efficiency: 5.10% of 2.00
    GB`, `Cores per node: 2`.
-   Then `seff <jobid>` if the site has it (Ceres has, *observed*); CPU
+   Then `seff <jobid>` if the site has it (all three have it,
+   *observed* 2026-11-23); CPU
    efficiency computed by hand once (`TotalCPU / (Elapsed ×
    AllocCPUS)`) so `seff`'s number is not magic: with the Ceres pair,
    478.9 s / (126 s × 4) = 95.0% and 120.0 s / (125 s × 4) = 24.0%,
@@ -997,7 +1055,7 @@ between the two misconceptions of §7).
   4. **Right-size a request.** Run `jobs/02_stats_array.sbatch` as an
      array over four runs with a generous request; use `seff` or
      `sacct` to choose a smaller one; resubmit; record efficiency and
-     queue wait (`sacct --format=JobID,Submit,Start`) for both in
+     queue wait (`sacct --format=JobID%20,Submit,Start`) for both in
      `NOTEBOOK.md`. Wait times depend on the queue at that moment, so
      they are recorded, not compared for a "right" answer. No cluster:
      supplied captured `sacct` tables for both runs.
@@ -1018,12 +1076,18 @@ between the two misconceptions of §7).
 - **Running dataset:** the book's two files, `SRR6357070_1.fastq.gz`
   and `SRR6357070_2.fastq.gz` (50,000 reads each, in `data/raw/` with
   `checksums.md5` from Chapter 3), for §6–§9. For the array (§10): four
-  rows in `data/meta/reads.tsv`. Proposal: add three more paired-end
+  rows in `data/meta/reads.tsv`. Decided (*Decisions* 3): add three more paired-end
   runs of the nf-core fixture (read 1 and read 2, so `reads.tsv` stays
   complete). This is a project change, done as one supplied step:
   - temporarily make `data/raw/` writable, download from the pinned
     `testdata-url`, add the files to `checksums.md5`, run `md5sum -c`,
-    and write-protect it again (Chapter 3's routine);
+    and write-protect it again (Chapter 3's routine). Recommended
+    route: do this in the **laptop** project, then send it with
+    Chapter 9's `rsync` through the DTN and run `md5sum -c` on the
+    cluster ("data still moves with rsync", Chapter 9); this is how the
+    Part 4 check ran on Nova (rsync sent only the new files; all 8
+    `OK`). Downloading on a login node is the alternative, if the site
+    allows it;
   - add one row per run to `reads.tsv` (and to `samples.tsv` for any new
     sample) and to `data/README.md` (source, accession, license,
     checksums);
@@ -1186,7 +1250,8 @@ correct. Nothing needs changing in the drafts.
 ## Site differences observed (2026-11-23)
 
 From `chapter_10_checks.md` (Ceres and Nova: Parts 0–3; Atlas: the
-parts where it may differ). The chapter's text, `tbl-sites-slurm`, and
+parts where it may differ; Nova: Part 4, the real first job and
+array). The chapter's text, `tbl-sites-slurm`, and
 the pitfall callouts are written from this table. User and project
 names are placeholders.
 
@@ -1206,6 +1271,7 @@ names are placeholders.
 | GPUs | none | four GPU partitions (`gpu-a100`, `gpu-a100-mig7`, `gpu-l40s`, `gpu-v100`); MIG slice `--gres=gpu:nvidia_a100_1g.10gb:1` or `gpu:1` (the OnDemand form's `a100_1g.10gb` is refused) | GPU nodes **in the default partition**; `--gres=gpu:<type>:1` | §12 |
 | `samtools` modules | 1.16.1, 1.17 (3 trees) | not checked | 1.16.1, 1.19.2, 1.23.1 with hash suffixes (9 trees, dated) | §4 |
 | `.pixi` on disk | 1.3 GB | 1.3 GB | 813 MB (compressed `/work`); same 13,001 files everywhere | §3 |
+| A 1-CPU request gets | not checked (2-CPU jobs bill as `billing=1`) | not checked | **2 CPUs**: `CR_CORE_MEMORY`, `ThreadsPerCore=2` | §7 |
 | Login node | 32 CPUs, 376 GB | 48 CPUs, 376 GB | 64 CPUs, 188 GB | §1 |
 :::
 
@@ -1226,7 +1292,14 @@ in `sinfo` is wrong on two of three sites; always set `--time` and
 
 ## Checks to capture
 
-To become `chapter_10_checks.md` (on Nova and Ceres; Atlas where the
+**Status 2026-11-23:** checks 1–15 done, results in
+`chapter_10_checks.md` (7 and 9 with the real job and array on Nova).
+Check 16 (ProxyJump to a held node) done the same day on Nova from the
+Mac (§5 updated; VS Code Remote-SSH and Windows not tried). §3's
+staging block also ran as a job on Nova the same day (§3 updated).
+**All checks done.**
+
+Written as the brief for `chapter_10_checks.md` (on Nova and Ceres; Atlas where the
 answer may differ). User and project names replaced in anything
 committed (`_private/` holds the real ones). Run as one end-to-end pass
 once the job scripts, the array manifest, and the staging block are
@@ -1296,8 +1369,9 @@ All six open questions answered; each took the proposed option.
 
 1. **`sacct` first.** The chapter teaches `sacct` fields as the main way
    to measure a job, since every site has it; `seff` appears as "if your
-   site has it". Which of Ceres, Atlas, and Nova have `seff` is still
-   check 5, and only changes that one sentence.
+   site has it". All three have `seff` (check 5, *observed*
+   2026-11-23), so that sentence says "if your site has it; Ceres,
+   Atlas, and Nova do".
 2. **Job scripts wrap Chapter 8's scripts.** The §6 job runs `pixi run
    bash src/01_count_reads.sh`, and the check reads
    `results/read_counts.tsv`. §10's array script calls seqkit directly,

@@ -1022,6 +1022,60 @@ verify).
 :::
 
 ::: {.callout-note}
+## Check 16, 2026-11-23: ProxyJump to a held node (Nova, from the Mac)
+ISU's recipe (`research.it.iastate.edu/launching-remote-ides-novas-compute-nodes`):
+`salloc -N1 -n 8 --time=2:00:00 --mem=8G sleep infinity`; a compute
+node `Host` block with `ForwardAgent yes`, `StrictHostKeyChecking no`,
+`ProxyJump`, and `User`; it does not say how to release the node.
+
+- **Hold (terminal A, login node):** `salloc -N1 -n1 --time=00:20:00
+  --mem=2G sleep infinity` → `Granted job allocation <id>`, `Waiting
+  for resource configuration`, `Nodes nova18-71 are ready for job`;
+  then no prompt.
+- **Find (terminal B, laptop):** `ssh nova 'squeue -u $USER'` → job
+  `interact`, `R`, `nova18-71`.
+- **Connect:** `ssh -J nova <netid>@nova18-71 hostname` → host-key
+  question (`The authenticity of host 'nova18-71 (<no hostip for proxy
+  command>)' can't be established. ED25519 key fingerprint is
+  SHA256:…`), `yes`, `Warning: Permanently added 'nova18-71'`, then
+  `nova18-71`. No password or code, no `-i` (key from the agent). The
+  `<netid>@` is needed because the `nova` alias's `User` covers only
+  the login node.
+- **Node not held:** `ssh -J nova <netid>@nova18-5 hostname` → the
+  **same fingerprint**, with `This host key is known by the following
+  other names/addresses: ~/.ssh/known_hosts:33: nova18-71` (Nova's
+  compute nodes share one host key); `yes`; then `Access denied by
+  pam_slurm_adopt: you have no active jobs on this node` and
+  `Connection closed by UNKNOWN port 65535`.
+- **Release (laptop):** `ssh nova 'scancel <id>; sleep 2; squeue -u
+  $USER'` → `squeue` empty; terminal A printed `salloc: Job allocation
+  <id> has been revoked.`
+- Not tried: VS Code Remote-SSH, Windows, Ceres and Atlas.
+- Left behind: two `known_hosts` lines on the Mac (`nova18-71`,
+  `nova18-5`); harmless, removable with `ssh-keygen -R <name>`.
+:::
+
+::: {.callout-note}
+## Staging block (exercise 6), 2026-11-23: Nova and laptop
+`jobs/ch10_staging.sbatch` (22 lines): the plan's §3 block with the
+corrected sort (`-t $'\t' -k4,4n`), plus a `du`, an `ls` of the removed
+folder, and a line count; 1 CPU, 1 GB, 5 minutes.
+
+- **Laptop** (`bash`): used macOS's `TMPDIR`, `8.0K`, folder gone
+  afterwards, `done: 3 lines`, header on top, exit 0.
+- **Nova** (sent with Chapter 9's rsync, which also resent
+  `checksums.md5`; `sbatch` from the project folder): `work folder:
+  /tmp/ch10_<id>_3FzT on nova18-71`; `8.0K /tmp/ch10_<id>_3FzT`; `ls:
+  cannot access '/tmp/ch10_<id>_3FzT': No such file or directory`;
+  `done: 3 lines in /work/<group>/<netid>/bioinf-computing/results/sorted_counts.tsv`.
+  `sorted_counts.tsv`: header `file num_seqs`, then both `SRR6357070`
+  files at 50000. `sacct`: `COMPLETED 0:0` on all three lines,
+  `Elapsed 00:00:00`, `MaxRSS 2376K` on `.batch`.
+- Left in the Nova and laptop projects: `jobs/ch10_staging.sbatch` and
+  `results/sorted_counts.tsv` (test files; safe to delete).
+:::
+
+::: {.callout-note}
 ## Part 4 status (2026-11-23): complete on Nova
 First job (interactive test, then `sbatch`), dated log, and the real
 array all ran as planned. Left in place on Nova: the project, with

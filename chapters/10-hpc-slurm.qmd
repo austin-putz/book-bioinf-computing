@@ -1,27 +1,2466 @@
 # HPC and SLURM {#sec-hpc-slurm}
 
-::: {.callout-important icon=false}
-## Under construction
-
-This chapter is a placeholder. The topics below are the current plan and
-will change as the chapter is written.
-:::
-
 **Core.** Work through it, with the exercises.
 
-## Planned topics
+::: {.callout-note .goals icon=false}
+## Learning goals
 
-- Cluster anatomy: login vs compute nodes; partitions, accounts, QOS, and each site's defaults and time limits (`sinfo`, `scontrol show partition`)
-- Storage tiers: home, project, scratch, and node-local temporary space (`$TMPDIR`); quotas (site quota command) and purges
-- File-count (inode) quotas: millions of small files (a Nextflow `work/` directory, environments in `$HOME`) can fill an account that has bytes to spare
-- Environment modules (`module load`, Lmod) beside the book's pixi environment
-- Interactive jobs (`srun --pty`, `salloc`); connecting to a node you hold (`ProxyJump`, completing @sec-working-remotely) and giving it back
-- A running process vs a submitted job
-- `sbatch` scripts that wrap @sec-shell-scripts's scripts; resource requests (CPUs, memory, time; passing the CPU count to the tool)
-- Why jobs wait or fail: pending reasons, out of memory, time limit, missing file
-- Estimating memory, time, and disk for a job; measuring a real one (`sacct`, `seff` where the site has it)
-- Monitoring and cancelling (`squeue`, `scancel`)
-- Job arrays
-- Chains of jobs (dependencies) (overview)
-- GPU partitions (overview, brief)
-- Etiquette: no heavy work on login nodes
+By the end of this chapter you should be able to:
+
+1. Tell a login node from a compute node, list a cluster's partitions
+   and your accounts, and say which work belongs where.
+2. Choose the right storage area for a file, and check your use against
+   your quota (bytes, and files where the site counts them).
+3. Load software with `module load` or the book environment, and keep
+   the two from clashing.
+4. Write and submit a batch job with sensible resource requests, then
+   watch, read, and cancel it.
+5. Find out why a job is waiting or failed, measure what a finished job
+   used, size the next request from it, and run one script over many
+   inputs with a job array.
+:::
+
+## What this chapter does {#sec-hpc-slurm-intro}
+
+So far you have used a compute node in one way only: by asking for a
+shell on it, with the `srun` line from @sec-orientation-first-session.
+Real analyses run differently. You write a script, hand it to the
+cluster's scheduler with a list of what it needs, and log out. The
+scheduler starts it when a node has room, runs it without you, and
+keeps a record of what happened. That script plus its request is a
+**job**, and the scheduler on Ceres, Atlas, Nova, and most academic
+clusters is **SLURM** (SLURM Workload Manager).
+
+@fig-cluster-anatomy from @sec-orientation-where already has every
+piece. One idea is new: the scheduler is a **queue** in front of the
+compute nodes. You never pick a node yourself; you describe the job,
+and the scheduler decides where and when it runs.
+
+::: {.callout-important}
+## Key idea
+Real work runs as jobs: a script plus a resource request, started by
+the scheduler when a node is free, whether or not you are logged in.
+:::
+
+**Start with two machines.** On the login node, ask what the machine
+is, then ask the same of a compute node from inside a small interactive
+session. Paste the `srun` line **alone**, and wait for the new prompt
+before typing anything else (@sec-hpc-slurm-interactive explains why).
+SCINet readers add `-A <project>` to `srun`, as in
+@sec-cluster-sites-interactive:
+
+```{.bash filename="Terminal (login node)"}
+hostname; nproc; free -g | head -n 2
+srun --cpus-per-task=2 --mem=2G --time=00:15:00 --pty bash -l
+```
+
+```{.bash filename="Terminal (compute node)"}
+hostname; nproc; free -g | head -n 2
+echo "cpus=$SLURM_CPUS_PER_TASK mem=$SLURM_MEM_PER_NODE"
+scontrol show job "$SLURM_JOB_ID" | grep -E 'NumCPUs|mem=|QOS='
+exit
+```
+
+On Ceres (captured 2026-11-23; the site's arrival lines left out):
+
+```{.console}
+ceres-login-1.ceres.scinet.usda.gov
+32
+               total        used        free      shared  buff/cache   available
+Mem:             376          42           5           0         331         334
+srun: job 22918832 queued and waiting for resources
+srun: job 22918832 has been allocated resources
+ceres20-compute-6
+2
+               total        used        free      shared  buff/cache   available
+Mem:             754          39         135           5         588         714
+cpus=2 mem=2048
+   Priority=11698683 Nice=0 Account=<project> QOS=ceres
+   NumNodes=1 NumCPUs=2 NumTasks=1 CPUs/Task=2 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=2,mem=2G,node=1,billing=1
+   AllocTRES=cpu=2,mem=2G,node=1,billing=1
+```
+
+The host name changed, so this is a different machine. Its `free`
+reports 754 GB, but that is the **whole node**, shared with everyone
+else's jobs; you asked for 2 GB. The `SLURM_*` variables and the
+`scontrol` lines describe **your allocation**: 2 CPUs and 2,048 MB.
+`nproc` happened to show 2 here, because Ceres limits a job's view to
+its CPUs; on other sites it may show the whole node. Nova gave the same
+pattern on `nova18-wide-13`: `nproc` 2, `free` 376 GB, `QOS=normal`.
+Read what you may use from the allocation lines, never from the
+hardware lines.
+
+**Without a cluster**, these parts work on the laptop: the job script
+in @sec-hpc-slurm-first-job runs with plain `bash`, the array's dry run
+in @sec-hpc-slurm-arrays runs with test values, the staging script in
+@sec-hpc-slurm-storage runs as is, and the backfill figure in
+@sec-hpc-slurm-resources is interactive. Everything else is shown as
+captured sessions, with a no-cluster version of every required
+exercise.
+
+**Where you work.** Practice happens in your cluster project, the one
+@sec-book-setup installed and @sec-working-remotely-move-project filled:
+`/project/<project>/<user>/bioinf-computing` on SCINet and
+`/work/<group>/<netid>/bioinf-computing` on Nova. Two things are new.
+Job scripts go in a new `jobs/` folder in the project; `logs/` exists
+from @sec-organizing-projects. And a scratch folder for this chapter,
+`bioinf-computing-ch10`, sits **beside** the project, not in your home
+(@sec-hpc-slurm-storage says why):
+
+```{.bash filename="Terminal (login node)"}
+cd /work/<group>/<netid>/bioinf-computing      # SCINet: /project/<project>/<user>/bioinf-computing
+mkdir -p jobs logs ../bioinf-computing-ch10/logs
+```
+
+You can write the job scripts in two places. On the laptop, in VS Code,
+in `~/bioinf-computing/jobs/`, test them there with `bash`, and send
+them with the `rsync` line from @sec-working-remotely-move-project; or
+on the login node with nano or vim (@sec-book-setup-terminal-editors).
+The first route is how this chapter's scripts were tested.
+
+The outputs shown were captured on 2026-11-23 on Ceres, Atlas, and
+Nova, and on a Mac (macOS 15, Homebrew bash and GNU tools) for the
+laptop parts. User names, accounts, and groups are replaced by
+`<user>`, `<netid>`, `<project>`, and `<group>`; job IDs and node names
+are as captured. Your numbers will differ.
+
+## Look at the cluster: nodes, partitions, accounts, QOS {#sec-hpc-slurm-layout}
+
+**Start hands-on.** On the login node:
+
+```{.bash filename="Terminal (login node)"}
+sinfo -s
+sacctmgr -n show assoc user=$USER format=account%30
+```
+
+On Ceres (captured 2026-11-21):
+
+```{.console}
+PARTITION AVAIL  TIMELIMIT   NODES(A/I/O/T) NODELIST
+ceres*       up 60-00:00:0     110/8/39/157 ceres20-compute-[0-75],ceres20-mem-[0-10],ceres24-compute-[1-20],ceres25-compute-[1-50]
+scavenger    up 21-00:00:0     110/8/39/157 ceres20-compute-[0-75],ceres20-mem-[0-10],ceres24-compute-[1-20],ceres25-compute-[1-50]
+          <project>
+          <project-2>
+```
+
+`sinfo -s` lists the **partitions**, groups of nodes with their own
+limits. The `*` marks the default, used when you do not name one.
+`TIMELIMIT` is the partition's longest run (`60-00:00:0` is 60 days,
+cut short by the column width). `NODES(A/I/O/T)` counts nodes that are
+allocated, idle, other (down or drained), and in total. `sacctmgr`
+lists your **accounts**, the projects or groups your jobs are charged
+to. Atlas lists `atlas*`, `bigmem`, four GPU partitions,
+`development`, and `service`, all `infinite`; Nova lists `nova*` (31
+days), `interactive` (8 hours), `instruction`, `scavenger`, and a few
+others (@sec-cluster-sites-interactive).
+
+**Then name it.** A request names up to three things besides its
+resources:
+
+- a **partition**: which nodes may run it, and their limits;
+- an **account**: who is charged. On SCINet you must give one (`-A
+  <project>`, or `--account`); Nova charges your default account if you
+  leave it out;
+- a **QOS** (quality of service): another set of limits (longest run,
+  most CPUs per user) attached to your account or to a partition.
+
+Limits apply at several levels, and the strictest one wins (SLURM's
+[resource limits](https://slurm.schedmd.com/resource_limits.html)
+page). This is not academic. Ceres's `sinfo` says 60 days, yet
+SCINet's guide says jobs on `ceres` run at most three weeks. Both are
+right:
+
+```{.bash filename="Terminal (login node)"}
+scontrol show partition ceres | grep -o -E '(DefaultTime|MaxTime|DefMemPerCPU|QoS)=[^ ]+'
+sacctmgr -n show qos format=Name%25,MaxWall,MaxTRESPU%40 | grep -E ' (ceres|normal) '
+```
+
+```{.console}
+QoS=ceres
+DefaultTime=02:00:00
+MaxTime=60-00:00:00
+DefMemPerCPU=2000
+                   normal 21-00:00:00
+                    ceres 21-00:00:00                 cpu=4000,mem=36T,node=32
+```
+
+The partition allows 60 days, but it attaches the `ceres` QOS to every
+job in it (`QoS=ceres`), and that QOS stops jobs at 21 days
+(`MaxWall`). The same two lines also show what you get when you leave
+things out: 2 hours (`DefaultTime`) and 2,000 MB per CPU
+(`DefMemPerCPU`). @tbl-sites-slurm has the three sites side by side;
+on two of the three, the number in `sinfo` is not your real limit.
+
+::: {.wide-table}
+: Where each site's limits come from (observed 2026-11-21 to 23). Full lists: @sec-cluster-sites. {#tbl-sites-slurm}
+
+| | Ceres | Atlas | Nova |
+|:--|:--|:--|:--|
+| `-A <account>` needed? | yes | yes | no (default account) |
+| Default partition, `sinfo` limit | `ceres`, 60 days | `atlas`, `infinite` | `nova`, 31 days |
+| Real time limit, and where it comes from | 21 days: the `ceres` QOS the partition attaches | 14 days: the `normal` QOS | 31 days: the partition (the `normal` QOS sets none) |
+| Default time / memory if left out | 2 h / 2,000 MB per CPU | 2 h / 7,686 MB per CPU | 4 h / 3,800 MB per CPU |
+| Interactive partition | none separate | none separate (`development` nodes) | `interactive`, 8 h |
+| Scavenger (runs on idle nodes, can be stopped) | `scavenger` | none | `scavenger` |
+| GPUs | none | four GPU partitions | GPU nodes inside `nova` |
+| `MaxArraySize` | 10001 | 10001 | 1001 |
+| `seff` | yes | yes | yes |
+| A node (CPUs, memory) | 96, 752,000 MB | 48, 385,323 MB | 72, 189,000 MB (`nova18-5`) |
+
+:::
+
+**Your own limits.** Three commands answer "which limits apply to
+me?". All three worked for an ordinary user on all three sites:
+
+```{.bash filename="Terminal (login node)"}
+sacctmgr -n -P show assoc user=$USER format=account,partition,qos,defaultqos
+sacctmgr -n show qos format=Name%25,MaxWall,MaxTRESPU%40
+scontrol show partition <name>
+```
+
+The first lists, per account, the QOS you may use and your default one
+(Atlas: `debug,normal`, default `normal`; Nova: `normal,scavenger`,
+default `normal`). The second gives each QOS's limits. The third gives
+a partition's own settings and the QOS it attaches, if any. Once you
+have a job, `scontrol show job <jobid>` shows the QOS it really got
+(`QOS=ceres` above; `QOS=normal` on Nova).
+
+**A request that breaks a limit** is either refused when you submit or
+accepted and left waiting with a reason (@sec-hpc-slurm-failures),
+depending on how the site is set up. All three sites refuse it at once.
+Ceres, asking for 30 days (captured 2026-11-23):
+
+```{.bash filename="Terminal (login node)"}
+sbatch -A <project> --time=30-00:00:00 --wrap="hostname"
+```
+
+```{.console}
+sbatch: error: QOSMaxWallDurationPerJobLimit
+sbatch: error: Batch job submission failed: Job violates accounting/QOS policy (job submit limit, user's size and/or time limits)
+```
+
+No job was created. (`--wrap` turns one command into a tiny job without
+a script file, handy for tests.) The message names the QOS limit, which
+confirms where the 21 days come from. Atlas gave the same message for
+30 days; Nova, whose limit is the partition's, said `Requested time
+limit is invalid (missing or exceeds some limit)` for 40 days.
+
+**What one node has**, in CPUs, memory (MB), and GPUs:
+
+```{.bash filename="Terminal (login node)"}
+sinfo -N -o "%N %c %m %G" | head -n 3
+```
+
+```{.console}
+NODELIST CPUS MEMORY GRES
+ceres20-compute-0 96 752000 (null)
+ceres20-compute-0 96 752000 (null)
+```
+
+(A node in two partitions is listed twice.) A job cannot be bigger than
+one node unless it is written to run across several, which the book's
+tools are not. **Scavenger** partitions run jobs on nodes nobody else
+is using, at no charge, but a job there can be stopped (preempted) when
+the owner's work arrives; use them only for jobs that can be rerun.
+
+: SLURM's vocabulary (reference). {#tbl-slurm-vocab}
+
+| Term | Plain meaning | Where you see it |
+|:-----|:--------------|:-----------------|
+| node | one computer in the cluster | `sinfo -N`, `NODELIST` in `squeue` |
+| partition | a group of nodes with its own limits | `sinfo`, `--partition` |
+| account | who is charged | `sacctmgr show assoc`, `--account` |
+| QOS | an extra set of limits on a request | `sacctmgr show qos`, `QOS=` in `scontrol show job` |
+| job | a script plus a resource request, with an ID | `sbatch`, `squeue` |
+| job step | one part of a job: `batch` (the script), `extern`, or one per `srun` inside it | `sacct` lines `<id>.batch`, `<id>.extern` |
+| task | one copy of a program; most bioinformatics tools need one | `--ntasks` |
+| SLURM CPU | a core, or one hardware thread of a core, depending on the site | `--cpus-per-task`, `AllocCPUS` |
+| allocation | the resources a job holds while it runs | `AllocTRES` in `scontrol show job` |
+| fair share | priority lowered for groups that used a lot recently | why your job waits behind others |
+| preemption | stopping a job so another can run (scavenger) | state `PREEMPTED` |
+
+::: {.check}
+**Check yourself.** `sinfo` shows 60 days for a partition, but the
+site's guide says 3 weeks. How do you find which limit applies to
+**your** job?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Look past the partition: `scontrol show partition <name>` shows whether
+it attaches a QOS, `sacctmgr show assoc user=$USER …` shows your
+account's QOS, and `sacctmgr show qos` shows each QOS's `MaxWall`. A
+real job's `QOS=` field in `scontrol show job` tells you which one it
+got. The strictest limit wins; an over-long request is refused or left
+pending with a reason that names the limit.
+:::
+:::
+
+## Where files go: storage tiers and quotas {#sec-hpc-slurm-storage}
+
+**Start hands-on.** Check your quota with the site's command, then
+count the files in the book environment, in your cluster project:
+
+```{.bash filename="Terminal (login node)"}
+my_quotas                                  # SCINet
+cat /work/<group>/group_storage_usage      # Nova: find your own row
+cd /work/<group>/<netid>/bioinf-computing  # SCINet: /project/<project>/<user>/bioinf-computing
+find .pixi -type f | wc -l
+du -sh .pixi
+```
+
+On Ceres, `my_quotas` printed one line for your home, one per project,
+and one per project on Juno, the long-term archive, each with usage,
+quota, and status (captured 2026-11-20; @tbl-sites-quotas has every
+site's command). The environment, on Ceres and on Nova (captured
+2026-11-23):
+
+```{.console}
+13001
+1.3G    .pixi
+```
+
+```{.console}
+13001
+813M    .pixi
+```
+
+Thirteen thousand files, for one small environment. `find -type f`
+counts regular files only; the site's own count (Nova's `OBJUSED`
+column) also includes folders and links, which here bring the total
+to 15,528, so the two numbers need not match. Nova's `du` says 813 MB
+for the same files because its `/work` compresses data.
+
+**Then name it.** A cluster has several kinds of storage, each for a
+different job (@fig-storage-tiers, @tbl-storage-tiers):
+
+- **Home** (`/home/<user>`): small, 10–30 GB. Config files and the
+  `pixi` program itself; never data, environments, or results.
+- **Project or group** (`/project/<project>` on SCINet, `/work/<group>`
+  on Nova): large, shared with your lab, quota per project. Your
+  project folder lives here, and so does the
+  `bioinf-shared/references` folder from
+  @sec-working-remotely-move-project that `data/ref` links to.
+- **Scratch** (`/90daydata` on SCINet, `/ptmp` on Nova): large and
+  free, but **purged**: SCINet deletes files 90 days after last access;
+  Nova's banner says 60 days unused. Never backed up. For intermediate
+  files you can make again.
+- **Node-local temporary space**: a disk inside the compute node
+  itself, reached through `$TMPDIR` while your job runs. SCINet's
+  [scratch guide](https://scinet.usda.gov/guides/use/scratch) and ISU's
+  [file storage page](https://research.it.iastate.edu/file-storage)
+  say it is deleted when the job ends. It is often faster than network
+  storage for many small files, but that depends on the site and the
+  work.
+
+Beyond these four sits the long-term archive: Juno on SCINet, `/lss`
+on Nova, which compute nodes on Nova cannot see.
+
+::: {#fig-storage-tiers}
+{{< svg ../figures/storage-tiers.svg >}}
+
+Four storage tiers. Home, project, and scratch are shared storage that
+login and compute nodes both see; node-local temporary space is inside
+the compute node and disappears when the job ends. The strip below is
+the staging pattern: read from the project, work in a temporary folder
+of your own, copy the results back.
+:::
+
+: Storage tiers (general; site paths and numbers in @tbl-sites-storage). {#tbl-storage-tiers}
+
+| Tier | What goes there | Size | Backed up? | Purged? | Seen from compute nodes? |
+|:-----|:----------------|:-----|:-----------|:--------|:------------------------|
+| home | config, `~/.pixi/bin` | 10–30 GB | site-dependent | no | yes |
+| project or group | projects, environments, references, results | TB, quota per project | SCINet: no; Nova `/work`: daily snapshots | no | yes |
+| scratch | big intermediate files | large, often no quota | no | yes, after 60–90 days | yes |
+| node-local temporary space (`$TMPDIR`) | one job's temporary files | 1–1.7 TB per node, shared by its jobs | no | when the job ends | only on that node, only by that job |
+| archive | finished data to keep | TB | yes (it is the backup) | no | no (Nova) |
+
+**What `$TMPDIR` is, per site.** Ceres and Nova set `TMPDIR=/tmp`. In
+a batch job there, that `/tmp` is not the node's shared one: it is an
+empty folder that belongs to you alone (Ceres, captured 2026-11-23):
+
+```{.console}
+TMPDIR: /tmp
+drwx------. 2 <user> root 6 Nov 23 11:52 /tmp
+/dev/nvme0n1p1  1.5T   11G  1.5T   1% /tmp
+```
+
+A shared `/tmp` reads `drwxrwxrwt` and belongs to `root`. SLURM on
+these two sites gives each job its own empty `/tmp` on the node's
+1.5 TB disk and removes it when the job ends. Atlas does it
+differently: a batch job gets `TMPDIR=/local/scratch/<user>/<jobid>`,
+a new empty folder per job on a 1.7 TB disk, while `/tmp` stays the
+node's shared folder. Two jobs on the same Atlas node each saw only
+their own files. So scripts say **`$TMPDIR`**, never `/tmp`, and they
+work on all three. To see which kind your site has:
+
+```{.bash filename="Terminal (login node)"}
+scontrol show config | grep -i -E 'NamespaceType|JobContainer'
+```
+
+`namespace/tmpfs` (Ceres, Nova) means a private `/tmp` per job;
+`(null)` (Atlas) means no such plugin, so look at what `$TMPDIR` is set
+to.
+
+**Files, not only bytes.** Many systems limit the **number of files**
+as well as the space, because each file costs the storage system
+work. A pipeline's work folder can hold millions of small files
+(@sec-nf-core), and a few environments in home can fill a home quota of
+files long before its gigabytes. SCINet and Nova state no file-count
+limit (@sec-cluster-sites-storage), but Nova's usage file reports
+`OBJUSED`, and many other sites do enforce one.
+
+::: {.callout-caution .misconception}
+## Misconception: "If my quota shows free space, I can keep making files"
+**Reality.** Many systems also limit the number of files. One
+environment is about 15,000 files; a pipeline's work folder can be
+millions. Count with `find … -type f | wc -l`, and read the site's own
+file count where it gives one.
+:::
+
+### Staging: work in your own temporary folder
+
+@sec-organizing-projects promised that large intermediate files could
+live in temporary storage while a job runs, with only the results kept
+in the project. Here is the pattern, complete, as a job script. Save
+it as `jobs/ch10_staging.sbatch`; SCINet readers replace `<project>`
+with their account, Nova readers delete that line. It sorts
+`results/read_counts.tsv`, which Chapter 8's pipeline left in your
+project, by read count:
+
+```{.bash filename="jobs/ch10_staging.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=ch10_staging
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=1G
+#SBATCH --time=00:05:00
+#SBATCH --output=logs/%x_%j.out
+set -euo pipefail
+project=$PWD                                       # <1>
+out="$project/results/sorted_counts.tsv"           # <2>
+tmp_root=${TMPDIR:?TMPDIR is not set}              # <3>
+work=$(mktemp -d "$tmp_root/ch10_${SLURM_JOB_ID:-local}_XXXX")  # <4>
+echo "work folder: $work on $(hostname)"
+cp "$project/results/read_counts.tsv" "$work/"
+LC_ALL=C sort -T "$work" -t $'\t' -k4,4n "$work/read_counts.tsv" > "$work/sorted.tsv"  # <5>
+du -sh "$work"                                     # <6>
+cp "$work/sorted.tsv" "$out.tmp" && mv "$out.tmp" "$out"  # <7>
+rm -rf "$work"                                     # <8>
+ls "$work" || true
+echo "done: $(wc -l < "$out") lines in $out"
+```
+1. A job starts in the folder you submitted from, so `$PWD` is the
+   project when you submit from there (@sec-hpc-slurm-first-job).
+2. Output paths are absolute and decided **before** anything changes
+   folder.
+3. `${TMPDIR:?message}` gives the value of `TMPDIR`, or, if it is
+   unset or empty, stops the script with that message. Its cousin
+   `${VAR:-default}` gives a default instead of stopping; both appear
+   again below.
+4. The job makes **its own** folder inside temporary space, with the
+   job ID in its name; `mktemp -d` fills in `XXXX` so two jobs never
+   collide.
+5. `sort -T` tells `sort` where to write its own temporary files, the
+   promise from @sec-text-tools: putting the input in a folder does not
+   tell a tool where to keep its temporary files. `-t $'\t' -k4,4n`
+   sorts on the fourth column, `num_seqs`, as numbers; the header stays
+   on top because a word counts as 0 in a numeric sort.
+6. Disk checks stay inside the job's own folder.
+7. The result goes back to project storage through a `.tmp` name, as
+   in @sec-shell-scripts-pipeline.
+8. The job removes only the folder it made; never clean `$TMPDIR` as a
+   whole, which other jobs on the node may share (Atlas).
+
+Try it on the laptop first (macOS and Linux set their own `TMPDIR`, or
+the `:?` line tells you), from the project folder, then submit it on the
+cluster in the same way as the first job in @sec-hpc-slurm-first-job:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+bash jobs/ch10_staging.sbatch
+```
+
+As a job on Nova (captured 2026-11-23):
+
+```{.console}
+work folder: /tmp/ch10_17734237_3FzT on nova18-71
+8.0K    /tmp/ch10_17734237_3FzT
+ls: cannot access '/tmp/ch10_17734237_3FzT': No such file or directory
+done: 3 lines in /work/<group>/<netid>/bioinf-computing/results/sorted_counts.tsv
+```
+
+The `ls` error is the good news: the folder is gone. On the laptop the
+work folder was under macOS's own temporary folder, and the result was
+the same three lines. Three more points about the pattern:
+
+- Commands that need the book environment run with `pixi run` from the
+  project folder, or with `pixi run --manifest-path
+  "$project/pixi.toml"` from anywhere else.
+- A job killed by its time or memory limit never reaches the copy-back
+  line. Anything a long job must keep is written to project storage as
+  it goes.
+- With a tiny file, this changes nothing about speed. It is the habit
+  that matters, for the day the files are large and many.
+
+::: {.callout-warning}
+## Pitfall: thousands of small files move slowly
+Moving 2 GB of R packages (67,000 small files) from home to `/work` on
+Nova with `mv` took hours and died when the SSH connection dropped
+(observed 2026-11-22). Network storage is slow per file. Run big moves
+as a job, or with `rsync` inside tmux (@sec-working-remotely-tmux),
+which can resume.
+:::
+
+The same rule from @sec-organizing-projects still holds: cluster
+storage is not a backup. SCINet's project storage is not backed up at
+all, and Nova's snapshots are kept for days, not years.
+
+::: {.check}
+**Check yourself.** Your project has 400 GB free, but an install fails
+with `Disk quota exceeded`. Give two possible causes.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+A file-count limit (the install makes many small files, and the site
+counts files as well as bytes); or the install is writing into your
+home, which has a much smaller quota (a cache or environment that
+defaults to `~`). Check the site's file count and where the files are
+going.
+:::
+:::
+
+## Software: modules and the book environment {#sec-hpc-slurm-modules}
+
+**Start hands-on.** On the login node, look for software the site
+provides:
+
+```{.bash filename="Terminal (login node)"}
+module avail apptainer
+module spider samtools
+```
+
+On Nova (captured 2026-11-21 and 23; some lines left out):
+
+```{.console}
+---------------------- /opt/rit/el9/20240815/modules/lmod/linux-rhel9-x86_64/Core -----------------------
+   apptainer/1.4.0-py311-cdh2uiv
+
+---------------------- /opt/rit/el9/20240413/modules/lmod/linux-rhel9-x86_64/Core -----------------------
+   apptainer/1.1.9-py311-ibc4ohb    apptainer/1.3.6-py311-nvfjdsj
+
+---------------------- /opt/rit/el9/20230413/modules/lmod/linux-rhel9-x86_64/Core -----------------------
+   apptainer/1.1.5-py310-vxqhwar    apptainer/1.1.7-py310-vn2uaxu    apptainer/1.1.9-py310-wsbt4ge
+
+Module defaults are chosen based on Find First Rules due to Name/Version/Version modules found in the modu
+le tree.
+…
+  samtools:
+     Versions:
+        samtools/1.16.1-py310-d6uutpz
+        samtools/1.19.2-py311-qlmoxzv
+        samtools/1.23.1-py313-3cgtvqh
+…
+     $ module spider samtools/1.23.1-py313-3cgtvqh
+```
+
+Each dashed line is one **module tree**; Nova has nine, four of them
+dated software releases. `module avail` lists what you can load now;
+`module spider` searches everything, including modules that appear only
+after another is loaded (some Atlas modules appear only after a `gcc`
+module). Ceres's `module spider samtools` lists `samtools/1.16.1` and
+`samtools/1.17`. Nova's names end in a short code, so copy the full
+name from `module spider` rather than typing it.
+
+Now load one and look at what changed (any version your site lists):
+
+```{.bash filename="Terminal (login node)"}
+module load samtools/1.23.1-py313-3cgtvqh   # SCINet: samtools/1.17
+module list
+type -a samtools
+module purge
+type -a samtools
+```
+
+After `module load`, `type -a` finds `samtools` in a folder from the
+module tree; after `module purge`, it is gone again (or only the book
+environment's copy is found, if one is active).
+
+**Then name it.** A module system (on these sites,
+[Lmod](https://lmod.readthedocs.io)) changes `PATH` and a few other
+variables, for **this shell only** (@sec-linux-system-path). Nothing is
+installed or removed. Three rules follow:
+
+- **Load a named version.** A bare `module load samtools` takes the
+  site's default, which changes when the site adds a version; Nova's
+  "Find First Rules" message above is Lmod saying the default was picked
+  by position in the tree.
+- **Load modules inside the job script**, not in the shell you submit
+  from: the script should say everything it needs. On Ceres and Nova
+  the `module` command works in a batch job as it is (checked
+  2026-11-23); if your site's batch jobs say `module: command not
+  found`, its documentation gives a setup line for the top of the
+  script.
+- **Never in `~/.bashrc`** (@sec-linux-system-startup): a module loaded
+  at every login quietly changes every job and every `pixi run`.
+
+: Lmod commands. {#tbl-module-commands}
+
+| Command | What it does |
+|:--------|:-------------|
+| `module avail` | modules you can load now |
+| `module spider <name>` | search all modules, including hidden ones |
+| `module spider <name>/<version>` | how to load that version (what must be loaded first) |
+| `module load <name>/<version>` | add it to this shell |
+| `module list` | what is loaded |
+| `module unload <name>` | remove one |
+| `module purge` | remove all |
+| `module show <name>/<version>` | what it changes (`PATH`, other variables) |
+
+**The book's way.** Use `pixi run` for everything the book environment
+has, and a module only for what it lacks. Never both for the same tool
+in one job: whichever folder comes first on `PATH` wins, and `type -a`
+(@sec-linux-system-path) shows which. A module or a container
+(@sec-containers) can provide a tool the environment does not; how
+environments and modules compare in depth is @sec-environments.
+
+::: {.callout-tip}
+## Load a version, not a default, inside the script
+Write `module load samtools/1.17`, not `module load samtools`, as a line
+of the job script. Next year the default may be a different version;
+the named one either loads or fails loudly.
+:::
+
+::: {.check}
+**Check yourself.** `samtools --version` prints different versions in
+your shell and in your job. Give two reasons.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+A module was loaded in one and not the other (in your shell from
+earlier, but not in the script, or a different version); or one ran
+`pixi run samtools` and the other the bare `samtools`, finding a
+different copy on `PATH`. `type -a samtools` in both places shows
+which copy each one found.
+:::
+:::
+
+## Interactive jobs {#sec-hpc-slurm-interactive}
+
+**Start hands-on.** Start the interactive session from
+@sec-orientation-first-session with your site's options, pasted
+**alone** (SCINet: add `-A <project>`):
+
+```{.bash filename="Terminal (login node)"}
+srun --cpus-per-task=1 --mem=4G --time=00:30:00 --pty bash -l
+```
+
+When the compute node's prompt appears:
+
+```{.bash filename="Terminal (compute node)"}
+hostname
+echo "$SLURM_JOB_ID"
+```
+
+From a **second** terminal, logged in to the same cluster, list your
+jobs; then `exit` the session and list them again:
+
+```{.bash filename="Terminal (login node)"}
+squeue -u $USER
+```
+
+While the session is open, `squeue` shows one job, with the ID the
+session printed, a state `R` (running), the time it has run, and the
+node. After `exit`, the list is empty, on all three sites. The shell
+was a job all along: it had an ID, a time limit, and an allocation, and
+`exit` ended it.
+
+**Then name it.** `srun --pty bash -l` starts a new job whose one
+command is a login shell, connected to your terminal (`--pty`).
+`salloc` works in two stages: it first reserves the resources, then
+you run commands in them. What happens after `salloc` differs by site
+(captured 2026-11-23). On Ceres and Nova you land on the compute node:
+
+```{.console}
+salloc: Granted job allocation 17706564
+salloc: Nodes nova21-swift-4 are ready for job
+```
+
+and `hostname` prints `nova21-swift-4`. On **Atlas**, `salloc` holds
+the node but leaves you on the login node:
+
+```{.console}
+salloc: Granted job allocation 21323405
+salloc: Nodes atlas-0006 are ready for job
+atlas-login-1.hpc.msstate.edu
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          21323405     atlas interact   <user>  R       0:05      1 atlas-0006
+atlas-0006
+```
+
+Those three answers came from `hostname`, `squeue -u $USER`, and `srun
+hostname`: only the command started with `srun` ran on `atlas-0006`, as
+SCINet's [Ceres and Atlas
+differences](https://scinet.usda.gov/guides/resources/CeresAtlasDifferences)
+page says. On every site `exit` released the allocation (`salloc:
+Relinquishing job allocation …`). Still, after any `salloc`, run
+`squeue -u $USER` and `scancel <jobid>` anything left over.
+
+::: {.callout-warning}
+## Pitfall: after `salloc`, check where you are
+The same `salloc` line puts you on the compute node on Ceres and Nova,
+and leaves you on the login node on Atlas, where commands run on the
+login node unless you start them with `srun`. Run `hostname` first. For
+a shell on an Atlas node, use `srun --pty bash -l`.
+:::
+
+**What interactive jobs are for.** Trying commands, short tests, and
+setup work too heavy for a login node. @sec-working-remotely-move-project
+promised one such job: if `pixi install --locked` is slow on your site
+(it took 25 to 40 minutes on Nova in November 2026), run it inside a
+session:
+
+```{.bash filename="Terminal (compute node)"}
+cd /work/<group>/<netid>/bioinf-computing   # SCINet: /project/<project>/<user>/bioinf-computing
+pixi install --locked
+exit
+```
+
+When the environment already exists and the lock file has not changed,
+it finishes at once (0.9 seconds on Nova, `✔ The default environment
+has been installed.`).
+
+On arrival, Ceres and Nova print the settings they make for you:
+`TMPDIR=/tmp`, Apptainer's folders, and `TMOUT=5400`, which logs out a
+shell that has been idle for 90 minutes. An **Open OnDemand** session
+(VS Code, RStudio, JupyterLab; @sec-book-setup-remote) is the same
+thing with a web page in front: a job, with an account, a time limit,
+and an allocation that holds until it ends or you press **Cancel**.
+Closing the browser tab ends nothing.
+
+::: {.callout-warning}
+## Pitfall: lines pasted with `srun` run on the login node
+Paste `srun … --pty bash -l` together with the commands after it, and
+those commands wait in the terminal while the job starts. They run
+only when the session ends: **on the login node** (observed
+2026-11-22). Paste the `srun` line alone, wait for the compute node's
+prompt, then type the rest.
+:::
+
+### Connecting to a node you hold {#sec-hpc-slurm-proxyjump}
+
+@sec-working-remotely-config showed a `ProxyJump` entry and left it
+unused (@fig-proxyjump). Here is the whole route, on Nova, following
+ISU's page [Launching remote IDEs on Nova's compute
+nodes](https://research.it.iastate.edu/launching-remote-ides-novas-compute-nodes).
+You need it to open VS Code's Remote-SSH, or a plain `ssh`, on a compute
+node: you hold a node, connect to it through the login node, and give
+it back. Four steps, all here, so nothing is left running. (On SCINet,
+use Open OnDemand for an editor on a compute node, as in
+@sec-book-setup-remote; direct SSH to a held node was not checked
+there.)
+
+**1. Acquire** (terminal A, login node). Hold one node for a set time.
+ISU's page gives `salloc -N1 -n 8 --time=2:00:00 --mem=8G sleep
+infinity` ("use your standard SLURM arguments"); a small request is
+enough here:
+
+```{.bash filename="Terminal (login node)"}
+salloc -N1 -n1 --time=00:20:00 --mem=2G sleep infinity
+```
+
+```{.console}
+salloc: Granted job allocation 17734158
+salloc: Waiting for resource configuration
+salloc: Nodes nova18-71 are ready for job
+```
+
+There is no prompt after it: `sleep infinity` keeps the allocation
+busy, and so the terminal, until you release it or the time runs out.
+Use a second terminal for the next steps.
+
+**2. Find the node** (terminal B, laptop). The `NODELIST` column names
+it:
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova 'squeue -u $USER'
+```
+
+```{.console}
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          17734158      nova interact  <netid>  R       0:20      1 nova18-71
+```
+
+**3. Connect** (laptop). Put the node's name into a `Host` block in
+`~/.ssh/config` (on Windows, the Windows config, for VS Code;
+@sec-working-remotely-config):
+
+```{.default filename="~/.ssh/config (laptop)"}
+Host nova18-71
+    User <netid>
+    ProxyJump nova
+```
+
+The `User` line matters: your `nova` alias sets the user name for the
+login node only, so without it ssh offers your laptop's user name to the
+compute node. Check the entry, then connect:
+
+```{.bash filename="Terminal (laptop)"}
+ssh -G nova18-71 | grep -E '^(user|proxyjump) '
+ssh nova18-71 hostname
+```
+
+The first time, ssh asks the host-key question (captured from a Mac on
+ISU's VPN, 2026-11-23; `ssh -J nova <netid>@nova18-71 hostname` is the
+same without the config block):
+
+```{.console}
+The authenticity of host 'nova18-71 (<no hostip for proxy command>)' can't be established.
+ED25519 key fingerprint is SHA256:x+Xcboxz9osHZVjq6dQB/6gwFmMwDx62mV/YSGyuJ+M.
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'nova18-71' (ED25519) to the list of known hosts.
+nova18-71
+```
+
+No password or code: the key from @sec-working-remotely-keys did the
+work through the agent. Nova's compute nodes share one host key, so the
+next node asks again but shows **the same fingerprint**, with `This host
+key is known by the following other names/addresses: … nova18-71`. VS
+Code's Remote-SSH can now open `nova18-71` like any other host. The node
+name changes every time you hold one, so edit the `Host` line each time.
+
+You can connect only to a node where you hold a job. Try one you do not
+hold (`ssh -J nova <netid>@nova18-5 hostname`) and the node refuses:
+
+```{.console}
+Access denied by pam_slurm_adopt: you have no active jobs on this node
+Connection closed by UNKNOWN port 65535
+```
+
+Remember that message: it is also what you see when your allocation has
+ended.
+
+**4. Release** (laptop or login node). An idle node you hold still
+counts against your account and keeps others off it:
+
+```{.bash filename="Terminal (laptop)"}
+ssh nova 'scancel 17734158; sleep 2; squeue -u $USER'
+```
+
+Terminal A prints `salloc: Job allocation 17734158 has been revoked.`
+and returns to its prompt, and `squeue` lists nothing. ISU's page does
+not cover this step; do not skip it.
+
+ISU's own config block adds two options to the compute-node entry:
+`ForwardAgent yes`, which lets the node use your laptop's agent (for
+`git` with your key, say; anyone with root on the node could use it
+while you are connected), and `StrictHostKeyChecking no`, which skips
+the host-key question because every node is new to your `known_hosts`.
+Both are ISU's choices **for that one entry**; never put them under
+`Host *`. Since Nova's nodes share one fingerprint, answering `yes` once
+per node is little work, so the block above keeps the check on.
+
+::: {.check}
+**Check yourself.** Yesterday `ssh nova18-71` worked through `ProxyJump
+nova`; today the same command fails. Give two likely reasons.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The allocation ended or was cancelled, so you no longer hold that node
+(`Access denied by pam_slurm_adopt`); or today's allocation is on a
+different node and the `Host` block still names yesterday's.
+`squeue -u $USER` answers both.
+:::
+:::
+
+### A command, an interactive job, and a batch job
+
+@tbl-process-vs-job puts the three ways of running something side by
+side. The middle column is the one to be careful with: an interactive
+job lives as long as its connection, or its web page's session, so do
+not rely on it surviving a lost connection. Batch jobs, next, are built
+to run without one.
+
+::: {.wide-table}
+: Where and how a command runs. {#tbl-process-vs-job}
+
+| | Command on the login node | Interactive job (`srun --pty`, `salloc`, OnDemand) | Batch job (`sbatch`) |
+|:--|:--|:--|:--|
+| Runs on | the login node, shared by everyone | a compute node you hold | a compute node the scheduler picks |
+| Starts | at once | when resources are free; you wait at the prompt | when resources are free; you need not wait |
+| Lost connection or sleeping laptop | stops it, unless in tmux (@sec-working-remotely-tmux) | do not rely on it surviving | no effect |
+| Output goes to | your terminal | your terminal | a log file (`--output`) |
+| Stop it with | {{< kbd Ctrl-C >}} | `exit`, or `scancel <jobid>` | `scancel <jobid>` |
+| Records afterwards | none | `sacct`, like any job | `sacct`, `seff`, the log |
+| Good for | editing, `sbatch`, small file moves | tests, short trials, slow setup | everything longer than a few minutes |
+
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "Closing the browser tab ends my Open OnDemand session"
+**Reality.** The session is a job on a compute node. Closing the tab
+leaves it running, holding its CPUs and memory and charging your
+account, until its time runs out. End it with **Cancel** (Delete) on
+the OnDemand page, or `scancel <jobid>`.
+:::
+
+::: {.check}
+**Check yourself.** Your laptop sleeps for an hour while you have an
+`srun` shell open in one terminal and a batch job running from
+another. Which can you rely on afterwards?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The batch job. It never depended on your connection. Do not rely on
+the interactive shell having survived; check `squeue -u $USER`, and
+cancel it if it is still holding resources you no longer use.
+:::
+:::
+
+## Your first batch job {#sec-hpc-slurm-first-job}
+
+@sec-working-remotely-move-project ran `run_all.sh` on the login node to
+test the move. That was fine, because it takes seconds. Anything longer
+is a job, starting now.
+
+**Start hands-on.** Save this script as `jobs/01_count_reads.sbatch` in
+your project. SCINet readers replace `<project>` with their account;
+Nova readers delete the `--account` line.
+
+```{.bash filename="jobs/01_count_reads.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=01_count_reads
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=2G
+#SBATCH --time=00:10:00
+#SBATCH --output=logs/%x_%j.out   # %x job name, %j job ID
+set -euo pipefail
+job_id=${SLURM_JOB_ID:-local}     # set by SLURM in a job; "local" with plain bash
+echo "job $job_id on $(hostname), started $(date)"
+pixi run bash src/01_count_reads.sh
+echo "job $job_id finished $(date)"
+```
+
+The script runs on a compute node. It wraps `src/01_count_reads.sh`
+from @sec-shell-scripts-read, unchanged. Read it once before you run
+it: everything below the `#SBATCH` lines is ordinary bash.
+
+**Test it without the scheduler.** On the laptop, from the project
+folder (captured 2026-11-23):
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+bash jobs/01_count_reads.sbatch; echo "exit $?"
+```
+
+```{.console}
+job local on <laptop>, started Mon Nov 23 21:13:33 CST 2026
+started:  2026-11-23 21:14:00 -0600
+host:     <laptop>
+script:   f2867b2a2f6e1a35218383c040947973  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-23 21:14:01 -0600
+job local finished Mon Nov 23 21:14:01 CST 2026
+exit 0
+```
+
+Bash read the `#SBATCH` lines as comments and ran the rest.
+`SLURM_JOB_ID` did not exist, so `${SLURM_JOB_ID:-local}` gave `local`:
+`${VAR:-default}` is the value of `VAR`, or `default` when it is unset
+or empty. The lines between came from Chapter 8's script, and
+its output checksum is the one from @sec-working-remotely-move-project.
+
+On the cluster, test it the same way, but **inside an interactive job**
+(the login node is for editing, not running): start an `srun` session,
+`cd` to the project, and run `bash jobs/01_count_reads.sbatch`. On Nova
+(captured 2026-11-23) the first line was:
+
+```{.console}
+job 17719911 on nova18-72, started Mon Nov 23 03:10:18 PM CST 2026
+```
+
+Not `local`: an interactive session is a job, so SLURM had set
+`SLURM_JOB_ID` to the session's ID. The `SLURM_*` variables exist in
+every job, interactive or batch. `local` appears only outside any job.
+
+**Submit it.** Back on the login node, from the project folder:
+
+```{.bash filename="Terminal (login node)"}
+cd /work/<group>/<netid>/bioinf-computing   # SCINet: /project/<project>/<user>/bioinf-computing
+mkdir -p logs
+sbatch jobs/01_count_reads.sbatch
+squeue -u $USER
+```
+
+```{.console}
+Submitted batch job 17720240
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          17720240      nova 01_count  <netid> PD       0:00      1 (None)
+```
+
+`sbatch` printed the job ID and returned at once; the job is now the
+scheduler's. `PD` is pending, and `(None)` means it was just submitted
+and not yet considered. Run `squeue -u $USER` again: a longer job shows
+`R` with its node, then disappears when it ends. This one takes two
+seconds, so it may be gone before you ever see `R`. To watch a log
+while a job runs, `tail -f logs/01_count_reads_<jobid>.out`
+(@sec-shell-basics-viewing); {{< kbd Ctrl-C >}} stops `tail`, not the
+job.
+
+`mkdir -p logs` comes first because SLURM opens the log file **before**
+the script starts; if the folder is missing, there is nowhere to write
+it. And submit from the project folder: from your home, `sbatch` cannot
+even find the script:
+
+```{.console}
+sbatch: error: Unable to open file jobs/01_count_reads.sbatch
+```
+
+**Check the result three ways.** When `squeue` no longer lists the job,
+ask the scheduler how it ended, read its log, and look at the result
+itself:
+
+```{.bash filename="Terminal (login node)"}
+sacct -j 17720240 --format=JobID%20,State%15,ExitCode,Elapsed,ReqMem,MaxRSS,AllocCPUS
+cat logs/01_count_reads_17720240.out
+cat results/read_counts.tsv
+```
+
+```{.console}
+               JobID           State ExitCode    Elapsed     ReqMem     MaxRSS  AllocCPUS
+-------------------- --------------- -------- ---------- ---------- ---------- ----------
+            17720240       COMPLETED      0:0   00:00:02         2G                     2
+      17720240.batch       COMPLETED      0:0   00:00:02               116244K          2
+     17720240.extern       COMPLETED      0:0   00:00:02                                2
+job 17720240 on nova18-wide-33, started Mon Nov 23 03:12:44 PM CST 2026
+started:  2026-11-23 15:12:44 -0600
+host:     nova18-wide-33
+script:   f2867b2a2f6e1a35218383c040947973  src/01_count_reads.sh
+seqkit:   seqkit v2.14.0
+checking inputs against data/raw/checksums.md5:
+SRR6357070_1.fastq.gz: OK
+SRR6357070_2.fastq.gz: OK
+command:  seqkit stats -T data/raw/*.fastq.gz
+output:   e1d81de77934f7ab7b44bf72b7520b32  results/read_counts.tsv
+finished: 2026-11-23 15:12:44 -0600
+job 17720240 finished Mon Nov 23 03:12:44 PM CST 2026
+```
+
+The last command prints the result. Its checksum in the log,
+`e1d81de7…`, is the laptop's, so the file is the same one the laptop
+made:
+
+```{.console}
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+data/raw/SRR6357070_1.fastq.gz	FASTQ	DNA	50000	5050000	101	101.0	101
+data/raw/SRR6357070_2.fastq.gz	FASTQ	DNA	50000	5050000	101	101.0	101
+```
+
+`COMPLETED` with exit code `0:0` on the job and its `batch` step; the
+log shows the job's start line, its node, and Chapter 8's messages;
+and the result holds 50,000 reads for each file, the same numbers as
+in @sec-organizing-projects. `COMPLETED` means only that the script
+exited with status 0, not that the result is right; the count is what
+confirms the result (SLURM's [exit code
+guide](https://slurm.schedmd.com/job_exit_code.html) says the same).
+Two other columns are worth a first look: the job used about 114 MB of
+the 2 GB it asked for (`MaxRSS`), and it got 2 CPUs though it asked for
+1 (@sec-hpc-slurm-resources explains both).
+
+**Then name it.** @fig-sbatch-anatomy labels the parts of the script.
+
+::: {#fig-sbatch-anatomy}
+{{< svg ../figures/sbatch-anatomy.svg >}}
+
+Anatomy of a job script. The `#SBATCH` lines are comments to bash and
+instructions to `sbatch`; they come before the first command and are
+read as plain text. Below them is an ordinary bash script, run on a
+compute node in the folder you submitted from.
+:::
+
+- **The shebang** (`#!/usr/bin/env bash`, @sec-shell-scripts-first)
+  says the script is bash.
+- **`#SBATCH` lines** are the resource request. Bash sees comments;
+  `sbatch` reads them as options. They must come **before the first
+  command**: after one, `sbatch` stops looking and ignores the rest.
+  They are read as **plain text**, so `$HOME` or `$(date)` in them is
+  not expanded. Options on the `sbatch` command line override them
+  (`sbatch --time=00:20:00 jobs/01_count_reads.sbatch`).
+- **`--output=logs/%x_%j.out`** names the log: `%x` is the job name,
+  `%j` the job ID, so `logs/01_count_reads_17720240.out`.
+- **`set -euo pipefail`** (@sec-shell-scripts-strict) makes a failed
+  command fail the job, instead of carrying on to a misleading
+  `COMPLETED`.
+
+::: {.callout-important}
+## Key idea
+A job script is a bash script. The `#SBATCH` lines are comments to
+bash and instructions to `sbatch`; everything below them runs on a
+compute node, later, without you.
+:::
+
+**The job's world** is not your terminal:
+
+- It starts in **the folder you submitted from**. Chapter 8's script
+  needs the project root, which is why you submit from there.
+- It gets **a copy of your environment** as it was when you ran
+  `sbatch` (SLURM's default `--export=ALL`), which is how it finds
+  `~/.pixi/bin/pixi`. On Ceres and Nova a test job started in the
+  submit folder, saw a variable exported before `sbatch`, and found
+  `pixi` (checked 2026-11-23).
+- It has **no terminal**, so nothing can stop to ask a question.
+- `SLURM_*` variables tell the script about itself (@tbl-slurm-env).
+
+: Variables a job can read. Full list: [`sbatch`](https://slurm.schedmd.com/sbatch.html), "Output environment variables". {#tbl-slurm-env}
+
+| Variable | Meaning | Example use |
+|:---------|:--------|:------------|
+| `SLURM_JOB_ID` | this job's ID | names of logs and temporary folders |
+| `SLURM_JOB_NAME` | `--job-name` | log lines |
+| `SLURM_CPUS_PER_TASK` | CPUs per task you asked for | `-j "$SLURM_CPUS_PER_TASK"` for a tool's threads |
+| `SLURM_MEM_PER_NODE` | memory asked for, in MB | a tool's memory option |
+| `SLURM_SUBMIT_DIR` | the folder `sbatch` ran in | going back there after a `cd` |
+| `SLURM_ARRAY_TASK_ID` | this task's number in an array | picking one input (@sec-hpc-slurm-arrays) |
+| `SLURM_ARRAY_JOB_ID` | the array's shared ID | log names (`%A`) |
+| `TMPDIR` | node-local temporary folder, if the site sets one | staging (@sec-hpc-slurm-storage) |
+
+**Two logs.** Look in `logs/`:
+
+```{.console}
+01_count_reads_17720240.out  01_count_reads_2026-11-23T151018_QjPH.log  01_count_reads_2026-11-23T151244_8Z0Y.log
+```
+
+The `.out` file is the **scheduler's log**: everything the job printed,
+standard output and standard error together, unless you add `--error`
+to split them (the two streams of @sec-text-tools-streams). So a job's
+errors are in the same file as its output. The `.log` files are **Chapter 8's own logs**, one per
+run, written by `01_count_reads.sh` itself, with `mktemp` filling in the
+last four characters: one from the interactive test, one from the batch
+job. Both kinds start with `01_count_reads_`, so `ls` shows them side by
+side.
+
+**What runs is fixed late.** `sbatch` keeps a copy of the job script
+itself, but `src/01_count_reads.sh` is read only when the job starts.
+Edit it while the job waits, and the job runs the edited version. Note
+the job ID and the script's git commit in `NOTEBOOK.md`, as in
+@sec-shell-scripts-git, so you can say later exactly what ran.
+
+@fig-job-lifecycle walks through the whole path, step by step.
+
+::: {#fig-job-lifecycle}
+{{< svg ../figures/job-lifecycle.svg >}}
+
+The life of a batch job: written, submitted and pending, scheduled onto
+a node, running while you are logged out, ended in one of several
+states, and checked afterwards from the scheduler's records and the
+result file itself.
+:::
+
+::: {.callout-caution .misconception}
+## Misconception: "A job sees my terminal as it is now"
+**Reality.** It runs later, on another node, with a copy of the
+environment from when you submitted, starting in the folder you
+submitted from, with no terminal. Scripts it calls are read when it
+starts, not when you submit.
+:::
+
+::: {.check}
+**Check yourself.** You move `#SBATCH --mem=8G` below the `set -euo
+pipefail` line. How much memory does the job get?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+The partition's default, not 8 GB. `#SBATCH` lines after the first
+command are ignored, and bash treats them as comments. (`sbatch` does
+not warn you; `scontrol show job <jobid>` shows what it really got.)
+:::
+:::
+
+## Asking for resources {#sec-hpc-slurm-resources}
+
+**Start hands-on.** Read the request in `jobs/01_count_reads.sbatch`
+line by line against @fig-resource-box:
+
+```{.default filename="jobs/01_count_reads.sbatch (the request)"}
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=2G
+#SBATCH --time=00:10:00
+```
+
+One node, one task, one CPU for that task, 2 GB of memory, ten
+minutes.
+
+::: {#fig-resource-box}
+{{< svg ../figures/resource-box.svg >}}
+
+A request is a box: CPUs × memory × time, on one node. Use more memory
+than the box allows and the job is killed (`OUT_OF_MEMORY`); run past
+its end and it is killed (`TIMEOUT`); reserve CPUs the tool does not
+use and they sit idle, still reserved for you.
+:::
+
+**Then name it.** The scheduler reserves that box for your job, and
+enforces two of its sides:
+
+- Go over the **memory**, and the job is killed.
+- Go over the **time**, and the job is killed.
+- Ask for **CPUs** the tool does not use, and nothing breaks, but they
+  sit idle, reserved for you and unavailable to anyone else.
+
+**CPUs do not set threads.** How many threads a tool starts is decided
+by the tool's own option, not by SLURM. `seqkit` uses 4 threads unless
+you tell it otherwise (its `-j` option, or the `SEQKIT_THREADS`
+variable; [SeqKit usage](https://bioinf.shenwei.me/seqkit/usage/)).
+With `--cpus-per-task=1`, an unadjusted seqkit starts more threads
+than it was given, and they share one CPU; with `--cpus-per-task=8`
+and no `-j`, it uses four and leaves four idle. Pass the request to
+the tool:
+
+```bash
+threads=${SLURM_CPUS_PER_TASK:-1}
+seqkit stats -j "$threads" -T data/raw/*.fastq.gz
+```
+
+The array script in @sec-hpc-slurm-arrays does exactly this. (Threads
+and how much faster they make a tool are @sec-performance; the rule
+here is only "ask for as many CPUs as you tell the tool to use".)
+
+::: {.callout-caution .misconception}
+## Misconception: "If I ask SLURM for 8 CPUs, my tool uses 8"
+**Reality.** SLURM reserves the CPUs; the tool starts as many threads
+as its own option says (seqkit: 4 by default, whatever you reserved).
+Pass `$SLURM_CPUS_PER_TASK` to the tool's thread option.
+:::
+
+**The shape of a request.** Most bioinformatics tools are one program
+using several threads, so the shape is always the same: `--nodes=1
+--ntasks=1 --cpus-per-task=N`. `--ntasks` counts separate copies of a
+program (tasks), which programs written to run across many machines
+need and the book's tools do not. What a "CPU" is depends on the site:
+a core, or one of a core's two hardware threads
+(@fig-cores-threads). On Nova the first job asked for 1 CPU and got 2:
+
+```{.console}
+               JobID           State ExitCode    Elapsed     ReqMem     MaxRSS  AllocCPUS
+            17720240       COMPLETED      0:0   00:00:02         2G                     2
+```
+
+Nova's nodes have two hardware threads per core, and SLURM there hands
+out whole cores (`scontrol show config` lists `SelectTypeParameters =
+CR_CORE_MEMORY`), so an odd request is rounded up. Check `AllocCPUS`,
+not only what you asked for; `seff`'s CPU efficiency is measured
+against what you got.
+
+**Memory and time.** Give memory with `--mem` (per node: for a
+one-node job, the whole job's memory). `--mem-per-cpu` multiplies by
+the CPU count, which is easy to get wrong; use `--mem`. Times are
+`D-HH:MM:SS` or `HH:MM:SS` (`--time=1-12:00:00` is a day and a half).
+**Always set both.** If you leave them out, you get the partition's
+default, not "as much as needed": 2 hours and 2,000 MB per CPU on
+Ceres, 2 hours and 7,686 MB per CPU on Atlas, 4 hours and 3,800 MB per
+CPU on Nova (`scontrol show partition`, @tbl-sites-slurm). A job that
+needs 6 hours is killed at 2 on Ceres.
+
+::: {.wide-table}
+: The `sbatch` options this book uses. Full list: [`sbatch`](https://slurm.schedmd.com/sbatch.html). {#tbl-sbatch-options}
+
+| Option | Short | Asks for | Example | Notes |
+|:-------|:------|:---------|:--------|:------|
+| `--job-name` | `-J` | a name | `--job-name=01_count_reads` | `%x` in log names |
+| `--account` | `-A` | who is charged | `--account=<project>` | required on SCINet |
+| `--partition` | `-p` | which nodes | `--partition=interactive` | default marked `*` in `sinfo` |
+| `--qos` | `-q` | a QOS | `--qos=debug` | only one your account may use |
+| `--time` | `-t` | longest run | `--time=02:00:00` | killed when it runs out |
+| `--nodes` | `-N` | nodes | `--nodes=1` | always 1 in this book |
+| `--ntasks` | `-n` | copies of the program | `--ntasks=1` | always 1 in this book |
+| `--cpus-per-task` | `-c` | CPUs for that task | `--cpus-per-task=4` | pass to the tool's thread option |
+| `--mem` | | memory per node | `--mem=8G` | killed if exceeded |
+| `--output`, `--error` | `-o`, `-e` | log files | `--output=logs/%x_%j.out` | `%x` name, `%j` job ID, `%A` array ID, `%a` task; folder must exist |
+| `--array` | `-a` | a job array | `--array=1-4%2` | @sec-hpc-slurm-arrays |
+| `--dependency` | `-d` | start after another job | `--dependency=afterok:<jobid>` | @sec-hpc-slurm-chains |
+| `--mail-type`, `--mail-user` | | e-mail when it ends or fails | `--mail-type=END,FAIL` | whether mail works is site-specific |
+| `--gres` | | GPUs and other devices | `--gres=gpu:1` | @sec-hpc-slurm-gpu |
+| `--test-only` | | check a request without submitting | `sbatch --test-only …` | says when and where it would start |
+
+:::
+
+**CPU efficiency, measured.** The first job finished in two seconds,
+far too fast to show anything about CPUs (`seff` reported `CPU
+Efficiency: 0.00%`). Two longer test jobs on Ceres (captured
+2026-11-23) each held 4 CPUs for two minutes: one kept all four busy,
+the other only one.
+
+: Two 2-minute jobs, each holding 4 CPUs (Ceres; Nova gave 97.15% and 24.39%). {#tbl-cpu-efficiency}
+
+| | 4 workers busy | 1 worker busy |
+|:--|--:|--:|
+| `Elapsed` | 00:02:06 | 00:02:05 |
+| `AllocCPUS` | 4 | 4 |
+| `TotalCPU` (CPU time used) | 07:58.890 | 02:00.008 |
+| `seff` CPU efficiency | 95.04% | 24.00% |
+| `seff` memory used | 66.47 MB of 1 GB | 69.64 MB of 1 GB |
+
+Both jobs held the same four CPUs for the same time; the second used a
+quarter of them. @sec-hpc-slurm-measure works these numbers out by
+hand.
+
+**Why accurate requests matter.** The scheduler does not simply run
+jobs in order. While it waits to start a big job, it fits smaller,
+shorter ones into the gaps, as long as they do not delay the big one
+(**backfill**; SLURM's [scheduling
+configuration](https://slurm.schedmd.com/sched_config.html#backfill-scheduling)).
+So a shorter, smaller request **can** start sooner. It is not
+guaranteed: priority, fair share, and new jobs arriving all change the
+picture. Try it in @fig-backfill: a toy node with 8 CPUs, three jobs
+running, and one big job waiting for the whole node. Set your job's
+CPUs and requested hours, and see when it could start.
+
+```{ojs}
+//| echo: false
+viewof bfCpus = Inputs.range([1, 8], {step: 1, value: 2, label: "Your job: CPUs"})
+```
+
+```{ojs}
+//| echo: false
+viewof bfHours = Inputs.range([1, 24], {step: 1, value: 2, label: "Your job: hours requested"})
+```
+
+```{ojs}
+//| echo: false
+bfStart = {
+  // CPUs free on the toy node at hour t, with the big job's reservation from hour 3 to 13
+  const free = (t) => t < 2 ? 2 : t < 3 ? 6 : t < 13 ? 0 : 8;
+  const fits = (s) => {
+    for (let t = s; t < s + bfHours; t += 0.5) if (free(t) < bfCpus) return false;
+    return true;
+  };
+  for (const s of [0, 2, 3, 13]) if (fits(s)) return s;
+  return 13;
+}
+```
+
+::: {#fig-backfill}
+```{ojs}
+//| echo: false
+{
+  const W = 720, left = 70, right = 20, top = 34, rowH = 24, rows = 8;
+  const plotW = W - left - right;
+  const x = (h) => left + Math.min(h, 24) * plotW / 24;
+  const y = (r) => top + (rows - 1 - r) * rowH;      // row 0 at the bottom
+  const base = top + rows * rowH;
+  const block = (r0, n, t0, t1, cls, label, labelCls) => htl.svg`<g>
+    <rect x="${x(t0)}" y="${y(r0 + n - 1)}" width="${x(t1) - x(t0)}" height="${n * rowH}"
+          rx="4" class="${cls}" stroke-width="1.25"/>
+    <text x="${(x(t0) + x(t1)) / 2}" y="${y(r0 + n - 1) + n * rowH / 2 + 5}" font-size="13"
+          text-anchor="middle" class="${labelCls}">${label}</text>
+  </g>`;
+  const s = bfStart;
+  const r0 = s < 13 ? 2 : 0;
+  const end = s + bfHours;
+  const msg = s === 0 ? "In this example, your job starts now."
+    : `In this example, your job starts in ${s} hours.`;
+  return htl.svg`<svg class="diagram" viewBox="0 0 720 ${base + 90}" role="img"
+      aria-label="${msg} It asks for ${bfCpus} CPUs for ${bfHours} hours.">
+    ${Array.from({length: rows}, (_, r) => htl.svg`<rect x="${left}" y="${y(r)}" width="${plotW}"
+        height="${rowH}" class="fill-surface stroke-line" stroke-width="0.5"/>`)}
+    <text x="${left - 10}" y="${top + 4 * rowH + 5}" font-size="13" text-anchor="end" class="fill-muted">CPUs</text>
+    ${block(4, 4, 0, 2, "fill-surface stroke-ink", "job A", "")}
+    ${block(0, 2, 0, 3, "fill-surface stroke-ink", "job B", "")}
+    ${block(0, 8, 3, 13, "fill-muted-soft stroke-ink", "big job (8 CPUs, 10 h), reserved", "")}
+    <rect x="${x(s)}" y="${y(r0 + bfCpus - 1)}" width="${x(end) - x(s)}" height="${bfCpus * rowH}"
+          rx="4" class="fill-line stroke-ink" stroke-width="2.5"/>
+    <text x="${x(s) + 6}" y="${y(r0 + bfCpus - 1) + 17}" font-size="13" font-weight="700">your job</text>
+    ${[0, 3, 6, 9, 12, 15, 18, 21, 24].map((h) => htl.svg`<g>
+      <line x1="${x(h)}" y1="${base}" x2="${x(h)}" y2="${base + 6}" class="stroke-muted"/>
+      <text x="${x(h)}" y="${base + 20}" font-size="12" text-anchor="middle" class="fill-muted">${h} h</text>
+    </g>`)}
+    <line x1="${x(0)}" y1="${top - 8}" x2="${x(0)}" y2="${base + 6}" class="stroke-ink" stroke-width="1.5"/>
+    <text x="${x(0)}" y="${top - 14}" font-size="12" class="fill-muted">now</text>
+    ${end > 24 ? htl.svg`<text x="${W - right}" y="${top - 14}" font-size="12" text-anchor="end" class="fill-muted">your job runs past 24 h →</text>` : ""}
+    <text x="${left}" y="${base + 50}" font-size="15" font-weight="700">${msg}</text>
+    <text x="${left}" y="${base + 72}" font-size="13" class="fill-muted">Asked for: ${bfCpus} CPU${bfCpus > 1 ? "s" : ""} for ${bfHours} hour${bfHours > 1 ? "s" : ""}. Simulated toy node, not a real queue.</text>
+  </svg>`;
+}
+```
+
+A toy backfill scheduler (simulated). One node with 8 CPUs: job A
+holds 4 CPUs for 2 more hours, job B 2 CPUs for 3 more hours, and a big
+job waiting for all 8 CPUs for 10 hours has the node reserved from hour
+3. Your job starts at the earliest time that does not delay that
+reservation. Real schedulers also weigh priority, fair share, and new
+jobs, so this shows a possibility, not a promise.
+:::
+
+If the figure does not load, the lesson is in @tbl-backfill-cases: the
+same 2 CPUs start now when asked for 2 hours, and wait 13 hours when
+asked for 12.
+
+: Three settings of @fig-backfill. {#tbl-backfill-cases}
+
+| Your request | Starts | Why |
+|:-------------|-------:|:----|
+| 2 CPUs, 2 hours | now | fits in the 2 free CPUs before the big job's reservation |
+| 4 CPUs, 1 hour | in 2 hours | fits in the 6 CPUs free between job A's end and the reservation |
+| 2 CPUs, 12 hours | in 13 hours | would overlap the reservation, so waits until the big job ends |
+
+**And what it costs.** Fair share, which lowers the priority of groups
+that used a lot recently, is based on what your jobs **used while they
+ran** (the resources they held × how long, weighted as the site
+chooses; SLURM's [multifactor
+priority](https://slurm.schedmd.com/priority_multifactor.html) page).
+Asking for 3 days and finishing in 10 minutes does not by itself
+charge 3 days; but CPUs you held and left idle while the job ran do
+count.
+
+::: {.callout-caution .misconception}
+## Misconception: "Asking for lots of memory and time is the safe choice"
+**Reality.** A big or long request can wait longer, because the
+scheduler can fit smaller, shorter jobs into gaps first; and resources
+you hold but do not use are unavailable to others and can count toward
+your group's usage. Measure a test run and add a margin
+(@sec-hpc-slurm-measure).
+:::
+
+::: {.check}
+**Check yourself.** A job asked for 16 CPUs and ran `seqkit stats -j
+2`. How many CPUs did it use, and what should the request be?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+At most 2; the other 14 sat idle. Request 2 (`--cpus-per-task=2`), or
+raise `-j` to match the request, written as `-j
+"$SLURM_CPUS_PER_TASK"` so the two cannot drift apart.
+:::
+:::
+
+## When jobs wait or fail {#sec-hpc-slurm-failures}
+
+**Start hands-on: break it on purpose.** Four small job scripts go in
+the chapter's scratch folder, `bioinf-computing-ch10/`, beside your
+project. Each one starts by naming your project folder, and runs
+tools through `pixi run --manifest-path "$project/pixi.toml"`: the
+scratch folder is outside the project, and pixi would not find the
+environment otherwise. The environment is already installed
+(@sec-book-setup), so no job installs anything under a small memory
+limit. Make each file with nano or VS Code; they differ only in the
+lines marked.
+
+::: {.panel-tabset}
+
+## ok
+
+```{.bash filename="bioinf-computing-ch10/ok.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=ok
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --mem=500M
+#SBATCH --time=00:05:00
+#SBATCH --output=logs/%x_%j.out
+set -euo pipefail
+project=/work/<group>/<netid>/bioinf-computing   # your project folder
+echo "start $(hostname) $(date)"
+pixi run --manifest-path "$project/pixi.toml" python -c 'print("ok")'
+echo "end $(date)"
+```
+
+## oom
+
+```{.bash filename="bioinf-computing-ch10/oom.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=oom
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --mem=500M
+#SBATCH --time=00:05:00
+#SBATCH --output=logs/%x_%j.out
+set -euo pipefail
+project=/work/<group>/<netid>/bioinf-computing   # your project folder
+echo "start $(hostname) $(date)"
+pixi run --manifest-path "$project/pixi.toml" python -c 'x = bytearray(2 * 1024**3); print("allocated")'  # 2 GB
+echo "end $(date)"
+```
+
+## timeout
+
+```{.bash filename="bioinf-computing-ch10/timeout.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=timeout
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --mem=500M
+#SBATCH --time=00:01:00           # one minute
+#SBATCH --output=logs/%x_%j.out
+set -euo pipefail
+project=/work/<group>/<netid>/bioinf-computing   # your project folder
+echo "start $(hostname) $(date)"
+sleep 300                         # five minutes
+echo "end $(date)"
+```
+
+## typo
+
+```{.bash filename="bioinf-computing-ch10/typo.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=typo
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --mem=500M
+#SBATCH --time=00:05:00
+#SBATCH --output=logs/%x_%j.out
+set -euo pipefail
+project=/work/<group>/<netid>/bioinf-computing   # your project folder
+echo "start $(hostname) $(date)"
+bash "$project/src/01_count_raeds.sh"            # misspelled on purpose
+echo "end $(date)"
+```
+
+:::
+
+`ok` proves that the route works. `oom` asks for 500 MB and then takes
+2 GB; `timeout` asks for one minute and sleeps for five; `typo` runs a
+script whose name is misspelled. Submit all four from the scratch
+folder, wait about three minutes (the timeout job needs its minute plus
+SLURM's grace time), and read the records:
+
+```{.bash filename="Terminal (login node)"}
+cd /work/<group>/<netid>/bioinf-computing-ch10   # SCINet: /project/<project>/<user>/bioinf-computing-ch10
+for name in ok oom timeout typo; do sbatch "$name.sbatch"; done
+squeue -u $USER
+sacct -u $USER -S today --name=ok,oom,timeout,typo --format=JobID%20,JobName,State%15,ExitCode,Elapsed,ReqMem,MaxRSS
+tail -n 3 logs/*.out
+```
+
+On Nova (captured 2026-11-23):
+
+```{.console}
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+          17706659      nova     typo  <netid> PD       0:00      1 (Priority)
+          17706658      nova  timeout  <netid> PD       0:00      1 (Priority)
+          17706657      nova      oom  <netid> PD       0:00      1 (Priority)
+          17706656      nova       ok  <netid> PD       0:00      1 (Priority)
+```
+
+```{.console}
+               JobID    JobName           State ExitCode    Elapsed     ReqMem     MaxRSS
+-------------------- ---------- --------------- -------- ---------- ---------- ----------
+            17706656         ok       COMPLETED      0:0   00:00:00       500M
+      17706656.batch      batch       COMPLETED      0:0   00:00:00                75952K
+     17706656.extern     extern       COMPLETED      0:0   00:00:00
+            17706657        oom   OUT_OF_MEMORY    0:125   00:00:00       500M
+      17706657.batch      batch   OUT_OF_MEMORY    0:125   00:00:00                    1G
+     17706657.extern     extern       COMPLETED      0:0   00:00:01
+            17706658    timeout         TIMEOUT      0:0   00:01:16       500M
+      17706658.batch      batch       CANCELLED     0:15   00:01:17                 2276K
+     17706658.extern     extern       COMPLETED      0:0   00:01:17
+            17706659       typo          FAILED    127:0   00:00:00       500M
+      17706659.batch      batch          FAILED    127:0   00:00:00                 2680K
+     17706659.extern     extern       COMPLETED      0:0   00:00:00
+```
+
+```{.console}
+==> logs/ok_17706656.out <==
+start nova21-swift-4 Mon Nov 23 12:43:03 PM CST 2026
+ok
+end Mon Nov 23 12:43:03 PM CST 2026
+
+==> logs/oom_17706657.out <==
+start nova18-wide-25 Mon Nov 23 12:43:03 PM CST 2026
+/var/spool/slurmd/job17706657/slurm_script: line <n>: 460600 Killed                  pixi run --manifest-path "$project/pixi.toml" python -c …
+[2026-11-23T12:43:03.960] error: Detected 1 oom_kill event in StepId=17706657.batch. Some of the step tasks have been OOM Killed.
+
+==> logs/timeout_17706658.out <==
+start nova18-wide-25 Mon Nov 23 12:43:03 PM CST 2026
+[2026-11-23T12:44:19.007] error: *** JOB 17706658 ON nova18-wide-25 CANCELLED AT 2026-11-23T12:44:19 DUE TO TIME LIMIT ***
+
+==> logs/typo_17706659.out <==
+start nova18-wide-25 Mon Nov 23 12:43:03 PM CST 2026
+bash: /work/<group>/<netid>/bioinf-computing/src/01_count_raeds.sh: No such file or directory
+```
+
+(`<n>` is the line number of the `pixi run` line in your script.) Ceres
+gave the same states, exit codes, and messages. Read them one at a
+time:
+
+- **`oom`**: state `OUT_OF_MEMORY`, exit code `0:125`. The log has
+  bash's `Killed` line and SLURM's `oom_kill event` line. There is no
+  Python `MemoryError`: the kernel stopped the program from outside,
+  the `Killed` that @tbl-common-errors said was "often, not always, out
+  of memory". `MaxRSS` shows `1G`, **above** the 500 MB request (Ceres
+  showed `1045816K`): the kernel kills a moment after the limit is
+  passed, and memory is sampled, so read "`MaxRSS` near or above
+  `ReqMem`, plus `OUT_OF_MEMORY`" together. This needs a cluster: a
+  laptop has no such limit to hit.
+- **`timeout`**: the job's own line says `TIMEOUT`, but its `batch`
+  line says only `CANCELLED 0:15` (signal 15, the polite "stop" of
+  @tbl-signals). Here the reason is on the job's line. The log's last
+  line, from SLURM, says `DUE TO TIME LIMIT`.
+- **`typo`**: `FAILED`, `127:0` on both lines, and bash's `No such
+  file or directory` in the log. Exit status 127 means a command or
+  script was not found.
+
+In all three, the script's last line, `echo "end …"`, never ran: the
+log shows where each one stopped. `sacct`'s default width cuts
+`OUT_OF_MEMORY` to `OUT_OF_ME+` and long job IDs to `17706657.ba+`,
+which is why every `sacct` command in this chapter widens those columns
+(`JobID%20`, `State%15`).
+
+::: {.callout-note}
+## Background: reading `ExitCode` and `COMPLETED`
+`ExitCode` is two numbers, `status:signal`. `127:0` is the script's own
+exit status (here, "command not found"), with no signal. `0:15` and
+`0:125` mean the job was stopped from outside: by signal 15 when the
+time ran out, and by the out-of-memory kill. `COMPLETED` only means the
+script exited with status 0: it says nothing about whether the result
+is right. Check the result.
+:::
+
+**Read the records together.** `sacct` gives one line for the job (the
+**allocation line**, which holds the request) and one per **step**:
+`.batch` is the script itself, `.extern` is SLURM's own bookkeeping,
+and a script that runs commands with `srun` gets numbered steps too.
+Read those lines **and** the log, because the most useful line varies:
+for `TIMEOUT` it was the allocation line, for `OUT_OF_MEMORY` both,
+and for `typo` the log.
+
+: Job states. Full list: [`squeue`](https://slurm.schedmd.com/squeue.html), "Job state codes". {#tbl-job-states}
+
+| State | Short | What happened | What to do |
+|:------|:------|:--------------|:-----------|
+| `PENDING` | `PD` | waiting; the reason is in `squeue` | read the reason (@tbl-pending-reasons) |
+| `RUNNING` | `R` | running on the node shown | `tail -f` its log |
+| `COMPLETED` | `CD` | the script exited 0 | check the result itself |
+| `FAILED` | `F` | the script exited non-zero | read the log above SLURM's lines; `127` = not found |
+| `OUT_OF_MEMORY` | `OOM` | killed for passing `--mem` | ask for more memory, or give the tool less work |
+| `TIMEOUT` | `TO` | killed at `--time` | ask for more time, after checking it was not stuck |
+| `CANCELLED` | `CA` | stopped by `scancel`, or a step of a `TIMEOUT` job | check who cancelled it, and why |
+| `PREEMPTED` | `PR` | stopped to make room (scavenger) | resubmit, or use a normal partition |
+| `NODE_FAIL` | `NF` | the node failed | resubmit; not your fault |
+
+**Then waiting.** A pending job shows its reason in `squeue`'s last
+column, `NODELIST(REASON)`. Above, the four jobs submitted together
+waited with `(Priority)`; the first job of the chapter showed `(None)`.
+Both are normal.
+
+::: {.wide-table}
+: Common pending reasons. Spellings as on the sites and SLURM's [reason codes](https://slurm.schedmd.com/job_reason_codes.html). {#tbl-pending-reasons}
+
+| Reason | Meaning | What to do |
+|:-------|:--------|:-----------|
+| `None` | just submitted, not yet considered (seen on Ceres and Nova) | wait a few seconds |
+| `Priority` | jobs with higher priority are ahead (seen on Nova) | wait |
+| `Resources` | yours is next, but no node has the room yet | wait; a smaller request may start sooner |
+| `Dependency` | waiting for another job (@sec-hpc-slurm-chains) | wait |
+| `DependencyNeverSatisfied` | the job it waits for failed, so it can never start | `scancel` it |
+| `QOSMaxWallDurationPerJobLimit` | the time asked for is over the QOS limit | fix `--time`, resubmit |
+| `PartitionTimeLimit` | the time asked for is over the partition's limit | fix `--time`, resubmit |
+| `AssocGrpCpuLimit` (and other `AssocGrp…`) | your group has reached a limit set for the whole group | wait for the group's jobs to finish |
+| `ReqNodeNotAvail` | a node it needs is down, drained, or reserved (maintenance is one cause) | wait, or check the site's news |
+
+:::
+
+The two limit reasons appear only on sites set up to accept such jobs;
+all three of ours refuse them at submission instead
+(@sec-hpc-slurm-layout). For everything SLURM knows about a job, use
+`scontrol show job <jobid>`; `squeue --start -u $USER` gives an
+estimated start time, which is often empty.
+
+::: {.callout-caution .misconception}
+## Misconception: "My job is pending, so something is wrong"
+**Reality.** `Priority` and `Resources` are normal waiting; only some
+reasons (a limit the request breaks, a dependency that failed) need a
+fix. Read the reason column.
+:::
+
+::: {.callout-tip}
+## Troubleshooting a job
+@sec-getting-help-checklist's steps, for jobs: **Where is the log?**
+`logs/<name>_<jobid>.out`, or `slurm-<jobid>.out` in the submit folder
+if you gave no `--output`. **What does it say?** The last line is
+often SLURM's (`DUE TO TIME LIMIT`, `oom_kill event`); the cause is
+usually just above it. **Are resources short?** `sacct` shows `State`,
+`ExitCode`, `Elapsed`, and `MaxRSS` beside `ReqMem`.
+:::
+
+::: {.check}
+**Check yourself.** A job's state is `FAILED`, exit code `127:0`. What
+is your first guess?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+A command or script was not found: a typo in a name or path, a tool run
+without `pixi run` (or without its module), or a relative path that
+assumed a different starting folder. The log's last lines name it.
+:::
+:::
+
+## Measuring a job and sizing the next one {#sec-hpc-slurm-measure}
+
+**Start hands-on.** Ask `sacct` for the fields that compare a request
+with its use, for a job that finished. On Ceres, a 2-CPU, 2 GB version
+of the read count (captured 2026-11-23):
+
+```{.bash filename="Terminal (login node)"}
+sacct -j 22918876 --format=JobID%20,State%15,Elapsed,AllocCPUS,TotalCPU,ReqMem,MaxRSS
+seff 22918876
+```
+
+```{.console}
+               JobID           State    Elapsed  AllocCPUS   TotalCPU     ReqMem     MaxRSS
+-------------------- --------------- ---------- ---------- ---------- ---------- ----------
+            22918876       COMPLETED   00:00:02          2  00:00.246         2G
+      22918876.batch       COMPLETED   00:00:02          2  00:00.246               106944K
+     22918876.extern       COMPLETED   00:00:02          2   00:00:00
+…
+Cores per node: 2
+CPU Utilized: 00:00:00
+CPU Efficiency: 0.00% of 00:00:04 core-walltime
+Job Wall-clock time: 00:00:02
+Memory Utilized: 104.44 MB
+Memory Efficiency: 5.10% of 2.00 GB (2.00 GB/node)
+```
+
+Compare cells across lines:
+
+- The **allocation line** holds the request: `ReqMem 2G` (older SLURM
+  versions add `n` or `c`, per node or per CPU), `AllocCPUS 2`.
+- The **step lines** hold the use: `MaxRSS 106944K` on `.batch`, about
+  104 MB. `MaxRSS` is the peak memory of one step, sampled every so
+  often, not a sum over everything in the job; a blank or zero means
+  that line was not measured, or the site does not collect it.
+- `seff` puts the two side by side: 104 MB used of 2 GB, 5.10%. It
+  exists on Ceres, Atlas, and Nova; if your site lacks it, `sacct` has
+  everything it uses.
+
+**CPU efficiency by hand.** `seff`'s number is `TotalCPU / (Elapsed ×
+AllocCPUS)`: CPU time used, divided by CPU time held. For the two jobs
+of @tbl-cpu-efficiency: 7 min 58.9 s is 478.9 s, and 478.9 / (126 × 4)
+= 95.0%; the second job's 120.0 / (125 × 4) = 24.0%. Both match `seff`.
+For the two-second count above, the CPU time rounds to nothing, so 0%
+says only that the job was too short to measure.
+
+: Measuring a finished job. {#tbl-measure-cmds}
+
+| Question | Command | Field | Read from |
+|:---------|:--------|:------|:----------|
+| How long did it take? | `sacct -j <id> --format=…` | `Elapsed` | the allocation line |
+| How much memory did it use? | same | `MaxRSS` (against `ReqMem`) | the step line (`.batch`, or `srun` steps) |
+| Were the CPUs used? | same, or `seff <id>` | `TotalCPU`, `AllocCPUS` | either; `seff` divides for you |
+| How much disk? | `du -sh` | size | outputs, and the job's own temporary folder |
+| How long did it wait? | `sacct -j <id> --format=JobID%20,Submit,Start` | `Start` − `Submit` | the allocation line |
+
+**Then estimate.** Test on a small input, measure, and scale with
+care. A small run is not a fair sample (@sec-orientation-data-sizes):
+memory often depends on the reference (an aligner's index is the same
+size for one sample or a hundred), time on the number of reads. For the
+next run of a **comparable job that succeeded**, start from:
+
+- memory: the measured peak plus about 25%;
+- time: the measured time, scaled to the new input size, plus a margin.
+
+That is a starting estimate, not a guarantee: sampling can miss a short
+peak, and a job killed for memory tells you only that it needed more
+than it was given, not how much. For disk, `du -sh` the outputs and the
+job's temporary folder. On the GNU/Linux nodes of a cluster,
+`/usr/bin/time -v <command>` reports one command's peak memory
+("Maximum resident set size") and time directly; macOS's
+`/usr/bin/time` has no `-v`.
+
+**The habit.** Record each job's request, what it used, its job ID,
+and how long it waited in `NOTEBOOK.md` (@sec-organizing-projects-records).
+After a few runs of the same step, you will know its size without
+guessing.
+
+::: {.check}
+**Check yourself.** A job on the same input as next time shows `MaxRSS`
+1.2 GB against `ReqMem` 32 GB, and `Elapsed` 0:04:10 of a 2-day
+request. What do you request next time?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+About 1.5–2 GB of memory (the peak plus a margin) and well under an
+hour, say 20–30 minutes. The smaller request can start sooner and
+leaves the rest of the node for others.
+:::
+:::
+
+## Job arrays: one script, many inputs {#sec-hpc-slurm-arrays}
+
+@sec-shell-scripts-loops ran one command per sample with a `for` loop,
+one after another. On a cluster, the same work is one **job array**:
+one script, submitted once, run as many tasks, each with its own number.
+The list of inputs is the project's own manifest from
+@sec-organizing-projects-metadata, `data/meta/reads.tsv`: one row per
+**run**, with columns `sample`, `run`, `fastq_1`, `fastq_2`. Each task
+is keyed by its run accession, which is unique where sample labels need
+not be.
+
+### More data for the array
+
+An array of one is no array. Add three more paired-end runs of the same
+nf-core test set, so `reads.tsv` has four rows. This changes the
+project, so do it the careful way, with @sec-organizing-projects-raw's
+routine: open `data/raw/` for writing, download from the book's pinned
+source, add the checksums the book recorded, check, and close it again.
+Do it in the **laptop** project, then send it to the cluster with
+@sec-working-remotely-move-project's `rsync` and check there:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+chmod u+w data/raw data/raw/checksums.md5
+for run in SRR6357071 SRR6357072 SRR6357076; do
+  for r in 1 2; do
+    curl -fL -o "data/raw/${run}_${r}.fastq.gz" "{{< var testdata-url >}}/testdata/GSE110004/${run}_${r}.fastq.gz"
+  done
+done
+```
+
+Add these six lines to the end of `data/raw/checksums.md5` (open it in
+VS Code and paste them; they are the values recorded in the book's
+`data/README.md`), then check all eight files and close the folder:
+
+```{.default filename="data/raw/checksums.md5 (add at the end)"}
+fd11dc240712f88f1f800656fc59b6ab  SRR6357071_1.fastq.gz
+3325feca06747fa80e34daed0dc57de4  SRR6357071_2.fastq.gz
+63534a634de5efa0273fa812932b0ed1  SRR6357072_1.fastq.gz
+4c7fb08dc831bc372bb6e827182f6ff7  SRR6357072_2.fastq.gz
+e026fe5743035e52b7b40606b4c05fba  SRR6357076_1.fastq.gz
+00377e768cfd005fb8556d17fd2ee239  SRR6357076_2.fastq.gz
+```
+
+```{.bash filename="Terminal (laptop)"}
+cd data/raw && md5sum -c checksums.md5 && cd ~/bioinf-computing
+chmod a-w data/raw/* data/raw
+```
+
+All eight lines should say `OK`. Then one row per new run in each
+table. The `sample` labels are the test set's; the GEO samples and
+conditions come from the ENA records in @sec-organizing-projects's
+exercise 3:
+
+```{.bash filename="Terminal (laptop)"}
+printf 'WT_REP1\tSRR6357071\tdata/raw/SRR6357071_1.fastq.gz\tdata/raw/SRR6357071_2.fastq.gz\n' >> data/meta/reads.tsv
+printf 'WT_REP2\tSRR6357072\tdata/raw/SRR6357072_1.fastq.gz\tdata/raw/SRR6357072_2.fastq.gz\n' >> data/meta/reads.tsv
+printf 'RAP1_IAA_30M_REP1\tSRR6357076\tdata/raw/SRR6357076_1.fastq.gz\tdata/raw/SRR6357076_2.fastq.gz\n' >> data/meta/reads.tsv
+printf 'WT_REP1\tSRR6357071\tGSM2879619\twild_type\t2\n' >> data/meta/samples.tsv
+printf 'WT_REP2\tSRR6357072\tGSM2879620\twild_type\t3\n' >> data/meta/samples.tsv
+printf 'RAP1_IAA_30M_REP1\tSRR6357076\tGSM2879624\trap1_degron_induced_30min\t1\n' >> data/meta/samples.tsv
+cat data/meta/reads.tsv
+```
+
+```{.console}
+sample	run	fastq_1	fastq_2
+WT_REP1	SRR6357070	data/raw/SRR6357070_1.fastq.gz	data/raw/SRR6357070_2.fastq.gz
+WT_REP1	SRR6357071	data/raw/SRR6357071_1.fastq.gz	data/raw/SRR6357071_2.fastq.gz
+WT_REP2	SRR6357072	data/raw/SRR6357072_1.fastq.gz	data/raw/SRR6357072_2.fastq.gz
+RAP1_IAA_30M_REP1	SRR6357076	data/raw/SRR6357076_1.fastq.gz	data/raw/SRR6357076_2.fastq.gz
+```
+
+Two runs carry the label `WT_REP1`: the test set groups them to test
+merging, though ENA lists them as separate biological samples. This is
+exactly why the run, not the label, keys each task. Send the project
+to the cluster with the `rsync` line from
+@sec-working-remotely-move-project (only the new files travel), and run
+`md5sum -c checksums.md5` in `data/raw/` there: on Nova all eight said
+`OK`. Note in `NOTEBOOK.md` what you added and why.
+
+One side effect: `src/01_count_reads.sh` counts every file in
+`data/raw/`, so from now on `results/read_counts.tsv` has eight rows,
+not two. That is correct, and the first job's numbers above were from
+before this step.
+
+### The array script
+
+**Start hands-on, no cluster needed.** Save this as
+`jobs/02_stats_array.sbatch` (SCINet: your account on the `--account`
+line; Nova: delete it):
+
+```{.bash filename="jobs/02_stats_array.sbatch"}
+#!/usr/bin/env bash
+#SBATCH --job-name=02_stats_array
+#SBATCH --account=<project>       # SCINet; Nova: delete this line
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=2G
+#SBATCH --time=00:10:00
+#SBATCH --output=logs/%x_%A_%a.out   # %A array job ID, %a task number
+# One task per run in data/meta/reads.tsv (line 1 is the header).
+# Test without SLURM:  SLURM_ARRAY_TASK_ID=1 bash jobs/02_stats_array.sbatch --dry-run
+set -euo pipefail
+task=${SLURM_ARRAY_TASK_ID:?run with sbatch --array, or set it to test}  # <1>
+threads=${SLURM_CPUS_PER_TASK:-1}                                         # <2>
+row=$(awk -F '\t' -v n="$task" 'NR == n + 1' data/meta/reads.tsv)         # <3>
+[ -n "$row" ] || { echo "no row $task in data/meta/reads.tsv" >&2; exit 1; }  # <4>
+run=$(cut -f 2 <<< "$row")                                                # <5>
+fq=$(cut -f 3 <<< "$row")
+[ -r "$fq" ] || { echo "cannot read $fq" >&2; exit 1; }                   # <6>
+echo "task $task: run $run, file $fq, $threads threads, on $(hostname)"
+if [ "${1:-}" = "--dry-run" ]; then exit 0; fi                            # <7>
+mkdir -p results
+pixi run seqkit stats -j "$threads" -T "$fq" > "results/stats_${run}.tsv.tmp"  # <8>
+mv "results/stats_${run}.tsv.tmp" "results/stats_${run}.tsv"
+echo "task $task finished $(date)"
+```
+1. SLURM sets `SLURM_ARRAY_TASK_ID` in each task. Without it, `:?`
+   stops the script with a message that says how to test.
+2. The CPU request, passed to the tool below; 1 when testing.
+3. Task *n* takes line *n* + 1 of the file, because line 1 is the header
+   (`awk`'s `NR` counts rows from 1; @sec-text-tools-sed-awk).
+4. `awk` prints nothing, and exits 0, for a row past the end; this
+   check turns that into an error.
+5. `<<<` hands a string to a command's standard input; `cut -f 2` takes
+   the second tab-separated field, the run.
+6. Stop early if the file in the table cannot be read.
+7. `--dry-run` stops after the checks, so you can test the selection
+   anywhere.
+8. Each task writes **its own** output, named by run, through a `.tmp`
+   name. Read 1 only, to keep the example small.
+
+Run the selection for every task number before you submit anything,
+one more than you have rows:
+
+```{.bash filename="Terminal (laptop)"}
+cd ~/bioinf-computing
+for i in 1 2 3 4 5; do
+  SLURM_ARRAY_TASK_ID=$i bash jobs/02_stats_array.sbatch --dry-run
+done
+```
+
+On Nova's login node (captured 2026-11-23; the laptop prints the same
+with its own host name):
+
+```{.console}
+task 1: run SRR6357070, file data/raw/SRR6357070_1.fastq.gz, 1 threads, on nova-login-1
+task 2: run SRR6357071, file data/raw/SRR6357071_1.fastq.gz, 1 threads, on nova-login-1
+task 3: run SRR6357072, file data/raw/SRR6357072_1.fastq.gz, 1 threads, on nova-login-1
+task 4: run SRR6357076, file data/raw/SRR6357076_1.fastq.gz, 1 threads, on nova-login-1
+no row 5 in data/meta/reads.tsv
+```
+
+Four tasks, four runs, and task 5 stops, as it should. (A dry run only
+reads a small table, so it is fine on a login node.) Now submit four
+tasks from the project folder on the cluster:
+
+```{.bash filename="Terminal (login node)"}
+sbatch --array=1-4 jobs/02_stats_array.sbatch
+squeue -u $USER
+```
+
+```{.console}
+Submitted batch job 17720815
+             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+    17720815_[1-4]      nova 02_stats  <netid> PD       0:00      1 (None)
+```
+
+One line for all four while they wait. When they have run:
+
+```{.bash filename="Terminal (login node)"}
+ls logs/02_stats_array_* results/
+cat logs/02_stats_array_17720815_2.out
+sacct -j 17720815 --format=JobID%20,State%15,ExitCode,Elapsed,AllocCPUS,MaxRSS,NodeList
+```
+
+```{.console}
+logs/02_stats_array_17720815_1.out  logs/02_stats_array_17720815_3.out
+logs/02_stats_array_17720815_2.out  logs/02_stats_array_17720815_4.out
+
+results/:
+read_counts.tsv  stats_SRR6357070.tsv  stats_SRR6357071.tsv  stats_SRR6357072.tsv  stats_SRR6357076.tsv
+task 2: run SRR6357071, file data/raw/SRR6357071_1.fastq.gz, 2 threads, on nova18-wide-10
+task 2 finished Mon Nov 23 03:17:00 PM CST 2026
+               JobID           State ExitCode    Elapsed  AllocCPUS     MaxRSS        NodeList
+-------------------- --------------- -------- ---------- ---------- ---------- ---------------
+          17720815_1       COMPLETED      0:0   00:00:00          2                  nova18-69
+    17720815_1.batch       COMPLETED      0:0   00:00:00          2     73768K       nova18-69
+   17720815_1.extern       COMPLETED      0:0   00:00:00          2                  nova18-69
+          17720815_2       COMPLETED      0:0   00:00:00          2             nova18-wide-10
+    17720815_2.batch       COMPLETED      0:0   00:00:00          2     72864K  nova18-wide-10
+   17720815_2.extern       COMPLETED      0:0   00:00:00          2             nova18-wide-10
+          17720815_3       COMPLETED      0:0   00:00:00          2             nova18-wide-21
+    17720815_3.batch       COMPLETED      0:0   00:00:00          2     88156K  nova18-wide-21
+   17720815_3.extern       COMPLETED      0:0   00:00:00          2             nova18-wide-21
+          17720815_4       COMPLETED      0:0   00:00:01          2             nova18-wide-21
+    17720815_4.batch       COMPLETED      0:0   00:00:01          2     72420K  nova18-wide-21
+   17720815_4.extern       COMPLETED      0:0   00:00:01          2             nova18-wide-21
+```
+
+Four logs, four results (each a seqkit table: 50,000 reads), every task
+`COMPLETED 0:0`, and the tasks ran on **three different nodes**.
+
+**Then name it** with @fig-job-array. One submission makes N tasks;
+each has the same request and its own `SLURM_ARRAY_TASK_ID`. The tasks
+run independently whenever resources allow: at once or one after
+another, on one node or several, finishing in any order. That is why
+each writes its own output file; two tasks writing one file would
+garble it.
+
+::: {#fig-job-array}
+{{< svg ../figures/job-array.svg >}}
+
+A job array. One `sbatch --array=1-4` makes four tasks; task *n* reads
+line *n* + 1 of `reads.tsv` (line 1 is the header) and writes its own
+`stats_<run>.tsv` and log. A fifth task would find no row and stop.
+Chapter 8's `for` loop, below, does the same work one run after
+another, in one process.
+:::
+
+**Managing an array:**
+
+- `--array=1-40%5` runs at most 5 tasks at once: be kind to the queue
+  with large arrays.
+- `scancel 17720815_3` cancels one task; `scancel 17720815` all of them.
+- `sacct -j 17720815` lists three lines per task (`_N`, `_N.batch`,
+  `_N.extern`), which is why the `JobID` column needs `%20`.
+- Logs use `%A` (the array's ID) and `%a` (the task number) in
+  `--output`.
+- Each site caps the array size (`scontrol show config | grep -i
+  MaxArraySize`): 10001 on Ceres and Atlas, **1001** on Nova. The
+  largest task number is one less, so Nova allows `--array=1-1000`.
+
+::: {.callout-warning}
+## Pitfall: the header row and the task past the end
+With the header on line 1, task *n* must read line *n* + 1, and four data
+rows mean `--array=1-4`. A task past the last row gets nothing
+from `awk`, which exits 0, so `set -e` alone would not stop it: without
+the `[ -n "$row" ]` check, task 5 would run seqkit on nothing. Dry-run
+every task number first.
+:::
+
+::: {.check}
+**Check yourself.** With the `awk` line as written and four data rows,
+what do tasks 0, 1, and 5 read?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Task 0 reads line 1, the header (its "file" would be `fastq_1`, which
+the readable-file check stops); task 1 reads the first run; task 5
+reads nothing, and the empty-row check stops it. So the array is
+`--array=1-4`.
+:::
+:::
+
+## Chains of jobs (overview) {#sec-hpc-slurm-chains}
+
+**Overview.** @sec-shell-scripts-pipeline ran numbered scripts one
+after another with `src/run_all.sh` and promised a cluster version.
+The simplest one is a single job that runs `run_all.sh`: its order and
+its stop-at-the-first-failure behaviour stay exactly as they are. Make
+a copy of `jobs/01_count_reads.sbatch` that runs `pixi run bash
+src/run_all.sh` instead, and that is it.
+
+Separate jobs earn their keep when steps need different resources (a
+big-memory step, a many-CPU step) or can run side by side. SLURM can
+start one job only after another succeeds:
+
+```{.bash filename="Terminal (login node)"}
+jid=$(sbatch --parsable jobs/01_count_reads.sbatch)
+sbatch --dependency="afterok:$jid" jobs/02_gtf_summary.sbatch
+squeue -u $USER
+```
+
+`--parsable` makes `sbatch` print only the job ID, which `$( )` saves
+in `jid`. (`jobs/02_gtf_summary.sbatch` is a copy of the first job
+script that runs `src/02_gtf_summary.sh`; making it is exercise 5.)
+While the first job waits or runs, `squeue` shows the second as
+`(Dependency)`. `afterok` imposes the order you chose; it passes no
+data. Here the two steps do not even need each other's output, so
+`afterok` only says "not before". If you did @sec-shell-scripts's
+exercise 4, `src/03_transcript_biotypes.sh` can be submitted with no
+dependency at all, beside `02`, and you can watch both run at once.
+
+**When the first job fails**, `afterok` never starts the second. What
+happens to it then depends on the site (captured 2026-11-23, with a
+first job that failed):
+
+- **Ceres and Nova** leave it pending for ever, as
+  `(DependencyNeverSatisfied)`. Cancel it yourself with `scancel`, or
+  submit it with `--kill-on-invalid-dep=yes` so SLURM cancels it.
+- **Atlas** cancels it automatically (its configuration has
+  `kill_invalid_depend`): the second job went from `PD (Dependency)`
+  to `CANCELLED` with no `scancel`.
+
+So after a failed chain, check `squeue`: on some sites the job waits
+forever, on others it is gone. This is also where hand-made chains
+stop being fun. A workflow manager (@sec-workflow-managers) tracks
+which steps are done, reruns only what changed, and submits each step
+as a job for you; nf-core pipelines do exactly this on SLURM
+(@sec-nf-core).
+
+::: {.check}
+**Check yourself.** The first job of a chain fails. What happens to the
+second?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+It never starts. Depending on the site it stays pending as
+`DependencyNeverSatisfied` (Ceres, Nova: `scancel` it) or is cancelled
+automatically (Atlas).
+:::
+:::
+
+## GPU partitions (overview) {#sec-hpc-slurm-gpu}
+
+**Overview.** A GPU is asked for like any other resource, with
+`--gres` (generic resources), and usually in a GPU partition:
+
+```{.bash filename="jobs/gpu_test.sbatch (the request)"}
+#SBATCH --partition=<gpu partition>
+#SBATCH --gres=gpu:1
+```
+
+Inside the job, `nvidia-smi` shows the card you got. Only tools built
+for GPUs use one: deep-learning tools, NVIDIA's Parabricks, some
+basecallers. An ordinary tool on a GPU node leaves the GPU idle while
+someone who needs it waits.
+
+The exact form is site-specific (observed 2026-11-23):
+
+- **Atlas** has four GPU partitions, `gpu-v100`, `gpu-a100`,
+  `gpu-a100-mig7`, and `gpu-l40s`, with QOS limits of 2 days (7 for
+  `a100`). `sinfo -o "%P %G"` names the cards, for example
+  `gpu:nvidia_a100_1g.10gb:56` on the MIG partition (an A100 split into
+  slices). Use the name `sinfo` shows, or plain `gpu:1`: the
+  OnDemand form's `gpu:a100_1g.10gb:1` was refused with `Requested node
+  configuration is not available`.
+- **Nova** has no separate GPU partition: GPU nodes sit in the default
+  `nova` partition (and `interactive`, `scavenger`), and the card type
+  goes in `--gres`, for example `--gres=gpu:a100:1`.
+- **Ceres** has no GPUs.
+
+Check a request without submitting it with `sbatch --test-only`, which
+says when and where the job would start, or refuses it. GPUs in depth
+are @sec-gpu.
+
+## Etiquette and a checklist {#sec-hpc-slurm-etiquette}
+
+**Start with a quick audit**, on the login node: what are you running
+here, what do you have queued, and how full is your storage?
+
+```{.bash filename="Terminal (login node)"}
+ps -u "$USER"
+squeue -u $USER
+my_quotas                                  # SCINet; Nova: cat /work/<group>/group_storage_usage
+```
+
+`ps` (@sec-linux-system-processes) should show your shell, perhaps
+tmux and an editor, and nothing heavy.
+
+::: {.wide-table}
+: Sharing a cluster. {#tbl-etiquette}
+
+| Do | Don't | Why |
+|:---|:------|:----|
+| edit, `sbatch`, small file moves, `module spider` on login nodes | align, sort big files, install large environments, or loop over samples on login nodes | the login node is shared by everyone logged in |
+| measure a test run, then request a margin over it | request whole nodes or days "to be safe" | idle reservations block others and can wait longer |
+| one array for many inputs, throttled (`%5`) | thousands of separate tiny jobs | each job costs the scheduler work |
+| pass the CPU count to the tool | reserve CPUs the tool never uses | idle CPUs are wasted for everyone |
+| delete your own temporary folders and scratch copies | leave data in scratch to be purged | purges lose data you forgot; quotas fill |
+| `scancel` jobs and sessions you no longer need | leave a held node or OnDemand session idle | it keeps charging and blocking |
+| use GPU partitions only for GPU tools | run CPU-only work on GPU nodes | GPUs are scarce |
+
+:::
+
+`scancel -u $USER` cancels **all** your jobs at once; use it with care.
+
+::: {.callout-caution .misconception}
+## Misconception: "I can run my analysis on the login node"
+**Reality.** The login node is the front desk: shared by everyone, for
+editing, submitting, and small moves. Analyses run as jobs on compute
+nodes, interactive for trying things, batch for everything longer than
+a few minutes.
+:::
+
+## Summary {#sec-hpc-slurm-summary}
+
+- A cluster is many computers behind a queue. The login node is for
+  editing and submitting; work runs as **jobs** on compute nodes,
+  started by SLURM when resources are free. Inside a job, the
+  allocation (`SLURM_*`, `scontrol show job`), not `free`, says what
+  you may use.
+- A request names a partition, an account, and sometimes a QOS; the
+  strictest limit wins. `sinfo` is not always the real limit: check
+  `scontrol show partition` and `sacctmgr show qos`.
+- Home is small; projects hold your work; scratch is big but purged;
+  node-local `$TMPDIR` lasts one job. Count files as well as bytes.
+  Stage work in a temporary folder of your own and copy results back.
+- Load modules by named version inside job scripts, never in
+  `~/.bashrc`; use `pixi run` for what the book environment has, and
+  never both for one tool.
+- `srun --pty bash -l` and `salloc` are interactive jobs; check
+  `hostname` after `salloc`, and give back what you hold. To SSH to a
+  compute node: hold it, find it in `squeue`, connect with `ProxyJump`,
+  `scancel` it.
+- A job script is a bash script with `#SBATCH` lines first. Submit
+  from the project folder with `mkdir -p logs` done; the job starts
+  there with a copy of your environment and no terminal. Check
+  `sacct`, the log, **and** the result: `COMPLETED` only means exit 0.
+- Ask for CPUs × memory × time on one node, always setting `--time` and
+  `--mem`; pass the CPU count to the tool; check `AllocCPUS`. Smaller,
+  accurate requests can start sooner.
+- Failures read as `OUT_OF_MEMORY 0:125`, `TIMEOUT` (with `.batch`
+  `CANCELLED 0:15`), or `FAILED 127:0` for a missing command; read the
+  allocation line, the step lines, and the log together. `Priority` and
+  `Resources` are normal waiting.
+- Size the next run from the last: peak memory plus about 25%, time
+  scaled to the input, recorded in `NOTEBOOK.md`.
+- A job array runs one script over many inputs; dry-run every task
+  number, guard the row past the end, and give each task its own
+  output. `afterok` chains jobs; a failed chain waits forever on some
+  sites.
+
+@tbl-slurm-commands collects the chapter's commands.
+
+::: {.wide-table}
+: The chapter's commands on one page. {#tbl-slurm-commands}
+
+| Task | Command |
+|:-----|:--------|
+| Partitions and their limits | `sinfo -s`, `scontrol show partition <name>` |
+| Your accounts and QOS | `sacctmgr -n -P show assoc user=$USER format=account,partition,qos,defaultqos`, `sacctmgr show qos` |
+| Node sizes | `sinfo -N -o "%N %c %m %G"` |
+| Interactive shell | `srun --cpus-per-task=1 --mem=4G --time=00:30:00 --pty bash -l` (SCINet: `-A <project>`) |
+| Hold a node | `salloc -N1 -n1 --time=00:20:00 --mem=2G sleep infinity`, then `scancel <jobid>` |
+| Submit | `sbatch jobs/script.sbatch`; `sbatch --array=1-4 …`; `jid=$(sbatch --parsable …)` |
+| Your jobs | `squeue -u $USER`; `squeue --start -u $USER` |
+| Everything about one job | `scontrol show job <jobid>` |
+| What a job used | `sacct -j <jobid> --format=JobID%20,State%15,ExitCode,Elapsed,AllocCPUS,TotalCPU,ReqMem,MaxRSS`; `seff <jobid>` |
+| Cancel | `scancel <jobid>`, `scancel <jobid>_3`, `scancel -u $USER` (all) |
+| Check a request | `sbatch --test-only …` |
+| Modules | `module spider <name>`, `module load <name>/<version>`, `module list`, `module purge` |
+| Site settings | `scontrol show config \| grep -i -E 'MaxArraySize\|NamespaceType'` |
+
+:::
+
+## Exercises {#sec-hpc-slurm-exercises}
+
+Exercises 1–4 are core; 5 and 6 are optional. Each has a route without a
+cluster. Record what you did and saw in `NOTEBOOK.md`, in the project
+for the cluster parts and in `~/bioinf-computing-ch10` for the rest.
+
+::: {.check}
+**Exercise 1. Know your cluster.** After @sec-hpc-slurm-layout and
+@sec-hpc-slurm-storage.
+
+Fill a five-row card in `NOTEBOOK.md` for your site: the default
+partition and its real time limit (and where that limit comes from);
+your accounts; the interactive partition, if any; the quota command
+and your current use; whether `seff` exists.
+
+**No cluster?** Fill the card for this fictional site from its
+captured outputs:
+
+```{.console}
+$ sinfo -s
+PARTITION AVAIL  TIMELIMIT   NODES(A/I/O/T) NODELIST
+main*        up 30-00:00:0       40/10/2/52 n[001-052]
+short        up    4:00:00         2/6/0/8 s[01-08]
+$ scontrol show partition main | grep -o -E '(DefaultTime|MaxTime|QoS)=[^ ]+'
+QoS=main
+DefaultTime=01:00:00
+MaxTime=30-00:00:00
+$ sacctmgr -n show qos format=Name%10,MaxWall | grep main
+      main  7-00:00:00
+$ sacctmgr -n show assoc user=$USER format=account%20
+            lab-smith
+$ command -v seff || echo "no seff"
+no seff
+```
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+For the fictional site: default partition `main`, whose real limit is
+7 days, from the `main` QOS the partition attaches (`sinfo` says 30);
+account `lab-smith`; interactive work goes to `short` (4 hours); no
+quota command given, so ask the site or use `df -h` on your project; no
+`seff`, so measure with `sacct`. On a real site, compare with
+@tbl-sites-slurm.
+:::
+:::
+
+::: {.check}
+**Exercise 2. Adapt the first job.** After @sec-hpc-slurm-first-job.
+
+Copy `jobs/01_count_reads.sbatch` to `jobs/count_small.sbatch`. Give it
+the job name `count_small`, 1 GB of memory, and 5 minutes. Before
+submitting, write down the log file's name. Submit it, and confirm with
+`sacct`, the log, and `results/read_counts.tsv`. Then give a log a date
+in its name. `#SBATCH` lines are not expanded, so do it on the command
+line, where your shell fills in the date before `sbatch` runs:
+
+```{.bash filename="Terminal (login node)"}
+sbatch --output="logs/%x_%j_$(date +%F).out" jobs/count_small.sbatch
+```
+
+**No cluster?** Run the copy with `bash` on the laptop, and write down
+what the log would have been called.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`logs/count_small_<jobid>.out`. `sacct` shows `COMPLETED 0:0` with
+`ReqMem 1G`; the log has the start line, Chapter 8's lines, and the
+finish line; the result file has one 50,000-read row per FASTQ file
+(eight after the array's data step). The dated version wrote, on Nova,
+`logs/01_count_reads_17720578_2026-11-23.out` for the original script:
+`%x` and `%j` are SLURM's, the date was the shell's. With `bash`, there
+is no log file at all: everything goes to your terminal.
+:::
+:::
+
+::: {.check}
+**Exercise 3. Diagnose three failures.** After
+@sec-hpc-slurm-failures.
+
+Submit `ok.sbatch`, then the three broken scripts. For each, record
+`State`, `ExitCode`, and the one log line that explains it. Then fix
+one of them (raise the memory, the time, or the spelling), resubmit,
+and confirm it completes.
+
+**No cluster?** Use the captured `sacct` table and logs in
+@sec-hpc-slurm-failures, and answer from these three lines of another
+user's jobs as well:
+
+```{.console}
+               JobID           State ExitCode    Elapsed     ReqMem     MaxRSS
+            31337001   OUT_OF_MEMORY    0:125   00:42:10        16G
+      31337001.batch   OUT_OF_MEMORY    0:125   00:42:10                 16.4G
+            31337002         TIMEOUT      0:0   12:00:16         64G
+      31337002.batch       CANCELLED     0:15   12:00:18                  3.1G
+            31337003       COMPLETED      0:0   00:03:05        120G
+      31337003.batch       COMPLETED      0:0   00:03:05                  2.2G
+```
+
+Which ran out of memory, which hit its time limit, and which asked for
+far more memory than it used?
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+`ok`: `COMPLETED 0:0`, log `ok`. `oom`: `OUT_OF_MEMORY 0:125`, log
+`… Killed …` and `Detected 1 oom_kill event`. `timeout`: `TIMEOUT 0:0`
+(`.batch` `CANCELLED 0:15`), log `CANCELLED AT … DUE TO TIME LIMIT`.
+`typo`: `FAILED 127:0`, log `No such file or directory`. In the extra
+table: 31337001 ran out of memory (its peak passed 16 GB);
+31337002 hit its 12-hour limit (and used only 3.1 of 64 GB, so the next
+request needs more time but far less memory); 31337003 used 2.2 of 120
+GB, so about 3 GB would do.
+:::
+:::
+
+::: {.check}
+**Exercise 4. Right-size a request.** After @sec-hpc-slurm-measure and
+@sec-hpc-slurm-arrays.
+
+Run `jobs/02_stats_array.sbatch` as an array over the four runs with a
+generous request (8 CPUs, 16 GB, 1 hour, given on the command line:
+`sbatch --array=1-4 --cpus-per-task=8 --mem=16G --time=01:00:00 …`).
+Use `seff` or `sacct` to choose a smaller request, and resubmit with
+it. For both runs, record CPU efficiency, peak memory, and queue wait
+(`sacct -j <id> --format=JobID%20,Submit,Start`) in `NOTEBOOK.md`. Wait
+times depend on the queue at that moment, so record them; do not
+expect a "right" answer.
+
+**No cluster?** Choose the smaller request from the four captured
+tasks in @sec-hpc-slurm-arrays (2 CPUs, 2 GB, at most 1 second each).
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+Each task peaked at 72–88 MB and ran a second or less, so 1–2 CPUs,
+about 256–512 MB (the peak plus a margin, rounded up generously for
+such a small number), and a few minutes is plenty. With 8 CPUs, seqkit
+used only as many threads as `-j "$threads"` gave it; check that your
+`seff` efficiency fell with the bigger request. The smaller request
+often waits less, but not always.
+:::
+:::
+
+::: {.check}
+**Exercise 5 (optional). Chain two steps.** After
+@sec-hpc-slurm-chains.
+
+Make `jobs/02_gtf_summary.sbatch` by copying the first job script and
+changing the job name and the `pixi run` line to `src/02_gtf_summary.sh`.
+Submit it with `--dependency="afterok:$jid"` after the first job, and
+watch `squeue`. Then make the first job fail (submit `typo.sbatch`, or
+point the first script at a missing file), chain the second after it,
+and record what your site does with the second.
+
+**No cluster?** From @sec-hpc-slurm-chains, write down what you would
+expect on Ceres and on Atlas, and the command that cleans up on Ceres.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+With a successful first job, the second shows `(Dependency)`, then
+runs. After a failed first job, Ceres and Nova leave the second
+pending as `(DependencyNeverSatisfied)`, and `scancel <jobid>` removes
+it; Atlas cancels it by itself.
+:::
+:::
+
+::: {.check}
+**Exercise 6 (optional). Use temporary space in the array.** After
+@sec-hpc-slurm-storage and @sec-hpc-slurm-arrays.
+
+Copy the array script to `jobs/02_stats_staged.sbatch` and add the
+staging pattern from `jobs/ch10_staging.sbatch`: each task makes its
+own folder under `$TMPDIR` (with `${SLURM_ARRAY_JOB_ID}_${task}` in its
+name), copies its FASTQ file there, runs seqkit on the copy, copies
+`stats_<run>.tsv` back to `results/`, and removes its folder. Confirm
+the four results match the unstaged ones (`diff`) and that each log
+shows its folder gone. With tiny files the time will not change; the
+habit is the point.
+
+**No cluster?** Run it on the laptop with `SLURM_ARRAY_TASK_ID=1 bash
+jobs/02_stats_staged.sbatch`.
+
+::: {.callout-tip collapse="true" appearance="minimal"}
+## Answer
+One possible core, after the checks:
+
+```bash
+project=$PWD
+work=$(mktemp -d "${TMPDIR:?}/stats_${SLURM_ARRAY_JOB_ID:-local}_${task}_XXXX")
+cp "$fq" "$work/"
+pixi run seqkit stats -j "$threads" -T "$work/$(basename "$fq")" > "$work/stats.tsv"
+cp "$work/stats.tsv" "$project/results/stats_${run}.tsv.tmp"
+mv "$project/results/stats_${run}.tsv.tmp" "$project/results/stats_${run}.tsv"
+rm -rf "$work"
+```
+
+The table's first column now shows the temporary path instead of
+`data/raw/…`, so `diff` reports that column; compare the other columns
+with `cut -f 2- results/stats_SRR6357070.tsv`.
+:::
+:::
+
+## Further reading {#sec-hpc-slurm-reading}
+
+- @hpccarpentry2026intro, *Introduction to High-Performance Computing*
+  --- a hands-on lesson on the same ground (logging in, the scheduler,
+  job scripts, modules, transferring files), with exercises; good for a
+  second explanation of anything here.
+- @schedmd2026quickstart, the SLURM *Quick Start User Guide* --- the
+  official short tour of every command in this chapter, with links to
+  each command's manual page; read the `sbatch` and `sacct` pages for
+  the options and fields in @tbl-sbatch-options and @tbl-measure-cmds.
+- @yoo2003slurm, "SLURM: Simple Linux Utility for Resource Management"
+  --- the original paper by SLURM's designers: why a scheduler is built
+  around partitions, jobs, and job steps.
+- @lmod2026docs, the *Lmod* user guide --- `module spider`, defaults,
+  and hidden modules, for when your site's module trees surprise you.
+- Your site's own pages: SCINet's [SLURM
+  guide](https://scinet.usda.gov/guides/use/slurm) and [Ceres and Atlas
+  differences](https://scinet.usda.gov/guides/resources/CeresAtlasDifferences),
+  MSU's [Atlas documentation](https://docs.hpc.msstate.edu/), and ISU's
+  [SLURM page](https://research.it.iastate.edu/slurm) --- the authority
+  for limits, partitions, and storage rules; @sec-cluster-sites collects
+  the details.

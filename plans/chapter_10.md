@@ -1,11 +1,12 @@
 ---
 title: "Chapter 10 — HPC and SLURM"
-subtitle: "Chapter plan · core · agreed"
+subtitle: "Chapter plan · core · agreed · drafted"
 date: 2026-11-23
 ---
 
 **Part:** II — The Linux command line · **Label:** core · **Status:**
-agreed 2026-11-23, after the hands-on checks on all three clusters
+first draft written 2026-11-23 (`chapters/10-hpc-slurm.qmd`; see
+*Drafting notes*); agreed 2026-11-23, after the hands-on checks on all three clusters
 (`chapter_10_checks.md`) and a consistency pass against the Chapter 8
 and 9 drafts; ready to draft. Drafted 2026-11-22; revised the same day after
 `chapter_10_codex_review.md` (what changed and why: *Review response*
@@ -1349,6 +1350,47 @@ final.
     question appear, and does it work on the VPN with a key?); the
     message when SSH-ing to a node you do not hold; VS Code Remote-SSH
     to the node from Mac and Windows; `scancel` and an empty `squeue`.
+
+## Drafting notes (2026-11-23)
+
+First draft in `chapters/10-hpc-slurm.qmd`, with five new figures
+(`storage-tiers`, `sbatch-anatomy`, `job-lifecycle` (stepped),
+`resource-box`, `job-array`) and `fig-backfill` (Observable JS). Every
+captured output is from the check sessions (`chapter_10_checks.md`),
+quoted verbatim apart from placeholders; laptop outputs were rerun on
+the Mac the same day. Where the draft differs from this plan:
+
+- **No `jobs-url`.** Readers save each job script from the page, as
+  Chapter 3 does for `src/01_count_reads.sh`: written on the laptop and
+  sent with Chapter 9's `rsync`, or written on the login node with nano
+  or vim. `_variables.yml` is unchanged. The four §8 scripts are shown
+  in full in a tabset, each with a `project=` line.
+- **"Line", not "row", for the array manifest:** task *n* reads line
+  *n* + 1 of `reads.tsv` (line 1 is the header), so "no row 5" (the
+  script's message, data rows) and the figure's line numbers agree.
+  The script comment changed to match; the code is as tested.
+- **`${VAR:-default}` and `${VAR:?message}`** are explained in place
+  (§3 and §6): Chapter 8's `tbl-expansions` does not list them.
+- **§8's `Killed` line** shows `line <n>`: the test scripts had no
+  `--account` or `project=` line, so their line number differs from the
+  chapter's scripts.
+- **§9's capture** is Ceres's stand-in count (2 CPUs), as the plan
+  says; §6 uses Nova's real first job.
+- **§11** suggests `run_all.sh` in one job as the simplest route, and
+  makes `jobs/02_gtf_summary.sbatch` exercise 5 instead of a supplied
+  file.
+- **Exercise 1's no-cluster card** is a fictional site (`main*`/`short`,
+  a 7-day QOS on a 30-day partition, no `seff`); exercise 3 adds a
+  three-job captured table for the no-cluster route, written for the
+  book.
+- **Spelling:** "SLURM" throughout, as in Chapters 1–9 (also in
+  `misconceptions.yml`).
+- **Not checked in a browser yet:** `fig-backfill`'s logic was tested in
+  Node (the three cases in `tbl-backfill-cases` and four more); the page
+  itself still needs a look over `http://`.
+- `data/README.md` has the three new runs (MD5 and SHA-256);
+  `references.bib` has `yoo2003slurm` (DOI checked with scite),
+  `hpccarpentry2026intro`, `schedmd2026quickstart`, `lmod2026docs`.
 
 ## Austin's notes
 
